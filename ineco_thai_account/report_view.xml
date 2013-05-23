@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <report id="report_wht_certif" model="ineco.wht" name="wht.certif" string="Withholding Tax Certificate"/>
+    </data>
+</openerp>

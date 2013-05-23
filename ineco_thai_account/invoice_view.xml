@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    	<!-- Customer Invoice -->
+        <record model="ir.ui.view" id="view_ineco_account_invoice_form">
+	      	<field name="name">ineco.account.invoice.form</field>
+	      	<field name="model">account.invoice</field>
+	      	<field name="inherit_id" ref="account.invoice_form"/>
+	      	<field name="arch" type="xml">
+	        	<page string="Payments" position="before" version="7.0">
+	        	    <page string="General Ledger">
+	        	    	<field name="account_move_lines" readonly="1">
+	        	    		<tree string="General ledgers">
+	        	    			<field name="date" />
+								<field name="name" />
+								<field name="account_id" />
+								<field name="debit"  sum="Total Debit" />
+								<field name="credit" sum="Total Credit"/>
+								<field name="analytic_account_id" invisible="1" />
+								<field name="quantity" invisible="1" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
+	        	</page>
+<!-- 	        	<field name="date_due" position="after"> -->
+<!-- 	        		<field name="bill_due" /> -->
+<!-- 	        	</field> -->
+			</field>
+		</record>   
+		
+		<!-- Sale receipt -->
+        <record model="ir.ui.view" id="view_ineco_account_voucher_form">
+	      	<field name="name">ineco.account.voucher.form</field>
+	      	<field name="model">account.voucher</field>
+	      	<field name="inherit_id" ref="account_voucher.view_sale_receipt_form"/>
+	      	<field name="arch" type="xml">
+	        	<page string="Sales Information" position="after" version="7.0">
+	        	    <page string="General Ledger">
+	        	    	<field name="account_move_lines" readonly="1">
+	        	    		<tree string="General ledgers">
+	        	    			<field name="date" />
+								<field name="name" />
+								<field name="account_id" />
+								<field name="debit"  sum="Total Debit" />
+								<field name="credit" sum="Total Credit"/>
+								<field name="analytic_account_id" invisible="1" />
+								<field name="quantity" invisible="1" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
+	        	    <page string="With Holding Tax">
+	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" context="{'default_partner_id': partner_id or False, 'default_wht_type':'sale'}" >
+	        	    		<tree string="With Holding Tax">
+	        	    			<field name="name" />
+	        	    			<field name="date_doc" />
+	        	    			<field name="base_amount" />
+	        	    			<field name="tax" />
+	        	    			<field name="state" />
+	        	    			<field name="note" />
+	        	    			<button name="button_compute_tax" string="Compute Tax" type="object" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
+	        	</page>
+			</field>
+		</record>    
+
+		<!-- Customer Payment -->
+        <record model="ir.ui.view" id="view_ineco_account_payment_form">
+	      	<field name="name">ineco.account.payment.form</field>
+	      	<field name="model">account.voucher</field>
+	      	<field name="inherit_id" ref="account_voucher.view_vendor_receipt_form"/>
+	      	<field name="arch" type="xml">
+	        	<page string="Payment Information" position="after" version="7.0">
+	        	    <page string="General Ledger">
+	        	    	<field name="account_move_lines" readonly="1">
+	        	    		<tree string="General ledgers">
+	        	    			<field name="date" />
+								<field name="name" />
+								<field name="account_id" />
+								<field name="debit"  sum="Total Debit" />
+								<field name="credit" sum="Total Credit"/>
+								<field name="analytic_account_id" invisible="1" />
+								<field name="quantity" invisible="1" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
+	        	    <page string="With Holding Tax">
+	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" context="{'default_partner_id': partner_id or False, 'default_wht_type':'sale'}" >
+	        	    		<tree string="With Holding Tax">
+	        	    			<field name="name" />
+	        	    			<field name="date_doc" />
+	        	    			<field name="base_amount" />
+	        	    			<field name="tax" />
+	        	    			<field name="state" />
+	        	    			<field name="note" />
+	        	    			<button name="button_compute_tax" string="Compute Tax" type="object" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
+	        	</page>
+			</field>
+		</record>    
+
+    	<!-- Supplier Invoice -->
+        <record model="ir.ui.view" id="view_ineco_account_supplierinvoice_form">
+	      	<field name="name">ineco.account.supplierinvoice.form</field>
+	      	<field name="model">account.invoice</field>
+	      	<field name="inherit_id" ref="account.invoice_supplier_form"/>
+	      	<field name="arch" type="xml">
+	        	<page string="Payments" position="before" version="7.0">
+	        	    <page string="General Ledger">
+	        	    	<field name="account_move_lines" readonly="1">
+	        	    		<tree string="General ledgers">
+	        	    			<field name="date" />
+								<field name="name" />
+								<field name="account_id" />
+								<field name="debit"  sum="Total Debit" />
+								<field name="credit" sum="Total Credit"/>
+								<field name="analytic_account_id" invisible="1" />
+								<field name="quantity" invisible="1" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
+	        	</page>
+			</field>
+		</record> 		
+		
+		<!-- Purchase receipt -->
+        <record model="ir.ui.view" id="view_ineco_account_supplierreceipt_form">
+	      	<field name="name">ineco.account.supplierreceipt.form</field>
+	      	<field name="model">account.voucher</field>
+	      	<field name="inherit_id" ref="account_voucher.view_purchase_receipt_form"/>
+	      	<field name="arch" type="xml">
+	        	<page string="Bill Information" position="after" version="7.0">
+	        	    <page string="General Ledger">
+	        	    	<field name="account_move_lines" readonly="1">
+	        	    		<tree string="General ledgers">
+	        	    			<field name="date" />
+								<field name="name" />
+								<field name="account_id" />
+								<field name="debit"  sum="Total Debit" />
+								<field name="credit" sum="Total Credit"/>
+								<field name="analytic_account_id" invisible="1" />
+								<field name="quantity" invisible="1" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
+	        	    <page string="With Holding Tax">
+	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" context="{'default_partner_id': partner_id or False, 'default_wht_type':'purchase'}" >
+	        	    		<tree string="With Holding Tax">
+	        	    			<field name="name" />
+	        	    			<field name="date_doc" />
+	        	    			<field name="base_amount" />
+	        	    			<field name="tax" />
+	        	    			<field name="state" />
+	        	    			<field name="note" />
+	        	    			<button name="button_compute_tax" string="Compute Tax" type="object" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
+	        	</page>
+			</field>
+		</record>    
+
+		<!-- Supplier Payment -->
+        <record model="ir.ui.view" id="view_ineco_account_supplierpayment_form">
+	      	<field name="name">ineco.account.supplierpayment.form</field>
+	      	<field name="model">account.voucher</field>
+	      	<field name="inherit_id" ref="account_voucher.view_vendor_payment_form"/>
+	      	<field name="arch" type="xml">
+	        	<page string="Payment Information" position="after" version="7.0">
+	        	    <page string="General Ledger">
+	        	    	<field name="account_move_lines" readonly="1">
+	        	    		<tree string="General ledgers">
+	        	    			<field name="date" />
+								<field name="name" />
+								<field name="account_id" />
+								<field name="debit"  sum="Total Debit" />
+								<field name="credit" sum="Total Credit"/>
+								<field name="analytic_account_id" invisible="1" />
+								<field name="quantity" invisible="1" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
+	        	    <page string="With Holding Tax">
+	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" context="{'default_partner_id': partner_id or False, 'default_wht_type':'sale'}" >
+	        	    		<tree string="With Holding Tax">
+	        	    			<field name="name" />
+	        	    			<field name="date_doc" />
+	        	    			<field name="base_amount" />
+	        	    			<field name="tax" />
+	        	    			<field name="state" />
+	        	    			<field name="note" />
+	        	    			<button name="button_compute_tax" string="Compute Tax" type="object" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
+	        	</page>
+			</field>
+		</record>    
+		
+		
+		
+		 
+    </data>
+</openerp>
