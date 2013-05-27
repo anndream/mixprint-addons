@@ -124,8 +124,22 @@ class sale_order(osv.osv):
     _description = 'Add Delivery Date'
     _columns = {
         'date_delivery': fields.date('Delivery Date'),
-        'sale_revision': fields.char('Revision', size=32),        
+        'sale_revision': fields.char('Revision', size=32),   
+        'sample_order_no': fields.char('Sampling Order No', size=32, readonly=True),
+        'garment_order_no': fields.char('Garment Order No', size=32, readonly=True),    
+        'garment_order_date': fields.date('Garment Order Date',),
     }
+    
+    def action_gen_sampling_no(self, cr, uid, ids, context=None):
+        sample_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.sampling.order')
+        self.write(cr, uid, ids, {'sample_order_no': sample_order_no})
+        return True
+
+    def action_gen_garment_no(self, cr, uid, ids, context=None):
+        garment_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.garment.order')
+        self.write(cr, uid, ids, 
+            {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
+        return True
 
     def _prepare_order_line_move_qty(self, cr, uid, order, line, picking_id, date_planned, new_qty, color, gender, size, context=None):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id

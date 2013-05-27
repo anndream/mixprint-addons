@@ -176,6 +176,7 @@
                     <field name="message_unread" invisible="1"/>
                     <field name="name" string="Quotation No"/>
                     <field name="date_order"/>
+                    <field name="sample_order_no" />
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="amount_total" sum="Total Tax Included"/>
@@ -218,7 +219,7 @@
                     <group>
                         <group>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}' />
-                            <field name="date_delivery"/>
+                            <field name="date_delivery" />
                             <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
                         </group>
                         <group>
@@ -360,6 +361,20 @@
                                 </group>
                             </group>
                         </page>
+                        <page string="Reference">
+                        	<group>
+                        		<group>
+		                    		<field name="sample_order_no" />                               		
+                        		</group>
+                        		<group>
+		                    		<button name="action_gen_sampling_no"
+		                            	string="Get Sampling No"
+		                            	type="object" 
+		                            	icon="gtk-justify-fill"
+		                            	attrs="{'invisible': [('sample_order_no','!=',False)]}" />                                            		
+                        		</group>
+                        	</group>                    	
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -487,6 +502,50 @@
         	parent="base.menu_sales"
         	sequence="5"/>
 
+        <record id="view_ineco_order_tree" model="ir.ui.view">
+            <field name="name">ineco.sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+              	<field name="date_order" position="after">
+              		<field name="sample_order_no" />
+              		<field name="garment_order_no" />
+              		<field name="garment_order_date" />
+              	</field>
+            </field>
+        </record>
+        
+        <record id="view_ineco_order_form" model="ir.ui.view">
+            <field name="name">ineco.sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page[@string='Other Information']" position="after" >
+                    <page string="Reference">
+	                    <group>
+	                    	<group>
+		 	              		<field name="sample_order_no" readonly="1" />
+			              		<field name="garment_order_no" readonly="1" />
+			              		<field name="garment_order_date" />
+	              			</group>
+	                    	<group>
+		                    		<button name="action_gen_sampling_no"
+		                            	string="Get Sampling No"
+		                            	type="object" 
+		                            	icon="gtk-justify-fill"
+		                            	attrs="{'invisible': [('sample_order_no','!=',False)]}" />                                            		
+		                    		<button name="action_gen_garment_no"
+		                            	string="Get Garment No"
+		                            	type="object" 
+		                            	icon="gtk-justify-fill"
+		                            	attrs="{'invisible': [('garment_order_no','!=',False)]}" />                                            		
+	                    	</group>
+	                    </group>
+
+                    </page>
+                </xpath>        
+            </field>
+        </record>        
         
     </data>
 </openerp>
