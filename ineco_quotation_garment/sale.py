@@ -127,18 +127,18 @@ class sale_order(osv.osv):
         'sale_revision': fields.char('Revision', size=32),   
         'sample_order_no': fields.char('Sampling Order No', size=32, readonly=True),
         'garment_order_no': fields.char('Garment Order No', size=32, readonly=True),    
+        'sample_order_date': fields.date('Sampling Order Date',),
         'garment_order_date': fields.date('Garment Order Date',),
     }
     
     def action_gen_sampling_no(self, cr, uid, ids, context=None):
         sample_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.sampling.order')
-        self.write(cr, uid, ids, {'sample_order_no': sample_order_no})
+        self.write(cr, uid, ids, {'sample_order_no': sample_order_no, 'sample_order_date': time.strftime('%Y-%m-%d')})
         return True
 
     def action_gen_garment_no(self, cr, uid, ids, context=None):
         garment_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.garment.order')
-        self.write(cr, uid, ids, 
-            {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
+        self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
         return True
 
     def _prepare_order_line_move_qty(self, cr, uid, order, line, picking_id, date_planned, new_qty, color, gender, size, context=None):

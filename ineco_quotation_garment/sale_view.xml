@@ -364,9 +364,10 @@
                         <page string="Reference">
                         	<group>
                         		<group>
-		                    		<field name="sample_order_no" />                               		
-				              		<field name="garment_order_no" readonly="1" attrs="{'invisible': ['|',('garment_order_no','!=',False),('state','=','draft')]}" />
-				              		<field name="garment_order_date" attrs="{'invisible': ['|',('garment_order_no','!=',False),('state','=','draft')]}" />
+		                    		<field name="sample_order_no" />      
+		                    		<field name="sample_order_date" />                         		
+				              		<field name="garment_order_no" readonly="1" attrs="{'invisible': [('state','=','draft')]}" />
+				              		<field name="garment_order_date" attrs="{'invisible': [('state','=','draft')]}" />
                         		</group>
                         		<group>
 		                    		<button name="action_gen_sampling_no"
@@ -532,6 +533,7 @@
 	                    <group>
 	                    	<group>
 		 	              		<field name="sample_order_no" readonly="1" />
+		 	              		<field name="sample_order_date" readonly="1" />
 			              		<field name="garment_order_no" readonly="1" />
 			              		<field name="garment_order_date" />
 	              			</group>
