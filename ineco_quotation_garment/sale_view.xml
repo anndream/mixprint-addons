@@ -365,6 +365,8 @@
                         	<group>
                         		<group>
 		                    		<field name="sample_order_no" />                               		
+				              		<field name="garment_order_no" readonly="1" attrs="{'invisible': ['|',('garment_order_no','!=',False),('state','=','draft')]}" />
+				              		<field name="garment_order_date" attrs="{'invisible': ['|',('garment_order_no','!=',False),('state','=','draft')]}" />
                         		</group>
                         		<group>
 		                    		<button name="action_gen_sampling_no"
@@ -372,6 +374,11 @@
 		                            	type="object" 
 		                            	icon="gtk-justify-fill"
 		                            	attrs="{'invisible': [('sample_order_no','!=',False)]}" />                                            		
+		                    		<button name="action_gen_garment_no"
+		                            	string="Get Garment No"
+		                            	type="object" 
+		                            	icon="gtk-justify-fill"
+		                            	attrs="{'invisible': ['|',('garment_order_no','!=',False),('state','=','draft')]}" />                                            		
                         		</group>
                         	</group>                    	
                         </page>
