@@ -45,6 +45,7 @@ A. Sale Module:
         'invoice_view.xml',
         'wht_view.xml',
         'report_view.xml',
+        'cheque_view.xml',
     ],
     'demo': [],
     'installable': True,

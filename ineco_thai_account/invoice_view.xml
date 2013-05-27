@@ -62,7 +62,10 @@
 	        	    	</field>
 	        	    </page>
 	        	</page>
-			</field>
+				<field name="partner_id" position="after">
+			    	<field name="cheque_id" context="{'default_type':'in'}"  domain="[('type','=','in'),('state','=','draft')]"/>
+			   	</field>	        	       	
+	        </field>
 		</record>    
 
 		<!-- Customer Payment -->
@@ -99,6 +102,9 @@
 	        	    	</field>
 	        	    </page>
 	        	</page>
+		        <field name="journal_id" position="after">
+		        	<field name="cheque_id" context="{'default_type':'in'}" domain="[('type','=','in'),('state','=','draft')]"/>
+		        </field>	        	       	
 			</field>
 		</record>    
 
@@ -160,6 +166,9 @@
 	        	    	</field>
 	        	    </page>
 	        	</page>
+		        <field name="partner_id" position="after">
+		        	<field name="cheque_id"  context="{'default_type':'out'}" domain="[('type','=','out'),('state','=','draft')]"/>
+		        </field>	        	       		        	
 			</field>
 		</record>    
 
@@ -197,11 +206,10 @@
 	        	    	</field>
 	        	    </page>
 	        	</page>
+		        <field name="journal_id" position="after">
+		        	<field name="cheque_id"  context="{'default_type':'out'}" domain="[('type','=','out'),('state','=','draft')]"/>
+		        </field>	        	       		        	
 			</field>
 		</record>    
-		
-		
-		
-		 
     </data>
 </openerp>

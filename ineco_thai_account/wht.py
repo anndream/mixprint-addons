@@ -63,9 +63,9 @@ class ineco_wht(osv.osv):
 
     def _get_line(self, cr, uid, ids, context=None):
         result = {}
-#        for line in self.pool.get('ineco.wht.line').browse(cr, uid, ids, context=context):
-#            if line:
-#                result[line.wht_id.id] = True
+        for line in self.pool.get('ineco.wht.line').browse(cr, uid, ids, context=context):
+            if line:
+                result[line.wht_id.id] = True
         return result.keys()
     
     _name = 'ineco.wht'
@@ -98,17 +98,19 @@ class ineco_wht(osv.osv):
         #'base_amount': fields.float('Base Amount', digits_compute= dp.get_precision('Account'), required=True),
         'base_amount': fields.function(_compute_tax, 
                 type='float', digits_compute=dp.get_precision('Account'), string='Base Amount', 
-                store={
-                    'ineco.wht': (lambda self, cr, uid, ids, c={}: ids, [], 10),
-                    'sale.order.line': (_get_line, [], 10),
-                }, multi="sums"),   
+#                store={
+#                    'ineco.wht': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+#                    'ineco.wht.line': (_get_line, [], 10),
+#                }, 
+                                       multi="sums"),   
         #'tax': fields.float('Tax', digits_compute= dp.get_precision('Account'), required=True),    
         'tax': fields.function(_compute_tax, 
                 type='float', digits_compute=dp.get_precision('Account'), string='Tax', 
-                store={
-                    'ineco.wht': (lambda self, cr, uid, ids, c={}: ids, [], 10),
-                    'sale.order.line': (_get_line, [], 10),
-                }, multi="sums"),   
+#                store={
+#                    'ineco.wht': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+#                    'ineco.wht.line': (_get_line, [], 10),
+#                }, 
+                               multi="sums"),   
                        
         'state': fields.selection([
             ('draft', 'Draft'),
@@ -190,8 +192,9 @@ class ineco_wht_line(osv.osv):
         #'tax': fields.float('Tax', digits_compute= dp.get_precision('Account'), required=True),
         'tax': fields.function(_compute_tax, 
                 type='float', digits_compute=dp.get_precision('Account'), string='Tax', 
-                store={'ineco.wht.line': (lambda self, cr, uid, ids, c={}: ids, [], 10),
-                      }, multi="sums"),   
+#                store={'ineco.wht.line': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+#                      },
+                                multi="sums"),   
         'wht_id': fields.many2one('ineco.wht','WHT')
     }
     _defaults = {

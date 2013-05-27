@@ -103,6 +103,8 @@ class account_voucher(osv.osv):
         'account_move_lines':fields.function(_get_move_lines, type='many2many', 
             relation='account.move.line', string='General Ledgers'),      
         'wht_ids': fields.one2many('ineco.wht', 'voucher_id', 'WHT'),
+        'cheque_id': fields.many2one('ineco.cheque','Cheque'),        
+        
     }
     
     def _get_wht_total(self, cr, uid, voucher_id, context=None):
@@ -205,9 +207,9 @@ class account_voucher(osv.osv):
             move_line_brw = move_line_pool.browse(cr, uid, move_line_id, context=context)
             #WHT Tax Amount
             wht_total = self._get_wht_total(cr, uid, voucher.id, context)
-            if voucher.type == 'sale':
+            if voucher.type in {'sale','receipt'}:
                 line_total = move_line_brw.debit - move_line_brw.credit + wht_total
-            elif voucher.type == 'purchase':
+            elif voucher.type in {'purchase','payment'}:
                 line_total = move_line_brw.debit - move_line_brw.credit - wht_total
             else:
                 line_total = move_line_brw.debit - move_line_brw.credit
