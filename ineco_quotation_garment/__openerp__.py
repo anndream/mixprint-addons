@@ -47,6 +47,7 @@ New Quotation Menu/View for Garment Business.
         'stock_view.xml',
         'account_view.xml',
         'sale_data.xml',
+        'stock_partial_picking_view.xml',
     ],
     'installable': True,
     'auto_install': False,
