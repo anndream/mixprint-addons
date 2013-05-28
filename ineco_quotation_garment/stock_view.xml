@@ -36,6 +36,9 @@
                     <field name="delivery_type_id" />
                     <field name="shiping_cost" />
                 </xpath>
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="batch_no" />
+                </xpath>
             </field>
         </record>
 
@@ -46,6 +49,9 @@
             <field name="arch" type="xml">
             	<field name="invoice_state" position="before">
             		<field name="delivery_type_id" />
+            	</field>
+            	<field name="origin" position="before">
+            		<field name="batch_no" />
             	</field>
             </field>
         </record>

@@ -61,12 +61,15 @@ class stock_picking_out(osv.osv):
     _columns = {
         'delivery_type_id': fields.many2one('ineco.delivery.type','Delivery Type'),
         'shiping_cost': fields.float('Shipping Cost', digits_compute=dp.get_precision('Account')),
+        'batch_no': fields.integer('Batch No'),
     }
     
 class stock_picking(osv.osv):
     
     _inherit = "stock.picking"
-    
+    _columns = {
+        'date_done': fields.datetime('Date of Transfer', help="Date of Completion"),               
+    }
 #     def name_get(self, cr, uid, ids, context=None):
 #         if not ids:
 #             return []
