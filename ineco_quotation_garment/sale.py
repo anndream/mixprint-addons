@@ -71,6 +71,17 @@ class sale_size(osv.osv):
         ('name_unique', 'unique (name)', 'Description must be unique !')
     ]     
     _order = 'name desc'
+
+class sale_style(osv.osv):
+    _name = 'sale.style'
+    _description = 'Style of Product Sale'
+    _columns = {
+        'name': fields.char('Description',size=64,required=True)
+    }
+    _sql_constraints = [
+        ('name_unique', 'unique (name)', 'Description must be unique !')
+    ] 
+    _order = 'name'
     
 class sale_line_property(osv.osv):
 
@@ -98,13 +109,15 @@ class sale_line_property_other(osv.osv):
         'size_id': fields.many2one('sale.size', 'Size'),
         'quantity': fields.integer('Quantity', required=True),
         'sale_line_id': fields.many2one('sale.order.line', 'Order Line', required=True),
+        'style_id': fields.many2one('sale.style', 'Style'),
+        'note': fields.char('Note', size=32),
     }
     _defaults = {
         'name': '...'
     }
-    _sql_constraints = [
-        ('name_property_unique', 'unique (color_id, gender_id, size_id, sale_line_id)', 'Data must be unique !')
-    ]
+#     _sql_constraints = [
+#         ('name_property_unique', 'unique (color_id, gender_id, size_id, sale_line_id, style_id)', 'Data must be unique !')
+#     ]
     _order = 'color_id, gender_id, size_id'
     
 class sale_order_line(osv.osv):
@@ -141,7 +154,7 @@ class sale_order(osv.osv):
         self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
         return True
 
-    def _prepare_order_line_move_qty(self, cr, uid, order, line, picking_id, date_planned, new_qty, color, gender, size, context=None):
+    def _prepare_order_line_move_qty(self, cr, uid, order, line, picking_id, date_planned, new_qty, color, gender, size, note=None, context=None):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
         output_id = order.shop_id.warehouse_id.lot_output_id.id
         return {
@@ -168,6 +181,7 @@ class sale_order(osv.osv):
             'size_id': size,
             'color_id': color,
             'gender_id': gender,
+            'note': note,
         }
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
@@ -197,7 +211,7 @@ class sale_order(osv.osv):
                                 uid, order, line, picking_id, date_planned, other.quantity, 
                                 other.color_id and other.color_id.id or False,
                                 other.gender_id and other.gender_id.id or False,
-                                other.size_id and other.size_id.id or False, context=context))
+                                other.size_id and other.size_id.id or False, other.note or False, context=context))
                     else:
                         move_id = move_obj.create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, context=context))
                 else:

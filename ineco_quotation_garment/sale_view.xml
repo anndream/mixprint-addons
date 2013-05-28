@@ -112,6 +112,8 @@
         	parent="base.menu_base_config"
         	sequence="7"/>  
         	
+        	
+        	
 <!--         Delivery Type     -->
         <record id="view_ineco_delivery_type_tree" model="ir.ui.view">
             <field name="name">ineco.delivery.type.tree</field>
@@ -166,7 +168,63 @@
         	action="action_ineco_delivery_type" 
         	parent="base.menu_base_config"
         	sequence="8"/>         	
-        	          
+
+		<!-- Style -->
+        <record id="view_ineco_style_tree" model="ir.ui.view">
+            <field name="name">sale.style.tree</field>
+            <field name="model">sale.style</field>
+            <field name="arch" type="xml">
+                <tree string="Style">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_style_form" model="ir.ui.view">
+            <field name="name">sale.style.form</field>
+            <field name="model">sale.style</field>
+            <field name="arch" type="xml">
+                <form string="Style">
+                    <field name="name" />
+                </form>
+            </field>
+        </record>	
+        
+        <record id="view_ineco_style_filter" model="ir.ui.view">
+            <field name="name">sale.style.select</field>
+            <field name="model">sale.style</field>
+            <field name="arch" type="xml">
+                <search string="Search Style">
+                	<field name="name" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_style" model="ir.actions.act_window">
+            <field name="name">Style</field>
+            <field name="res_model">sale.style</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_style_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a color. 
+              </p><p>
+                This is the list of all color that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        
+<!--         <menuitem  -->
+<!--             id="menu_ineco_style" -->
+<!--         	action="action_ineco_style"  -->
+<!--         	parent="base.menu_base_config" -->
+<!--         	sequence="9"/>     -->
+        	
+        	        	          
         <!-- Quotation -->
         <record id="view_ineco_quotation_tree" model="ir.ui.view">
             <field name="name">ineco.quotation.tree</field>
@@ -288,6 +346,7 @@
 		                                            <field name="order_line_property_other_ids">
 		                                                <tree string="Other Information" editable="bottom">
 		                                                    <field name="color_id" />
+		                                                    <field name="note" />
 		                                                    <field name="gender_id" />
 		                                                    <field name="size_id" />
 		                                                    <field name="quantity" />

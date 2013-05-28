@@ -53,6 +53,7 @@ class stock_move(osv.osv):
         'color_id': fields.many2one('sale.color', 'Color'),
         'gender_id': fields.many2one('sale.gender', 'Gender'),
         'size_id': fields.many2one('sale.size', 'Size'),        
+        'note': fields.char('Note', size=32,),
     }
     
 class stock_picking_out(osv.osv):
