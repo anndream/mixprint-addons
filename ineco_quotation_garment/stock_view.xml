@@ -50,6 +50,7 @@
                 <field name="stock_journal_id" position="after">
                     <field name="delivery_type_id" />
                     <field name="ineco_date_delivery" />
+                    <field name="garment_order_no" />
                 </field>
         	</field>
        	</record>
@@ -82,6 +83,7 @@
             	</field>
             	<field name="origin" position="before">
             		<field name="batch_no" />
+            		<field name="garment_order_no" />
             	</field>
                 <field name="name" position="after">
                 	<field name="ineco_date_delivery" />
