@@ -1,7 +1,8 @@
 #!/usr/bin/env jython
 
 import sys
-sys.path.append("/usr/share/java/itextpdf-5.4.1.jar")
+#sys.path.append("/usr/share/java/itextpdf-5.4.1.jar")
+sys.path.append("itextpdf-5.4.1.jar")
 #sys.path.append("/usr/share/java/itext-2.0.7.jar")
 #sys.path.append("/usr/share/java/xercesImpl.jar")
 #sys.path.append("/usr/share/java/xml-apis.jar")

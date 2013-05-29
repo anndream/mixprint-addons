@@ -23,6 +23,7 @@
             <field name="arch" type="xml">
                 <field name="stock_journal_id" position="after">
                     <field name="delivery_type_id" />
+                    <field name="ineco_date_delivery" />
                 </field>
         	</field>
        	</record>
@@ -39,6 +40,9 @@
                 <xpath expr="//field[@name='origin']" position="after">
                     <field name="batch_no" />
                 </xpath>
+                <xpath expr="//field[@name='date_done']" position="after">
+                    <field name="ineco_date_delivery" />
+                </xpath>
             </field>
         </record>
 
@@ -53,6 +57,10 @@
             	<field name="origin" position="before">
             		<field name="batch_no" />
             	</field>
+                <field name="name" position="after">
+                	<field name="ineco_date_delivery" />
+                </field>
+            	
             </field>
         </record>
         

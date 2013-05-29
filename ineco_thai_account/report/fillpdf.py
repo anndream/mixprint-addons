@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 import sys
-sys.path.append("/usr/share/java/itextpdf-5.4.1.jar")
+sys.path.append("itextpdf-5.4.1.jar")
 
 from java.io import FileOutputStream
 from com.itextpdf.text.pdf import PdfReader,PdfStamper,BaseFont
@@ -13,7 +13,7 @@ def pdf_fill(orig_pdf,new_pdf,vals):
     t0=time.time()
     rd=PdfReader(orig_pdf)
     st=PdfStamper(rd,FileOutputStream(new_pdf))
-    font=BaseFont.createFont("/usr/share/fonts/truetype/tlwg/Garuda.ttf",BaseFont.IDENTITY_H,BaseFont.EMBEDDED)
+    font=BaseFont.createFont("Garuda.ttf",BaseFont.IDENTITY_H,BaseFont.EMBEDDED)
     form=st.getAcroFields()
     for k,v in vals.items():
         try:

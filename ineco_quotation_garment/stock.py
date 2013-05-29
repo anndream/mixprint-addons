@@ -22,7 +22,7 @@
 # from lxml import etree
 # from datetime import datetime
 # from dateutil.relativedelta import relativedelta
-# import time
+import time
 # from operator import itemgetter
 # from itertools import groupby
 
@@ -62,14 +62,14 @@ class stock_picking_out(osv.osv):
         'delivery_type_id': fields.many2one('ineco.delivery.type','Delivery Type'),
         'shiping_cost': fields.float('Shipping Cost', digits_compute=dp.get_precision('Account')),
         'batch_no': fields.integer('Batch No'),
+        'ineco_date_delivery': fields.date('Actual Delivery Date'),
     }
+        
     
 class stock_picking(osv.osv):
     
     _inherit = "stock.picking"
-    _columns = {
-        'date_done': fields.datetime('Date of Transfer', help="Date of Completion"),               
-    }
+
 #     def name_get(self, cr, uid, ids, context=None):
 #         if not ids:
 #             return []
@@ -79,6 +79,10 @@ class stock_picking(osv.osv):
 #             name = record['name']
 #             res.append((record['id'], name))
 #         return res
+    
+    def action_done(self, cr, uid, ids, context=None):
+        self.pool.get('stock.picking.out').write(cr, uid, ids, {'ineco_date_delivery': time.strftime('%Y-%m-%d')})
+        return super(stock_picking, self).action_done(cr, uid, ids, context)
     
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -107,5 +111,3 @@ class stock_picking(osv.osv):
             if ids:
                 return self.name_get(cr, uid, ids, context)
         return super(stock_picking,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)    
-    
-    
