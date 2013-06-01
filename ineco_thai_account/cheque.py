@@ -19,25 +19,54 @@
 #
 ##############################################################################
 
+
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
+import time
 from osv import fields, osv
 import decimal_precision as dp
+
 
 
 class ineco_cheque(osv.osv):
 
     _name = "ineco.cheque"
     _description = "cheque for customer payment and supplier payment"
+    
+    def _get_move_lines(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for invoice in self.browse(cr, uid, ids, context=context):
+            id = invoice.id
+            res[id] = []
+            if not invoice.move_id:
+                continue
+            data_lines = [x for x in invoice.move_id.line_id]
+            partial_ids = []
+            for line in data_lines:
+                partial_ids.append(line.id)
+            res[id] =[x for x in partial_ids]
+        return res    
+    
     _columns = {
         'name': fields.char('Cheque No.', size=32, required=True),
         'cheque_date': fields.date('Date',required=True), 
         'bank': fields.many2one('res.bank', 'Bank',required=True),        
         'partner_id': fields.many2one('res.partner', 'Pay', required=True, ondelete='cascade', select=True),
-        'the_sum_of': fields.char('The Sum Of', size=254, required=True),  
         'amount': fields.float('Amount', digits_compute= dp.get_precision('Account'), required=True),
         'type': fields.selection([('out', 'Supplier'), ('in', 'Customer')], 'Cheque Type', required=True, select=True),
-        'note': fields.text('Notes', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'active': fields.boolean('Active'),
-        'voucher_id': fields.many2one('account.voucher','Voucher'),        
+        'note': fields.text('Notes'),
+        'date_cancel': fields.datetime('Date Cancel'),
+        'date_done': fields.datetime('Date Done'),
+        'date_pending': fields.datetime('Date Pending'),
+        'date_reject': fields.datetime('Date Reject'),    
+        'date_assigned': fields.datetime('Date Assigned'),
+        'account_receipt_id': fields.many2one('account.account','Account'),  
+        'account_pay_id': fields.many2one('account.account','Account'), 
+        'move_id':fields.many2one('account.move', 'Account Entry'),
+        'move_ids': fields.related('move_id','line_id', type='one2many', relation='account.move.line', string='Journal Items', readonly=True),                         
+        'account_move_lines':fields.function(_get_move_lines, type='many2many', relation='account.move.line', string='General Ledgers'),  
+        'active': fields.boolean('Active'),     
         'state': fields.selection([
             ('draft', 'Draft'),
             ('cancel', 'Cancelled'),
@@ -56,8 +85,117 @@ class ineco_cheque(osv.osv):
         ('name_unique', 'unique (name)', 'Cheque No. must be unique !')
     ]
 
+    def action_cancel_draft(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'draft'})
+        return True
+
+    def action_done(self, cr, uid, ids, context=None):
+        
+        if context is None:
+            context = {}
+        move_pool = self.pool.get('account.move')        
+        move_line_pool = self.pool.get('account.move.line')  
+        voucher_ids = self.pool.get('account.voucher').search(cr,uid,[('cheque_id','in',ids),('state','=','posted')])            
+        if  voucher_ids != []:            
+            voucher_obj = self.pool.get('account.voucher').browse(cr,uid,voucher_ids,context=context)
+            for line in voucher_obj:
+                for cheque in self.browse(cr, uid, ids, context=context): 
+                    move_line = [1,2]
+                    if cheque.type == 'in':
+                        gl_name = self.pool.get('ir.sequence').get(cr, uid, 'ineco.cheque.in')
+                        move_cheque = {
+                            'name': gl_name,
+                            'period_id':line.period_id.id,
+                            'ref':  cheque.name,
+                            'journal_id': line.journal_id.id,
+                            'narration':cheque.note,
+                            'partner_id': line.partner_id.id,
+                        }
+                        move_id  = move_pool.create(cr,uid,move_cheque,context=context)       
+                        for i in move_line:
+                            if i == 1:
+                                move_line_detail = {
+                                        'name': gl_name,
+                                        'debit': cheque.amount,
+                                        'credit': 0.0,
+                                        'account_id': cheque.account_receipt_id.id,
+                                        'move_id': move_id,
+                                        'journal_id': line.journal_id.id,
+                                        'period_id': line.period_id.id,
+                                        'partner_id': line.partner_id.id,
+                                    }
+                                move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
+                            else:
+                                move_line_detail = {
+                                        'name': line.account_id.name,
+                                        'debit': 0.0,
+                                        'credit': cheque.amount,
+                                        'account_id': line.account_id.id,
+                                        'move_id': move_id,
+                                        'journal_id': line.journal_id.id,
+                                        'period_id': line.period_id.id,
+                                        'partner_id': line.partner_id.id,
+                                    }
+                                move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
+                    else:
+                        gl_name = self.pool.get('ir.sequence').get(cr, uid, 'ineco.cheque.out')
+                        move_cheque = {
+                            'name': gl_name,
+                            'period_id':line.period_id.id,
+                            'ref':  cheque.name,
+                            'journal_id': line.journal_id.id,
+                            'narration':cheque.note,
+                            'partner_id': line.partner_id.id,
+                        }
+                        move_id  = move_pool.create(cr,uid,move_cheque,context=context)
+                        for i in move_line:
+                            if i == 1:
+                                move_line_detail = {
+                                        'name': gl_name,
+                                        'debit': 0.0,
+                                        'credit': cheque.amount,
+                                        'account_id': cheque.account_pay_id.id,
+                                        'move_id': move_id,
+                                        'journal_id': line.journal_id.id,
+                                        'period_id': line.period_id.id,
+                                        'partner_id': line.partner_id.id,
+                                    }
+                                move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
+                            else:
+                                move_line_detail = {
+                                        'name': line.account_id.name,
+                                        'debit': cheque.amount,
+                                        'credit': 0.0,
+                                        'account_id': line.account_id.id,
+                                        'move_id': move_id,
+                                        'journal_id': line.journal_id.id,
+                                        'period_id': line.period_id.id,
+                                        'partner_id': line.partner_id.id,
+                                    }
+                                move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
+                        
+            self.write(cr, uid, ids, {'state':'done','date_done': time.strftime('%Y-%m-%d %H:%M:%S'),'move_id':move_id})
+        else:
+            raise osv.except_osv(('Warning!'),("Checking Voucher"))
+        return True
+    
+    def action_assigned(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'assigned','date_assigned': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return True
+    
+    def cancel_cheque(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'cancel','date_cancel': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return True
+
+    def pending_cheque(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'pending','date_pending': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return True
+
+    def reject_cheque(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'reject','date_reject': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return True
+
 
 ineco_cheque()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -9,25 +9,48 @@
             <field name="arch" type="xml">
                 <form string="Cheque" version="7.0">
                 <header>
-                    <field name="state" widget="statusbar" statusbar_visible="cancel,draft,assigned,pending,reject,done" statusbar_colors='{"proforma":"blue"}'/>
+                	<button name="action_assigned"      type="object" states="draft,pending" 	        string="Assigned" /> 
+                	<button name="action_done"      	type="object" states="assigned" 	        	string="Done" /> 
+                	<button name="pending_cheque"       type="object" states="draft,assigned" 	        string="Pending" /> 
+                	<button name="reject_cheque"        type="object" states="draft,assigned,pending" 	string="Reject" /> 
+                	<button name="cancel_cheque"        type="object" states="draft,pending,reject" 	string="Cancel" /> 
+                	<button name="action_cancel_draft"  type="object" states="cancel" 				    string="Set to Draft"/>                   
+                    <field name="state" widget="statusbar" statusbar_visible="cancel,draft,assigned,pending,reject,done" statusbar_colors='{"assigned":"blue"}'/>
                 </header>                    
                   <sheet>
                     <group col="4">
-                        <field name="name"/>
-                        <field name="cheque_date"/>
+                        <field name="name" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="cheque_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </group>
                     <group>
-                        <group string="Cheque">
-                        	<field name="bank" />
-                           	<field name="partner_id"/>
-                            <field name="the_sum_of" />
-                            <field name="amount" />
-                            <field name="active"/>
+                        <group>
+                        	<field name="bank"       attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                           	<field name="partner_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="amount"     attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="active"     attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         </group>
-                        <group string="Note">
-                            <field name="note"/>
-                        </group>
+                        <group>
+                            <field name="note" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+		        	    	<field name="account_receipt_id" attrs="{'invisible': [('type', '=', 'out')],'required':[('type', '=', 'in')]}"/>
+		        	    	<field name="account_pay_id"     attrs="{'invisible': [('type', '=', 'in')],'required':[('type', '=', 'out')]}"/>
+		        	    	<field name="type" required="1" invisible="1"/>
+		        	    </group>
                     </group>
+                    <notebook colspan="4">
+		        	    <page string="General Ledger">
+		        	    	<field name="account_move_lines" readonly="1">
+		        	    		<tree string="General ledgers">
+		        	    			<field name="date" />
+									<field name="name" />
+									<field name="account_id" />
+									<field name="debit"  sum="Total Debit" />
+									<field name="credit" sum="Total Credit"/>
+									<field name="analytic_account_id" invisible="1" />
+									<field name="quantity" invisible="1" />
+		        	    		</tree>
+		        	    	</field>
+		        	    </page>                         
+                    </notebook>
                   </sheet>
                 </form>
             </field>
@@ -41,7 +64,8 @@
                     <field name="cheque_date"/>
                     <field name="bank" />                    
                     <field name="partner_id"/>
-                    <field name="amount"/>                    
+                    <field name="amount"/>     
+                    <field name="state"/>           
                 </tree>
             </field>
         </record>

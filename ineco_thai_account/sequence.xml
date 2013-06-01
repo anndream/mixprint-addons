@@ -14,6 +14,32 @@
             <field name="padding">4</field>
             <field name="company_id" eval="False"/>
         </record>
- 		
+
+        <record id="seq_ineco_cheque_journal_in_code" model="ir.sequence.type">
+            <field name="name">Cheque Journal In</field>
+            <field name="code">ineco.cheque.in</field>
+        </record>
+
+        <record id="seq_ineco_cheque_journal_in" model="ir.sequence">
+            <field name="name">Cheque Journal In</field>
+            <field name="code">ineco.cheque.in</field>
+            <field name="prefix">CQI-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>    
+            
+        <record id="seq_ineco_cheque_journal_out_code" model="ir.sequence.type">
+            <field name="name">Cheque Journal Out</field>
+            <field name="code">ineco.cheque.out</field>
+        </record>
+
+        <record id="seq_ineco_cheque_journal_out" model="ir.sequence">
+            <field name="name">Cheque Journal Out</field>
+            <field name="code">ineco.cheque.out</field>
+            <field name="prefix">CQO-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>        
+        		
     </data>
 </openerp>
