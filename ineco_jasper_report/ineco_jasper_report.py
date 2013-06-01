@@ -170,7 +170,7 @@ class ineco_jasper_report(osv.osv):
                                    ('warehouse', 'Warehouse')], 'Module' ),
     }
     _sql_constraints = [
-        ('name_uniq', 'unique(name,server_id)', 'Server and Report must be unique!'),
+        ('name_uniq', 'unique(name,server_id,uristring)', 'Server and Report must be unique!'),
     ]
     _order = 'server_id, name'
     

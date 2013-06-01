@@ -6,14 +6,20 @@
             <field name="inherit_id" ref="base.act_report_xml_view"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@string='Security']" position="before" >
+                <xpath expr="/form/notebook/page[@string='Security']" position="before" >          
                     <page string="Ineco" attrs="{'invisible':[('report_type','!=','ineco')]}">
-                        <field name="jasper_url"/>
-                        <field name="jasper_report_path" />
-                        <field name="jasper_username" />
-                        <field name="jasper_password" />
-                        <field name="parameter_name"  />
-                        <field name="criteria_field"  />
+                    	<group>
+                    		<group>
+		                        <field name="jasper_url"/>
+		                        <field name="jasper_username" />
+		                        <field name="parameter_name"  />
+                    		</group>
+                    		<group>
+		                        <field name="jasper_report_path" />
+		                        <field name="jasper_password" />
+		                        <field name="criteria_field"  />
+                    		</group>
+                        </group>
                     </page>
                 </xpath>
             </field>
