@@ -19,9 +19,23 @@
 #
 ##############################################################################
 
-import sale
-import stock
-import stock_partial_picking
-import partner
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+#import datetime
+#import math
+#import openerp
+from openerp.osv import osv, fields
+#from openerp import SUPERUSER_ID
+#import re
+#import tools
+#from tools.translate import _
+#import logging
+#import pooler
+#import pytz
+#from lxml import etree
+
+
+class res_partner(osv.osv):
+    _inherit = "res.partner"
+    _columns = {
+        'account_comment': fields.text('Account Information'),     
+    }

@@ -36,7 +36,7 @@ from openerp.osv import osv, fields
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
-        'nick_name': fields.char('Nick Name', sieze=64, select=True),        
+        'nick_name': fields.char('Nick Name', sieze=64, select=True),   
     }
     _defaults = {
         'use_parent_address': False,  
