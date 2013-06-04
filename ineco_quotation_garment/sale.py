@@ -154,6 +154,11 @@ class sale_order(osv.osv):
         self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
         return True
 
+    def _prepare_order_picking(self, cr, uid, order, context=None):
+        result = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
+        result.update({'invoice_state':'2binvoiced'})
+        return result
+    
     def _prepare_order_line_move_qty(self, cr, uid, order, line, picking_id, date_planned, new_qty, color, gender, size, note=None, context=None):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
         output_id = order.shop_id.warehouse_id.lot_output_id.id
