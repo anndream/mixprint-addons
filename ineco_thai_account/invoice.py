@@ -23,7 +23,7 @@ from osv import fields, osv
 
 #from datetime import datetime, timedelta
 #from dateutil.relativedelta import relativedelta
-#import time
+import time
 #import pooler
 
 #from tools.translate import _
