@@ -2,7 +2,8 @@
 # -*- encoding: utf-8 -*-
 
 import sys
-sys.path.append("itextpdf-5.4.1.jar")
+sys.path.append("/usr/share/java/itextpdf-5.4.1.jar")
+#sys.path.append("itextpdf-5.4.1.jar")
 
 from java.io import FileOutputStream
 from com.itextpdf.text.pdf import PdfReader,PdfStamper,BaseFont

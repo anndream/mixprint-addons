@@ -46,6 +46,7 @@ A. Sale Module:
         'wht_view.xml',
         'report_view.xml',
         'cheque_view.xml',
+        'res_partner_view.xml',
     ],
     'demo': [],
     'installable': True,

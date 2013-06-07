@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-Today INECO LTD,. PART. (<http://www.ineco.co.th>).
+#    Copyright (C) 2012 - INECO PARTNERSHIP LIMITE (<http://www.ineco.co.th>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-import delivery
-import sale
-import invoice
-import wizard
-import wht
-import report
-import cheque
-import res_partner
+from openerp.osv import osv, fields
+
+
+class res_partner(osv.osv):
+    _inherit = "res.partner"
+    _columns = {
+        'pid': fields.char('Personal ID', sieze=32, select=True),   
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
