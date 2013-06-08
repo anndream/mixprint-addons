@@ -32,9 +32,11 @@ class crm_phonecall(osv.osv):
     _inherit = 'crm.phonecall'
     _columns = {
         'create_user_id': fields.many2one('res.users', 'Created By'),
+        'new_customer': fields.boolean('New Customer'),
     }
     _defaults = {
         'create_user_id': lambda self,cr,uid,ctx: uid,
+        'new_customer': False,
     }
 
     def write(self, cr, uid, ids, vals, context=None):

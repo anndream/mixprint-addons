@@ -414,6 +414,19 @@
     	    id="menu_ineco_crm_reason" sequence="10" 
     	    action="ineco_crm_reason_action"/>
 	    	    	    	    	    
+	    <record model="ir.ui.view" id="ineco_crm_case_phone_form_view">
+	        <field name="name">ineco.crm.phone.form.view</field>
+	        <field name="model">crm.phonecall</field>
+	        <field name="priority">50</field>
+	        <field name="inherit_id" ref="crm.crm_case_phone_form_view" />
+	        <field name="arch" type="xml">
+	        	<field name="opportunity_id" position="after">
+	        		<field name="new_customer" />
+	        	</field>
+	        </field>
+		
+		</record>
+	    
 	    
     </data>
 </openerp>
