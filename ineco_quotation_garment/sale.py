@@ -35,6 +35,10 @@ class sale_property(osv.osv):
     _description = 'Property of Sale Line'
     _columns = {
         'name': fields.char('Description',size=64,required=True),
+        'active': fields.boolean('Active'),
+    }
+    _defaults = {
+        'active': True,
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')

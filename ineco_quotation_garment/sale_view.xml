@@ -111,9 +111,7 @@
         	action="action_ineco_size" 
         	parent="base.menu_base_config"
         	sequence="7"/>  
-        	
-        	
-        	
+        	        	        	
 <!--         Delivery Type     -->
         <record id="view_ineco_delivery_type_tree" model="ir.ui.view">
             <field name="name">ineco.delivery.type.tree</field>
@@ -224,6 +222,62 @@
 <!--         	parent="base.menu_base_config" -->
 <!--         	sequence="9"/>     -->
         	
+		<!-- Property -->
+        <record id="view_ineco_property_tree" model="ir.ui.view">
+            <field name="name">sale.property.tree</field>
+            <field name="model">sale.property</field>
+            <field name="arch" type="xml">
+                <tree string="Property">
+                    <field name="name" />
+                    <field name="active" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_property_form" model="ir.ui.view">
+            <field name="name">sale.property.form</field>
+            <field name="model">sale.property</field>
+            <field name="arch" type="xml">
+                <form string="Property">
+                    <field name="name" />
+                    <field name="active" />
+                </form>
+            </field>
+        </record>	
+        
+        <record id="view_ineco_property_filter" model="ir.ui.view">
+            <field name="name">sale.property.select</field>
+            <field name="model">sale.property</field>
+            <field name="arch" type="xml">
+                <search string="Search Property">
+                	<field name="name" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_property" model="ir.actions.act_window">
+            <field name="name">Property</field>
+            <field name="res_model">sale.property</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_property_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a property. 
+              </p><p>
+                This is the list of all property that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem 
+            id="menu_ineco_property"
+        	action="action_ineco_property" 
+        	parent="base.menu_base_config"
+        	sequence="9"/>    
         	        	          
         <!-- Quotation -->
         <record id="view_ineco_quotation_tree" model="ir.ui.view">
