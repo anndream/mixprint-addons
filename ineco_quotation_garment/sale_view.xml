@@ -479,7 +479,7 @@
                         		<group>
 		                    		<field name="sample_order_no" />      
 		                    		<field name="sample_order_date" />      
-		                    		<field name="sample_deliver_date" required="1" />                   		
+		                    		<field name="sample_deliver_date" />                   		
 				              		<field name="garment_order_no" readonly="1" attrs="{'invisible': [('state','=','draft')]}" />
 				              		<field name="garment_order_date" attrs="{'invisible': [('state','=','draft')]}" />
                         		</group>
