@@ -146,6 +146,7 @@ class sale_order(osv.osv):
         'garment_order_no': fields.char('Garment Order No', size=32, readonly=True),    
         'sample_order_date': fields.date('Sampling Order Date',),
         'garment_order_date': fields.date('Garment Order Date',),
+        'sample_deliver_date': fields.date('Sampling Deliver Date'),
     }
     
     def action_gen_sampling_no(self, cr, uid, ids, context=None):
