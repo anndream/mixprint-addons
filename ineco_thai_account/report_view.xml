@@ -2,5 +2,6 @@
 <openerp>
     <data>
         <report id="report_wht_certif" model="ineco.wht" name="wht.certif" string="Withholding Tax Certificate"/>
+        <report id="report_wht_pnd3" model="ineco.wht.pnd" name="wht.pnd3" string="PND 3"/>       
     </data>
 </openerp>

@@ -203,5 +203,74 @@ class ineco_wht_line(osv.osv):
         'percent': 3.0
     }
     
+class ineco_wht_pnd(osv.osv):
+    _name = 'ineco.wht.pnd'
+    _description = "WHT PND"
     
+    def _compute_tax(self, cr, uid, ids, prop, unknow_none, context=None):
+        result = {}
+        for id in ids:
+            result[id] = {
+                'total_amount': 0.0,
+                'total_tax': 0.0,
+                'total_tax_send':0.0,
+            }
+            data = self.browse(cr, uid, [id], context=context)[0]
+            val = val1 = 0.0
+            for line in data.wht_ids:
+                val1 += line.base_amount
+                val += line.tax
+                
+            result[id]['total_tax'] = val
+            result[id]['total_amount'] = val1
+            result[id]['total_tax_send'] = val + data.add_amount or 0.0
+            
+        return result
+    
+    def _compute_line(self, cr, uid, ids, prop, unknow_none, context=None):    
+        result = {}
+        for id in ids:
+            result[id] = {
+                'attach_count': 0,
+                'attach_no': 0,
+            }
+            data = self.browse(cr, uid, [id], context=context)[0]
+            
+            count_line = len(data.wht_ids)
+            count_page = count_line / 6 + 1
+            result[id]['attach_count'] = count_line
+            result[id]['attach_no'] = count_page
+            
+        return result
+    
+    _columns = {
+        'name': fields.char('Description', size=128),
+        'date_pnd': fields.date('Date', required=True), 
+        'type_normal':  fields.boolean('Normal Type'),
+        'type_special': fields.boolean('Special Type'),   
+        'type_no': fields.integer('Type No.'),
+        'section_3': fields.boolean('Section 3'),
+        'section_48': fields.boolean('Section 48'),
+        'section_50': fields.boolean('Section 50'),
+        'attach_pnd': fields.boolean('Attach PND'),
+        'attach_count': fields.function(_compute_line,type='integer',string='Attach Count',multi="sums2"),
+        'attach_no': fields.function(_compute_line,type='integer',string='Attach No',multi="sums2"),        
+        'total_amount': fields.function(_compute_tax, 
+                type='float', digits_compute=dp.get_precision('Account'), string='Total Amount',  multi="sums"), 
+        'total_tax': fields.function(_compute_tax, 
+                type='float', digits_compute=dp.get_precision('Account'), string='Total Tax',  multi="sums"), 
+        'add_amount': fields.float('Add Amount', digits_compute= dp.get_precision('Account')),
+        'total_tax_send': fields.function(_compute_tax, 
+                type='float', digits_compute=dp.get_precision('Account'), string='Total Tax Send',  multi="sums"), 
+        'wht_ids': fields.many2many('ineco.wht', 'ineco_wht_pnds', 'pnd_id', 'wht_id', 'With holding tax'),       
+        'note': fields.text('Note'),
+        'company_id': fields.many2one('res.company','Company', required=True),
+    }
+    _defaults = {
+        'name': '/',
+        'date_pnd': fields.date.context_today,
+        'type_normal': True,
+        'attach_pnd': True,
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'ineco.wht.pnd', context=c),
+    }    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

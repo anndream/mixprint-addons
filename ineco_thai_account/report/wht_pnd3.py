@@ -1,8 +1,10 @@
 # -*- encoding: utf-8 -*-
 from report.interface import report_int
-from report_tools import pdf_fill,pdf_merge
+from report_tools import pdf_fill
+from openerp.osv import fields, osv
+
 import pooler
-from ac_account_thai.num2word import num2word_th
+from num2word import num2word_th
 import datetime
 
 def fmt_tin(tin):
@@ -22,141 +24,81 @@ def fmt_thaidate(date):
     dt=datetime.datetime.strptime(date,"%Y-%m-%d")
     return "%2d/%d/%d"%(dt.day,dt.month,dt.year+543) 
 
-def fmt_addr(addr):
-    s=""
-    if addr.street:
-        s+=addr.street
-    if addr.zip:
-        s+=", "+addr.zip
-    if addr.state_id:
-        s+=" "+addr.state_id.name
-    return s
-
-def fmt_thaidate(date):
-    dt=datetime.datetime.strptime(date,"%Y-%m-%d")
-    return "%2d/%d/%d"%(dt.day,dt.month,dt.year+543) 
 
 class report_custom(report_int):
     def create(self,cr,uid,ids,datas,context={}):
+        print "WHT PND3 Report"      
         pool=pooler.get_pool(cr.dbname)
-
-        res=pool.get("res.lang").search(cr,uid,[("code","=","th_TH")])
-        if not res:
-            raise Exception("Thai language not installed")
-        lang_id=res[0]
-        lang=pool.get("res.lang").browse(cr,uid,lang_id)
-
-        period_id=datas["form"]["period_id"]
-        period=pool.get("account.period").browse(cr,uid,period_id)
-        fy=period.fiscalyear_id
+        lang=pool.get("res.lang").browse(cr,uid,1)      
         user=pool.get("res.users").browse(cr,uid,uid)
+        vouch = pool.get("ineco.wht.pnd").browse(cr,uid,ids[0])          
+        company = vouch.company_id
+        
+        year=int(vouch.date_pnd[0:4])+543
+        month=int(vouch.date_pnd[5:7]) - 1
+        day=int(vouch.date_pnd[8:10])
+                        
+        daynow = datetime.datetime.now().day
+        monthnow  = datetime.datetime.now().month
+        yearnow = int(datetime.datetime.now().year)+543
+               
+        typepnd = 0
+        section3 = ""
+        section48 = ""
+        section50 = ""
+        attachpnd = ""
+        
+        if vouch.type_normal == True:
+            typepnd = 0
+        else:
+            typepnd = 1
+        if  vouch.section_3 == True:
+            section3 = "Yes"
+        if  vouch.section_48 == True:
+            section48 = "Yes"
+        if  vouch.section_50 == True:
+            section50 = "Yes"        
+        if  vouch.attach_pnd == True:
+            attachpnd = "Yes"             
 
-        year=int(fy.date_stop[:4])+543
-        month=int(period.date_stop[5:7])
-
-        partner=user.company_id.partner_id
-        addr=partner.address[0]
         vals={
-            "name": partner.name,
-            "year": year,
-            "branch_code":"00000",
-            "cb_pnd_attach":"Yes",
-            "cb_tredecim":"Yes",
-            "cb_ordinary_filling":"Yes",
-            "road": addr.street,
-            "district": addr.city,
-            "province": addr.state_id.name,
-            "tel": addr.phone,
-            "zipcode":addr.zip,
-            "ordinary":"Yes",
-            "month%d"%month: "Yes",
-            "tin":partner.tin and fmt_tin(partner.tin) or "",
+            "Text2":company.ineco_tax,
+            "Text4":company.ineco_branch,
+            "Text5":company.ineco_company_name,
+            "Text6":company.ineco_building,
+            "Text7":company.ineco_room_no,
+            "Text8":company.ineco_class,
+            "Text9":company.ineco_village,
+            "Text10":company.ineco_no,
+            "Text11":company.ineco_moo,
+            "Text12":company.ineco_alley,
+            "Text13":company.ineco_road,
+            "Text14":company.ineco_district,
+            "Text15":company.ineco_amphoe,
+            "Text16":company.ineco_province,
+            "Text17":company.ineco_zip,
+            "Text18":company.ineco_phone,
+            "Text19":vouch.attach_count,
+            "Text22":year,
+            "Text46":vouch.attach_no,
+            "Text51.2":lang.format("%.2f",vouch.total_amount,grouping=True).replace("."," "),
+            "Text51.3":lang.format("%.2f",vouch.total_tax,grouping=True).replace("."," "),
+            "Text51.4":lang.format("%.2f",vouch.add_amount,grouping=True).replace("."," "),
+            "Text51.5":lang.format("%.2f",vouch.total_tax_send,grouping=True).replace("."," "),
+            "Text55":"      "+ company.ineco_position,
+            "Text54":"      "+ company.ineco_name,
+            "Text56":daynow,  
+            "Text57":"    "+ str(monthnow),  
+            "Text58":yearnow,   
+            "'Check Box6'": section3,
+            "'Check Box7'": section48,
+            "'Check Box8'": section50,
+            "'Check Box36'": attachpnd,
+            "'Radio Button23'":month ,
+            "'Radio Button19'":typepnd ,
         }
 
-        ids=pool.get("account.tax.code").search(cr,uid,[("code","like","PND3_")])
-        for tc in pool.get("account.tax.code").browse(cr,uid,ids,{"period_id":period_id}):
-            vals[tc.code.replace("PND3_","tax")]=tc.sum_period
-
-        vals.update({
-            "tax3": 0.0,
-            "tax4": vals["tax2"],
-        })
-        #vals["total_wht_letters"]=num2word(int(vals["tax4"])).upper()+" BAHT" #not used
-
-        vals.update({
-            "tax1":("%.2f"%vals["tax1"]).replace("."," "),
-            "tax2":("%.2f"%vals["tax2"]).replace("."," "),
-            "tax3":("%.2f"%vals["tax3"]).replace("."," "),
-            "tax4":("%.2f"%vals["tax4"]).replace("."," "),
-        })
-        pdf=pdf_fill("addons/ac_account_thai/report/pdf/wht_pnd3.pdf",vals)
-
-        ids=pool.get("account.move.line").search(cr,uid,[("tax_code_id.code","=","PND3_2"),("period_id","=",period_id)])
-        
-        # fill attachments
-
-        tax_code_id=pool.get("account.tax.code").search(cr,uid,[("code","=","PND3_2")])
-        base_code_id=pool.get("account.tax.code").search(cr,uid,[("code","=","PND3_1")])
-
-        # find all lines to show in attachments
-        ids=pool.get("account.move.line").search(cr,uid,[("tax_code_id","child_of","PND3_2"),("period_id","=",period_id)],order="date")
-
-        # group lines by suppliers
-        supp_lines = {}
-        for ml in pool.get("account.move.line").browse(cr,uid,ids):
-            supp_lines.setdefault(ml.partner_id,[]).append(ml)
-
-        # create list of rows to show in attachments
-        rows=[]
-        for supp,lines in supp_lines.items():
-            for i in range(0,len(lines),3):
-                rows.append((lines[i].date,supp,lines[i:i+3]))
-
-        # sort rows by date
-        rows=sorted(rows)
-
-        # display rows on pages
-        ROWS_PER_PAGE=6
-        num_pages=(len(rows)+ROWS_PER_PAGE-1)/ROWS_PER_PAGE
-
-        for j in range(0,len(rows),ROWS_PER_PAGE):
-            vals={
-                "tin": partner.tin and fmt_tin(partner.tin) or "",
-                "branch_code":"00000",
-                "page_no": j/ROWS_PER_PAGE+1,
-                "page_total": num_pages,
-            }
-            page_rows=rows[j:j+ROWS_PER_PAGE]
-
-            i=0
-            for row in page_rows:
-                i+=1
-                supp=row[1]
-                lines=row[2]
-
-                vals.update({
-                    "line%d_tin"%i: supp.tin and fmt_tin(supp.tin) or "",
-                    "line%d_pin"%i: supp.pin and fmt_pin(supp.pin) or "",
-                    "line%d_name"%i: supp.name.split(" ")[0] or "",
-                    "line%d_surname"%i: supp.name.split(" ")[1] if len(supp.name.split(" "))>1 else "", # TODO: add the field in pantner or split the space
-                    "line%d_branch_code"%i:"00000",
-                    "line%d_addr"%i: fmt_addr(addr) or "",
-                })
-                ii=0
-                for ml_tax in lines:
-                    ii+=1
-                    res=pool.get("account.move.line").search(cr,uid,[("tax_code_id","child_of",base_code_id),("move_id","=",ml_tax.move_id.id)])
-                    ml_base=res and pool.get("account.move.line").browse(cr,uid,res[0]) or None
-                    vals.update({
-                        "line%d_date%d"%(i,ii): fmt_thaidate(ml_tax.date),
-                        "line%d_type%d"%(i,ii): ml_tax.name or "",
-                        "line%d_base%d"%(i,ii): ml_base and lang.format("%.2f",ml_base.tax_amount,grouping=True) or "",
-                        "line%d_rate%d"%(i,ii): ml_base and "%.0f%%"%(ml_tax.tax_amount*100.0/ml_base.tax_amount) or "",
-                        "line%d_tax%d"%(i,ii): lang.format("%.2f",ml_tax.tax_amount,grouping=True) or "",
-                        "line%d_cond%d"%(i,ii): "1",
-                    })
-            pdf2=pdf_fill("addons/ac_account_thai/report/pdf/wht_pnd3_attach.pdf",vals)
-            pdf=pdf_merge(pdf,pdf2)
-        return (pdf,"pdf")
+        pdf=pdf_fill("openerp/addons/ineco_thai_account/report/pdf/wht_pnd3.pdf",vals)
+        return (pdf, "pdf")
 
 report_custom("report.wht.pnd3")

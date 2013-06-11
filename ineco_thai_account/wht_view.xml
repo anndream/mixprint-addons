@@ -170,6 +170,94 @@
     		parent="menu_ineco_account" 
     		sequence="10" 
     		action="ineco_wht_action"/>
-    		 
+
+    	
+    	<record model="ir.ui.view" id="ineco_wht_pnd_form">
+      		<field name="name">ineco.wht.pnd.form</field>
+      		<field name="model">ineco.wht.pnd</field>
+      		<field name="arch" type="xml">
+	        	<form string="WHT PND" version="7.0">
+	        	    <header>
+	        	    </header>
+	        	    <sheet>	
+	                    <h1>
+	                    	<label string="No." for="name" />
+		        	    	<field name="name" />
+	                    </h1>	        	    
+	        	    	<group>
+		        	    	<group>
+	                    		<field name="date_pnd"/>
+		        	    		<field name="type_normal" />
+		        	    		<field name="type_special" />
+		        	    		<field name="type_no" />
+		        	    	    <field name="company_id" />
+		        	    	</group>
+		        	    	<group>
+		        	    		<field name="section_3" />
+		        	    		<field name="section_48"/>
+		        	    		<field name="section_50"/>
+		        	    		<field name="attach_pnd" />
+		        	    		<field name="attach_count"/>
+		        	    		<field name="attach_no"/>
+		        	    	</group>			        	    	        	    		
+	        	    	</group>
+						<notebook>
+							<page string="Detail">
+								<field name="wht_ids">
+									<tree string="WHT Lines">
+									    <field name="name" />
+										<field name="date_doc" />
+										<field name="partner_id" />
+										<field name="base_amount" />
+										<field name="tax" />
+									</tree>
+								</field>
+								<group>
+								    <group>
+								    </group>
+									<group>
+										<field name="total_amount"  readonly="1" />
+										<field name="total_tax" 	readonly="1" />
+										<field name="add_amount"/>		
+										<field name="total_tax_send" readonly="1" />									
+									</group>																	
+								</group>
+							</page>
+							<page string="Note">
+								<field name="note" nolabel="1"/>
+							</page>
+						</notebook>	        	    	
+	        	    </sheet>
+	        	</form>
+      		</field>
+    	</record>
+
+    	<record model="ir.ui.view" id="ineco_wht_pnd_tree">
+      		<field name="name">ineco.wht.pnd.tree</field>
+      		<field name="model">ineco.wht.pnd</field>
+      		<field name="arch" type="xml">
+		        <tree string="With holding tax PND">
+		        	<field name="name" />
+		        	<field name="date_pnd" />
+		       		<field name="total_amount" />
+		        	<field name="total_tax" />
+	        	  	<field name="add_amount" />
+	        	  	<field name="total_tax_send" />
+		        </tree>
+      		</field>
+    	</record>    		
+    	
+	    <record model="ir.actions.act_window" id="ineco_wht_pnd_action">
+	        <field name="name">PND3</field>
+	        <field name="res_model">ineco.wht.pnd</field>
+	        <field name="view_mode">tree,form</field>
+	    </record>	   
+
+    	<menuitem name="PND3" 
+    		id="menu_ineco_wht_pnd" 
+    		parent="menu_ineco_account" 
+    		sequence="10" 
+    		action="ineco_wht_pnd_action"/>    	
+    	
     </data>
 </openerp>
