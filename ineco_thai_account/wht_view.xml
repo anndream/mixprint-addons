@@ -18,6 +18,8 @@
 	        	    	<field name="seq" />
 	        	    	<label for="name" string="Description" />
 	        	    	<field name="name" />
+	        	    	<label for="seq" string="Printed" />
+	        	    	<field name="printed"/>	   
 	        	    </sheet>
 	        	    <!-- 
 	                <div class="oe_chatter">
@@ -36,7 +38,8 @@
       		<field name="arch" type="xml">
 		        <tree string="WHT Type">
 		        	<field name="seq" />
-		            <field name="name"/>		            
+		            <field name="name"/>
+		            <field name="printed"/>	            
 		        </tree>
       		</field>
     	</record>
@@ -48,6 +51,7 @@
 	        	<search string="WHT Type">
 	        		<field name="seq" />
 	          		<field name="name" />
+	          		<field name="printed" />
 	        	</search>
 	      	</field>
 	    </record>

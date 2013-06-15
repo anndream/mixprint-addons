@@ -8,10 +8,7 @@ from num2word import num2word_th
 import datetime
 
 def fmt_tin(tin):
-    return "%s %s%s%s%s %s%s%s%s %s"%(tin[0],tin[1],tin[2],tin[3],tin[4],tin[5],tin[6],tin[7],tin[8],tin[9])
-
-def fmt_pin(pin):
-    return "%s %s%s%s%s %s%s%s%s%s %s%s %s"%(pin[0],pin[1],pin[2],pin[3],pin[4],pin[5],pin[6],pin[7],pin[8],pin[9],pin[10],pin[11],pin[12])
+    return "%s %s%s%s%s %s%s%s%s%s %s%s %s"%(tin[0],tin[1],tin[2],tin[3],tin[4],tin[5],tin[6],tin[7],tin[8],tin[9],tin[10],tin[11],tin[12])
 
 def set_satang(vals):
     for key in vals.keys():
@@ -62,7 +59,7 @@ class report_custom(report_int):
             attachpnd = "Yes"             
 
         vals={
-            "Text2":company.ineco_tax,
+            "Text2":company.ineco_tax and fmt_tin(company.ineco_tax) or "",
             "Text4":company.ineco_branch,
             "Text5":company.ineco_company_name,
             "Text6":company.ineco_building,
