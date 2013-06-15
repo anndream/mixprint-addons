@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-        <record id="view_ineco_garment_partner_form" model="ir.ui.view">
-            <field name="name">ineco.garment.partner.form</field>
+    
+        <record id="view_ineco_partner_form2" model="ir.ui.view">
+            <field name="name">ineco.partner.form2</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/sheet/notebook/page[@string='History']" position="before" >
-                	<page string="Account Information">
-                		<group>
-                			<field name="account_comment" nolabel="1" />                		
-                		</group>
-                	</page>
-                </xpath>            
+                
             </field>
         </record>
-        
-    </data>
+    
+	</data>
 </openerp>

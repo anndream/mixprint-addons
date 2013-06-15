@@ -147,6 +147,13 @@ class sale_order(osv.osv):
         'sample_order_date': fields.date('Sampling Order Date',),
         'garment_order_date': fields.date('Garment Order Date',),
         'sample_deliver_date': fields.date('Sampling Deliver Date'),
+        'cancel_sample_order': fields.boolean('Cancel Sampling Order'),
+        'cancel_garment_order': fields.boolean('Cancel Garment Order'),
+        'date_sale_close': fields.date('Closed Date'),
+    }
+    _defaults = {
+        'cancel_sample_order': False,
+        'cancel_garment_order': False,
     }
     
     def action_gen_sampling_no(self, cr, uid, ids, context=None):

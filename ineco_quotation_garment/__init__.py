@@ -22,6 +22,6 @@
 import sale
 import stock
 import stock_partial_picking
-import partner
+#import partner
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
