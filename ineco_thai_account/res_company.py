@@ -25,7 +25,7 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _description = 'address for vat thai'
     _columns = {
-        'ineco_company_name': fields.char('Company Name', size=32),                
+        'ineco_company_name': fields.char('Company Name', size=128),                
         'ineco_branch': fields.char('Branch', size=32),
         'ineco_building':fields.char('Building', size=128),
         'ineco_room_no':fields.char('Room No.', size=32),
