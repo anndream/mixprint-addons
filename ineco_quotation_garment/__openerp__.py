@@ -48,7 +48,7 @@ New Quotation Menu/View for Garment Business.
         'account_view.xml',
         'sale_data.xml',
         'stock_partial_picking_view.xml',
-        #'partner_view.xml',
+        'partner_view.xml',
     ],
     'installable': True,
     'auto_install': False,

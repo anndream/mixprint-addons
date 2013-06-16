@@ -25,7 +25,7 @@ from openerp.osv import osv, fields
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
-        'pid': fields.char('Personal ID', sieze=32, select=True),   
+        'pid': fields.char('Tax ID', sieze=32, select=True),   
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
