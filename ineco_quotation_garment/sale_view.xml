@@ -482,8 +482,8 @@
 		                    		<field name="sample_deliver_date" />                   		
 				              		<field name="garment_order_no" readonly="1" attrs="{'invisible': [('state','=','draft')]}" />
 				              		<field name="garment_order_date" attrs="{'invisible': [('state','=','draft')]}" />
-				              		<field name="cancel_sample_order"  attrs="{'invisible': [('sample_order_no','=',False)]}" />
-				              		<field name="cancel_garment_order" attrs="{'invisible': [('state','=','draft')]}" />
+				              		<field name="cancel_sample_order"  attrs="{'invisible': [('sample_order_no','=',False)]}" groups="base.group_erp_manager" />
+				              		<field name="cancel_garment_order" attrs="{'invisible': [('state','=','draft')]}" groups="base.group_erp_manager"/>
                         		</group>
                         		<group>
 		                    		<button name="action_gen_sampling_no"
@@ -654,8 +654,8 @@
 		 	              		<field name="sample_deliver_date" readonly="1" />
 			              		<field name="garment_order_no" readonly="1" />
 			              		<field name="garment_order_date" />
-			              		<field name="cancel_sample_order" attrs="{'invisible': [('sample_order_no','=',False)]}"/>
-			              		<field name="cancel_garment_order" attrs="{'invisible': [('garment_order_no','=',False)]}" />		              	
+			              		<field name="cancel_sample_order" attrs="{'invisible': [('sample_order_no','=',False)]}" groups="base.group_erp_manager"/>
+			              		<field name="cancel_garment_order" attrs="{'invisible': [('garment_order_no','=',False)]}" groups="base.group_erp_manager"/>		              	
 	              			</group>
 	                    	<group>
 		                    		<button name="action_gen_sampling_no"

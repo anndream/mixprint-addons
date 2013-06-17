@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<!-- Problem Type -->
+        <record id="view_ineco_problem_type_tree" model="ir.ui.view">
+            <field name="name">ineco.problem.type.tree</field>
+            <field name="model">ineco.problem.type</field>
+            <field name="arch" type="xml">
+                <tree string="Problem Type">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_problem_type_form" model="ir.ui.view">
+            <field name="name">ineco.problem.type.form</field>
+            <field name="model">ineco.problem.type</field>
+            <field name="arch" type="xml">
+                <form string="Problem Type">
+                    <field name="name" />
+                </form>
+            </field>
+        </record>	
+        
+        <record id="view_ineco_problem_type_filter" model="ir.ui.view">
+            <field name="name">ineco.problem.type.select</field>
+            <field name="model">ineco.problem.type</field>
+            <field name="arch" type="xml">
+                <search string="Search Type">
+                	<field name="name" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_problem_type" model="ir.actions.act_window">
+            <field name="name">Problem Type</field>
+            <field name="res_model">ineco.problem.type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_problem_type_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a problem type. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem 
+            id="menu_ineco_problem_type"
+        	action="action_ineco_problem_type" 
+        	parent="base.menu_base_config"
+        	sequence="9"/> 
+        	    
+      	<!-- Problem -->
+        <record id="view_ineco_problem_tree" model="ir.ui.view">
+            <field name="name">ineco.problem.tree</field>
+            <field name="model">ineco.problem</field>
+            <field name="arch" type="xml">
+                <tree string="Problem">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="sale_order_id" />
+                    <field name="partner_id" />
+                    <field name="type_id" />
+                    <field name="target_user_id" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_problem_form" model="ir.ui.view">
+            <field name="name">ineco.problem.form</field>
+            <field name="model">ineco.problem</field>
+            <field name="arch" type="xml">
+                <form string="Problem" version="7.0">
+	                <header>
+                        <button name="button_approve" states="draft,pending" string="Approve" type="object" class="oe_highlight" />
+                        <button name="button_pending" states="draft" string="Pending" type="object"/>
+                        <button name="button_cancel" states="draft,pending" string="Cancel" type="object"/>	                
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,approve,cancel" statusbar_colors='{"draft":"blue","pending":"red"}'/>
+	                </header>
+	                <sheet string="Problem">
+	                    <div class="oe_title">
+	                        <h1>
+	                    		<field name="name" readonly="1" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>                            
+	                        </h1>
+	                    </div>
+	                    <group>
+	                        <group>
+			                    <field name="date" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
+			                    <field name="sale_order_id" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
+			                    <field name="partner_id" readonly="1"/>
+			                    <field name="cost" />
+	                        </group>
+	                        <group>
+			                    <field name="target_user_id" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
+			                    <field name="department_id" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
+			                    <field name="type_id" />
+	                        </group>
+	                    </group>
+	                    <notebook>
+	                        <page string="Sale Order Line">
+	                        	<field name="line_ids" nolabel="1">
+	                        		<tree string="Order Line">
+	                        			<field name="name" />
+	                        			<field name="product_uom_qty" />
+	                        			<field name="price_unit" />
+	                        			<field name="product_uom" />
+	                        			<field name="state" />
+	                        		</tree>
+	                        	</field>
+	                        </page>
+	                        <page string="Note">
+	                        	<field name="note" />
+	                        </page>
+	                    </notebook>
+	                </sheet>
+	                <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+                </form>            
+            </field>
+        </record>	
+        
+        <record id="view_ineco_problem_filter" model="ir.ui.view">
+            <field name="name">ineco.problem.select</field>
+            <field name="model">ineco.problem</field>
+            <field name="arch" type="xml">
+                <search string="Search Problem">
+                	<field name="name" />
+                	<field name="date" />
+                	<field name="sale_order_id" />
+                	<field name="partner_id" />
+                	<field name="target_user_id" />
+                	<field name="state" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_problem" model="ir.actions.act_window">
+            <field name="name">Problem</field>
+            <field name="res_model">ineco.problem</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_problem_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a problem. 
+              </p><p>
+                This is the list of all problem that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem 
+            id="menu_ineco_problem"
+        	action="action_ineco_problem" 
+        	parent="base.menu_sales"
+        	sequence="10"/> 
+      	
+    </data>
+</openerp>
