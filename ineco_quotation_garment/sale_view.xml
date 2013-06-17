@@ -495,7 +495,8 @@
 		                            	string="Get Garment No"
 		                            	type="object" 
 		                            	icon="gtk-justify-fill"
-		                            	attrs="{'invisible': ['|',('garment_order_no','!=',False),('state','=','draft')]}" />                                            		
+		                            	attrs="{'invisible': ['|',('garment_order_no','!=',False),('state','=','draft')]}" />   
+		                            <field name="date_sale_close" />                                          		
                         		</group>
                         	</group>                    	
                         </page>
