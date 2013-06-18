@@ -125,6 +125,8 @@ class ReportXML(osv.osv):
         'jasper_password': fields.char('Password', size=20),
         'criteria_field': fields.char('Criteria Field', size=100),
         'parameter_name': fields.char('Jasper Parameter Name', size=100),
+        'domain': fields.char('Domain Value', size=250,
+            help="Optional domain filtering of the destination data, as a Python expression"),        
     }
     
     _defaults = {
