@@ -490,7 +490,7 @@
 		                            	attrs="{'invisible': [('sample_order_no','!=',False)]}" />                                            		
                         		</group>
                         		<group>
-		                            <field name="date_sale_close" attrs="{'invisible': [('state','=','draft')]}"/>                                          		
+		                            <field name="date_sale_close" />                                          		
 				              		<field name="garment_order_no" readonly="1" attrs="{'invisible': [('state','=','draft')]}" />
 				              		<field name="garment_order_date" attrs="{'invisible': [('state','=','draft')]}" />
 				              		<field name="cancel_garment_order" attrs="{'invisible': [('state','=','draft')]}" groups="base.group_erp_manager"/>
@@ -664,10 +664,10 @@
 		                            	attrs="{'invisible': [('sample_order_no','!=',False)]}" />                                            		
 	              			</group>
 	              			<group>
+		                        <field name="date_sale_close" />                                           		
 			              		<field name="garment_order_no" readonly="1" />
 			              		<field name="garment_order_date" />
 			              		<field name="cancel_garment_order" attrs="{'invisible': [('garment_order_no','=',False)]}" groups="base.group_erp_manager"/>		              	
-		                        <field name="date_sale_close" />                                           		
 		                    	<button name="action_gen_garment_no"
 		                            	string="Get Garment No"
 		                            	type="object" 
