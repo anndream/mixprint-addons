@@ -253,6 +253,8 @@ class ineco_wht_pnd(osv.osv):
         'section_3': fields.boolean('Section 3'),
         'section_48': fields.boolean('Section 48'),
         'section_50': fields.boolean('Section 50'),
+        'section_65': fields.boolean('Section 65'),
+        'section_69': fields.boolean('Section 69'),        
         'attach_pnd': fields.boolean('Attach PND'),
         'attach_count': fields.function(_compute_line,type='integer',string='Attach Count',multi="sums2"),
         'attach_no': fields.function(_compute_line,type='integer',string='Attach No',multi="sums2"),        
@@ -266,6 +268,8 @@ class ineco_wht_pnd(osv.osv):
         'wht_ids': fields.many2many('ineco.wht', 'ineco_wht_pnds', 'pnd_id', 'wht_id', 'With holding tax'),       
         'note': fields.text('Note'),
         'company_id': fields.many2one('res.company','Company', required=True),
+        'pnd_type': fields.selection([('pp4','(4) PP3'),('pp7','(7) PP53')], 'PND Type', required=True, select=True),
+    
     }
     _defaults = {
         'name': '/',

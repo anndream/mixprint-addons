@@ -54,7 +54,7 @@ class report_custom(report_int):
             no[i] = k
             vat[i] = line.partner_id.vat and fmt_tin(line.partner_id.vat) or ""
             sup_name[i] = line.partner_id.name 
-            sup_address[i]= line.partner_id.street or ""+"  "+line.partner_id.street2 or ""+ "   "+ line.partner_id.city or "" + "   " +  line.partner_id.zip or ""
+            sup_address[i]= str(str(line.partner_id.street)+"  "+str(line.partner_id.street2) + "   "+ str(line.partner_id.city) + "   " +  str(line.partner_id.zip)) or ""
             for wht_line in line.line_ids:
                 wht_date[j] = line.date_doc and fmt_thaidate(line.date_doc) or ""                
                 wht_name_line[j] = wht_line.wht_type_id.printed
