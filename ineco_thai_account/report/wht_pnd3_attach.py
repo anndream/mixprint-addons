@@ -45,6 +45,7 @@ class report_custom(report_int):
         wht_percent_line = {}
         wht_base_amount = {}
         wht_tax_line = {}
+        vals = {}
         
         count_line = vouch.attach_count
         pages = 1
@@ -73,6 +74,8 @@ class report_custom(report_int):
                     "Text23":   daynow,
                     "Text24":"    "+ str(monthnow),  
                     "Text25":   yearnow,   
+                    "Text9.7":  lang.format("%.2f",vouch.total_amount,grouping=True).replace("."," "),
+                    "Text10.7": lang.format("%.2f", vouch.total_tax_send,grouping=True).replace("."," "),
                     "Text20.0.0":       no.has_key(1) and no[1] or "",
                     "Text20.1.0":       no.has_key(2) and no[2] or "",
                     "Text20.2.0":       no.has_key(3) and no[3] or "",
@@ -151,42 +154,42 @@ class report_custom(report_int):
                     "Text5.4.1.0":      wht_percent_line.has_key(16) and wht_percent_line[16] or "" ,
                     "Text5.4.1.1":      wht_percent_line.has_key(17) and wht_percent_line[17] or "" ,
                     "Text5.5":          wht_percent_line.has_key(18) and wht_percent_line[18] or "" ,      
-                    "Text9.0.0":        wht_base_amount.has_key(1)  and lang.format("%.2f",wht_base_amount[1],grouping=True).replace("."," ") or "",
-                    "Text9.0.1.0":      wht_base_amount.has_key(2)  and lang.format("%.2f",wht_base_amount[2],grouping=True).replace("."," ") or "",
-                    "Text9.0.1.1.0":    wht_base_amount.has_key(3)  and lang.format("%.2f",wht_base_amount[3],grouping=True).replace("."," ") or "",
-                    "Text9.0.1.1.1.0":  wht_base_amount.has_key(4)  and lang.format("%.2f",wht_base_amount[4],grouping=True).replace("."," ") or "",
-                    "Text9.0.1.1.1.1":  wht_base_amount.has_key(5)  and lang.format("%.2f",wht_base_amount[5],grouping=True).replace("."," ") or "",
-                    "Text9.1.0":        wht_base_amount.has_key(6)  and lang.format("%.2f",wht_base_amount[6],grouping=True).replace("."," ") or "",
-                    "Text9.1.1.0":      wht_base_amount.has_key(7)  and lang.format("%.2f",wht_base_amount[7],grouping=True).replace("."," ") or "",
-                    "Text9.1.1.1":      wht_base_amount.has_key(8)  and lang.format("%.2f",wht_base_amount[8],grouping=True).replace("."," ") or "",
-                    "Text9.2.0":        wht_base_amount.has_key(9)  and lang.format("%.2f",wht_base_amount[9],grouping=True).replace("."," ") or "",
-                    "Text9.2.1.0":      wht_base_amount.has_key(10)  and lang.format("%.2f",wht_base_amount[10],grouping=True).replace("."," ") or "",
-                    "Text9.2.1.1":      wht_base_amount.has_key(11)  and lang.format("%.2f",wht_base_amount[11],grouping=True).replace("."," ") or "",
-                    "Text9.3.0":        wht_base_amount.has_key(12)  and lang.format("%.2f",wht_base_amount[12],grouping=True).replace("."," ") or "",
-                    "Text9.3.1.0":      wht_base_amount.has_key(13)  and lang.format("%.2f",wht_base_amount[13],grouping=True).replace("."," ") or "",
-                    "Text9.3.1.1":      wht_base_amount.has_key(14)  and lang.format("%.2f",wht_base_amount[14],grouping=True).replace("."," ") or "",
-                    "Text9.4.0":        wht_base_amount.has_key(15)  and lang.format("%.2f",wht_base_amount[15],grouping=True).replace("."," ") or "",
-                    "Text9.4.1.0":      wht_base_amount.has_key(16)  and lang.format("%.2f",wht_base_amount[16],grouping=True).replace("."," ") or "",
-                    "Text9.4.1.1":      wht_base_amount.has_key(17)  and lang.format("%.2f",wht_base_amount[17],grouping=True).replace("."," ") or "",
-                    "Text9.5":          wht_base_amount.has_key(18)  and lang.format("%.2f",wht_base_amount[18],grouping=True).replace("."," ") or "",
-                    "Text10.0.0":       wht_tax_line.has_key(1) and lang.format("%.2f",wht_tax_line[1],grouping=True).replace("."," ") or "",
-                    "Text10.0.1.0":     wht_tax_line.has_key(2) and lang.format("%.2f",wht_tax_line[2],grouping=True).replace("."," ") or "",
-                    "Text10.0.1.1.0":   wht_tax_line.has_key(3) and lang.format("%.2f",wht_tax_line[3],grouping=True).replace("."," ") or "",
-                    "Text10.0.1.1.1.0": wht_tax_line.has_key(4) and lang.format("%.2f",wht_tax_line[4],grouping=True).replace("."," ") or "",
-                    "Text10.0.1.1.1.1": wht_tax_line.has_key(5) and lang.format("%.2f",wht_tax_line[5],grouping=True).replace("."," ") or "",
-                    "Text10.1.0":       wht_tax_line.has_key(6) and lang.format("%.2f",wht_tax_line[6],grouping=True).replace("."," ") or "",
-                    "Text10.1.1.0":     wht_tax_line.has_key(7) and lang.format("%.2f",wht_tax_line[7],grouping=True).replace("."," ") or "",
-                    "Text10.1.1.1":     wht_tax_line.has_key(8) and lang.format("%.2f",wht_tax_line[8],grouping=True).replace("."," ") or "",
-                    "Text10.2.0":       wht_tax_line.has_key(9) and lang.format("%.2f",wht_tax_line[9],grouping=True).replace("."," ") or "",
-                    "Text10.2.1.0":     wht_tax_line.has_key(10) and lang.format("%.2f",wht_tax_line[10],grouping=True).replace("."," ") or "",
-                    "Text10.2.1.1":     wht_tax_line.has_key(11) and lang.format("%.2f",wht_tax_line[11],grouping=True).replace("."," ") or "",
-                    "Text10.3.0":       wht_tax_line.has_key(12) and lang.format("%.2f",wht_tax_line[12],grouping=True).replace("."," ") or "",
-                    "Text10.3.1.0":     wht_tax_line.has_key(13) and lang.format("%.2f",wht_tax_line[13],grouping=True).replace("."," ") or "",
-                    "Text10.3.1.1":     wht_tax_line.has_key(14) and lang.format("%.2f",wht_tax_line[14],grouping=True).replace("."," ") or "",
-                    "Text10.4.0":       wht_tax_line.has_key(15) and lang.format("%.2f",wht_tax_line[15],grouping=True).replace("."," ") or "",
-                    "Text10.4.1.0":     wht_tax_line.has_key(16) and lang.format("%.2f",wht_tax_line[16],grouping=True).replace("."," ") or "",
-                    "Text10.4.1.1":     wht_tax_line.has_key(17) and lang.format("%.2f",wht_tax_line[17],grouping=True).replace("."," ") or "",
-                    "Text10.5":         wht_tax_line.has_key(18) and lang.format("%.2f",wht_tax_line[18],grouping=True).replace("."," ") or "",
+                    "Text9.0.0":        wht_base_amount.has_key(1) and wht_base_amount[1] and lang.format("%.2f",wht_base_amount[1],grouping=True).replace("."," ") or "",
+                    "Text9.0.1.0":      wht_base_amount.has_key(2) and wht_base_amount[2] and lang.format("%.2f",wht_base_amount[2],grouping=True).replace("."," ") or "",
+                    "Text9.0.1.1.0":    wht_base_amount.has_key(3) and wht_base_amount[3] and lang.format("%.2f",wht_base_amount[3],grouping=True).replace("."," ") or "",
+                    "Text9.0.1.1.1.0":  wht_base_amount.has_key(4) and wht_base_amount[4] and lang.format("%.2f",wht_base_amount[4],grouping=True).replace("."," ") or "",
+                    "Text9.0.1.1.1.1":  wht_base_amount.has_key(5) and wht_base_amount[5] and lang.format("%.2f",wht_base_amount[5],grouping=True).replace("."," ") or "",
+                    "Text9.1.0":        wht_base_amount.has_key(6) and wht_base_amount[6] and lang.format("%.2f",wht_base_amount[6],grouping=True).replace("."," ") or "",
+                    "Text9.1.1.0":      wht_base_amount.has_key(7) and wht_base_amount[7] and lang.format("%.2f",wht_base_amount[7],grouping=True).replace("."," ") or "",
+                    "Text9.1.1.1":      wht_base_amount.has_key(8) and wht_base_amount[8] and lang.format("%.2f",wht_base_amount[8],grouping=True).replace("."," ") or "",
+                    "Text9.2.0":        wht_base_amount.has_key(9) and wht_base_amount[9]  and lang.format("%.2f",wht_base_amount[9],grouping=True).replace("."," ") or "",
+                    "Text9.2.1.0":      wht_base_amount.has_key(10) and wht_base_amount[10]  and lang.format("%.2f",wht_base_amount[10],grouping=True).replace("."," ") or "",
+                    "Text9.2.1.1":      wht_base_amount.has_key(11) and wht_base_amount[11] and lang.format("%.2f",wht_base_amount[11],grouping=True).replace("."," ") or "",
+                    "Text9.3.0":        wht_base_amount.has_key(12) and wht_base_amount[12] and lang.format("%.2f",wht_base_amount[12],grouping=True).replace("."," ") or "",
+                    "Text9.3.1.0":      wht_base_amount.has_key(13) and wht_base_amount[13] and lang.format("%.2f",wht_base_amount[13],grouping=True).replace("."," ") or "",
+                    "Text9.3.1.1":      wht_base_amount.has_key(14) and wht_base_amount[14] and lang.format("%.2f",wht_base_amount[14],grouping=True).replace("."," ") or "",
+                    "Text9.4.0":        wht_base_amount.has_key(15) and wht_base_amount[15] and lang.format("%.2f",wht_base_amount[15],grouping=True).replace("."," ") or "",
+                    "Text9.4.1.0":      wht_base_amount.has_key(16) and wht_base_amount[16] and lang.format("%.2f",wht_base_amount[16],grouping=True).replace("."," ") or "",
+                    "Text9.4.1.1":      wht_base_amount.has_key(17) and wht_base_amount[17] and lang.format("%.2f",wht_base_amount[17],grouping=True).replace("."," ") or "",
+                    "Text9.5":          wht_base_amount.has_key(18) and wht_base_amount[18] and lang.format("%.2f",wht_base_amount[18],grouping=True).replace("."," ") or "",
+                    "Text10.0.0":       wht_tax_line.has_key(1) and wht_tax_line[1] and lang.format("%.2f",wht_tax_line[1],grouping=True).replace("."," ") or "",
+                    "Text10.0.1.0":     wht_tax_line.has_key(2) and wht_tax_line[2] and lang.format("%.2f",wht_tax_line[2],grouping=True).replace("."," ") or "",
+                    "Text10.0.1.1.0":   wht_tax_line.has_key(3) and wht_tax_line[3] and lang.format("%.2f",wht_tax_line[3],grouping=True).replace("."," ") or "",
+                    "Text10.0.1.1.1.0": wht_tax_line.has_key(4) and wht_tax_line[4] and lang.format("%.2f",wht_tax_line[4],grouping=True).replace("."," ") or "",
+                    "Text10.0.1.1.1.1": wht_tax_line.has_key(5) and wht_tax_line[5] and lang.format("%.2f",wht_tax_line[5],grouping=True).replace("."," ") or "",
+                    "Text10.1.0":       wht_tax_line.has_key(6) and wht_tax_line[6] and lang.format("%.2f",wht_tax_line[6],grouping=True).replace("."," ") or "",
+                    "Text10.1.1.0":     wht_tax_line.has_key(7) and wht_tax_line[7] and lang.format("%.2f",wht_tax_line[7],grouping=True).replace("."," ") or "",
+                    "Text10.1.1.1":     wht_tax_line.has_key(8) and wht_tax_line[8] and lang.format("%.2f",wht_tax_line[8],grouping=True).replace("."," ") or "",
+                    "Text10.2.0":       wht_tax_line.has_key(9) and wht_tax_line[9] and lang.format("%.2f",wht_tax_line[9],grouping=True).replace("."," ") or "",
+                    "Text10.2.1.0":     wht_tax_line.has_key(10) and wht_tax_line[10] and lang.format("%.2f",wht_tax_line[10],grouping=True).replace("."," ") or "",
+                    "Text10.2.1.1":     wht_tax_line.has_key(11) and wht_tax_line[11] and lang.format("%.2f",wht_tax_line[11],grouping=True).replace("."," ") or "",
+                    "Text10.3.0":       wht_tax_line.has_key(12) and wht_tax_line[12] and lang.format("%.2f",wht_tax_line[12],grouping=True).replace("."," ") or "",
+                    "Text10.3.1.0":     wht_tax_line.has_key(13) and wht_tax_line[13] and lang.format("%.2f",wht_tax_line[13],grouping=True).replace("."," ") or "",
+                    "Text10.3.1.1":     wht_tax_line.has_key(14) and wht_tax_line[14] and lang.format("%.2f",wht_tax_line[14],grouping=True).replace("."," ") or "",
+                    "Text10.4.0":       wht_tax_line.has_key(15) and wht_tax_line[15] and lang.format("%.2f",wht_tax_line[15],grouping=True).replace("."," ") or "",
+                    "Text10.4.1.0":     wht_tax_line.has_key(16) and wht_tax_line[16] and lang.format("%.2f",wht_tax_line[16],grouping=True).replace("."," ") or "",
+                    "Text10.4.1.1":     wht_tax_line.has_key(17) and wht_tax_line[17] and lang.format("%.2f",wht_tax_line[17],grouping=True).replace("."," ") or "",
+                    "Text10.5":         wht_tax_line.has_key(18) and wht_tax_line[18] and lang.format("%.2f",wht_tax_line[18],grouping=True).replace("."," ") or "",
                 }
             if k == count_line:              
                 pdf2 = pdf_fill("openerp/addons/ineco_thai_account/report/pdf/wht_pnd3_attach.pdf",vals)
@@ -199,11 +202,26 @@ class report_custom(report_int):
                 pages += 1
                 i = 1
                 j = 1
+                ii = 0
+                jj = 0
                 if pdf:
                     pdf = pdf_merge(pdf, pdf2)
                 else:
                     pdf = pdf2
-                    
+                for irnge in range(6):
+                    ii += 1 
+                    no[ii] = ""
+                    vat[ii] = ""
+                    sup_name[ii] = ""
+                    sup_address[ii]= ""
+                for jrnge in range(18):
+                    jj += 1
+                    wht_date[jj] =  False
+                    wht_name_line[jj] = False
+                    wht_percent_line[jj] = False
+                    wht_base_amount[jj] = False
+                    wht_tax_line[jj] = False
+
         return (pdf, "pdf")
     
 report_custom("report.wht.pnd3.attach")
