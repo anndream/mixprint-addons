@@ -150,6 +150,7 @@ class sale_order(osv.osv):
         'cancel_sample_order': fields.boolean('Cancel Sampling Order'),
         'cancel_garment_order': fields.boolean('Cancel Garment Order'),
         'date_sale_close': fields.date('Closed Date'),
+        'sample_revision_no': fields.char('Sample Revision No', size=32,),
     }
     _defaults = {
         'cancel_sample_order': False,

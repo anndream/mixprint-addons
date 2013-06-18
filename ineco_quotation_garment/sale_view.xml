@@ -479,6 +479,7 @@
                         		<group>
 		                    		<field name="sample_order_no" />      
 		                    		<field name="sample_order_date" />      
+                        			<field name="sample_revision_no" />
 		                    		<field name="sample_deliver_date" />                   		
 				              		<field name="garment_order_no" readonly="1" attrs="{'invisible': [('state','=','draft')]}" />
 				              		<field name="garment_order_date" attrs="{'invisible': [('state','=','draft')]}" />
@@ -647,10 +648,11 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/notebook/page[@string='Other Information']" position="after" >
                     <page string="Reference">
-	                    <group>
+	                    <group colspan="4" cols="6">
 	                    	<group>
 		 	              		<field name="sample_order_no" readonly="1" />
 		 	              		<field name="sample_order_date" readonly="1" />
+	              				<field name="sample_revision_no" />
 		 	              		<field name="sample_deliver_date" readonly="1" />
 			              		<field name="garment_order_no" readonly="1" />
 			              		<field name="garment_order_date" />
@@ -671,7 +673,6 @@
 		                           	<field name="date_sale_close" />                                           		
 	                    	</group>
 	                    </group>
-
                     </page>
                 </xpath>        
             </field>
