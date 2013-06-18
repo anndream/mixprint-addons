@@ -482,17 +482,17 @@
                         			<field name="sample_revision_no" />
                         			<field name="sample_revision_date" />
 		                    		<field name="sample_deliver_date" />                   		
-				              		<field name="garment_order_no" readonly="1" attrs="{'invisible': [('state','=','draft')]}" />
-				              		<field name="garment_order_date" attrs="{'invisible': [('state','=','draft')]}" />
 				              		<field name="cancel_sample_order"  attrs="{'invisible': [('sample_order_no','=',False)]}" groups="base.group_erp_manager" />
-				              		<field name="cancel_garment_order" attrs="{'invisible': [('state','=','draft')]}" groups="base.group_erp_manager"/>
-                        		</group>
-                        		<group>
 		                    		<button name="action_gen_sampling_no"
 		                            	string="Get Sampling No"
 		                            	type="object" 
 		                            	icon="gtk-justify-fill"
 		                            	attrs="{'invisible': [('sample_order_no','!=',False)]}" />                                            		
+                        		</group>
+                        		<group>
+				              		<field name="garment_order_no" readonly="1" attrs="{'invisible': [('state','=','draft')]}" />
+				              		<field name="garment_order_date" attrs="{'invisible': [('state','=','draft')]}" />
+				              		<field name="cancel_garment_order" attrs="{'invisible': [('state','=','draft')]}" groups="base.group_erp_manager"/>
 		                    		<button name="action_gen_garment_no"
 		                            	string="Get Garment No"
 		                            	type="object" 
@@ -656,24 +656,24 @@
 	              				<field name="sample_revision_no" />
 	              				<field name="sample_revision_date" />
 		 	              		<field name="sample_deliver_date" readonly="1" />
-			              		<field name="garment_order_no" readonly="1" />
-			              		<field name="garment_order_date" />
 			              		<field name="cancel_sample_order" attrs="{'invisible': [('sample_order_no','=',False)]}" groups="base.group_erp_manager"/>
-			              		<field name="cancel_garment_order" attrs="{'invisible': [('garment_order_no','=',False)]}" groups="base.group_erp_manager"/>		              	
-	              			</group>
-	                    	<group>
-		                    		<button name="action_gen_sampling_no"
+		                    	<button name="action_gen_sampling_no"
 		                            	string="Get Sampling No"
 		                            	type="object" 
 		                            	icon="gtk-justify-fill"
 		                            	attrs="{'invisible': [('sample_order_no','!=',False)]}" />                                            		
-		                    		<button name="action_gen_garment_no"
+	              			</group>
+	              			<group>
+			              		<field name="garment_order_no" readonly="1" />
+			              		<field name="garment_order_date" />
+			              		<field name="cancel_garment_order" attrs="{'invisible': [('garment_order_no','=',False)]}" groups="base.group_erp_manager"/>		              	
+		                        <field name="date_sale_close" />                                           		
+		                    	<button name="action_gen_garment_no"
 		                            	string="Get Garment No"
 		                            	type="object" 
 		                            	icon="gtk-justify-fill"
 		                            	attrs="{'invisible': [('garment_order_no','!=',False)]}" /> 
-		                           	<field name="date_sale_close" />                                           		
-	                    	</group>
+	              			</group>
 	                    </group>
                     </page>
                 </xpath>        
