@@ -151,6 +151,7 @@ class sale_order(osv.osv):
         'cancel_garment_order': fields.boolean('Cancel Garment Order'),
         'date_sale_close': fields.date('Closed Date'),
         'sample_revision_no': fields.char('Sample Revision No', size=32,),
+        'sample_revision_date': fields.date('Sampling Revision Date',),
     }
     _defaults = {
         'cancel_sample_order': False,
@@ -159,7 +160,7 @@ class sale_order(osv.osv):
     
     def action_gen_sampling_no(self, cr, uid, ids, context=None):
         sample_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.sampling.order')
-        self.write(cr, uid, ids, {'sample_order_no': sample_order_no, 'sample_order_date': time.strftime('%Y-%m-%d')})
+        self.write(cr, uid, ids, {'sample_order_no': sample_order_no, 'sample_order_date': time.strftime('%Y-%m-%d'), 'sample_revision_date': time.strftime('%Y-%m-%d')})
         return True
 
     def action_gen_garment_no(self, cr, uid, ids, context=None):
