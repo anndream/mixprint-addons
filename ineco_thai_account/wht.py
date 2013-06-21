@@ -36,7 +36,7 @@ class ineco_wht_type(osv.osv):
     _description = "Type of WHT"
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'printed': fields.char('Printed', size=32, required=True),
+        'printed': fields.char('Printed', size=32),
         'seq': fields.integer('Sequence'),
     }
     _sql_constraints = [
