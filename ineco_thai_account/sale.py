@@ -45,10 +45,13 @@ class sale_order(osv.osv):
         'delivery_date': fields.date('Delivery Date',),
         'ineco_delivery_type_id': fields.many2one('ineco.delivery.type', 'Delivery Type'),
         'ineco_sale_admin_id': fields.many2one('res.users','Sale Admin.'),
+        'check_advnace':fields.boolean('Check Advnace'),
     }
     _defaults = {
         'ineco_sale_admin_id': lambda obj, cr, uid, context: uid,
-    }
+        'check_advnace': False,
+    }  
+
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
             if vals.get('shop_id'):

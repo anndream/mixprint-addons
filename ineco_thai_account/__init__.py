@@ -28,5 +28,6 @@ import report
 import cheque
 import res_partner
 import res_company
+import stock
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
