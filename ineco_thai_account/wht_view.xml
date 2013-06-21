@@ -343,13 +343,13 @@
             <field name="context">{'default_pnd_type': 'pp7','pnd_type': 'pp7'}</field>	        
 	    </record>	   
 
-	    <record model="ir.actions.act_window" id="ineco_wht_pnd_action53_tree">
+	    <record model="ir.actions.act_window.view" id="ineco_wht_pnd_action53_tree">
 	        <field name="view_mode">tree</field>
 	        <field name="view_id" ref="ineco_wht_pnd_tree"/>
 	        <field name="act_window_id" ref="ineco_wht_pnd_action53"/>
 	    </record>		    
 	    	    
-	    <record model="ir.actions.act_window" id="ineco_wht_pnd_action53_from">
+	    <record model="ir.actions.act_window.view" id="ineco_wht_pnd_action53_from">
 	        <field name="view_mode">form</field>
 	        <field name="view_id" ref="ineco_wht_pnd53_form"/>
 	        <field name="act_window_id" ref="ineco_wht_pnd_action53"/>     
