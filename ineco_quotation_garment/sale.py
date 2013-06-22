@@ -109,15 +109,16 @@ class sale_line_property_other(osv.osv):
         'name': fields.text('Description', required=True),
         'seq': fields.integer('Sequence'),
         'color_id': fields.many2one('sale.color', 'Color' ),
-        'gender_id': fields.many2one('sale.gender', 'Gender' ),
+        'gender_id': fields.many2one('sale.gender', 'Gender', required=True ),
         'size_id': fields.many2one('sale.size', 'Size'),
         'quantity': fields.integer('Quantity', required=True),
         'sale_line_id': fields.many2one('sale.order.line', 'Order Line', required=True),
         'style_id': fields.many2one('sale.style', 'Style'),
-        'note': fields.char('Note', size=32),
+        'note': fields.char('Note', size=32, required=True),
     }
     _defaults = {
-        'name': '...'
+        'name': '...',
+        'note': '-',
     }
 #     _sql_constraints = [
 #         ('name_property_unique', 'unique (color_id, gender_id, size_id, sale_line_id, style_id)', 'Data must be unique !')
