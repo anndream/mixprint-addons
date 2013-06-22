@@ -40,10 +40,22 @@ class ineco_sale_advance_payment_inv(osv.osv_memory):
                 You may have to create it and set it as a default value on this field."""),
         'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Account'),
             help="The amount to be invoiced in advance."),
+        'percent_advance': fields.float('Advance Percent', digits=(3, 2)),
+
+        
     }
     _defaults = { 
                  'advance_payment_method': 'fixed',
                  }
+    
+    def _get_order_amount(self, cr, uid, context=None):
+        if context is None:
+            context = {}        
+        sale_ids = context.get('active_ids', [])
+        sale_obj = self.pool.get('sale.order').browse(cr, uid, sale_ids, context=context)
+        amount = sale_obj.amount_untaxed or 0.00
+        return amount        
+        
     def _get_advance_product(self, cr, uid, context=None):
         try:
             product = self.pool.get('ir.model.data').get_object(cr, uid, 'sale', 'advance_product_0')
@@ -212,6 +224,22 @@ class ineco_sale_advance_payment_inv(osv.osv_memory):
             'context': "{'type': 'out_invoice'}",
             'type': 'ir.actions.act_window',
         }
+        
+    def onchange_percent(self, cr, uid, ids, percent, context=None):
+        
+        sale_amount = self._get_order_amount(cr, uid, ids) 
+        if sale_amount > 0.00 and percent > 0.00:
+            amount  = sale_amount * percent / 100.00
+            return {'value': {'amount': amount}}
+        return {'value': {'amount': 0}}
+
+    def onchange_amount(self, cr, uid, ids, amount, context=None):
+        
+        sale_amount = self._get_order_amount(cr, uid, ids) 
+        if  sale_amount > 0.00 and amount > 0.00:
+            percent  = (amount / sale_amount) * 100.00
+            return {'value': {'percent_advance': percent}}
+        return {'value': {'percent_advance': 0}}        
 
 ineco_sale_advance_payment_inv()
 
