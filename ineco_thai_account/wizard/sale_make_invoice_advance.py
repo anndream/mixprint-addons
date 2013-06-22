@@ -48,15 +48,15 @@ class ineco_sale_advance_payment_inv(osv.osv_memory):
                  'advance_payment_method': 'fixed',
                  }
     
-    def _get_order_amount(self, cr, uid, context=None):
+    def _get_order_amount(self, cr, uid, ids, context=None):
         if context is None:
             context = {}        
         sale_ids = context.get('active_ids', [])
-        sale_obj = self.pool.get('sale.order').browse(cr, uid, sale_ids, context=context)
+        sale_obj = self.pool.get('sale.order').browse(cr, uid, sale_ids, context=context)[0]
         amount = sale_obj.amount_untaxed or 0.00
         return amount        
         
-    def _get_advance_product(self, cr, uid, context=None):
+    def _get_advance_product(self, cr, uid, ids, context=None):
         try:
             product = self.pool.get('ir.model.data').get_object(cr, uid, 'sale', 'advance_product_0')
         except ValueError:
@@ -75,7 +75,7 @@ class ineco_sale_advance_payment_inv(osv.osv_memory):
             return {'value': {'amount':0, 'product_id':False }}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            return {'value': {'amount': product.list_price}}
+            return {'value': {'amount': 0}}
         return {'value': {'amount': 0}}
 
     def _prepare_advance_invoice_vals(self, cr, uid, ids, context=None):
@@ -227,7 +227,7 @@ class ineco_sale_advance_payment_inv(osv.osv_memory):
         
     def onchange_percent(self, cr, uid, ids, percent, context=None):
         
-        sale_amount = self._get_order_amount(cr, uid, ids) 
+        sale_amount = self._get_order_amount(cr, uid, ids, context) 
         if sale_amount > 0.00 and percent > 0.00:
             amount  = sale_amount * percent / 100.00
             return {'value': {'amount': amount}}
@@ -235,7 +235,7 @@ class ineco_sale_advance_payment_inv(osv.osv_memory):
 
     def onchange_amount(self, cr, uid, ids, amount, context=None):
         
-        sale_amount = self._get_order_amount(cr, uid, ids) 
+        sale_amount = self._get_order_amount(cr, uid, ids, context) 
         if  sale_amount > 0.00 and amount > 0.00:
             percent  = (amount / sale_amount) * 100.00
             return {'value': {'percent_advance': percent}}
