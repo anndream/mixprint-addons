@@ -166,17 +166,17 @@ class account_invoice(osv.osv):
             raise osv.except_osv(_('Insufficient Data!'), _('The payment term of supplier does not have a payment term line.'))
         return res
 
-    def create(self, cr, uid, vals, context=None):
-        if vals.get('partner_id', False) and vals.get('date_due', False) :
-            partner = self.pool.get('res.partner').browse(cr, uid, vals['partner_id'])[0]
-            if partner.billing_payment_id:
-                pterm_list = self.pool.get('account.payment.term').compute(cr, uid, partner.billing_payment_id.id, value=1, date_ref=vals['date_due'])
-                if pterm_list:
-                    pterm_list = [line[0] for line in pterm_list]
-                    pterm_list.sort()
-                    vals['bill_due'] = pterm_list[-1]
-                
-        return super(account_invoice, self).create(cr, uid, vals, context=context)
+#     def create(self, cr, uid, vals, context=None):
+#         if vals.get('partner_id', False) and vals.get('date_due', False) :
+#             partner = self.pool.get('res.partner').browse(cr, uid, vals['partner_id'])[0]
+#             if partner.billing_payment_id:
+#                 pterm_list = self.pool.get('account.payment.term').compute(cr, uid, partner.billing_payment_id.id, value=1, date_ref=vals['date_due'])
+#                 if pterm_list:
+#                     pterm_list = [line[0] for line in pterm_list]
+#                     pterm_list.sort()
+#                     vals['bill_due'] = pterm_list[-1]
+#                 
+#         return super(account_invoice, self).create(cr, uid, vals, context=context)
     
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('date_due',False):
