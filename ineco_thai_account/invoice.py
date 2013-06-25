@@ -137,9 +137,9 @@ class account_invoice(osv.osv):
                     cr, uid, ids, partner_payment_term, date_invoice)
                 result['value'].update(to_update['value'])
                 #Change Billing Date
-                if p.billing_term:
+                if p.billing_payment_id:
                     bill_update = self.onchange_payment_term_date_due(
-                    cr, uid, ids, p.billing_term, to_update['value'])
+                    cr, uid, ids, p.billing_payment_id.id, to_update['value'])
                     result['value'].update(bill_update['value'])
                 else:
                     result['value']['bill_due'] = False
