@@ -9,6 +9,7 @@
 	      	<field name="arch" type="xml">	        	
 	        	<field name="website" position="after">
 	        		<field name="pid" />
+	        		<field name="billing_payment_id" domain="[('billing_term','=',True)]"/>
 	        	</field>
 	        </field>  	
 	    </record>

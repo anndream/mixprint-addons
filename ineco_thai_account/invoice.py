@@ -71,11 +71,124 @@ class account_invoice(osv.osv):
     _inherit = "account.invoice"
     _columns = {
         'account_move_lines':fields.function(_get_move_lines, type='many2many', relation='account.move.line', string='General Ledgers'),                
-        'date_due': fields.date('Due Date', select=True,
-            help="If you use payment terms, the due date will be computed automatically at the generation "\
-                "of accounting entries. The payment term may compute several due dates, for example 50% now and 50% in one month, but if you want to force a due date, make sure that the payment term is not set on the invoice. If you keep the payment term and the due date empty, it means direct payment."),        
+#         'date_due': fields.date('Due Date', select=True,
+#             help="If you use payment terms, the due date will be computed automatically at the generation "\
+#                 "of accounting entries. The payment term may compute several due dates, for example 50% now and 50% in one month, but if you want to force a due date, make sure that the payment term is not set on the invoice. If you keep the payment term and the due date empty, it means direct payment."),        
         'bill_due': fields.date('Billing Date', select=True)
     }
+
+    def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
+            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
+        partner_payment_term = False
+        acc_id = False
+        bank_id = False
+        fiscal_position = False
+
+        opt = [('uid', str(uid))]
+        if partner_id:
+
+            opt.insert(0, ('id', partner_id))
+            p = self.pool.get('res.partner').browse(cr, uid, partner_id)
+            if company_id:
+                if (p.property_account_receivable.company_id and (p.property_account_receivable.company_id.id != company_id)) and (p.property_account_payable.company_id and (p.property_account_payable.company_id.id != company_id)):
+                    property_obj = self.pool.get('ir.property')
+                    rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
+                    pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
+                    if not rec_pro_id:
+                        rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id)])
+                    if not pay_pro_id:
+                        pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id)])
+                    rec_line_data = property_obj.read(cr,uid,rec_pro_id,['name','value_reference','res_id'])
+                    pay_line_data = property_obj.read(cr,uid,pay_pro_id,['name','value_reference','res_id'])
+                    rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
+                    pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
+                    if not rec_res_id and not pay_res_id:
+                        raise osv.except_osv(_('Configuration Error!'),
+                            _('Cannot find a chart of accounts for this company, you should create one.'))
+                    account_obj = self.pool.get('account.account')
+                    rec_obj_acc = account_obj.browse(cr, uid, [rec_res_id])
+                    pay_obj_acc = account_obj.browse(cr, uid, [pay_res_id])
+                    p.property_account_receivable = rec_obj_acc[0]
+                    p.property_account_payable = pay_obj_acc[0]
+
+            if type in ('out_invoice', 'out_refund'):
+                acc_id = p.property_account_receivable.id
+                partner_payment_term = p.property_payment_term and p.property_payment_term.id or False
+            else:
+                acc_id = p.property_account_payable.id
+                partner_payment_term = p.property_supplier_payment_term and p.property_supplier_payment_term.id or False
+            fiscal_position = p.property_account_position and p.property_account_position.id or False
+            if p.bank_ids:
+                bank_id = p.bank_ids[0].id
+
+        result = {'value': {
+            'account_id': acc_id,
+            'payment_term': partner_payment_term,
+            'fiscal_position': fiscal_position
+            }
+        }
+
+        if type in ('in_invoice', 'in_refund'):
+            result['value']['partner_bank_id'] = bank_id
+
+        if payment_term != partner_payment_term:
+            if partner_payment_term:
+                to_update = self.onchange_payment_term_date_invoice(
+                    cr, uid, ids, partner_payment_term, date_invoice)
+                result['value'].update(to_update['value'])
+                #Change Billing Date
+                if p.billing_term:
+                    bill_update = self.onchange_payment_term_date_due(
+                    cr, uid, ids, p.billing_term, to_update['value'])
+                    result['value'].update(bill_update['value'])
+                else:
+                    result['value']['bill_due'] = False
+            else:
+                result['value']['date_due'] = False
+
+        if partner_bank_id != bank_id:
+            to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
+            result['value'].update(to_update['value'])
+        return result    
+
+    def onchange_payment_term_date_due(self, cr, uid, ids, payment_term_id, date_invoice):
+        res = {}        
+        if not date_invoice:
+            date_invoice = time.strftime('%Y-%m-%d')
+        if not payment_term_id:
+            return {'value':{'bill_due': date_invoice}} #To make sure the invoice has a due date when no payment term 
+        pterm_list = self.pool.get('account.payment.term').compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
+        if pterm_list:
+            pterm_list = [line[0] for line in pterm_list]
+            pterm_list.sort()
+            res = {'value':{'bill_due': pterm_list[-1]}}
+        else:
+            raise osv.except_osv(_('Insufficient Data!'), _('The payment term of supplier does not have a payment term line.'))
+        return res
+
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('partner_id', False) and vals.get('date_due', False) :
+            partner = self.pool.get('res.partner').browse(cr, uid, vals['partner_id'])[0]
+            if partner.billing_payment_id:
+                pterm_list = self.pool.get('account.payment.term').compute(cr, uid, partner.billing_payment_id.id, value=1, date_ref=vals['date_due'])
+                if pterm_list:
+                    pterm_list = [line[0] for line in pterm_list]
+                    pterm_list.sort()
+                    vals['bill_due'] = pterm_list[-1]
+                
+        return super(account_invoice, self).create(cr, uid, vals, context=context)
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('date_due',False):
+            for line in self.browse(cr, uid, ids):
+                if line.partner_id.billing_payment_id:
+                    pterm_list = self.pool.get('account.payment.term').compute(cr, uid, line.partner_id.billing_payment_id.id, value=1, date_ref=vals['date_due'])
+                    if pterm_list:
+                        pterm_list = [line[0] for line in pterm_list]
+                        pterm_list.sort()
+                        vals['bill_due'] = pterm_list[-1]
+        return super(account_invoice, self).write(cr, uid, ids, vals, context=context)
+
 
 class account_voucher(osv.osv):
     
@@ -241,5 +354,14 @@ class account_voucher(osv.osv):
                 if len(rec_ids) >= 2:
                     reconcile = move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
         return True
+
+class account_payment_term(osv.osv):
+    _inherit = "account.payment.term"
+    _columns = {
+        'billing_term': fields.boolean('Billing Term'),
+    }
+    _defaults = {
+        'billing_term': False,
+    }
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,11 +21,11 @@
 
 from openerp.osv import osv, fields
 
-
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
         'pid': fields.char('Tax ID', sieze=32, select=True),   
+        'billing_payment_id': fields.many2one('account.payment.term', 'Billing Term', select=True),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
