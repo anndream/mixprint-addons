@@ -15,6 +15,7 @@
                         <field name="advance_payment_method" class="oe_inline" domain="[('advance_payment_method','=','fixed')]"
                              on_change="onchange_method(advance_payment_method, product_id, context)"/>
                         <field name="qtty" invisible="1"/>
+						<field name="date" />                      
                         <field name="product_id"
                             on_change="onchange_method(advance_payment_method, product_id, context)"
                             context="{'search_default_services': 1}"

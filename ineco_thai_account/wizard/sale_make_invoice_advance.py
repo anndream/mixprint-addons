@@ -21,6 +21,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+import time
 
 class ineco_sale_advance_payment_inv(osv.osv_memory):
     _name = "ineco.sale.advance.payment.inv"
@@ -41,12 +42,9 @@ class ineco_sale_advance_payment_inv(osv.osv_memory):
         'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Account'),
             help="The amount to be invoiced in advance."),
         'percent_advance': fields.float('Advance Percent', digits=(3, 2)),
-
+        'date': fields.date('Invoice Date'),
         
     }
-    _defaults = { 
-                 'advance_payment_method': 'fixed',
-                 }
     
     def _get_order_amount(self, cr, uid, ids, context=None):
         if context is None:
@@ -65,9 +63,10 @@ class ineco_sale_advance_payment_inv(osv.osv_memory):
         return product.id
 
     _defaults = {
-        'advance_payment_method': 'all',
+        'advance_payment_method': 'fixed',
         'qtty': 1.0,
         'product_id': _get_advance_product,
+        'date': lambda *a: time.strftime('%Y-%m-%d')
     }
 
     def onchange_method(self, cr, uid, ids, advance_payment_method, product_id, context=None):
@@ -159,7 +158,8 @@ class ineco_sale_advance_payment_inv(osv.osv_memory):
                 'currency_id': sale.pricelist_id.currency_id.id,
                 'comment': '',
                 'payment_term': sale.payment_term.id,
-                'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id
+                'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id,
+                'date_invoice': wizard.date or False
             }
             result.append((sale.id, inv_values))
         return result
