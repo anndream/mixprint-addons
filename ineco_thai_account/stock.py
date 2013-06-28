@@ -60,7 +60,8 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
-            partner = self._get_partner_to_invoice(cr, uid, picking, context=context)
+            #partner = self._get_partner_to_invoice(cr, uid, picking, context=context)
+            partner = picking.partner_id.id
             if isinstance(partner, int):
                 partner = partner_obj.browse(cr, uid, [partner], context=context)[0]
             if not partner:
