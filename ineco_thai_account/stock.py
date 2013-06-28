@@ -78,6 +78,7 @@ class stock_picking(osv.osv):
                 invoice_obj.write(cr, uid, [invoice_id], invoice_vals_group, context=context)
             else:
                 invoice_vals = self._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
+                invoice_vals['partner_delivery_id'] = partner.id
                 invoice_id = invoice_obj.create(cr, uid, invoice_vals, context=context)
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
