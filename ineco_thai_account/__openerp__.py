@@ -48,6 +48,7 @@ A. Sale Module:
         'cheque_view.xml',
         'res_partner_view.xml',
         'res_company_view.xml',
+        'close_account_view.xml',
     ],
     'demo': [],
     'installable': True,

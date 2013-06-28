@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- ineco.close.account -->        
+        <record id="view_ineco_close_account_form" model="ir.ui.view">
+            <field name="name">ineco.close.account.form</field>
+            <field name="model">ineco.close.account</field>
+            <field name="arch" type="xml">  
+                <form string="Close Account">    
+                    <field name="account_id"/>
+                    <field name="period_id" /> 
+                    <field name="balance_before"/>  
+                    <field name="debit"/>   
+                    <field name="credit"/>                                          
+                    <field name="balance"/>   
+                    <field name="company_id"/>                          	      
+                </form>
+            </field>
+        </record>
+                
+        <record id="view_ineco_close_account_tree" model="ir.ui.view">
+            <field name="name">ineco.close.account.tree</field>
+            <field name="model">ineco.close.account</field>
+            <field name="arch" type="xml">
+                <tree string="Close Account">
+                    <field name="account_id"/>
+                    <field name="balance_before"/> 
+                    <field name="debit"/>   
+                    <field name="credit"/>                      
+                    <field name="balance"/>           
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_ineco_close_account_search" model="ir.ui.view">
+            <field name="name">ineco.close.account.search</field>
+            <field name="model">ineco.close.account</field>
+            <field name="arch" type="xml">
+                <search string="Close Account">
+                    <field name="code"/>
+                    <field name="account_id"/>
+                    <field name="period_id" />                           
+                </search>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_ineco_close_account_sale_form">
+	      	<field name="name">ineco.close.account.period.form</field>
+	      	<field name="model">account.period</field>
+	      	<field name="inherit_id" ref="account.view_account_period_form"/>
+	      	<field name="arch" type="xml">        
+	            <xpath expr="//group" position="after">
+	        	    <newline/>   
+ 	        		<notebook colspan="4">  
+                      <page string="Close Account"> 	        		    
+						<field name="close_line_ids" />	    	    	        	        
+		        	  </page>
+	        		</notebook>	
+				</xpath>
+			</field>        
+        </record>
+        
+    </data>
+</openerp>
+                
