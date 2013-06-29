@@ -78,15 +78,5 @@
             </field>
         </record>
 
-        <record id="view_ineco_partner_form2" model="ir.ui.view">
-            <field name="name">ineco.res.partner.form2</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">      
-            	<field name="user_id" position="after">
-            		<field name="sale_team_id" />
-            	</field>  
-            </field>
-        </record>
 	</data>
 </openerp>
