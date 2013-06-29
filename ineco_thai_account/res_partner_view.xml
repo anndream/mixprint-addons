@@ -2,12 +2,12 @@
 <openerp>
     <data>
         
-        <record model="ir.ui.view" id="view_ineco_account_res_partner_form">
-	      	<field name="name">ineco.account.res.partner.form</field>
+        <record model="ir.ui.view" id="view_ineco_billing_partner_form">
+	      	<field name="name">ineco.billing.partner.form</field>
 	      	<field name="model">res.partner</field>
-	      	<field name="inherit_id" ref="base.view_partner_form"/>
+	      	<field name="inherit_id" ref="account.view_partner_property_form"/>
 	      	<field name="arch" type="xml">	        	
-	        	<field name="website" position="after">
+	        	<field name="property_payment_term" position="after">
 	        		<field name="pid" />
 	        		<field name="billing_payment_id" domain="[('billing_term','=',True)]"/>
 	        	</field>

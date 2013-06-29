@@ -163,6 +163,9 @@ class crm_lead(osv.osv):
                 'crm.lead': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             }, help="The amount without tax.", track_visibility='always'),
         'reason_ids': fields.many2many('ineco.crm.reason', 'crm_lead_reason_rel', 'lead_id', 'reason_id', 'Reasons'),
+        'date_lead_to_opportunity': fields.datetime('Date Lead to Opportunity'),
+        'date_opportunity_to_quotation': fields.datetime('Date Lead to Opportunity'),
+        'date_lose': fields.datetime('Date Lose'),
     }
     
     _defaults = {
@@ -177,16 +180,21 @@ class crm_lead(osv.osv):
     def case_reset(self, cr, uid, ids, context=None):
         """ Overrides case_reset from base_stage to set probability """
         res = super(crm_lead, self).case_reset(cr, uid, ids, context=context)
-        self.write(cr, uid, ids, {'probability': 0.0, 'date_closed': False}, context=context)
+        self.write(cr, uid, ids, {'probability': 0.0, 
+                                  'date_closed': False, 
+                                  'date_lose': False, 
+                                  'date_lead_to_opportunity': False, 
+                                  'date_opportunity_to_quotation':False}, context=context)
         return res
 
     def case_mark_lost(self, cr, uid, ids, context=None):
         """ Mark the case as lost: state=cancel and probability=0 """
         for lead in self.browse(cr, uid, ids):
             stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('state','=','cancel')])
-            #stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0),('on_change','=',True)], context=context)
             if stage_ids:
-                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0, 'date_closed': time.strftime("%Y-%m-%d %H:%M:%S")}, new_stage_id=stage_ids[0], context=context)
+                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0, 
+                                                                    'date_closed': time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                    'date_lose': time.strftime("%Y-%m-%d %H:%M:%S")}, new_stage_id=stage_ids[0], context=context)
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
@@ -194,27 +202,117 @@ class crm_lead(osv.osv):
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0),('on_change','=',True)], context=context)
             if stage_id:
-                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0, 'date_closed': time.strftime("%Y-%m-%d %H:%M:%S")}, new_stage_id=stage_id, context=context)
+                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0, 
+                                                                    'date_closed': time.strftime("%Y-%m-%d %H:%M:%S")}, new_stage_id=stage_id, context=context)
         return True
     
-#    def write(self, cr, uid, ids, vals, context=None):
-#        if context is None:
-#            context = {}            
-#        if not ids:
-#            return True       
-#        if isinstance(ids, (int, long)):
-#            ids = [ids]          
-#        for lead in self.browse(cr, uid, ids):
-#            stage_loss_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0)], context=context)
-#            stage_win_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0)], context=context)
-#    
-#            if 'stage_id' in vals:
-#                if vals['stage_id'] in [stage_loss_id, stage_win_id]:
-#                    opp = self.browse(cr, uid, ids)[0]
-#                    if not opp.date_deadline:
-#                        raise osv.except_osv(_('Error!'),
-#                                             _('Please inform Closing Date of (LOSS or WIN).'))         
-#                    
-#        return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
-    
+    def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
+        customer = False
+        if partner_id:
+            partner = self.pool.get('res.partner')
+            customer = partner.browse(cr, uid, partner_id, context=context)
+        for lead in self.browse(cr, uid, ids, context=context):
+            if lead.state in ('done', 'cancel'):
+                continue
+            vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
+            #Lead to Opportunity default datetime
+            vals['date_lead_to_opportunity'] = time.strftime("%Y-%m-%d %H:%M:%S")
+            self.write(cr, uid, [lead.id], vals, context=context)
+        self.message_post(cr, uid, ids, body=_("Lead <b>converted into an Opportunity</b>"), subtype="crm.mt_lead_convert_to_opportunity", context=context)
+
+        if user_ids or section_id:
+            self.allocate_salesman(cr, uid, ids, user_ids, section_id, context=context)
+
+        return True
+
+class crm_make_sale(osv.osv_memory):
+    """ Make sale  order for crm """
+
+    _inherit = "crm.make.sale"
+
+    def makeOrder(self, cr, uid, ids, context=None):
+        """
+        This function  create Quotation on given case.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of crm make sales' ids
+        @param context: A standard dictionary for contextual values
+        @return: Dictionary value of created sales order.
+        """
+        if context is None:
+            context = {}
+        # update context: if come from phonecall, default state values can make the quote crash lp:1017353
+        context.pop('default_state', False)        
+        
+        case_obj = self.pool.get('crm.lead')
+        sale_obj = self.pool.get('sale.order')
+        partner_obj = self.pool.get('res.partner')
+        data = context and context.get('active_ids', []) or []
+
+        for make in self.browse(cr, uid, ids, context=context):
+            partner = make.partner_id
+            partner_addr = partner_obj.address_get(cr, uid, [partner.id],
+                    ['default', 'invoice', 'delivery', 'contact'])
+            pricelist = partner.property_product_pricelist.id
+            fpos = partner.property_account_position and partner.property_account_position.id or False
+            new_ids = []
+            for case in case_obj.browse(cr, uid, data, context=context):
+                if not partner and case.partner_id:
+                    partner = case.partner_id
+                    fpos = partner.property_account_position and partner.property_account_position.id or False
+                    partner_addr = partner_obj.address_get(cr, uid, [partner.id],
+                            ['default', 'invoice', 'delivery', 'contact'])
+                    pricelist = partner.property_product_pricelist.id
+                if False in partner_addr.values():
+                    raise osv.except_osv(_('Insufficient Data!'), _('No addresse(s) defined for this customer.'))
+
+                vals = {
+                    'origin': _('Opportunity: %s') % str(case.id),
+                    'section_id': case.section_id and case.section_id.id or False,
+                    'categ_ids': [(6, 0, [categ_id.id for categ_id in case.categ_ids])],
+                    'shop_id': make.shop_id.id,
+                    'partner_id': partner.id,
+                    'pricelist_id': pricelist,
+                    'partner_invoice_id': partner_addr['invoice'],
+                    'partner_shipping_id': partner_addr['delivery'],
+                    'date_order': fields.date.context_today(self,cr,uid,context=context),
+                    'fiscal_position': fpos,
+                }
+                if partner.id:
+                    vals['user_id'] = partner.user_id and partner.user_id.id or uid
+                new_id = sale_obj.create(cr, uid, vals, context=context)
+                sale_order = sale_obj.browse(cr, uid, new_id, context=context)
+                case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id,'date_opportunity_to_quotation': time.strftime("%Y-%m-%d %H:%M:%S")})
+                new_ids.append(new_id)
+                message = _("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
+                case.message_post(body=message)
+            if make.close:
+                case_obj.case_close(cr, uid, data)
+            if not new_ids:
+                return {'type': 'ir.actions.act_window_close'}
+            if len(new_ids)<=1:
+                value = {
+                    'domain': str([('id', 'in', new_ids)]),
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'sale.order',
+                    'view_id': False,
+                    'type': 'ir.actions.act_window',
+                    'name' : _('Quotation'),
+                    'res_id': new_ids and new_ids[0]
+                }
+            else:
+                value = {
+                    'domain': str([('id', 'in', new_ids)]),
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'res_model': 'sale.order',
+                    'view_id': False,
+                    'type': 'ir.actions.act_window',
+                    'name' : _('Quotation'),
+                    'res_id': new_ids
+                }
+            return value
+  
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

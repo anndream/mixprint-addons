@@ -21,10 +21,8 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 
-                <!-- <xpath expr="//field[@name='child_ids']/form/div[@class='oe_title']/group/field[@name='function']" position="before" > -->
                 <xpath expr="//field[@name='child_ids']/form" position="replace" >
                     <form string="Contact" version="7.0" >
-                    	<!-- <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/> -->
                         <group>
 			                <div class='oe_title' >
 			                    <div class='oe_edit_only'>
@@ -56,33 +54,12 @@
 		                      	<field name="fax" />
 			                    <field name="mobile"/>
 		                        <field name="type" />
-			                    <field name="user_id" />           
+			                    <field name="user_id" />         
 			         		</group>
 			         	</group>
 	                </form>                 
                 </xpath>
                 
-                <!-- 
-                <xpath expr="//field[@name='child_ids']/form/div/group/field[@name='function']" position="after" >
-                    <field name="street" required="1" />                    
-                    <field name="street2" required="1"/>                    
-                    <field name="city" invisible="1"/>                    
-                    <field name="state_id" />                    
-                    <field name="zip" required="1" />                    
-                    <field name="country_id" />                    
-                </xpath>
-                
-                -->
-                
-                <!-- <xpath expr="//field[@name='website']" position="after" >                    
-                    <field name="ineco_code" />
-                    <field name="ineco_region_id" />
-                </xpath>
-                 
-                <xpath expr="//field[@name='email']" position="after" >                    
-                    <field name="ineco_vip_id" />
-                </xpath>
-                -->
                 
                 <xpath expr="//label[@for='type']" position="replace">
                     <label for="type" attrs="{'invisible': [('is_company','=', True)]}" />

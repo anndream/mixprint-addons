@@ -462,6 +462,7 @@
                                 <group name="sales_person" groups="base.group_user">
                                     <field name="user_id"/>
                                     <field name="section_id" />
+                                    <field name="lead_id" required="1" />
                                     <field groups="base.group_no_one" name="origin"/>
                                 </group>
                                 <group name="sale_pay">

@@ -10,6 +10,7 @@
                 
                 <field name="user_id" position="after">
                     <field name="sale_team_id" />
+                    <field name="lead_id" required="1" />
                 </field>
                 
             </field>

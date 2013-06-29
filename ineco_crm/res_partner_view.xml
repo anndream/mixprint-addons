@@ -1,32 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-<!--         <record id="view_ineco_crm_partner_form" model="ir.ui.view">
-            <field name="name">ineco.crm.partner.form</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="crm.res_partner_view_buttons"/>
-            <field name="arch" type="xml">           
-                <xpath expr="//button[@string='Meetings]" position="replace">
-                    <button type="action"
-                        groups="base.group_sale_salesman"
-                        string="Meetings"
-                        name="%(base_calendar.action_crm_meeting)d"
-                        context="{'search_default_partner_ids': active_id, 'default_partner_ids' : [active_id]}"/>
-                </xpath>
-                <xpath expr="//button[@string='Calls" position="replace">
-                    <button type="action" string="Calls" 
-                        name="%(crm.crm_case_categ_phone_incoming0)d" 
-                        context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
-                </xpath>
-                <xpath expr="//button[@string='Opportunities" position="replace">
-                    <button type="action" string="Opportunities" attrs="{'invisible': [('customer', '=', False)]}"
-                        groups="base.group_sale_salesman"
-                        name="%(crm.crm_case_category_act_oppor11)d" context="{'search_default_partner_id': active_id}"/>
-                </xpath>
-            </field>
-		</record>        		
- -->
- 
         <record id="ineco_call_partner_action" model="ir.actions.act_window">
             <field name="name">Partner Calls</field>
             <field name="res_model">crm.phonecall</field>
@@ -104,18 +78,15 @@
             </field>
         </record>
 
-<!--         <record id="ineco_partner_saleteam_form" model="ir.ui.view"> -->
-<!--             <field name="name">ineco.saleteam.form</field> -->
-<!--             <field name="model">res.partner</field> -->
-<!--             <field name="inherit_id" ref="base.view_partner_form"/> -->
-<!--             <field name="arch" type="xml"> -->
-                
-<!--                 <field name="user_id" position="after"> -->
-<!--                     <field name="sale_team_id" /> -->
-<!--                 </field> -->
-
-<!--             </field> -->
-<!--         </record> -->
-        
+        <record id="view_ineco_partner_form2" model="ir.ui.view">
+            <field name="name">ineco.res.partner.form2</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">      
+            	<field name="user_id" position="after">
+            		<field name="sale_team_id" />
+            	</field>  
+            </field>
+        </record>
 	</data>
 </openerp>

@@ -39,6 +39,7 @@ A. Sale Module:
         'sequence.xml',
     ],
     'update_xml': [
+        'res_partner_view.xml',
         'delivery_view.xml',
         'wizard/sale_make_invoice_advance.xml',
         'sale_view.xml',
@@ -46,7 +47,6 @@ A. Sale Module:
         'wht_view.xml',
         'report_view.xml',
         'cheque_view.xml',
-        'res_partner_view.xml',
         'res_company_view.xml',
         'close_account_view.xml',
     ],

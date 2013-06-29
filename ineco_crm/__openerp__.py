@@ -22,7 +22,7 @@
 {
     'name' : 'INECO CRM Extended',
     'version' : '0.1',
-    'depends' : ['base','crm','crm_todo','project','sale'],
+    'depends' : ['base','crm','crm_todo','project','sale','sale_crm'],
     'author' : 'Mr.Tititab Srisookco',
     'category': 'INECO',
     'description': """

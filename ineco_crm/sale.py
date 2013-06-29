@@ -32,8 +32,8 @@ from openerp.osv import fields, osv
 class sale_order(osv.osv):
     _inherit = 'sale.order'
     _columns = {
-        #Add Sale Team
-        'sale_team_id': fields.many2one('crm.case.section','Sale Team'),
+        'sale_team_id': fields.many2one('crm.case.section', 'Sale Team'),
+        'lead_id': fields.many2one('crm.lead', 'Lead/Opportunity'),
     }
     
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
