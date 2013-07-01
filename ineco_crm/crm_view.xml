@@ -423,6 +423,7 @@
 	        <field name="arch" type="xml">
 	        	<field name="opportunity_id" position="after">
 	        		<field name="new_customer" />
+	        		<field name="visit" />
 	        	</field>
 	        </field>
 		
