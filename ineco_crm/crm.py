@@ -278,12 +278,15 @@ class crm_make_sale(osv.osv_memory):
                     'partner_shipping_id': partner_addr['delivery'],
                     'date_order': fields.date.context_today(self,cr,uid,context=context),
                     'fiscal_position': fpos,
+                    'lead_id': case.id,
                 }
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid
                 new_id = sale_obj.create(cr, uid, vals, context=context)
                 sale_order = sale_obj.browse(cr, uid, new_id, context=context)
-                case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id,'date_opportunity_to_quotation': time.strftime("%Y-%m-%d %H:%M:%S")})
+                case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id, 
+                                                    'date_opportunity_to_quotation': time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                    })
                 new_ids.append(new_id)
                 message = _("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
                 case.message_post(body=message)
@@ -314,5 +317,5 @@ class crm_make_sale(osv.osv_memory):
                     'res_id': new_ids
                 }
             return value
-  
+        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
