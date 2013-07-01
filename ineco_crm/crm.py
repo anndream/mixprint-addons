@@ -153,6 +153,19 @@ class crm_lead(osv.osv):
                 last_date_count = (date_finished-date_start).days 
             res[lead.id] = last_date_count
         return res
+
+    def _my_opportunity(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for lead in self.browse(cr, uid, ids, context=context): 
+            sql = "select create_uid from crm_lead where id = %s"
+            cr.execute(sql % (lead.id))
+            result = cr.dictfetchone()
+            create_uid = result['create_uid']
+            if create_uid == lead.user_id.id:       
+                res[lead.id] = True
+            else:
+                res[lead.id] = False
+        return res
     
     _name = "crm.lead"
     _description = "Add Reason of LEAD/OPPORTUNITY"
@@ -166,6 +179,10 @@ class crm_lead(osv.osv):
         'date_lead_to_opportunity': fields.datetime('Date Lead to Opportunity'),
         'date_opportunity_to_quotation': fields.datetime('Date Lead to Opportunity'),
         'date_lose': fields.datetime('Date Lose'),
+        'is_owned': fields.function(_my_opportunity, type="boolean", string='My Opportunity',
+            store={
+                'crm.lead': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            }),
     }
     
     _defaults = {

@@ -276,7 +276,7 @@
                     <field name="last_date_count" />
                 </field>
                 <field name="user_id" position="replace">
-                    <field name="user_id" invisible="0"/>
+                    <field name="user_id" invisible="0"/>                  
                 </field>
             </field>
         </record>
@@ -314,6 +314,7 @@
 	        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
         	<field name="arch" type="xml">
         	    <field name="planned_revenue" position="before">
+        	        <field name="is_owned" />      	    
         	        <field name="date_deadline" string="Closing Date" />
         	        <field name="date_closed" string="Won Date" />
         	    </field>
