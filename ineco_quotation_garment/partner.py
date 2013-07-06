@@ -33,9 +33,17 @@ from openerp.osv import osv, fields
 #import pytz
 #from lxml import etree
 
-
 class res_partner(osv.osv):
+    
+    def _get_account_comment(self, cr, uid, ids, prop, unknow_none, context=None):
+        result = {}
+        for data in self.browse(cr, uid, ids):
+            result[data.id] = data.account_comment or False
+        return result
+    
     _inherit = "res.partner"
     _columns = {
         'account_comment': fields.text('Account Information'),     
+        'review': fields.function(_get_account_comment, type='boolean', string='Review'),
+
     }

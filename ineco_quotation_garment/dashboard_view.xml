@@ -12,9 +12,9 @@
                     <field name="so" />
                     <field name="mo" />
                     <field name="lose" />
-                    <field name="percent10" />
-                    <field name="percent50" />
                     <field name="percent90" />
+                    <field name="percent50" />
+                    <field name="percent10" />
                 </tree>
             </field>
         </record>		
