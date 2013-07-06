@@ -55,11 +55,56 @@
                       <page string="Close Account"> 	        		    
 						<field name="close_line_ids" />	    	    	        	        
 		        	  </page>
-	        		</notebook>	
+                      <page string="Customer Invoice"> 	      	  		    
+						<field name="customer_invoice_ids" />	    	    	        	        
+		        	  </page>
+                      <page string="Customer Refund"> 	        		    
+						<field name="customer_refund_ids" />	    	    	        	        
+		        	  </page>	
+                      <page string="Supplier Invoice"> 	        		    
+						<field name="supplier_invoice_ids" />	    	    	        	        
+		        	  </page>
+                      <page string="Supplier Refund"> 	        		    
+						<field name="supplier_refund_ids" />	    	    	        	        
+		        	  </page>	
+		        	  <page string="PP30"> 	
+		        	    <group>
+		        	        <group string="Customer Invoice" >
+			        	    <field name="sale_amount_untaxed" />
+							<field name="sale_amount_tax" />
+							</group>
+		        	        <group string="Customer Refund" >
+			        	    <field name="sale_refund_amount_untaxed" />
+							<field name="sale_refund_amount_tax" />
+							</group>							
+						</group>
+						<group>
+							<group string="Supplier Invoice">
+				        	    <field name="purchase_amount_untaxed" />
+								<field name="purchase_amount_tax" />
+							</group>	
+							<group string="Supplier Refund">
+				        	    <field name="purchase_refund_amount_untaxed" />
+								<field name="purchase_refund_amount_tax" />
+							</group>	
+						</group>
+					  </page>	        	  	        	  		        	  
+	        		</notebook>        		
 				</xpath>
 			</field>        
         </record>
         
+	    <record model="ir.actions.act_window" id="ineco_pp30_action">
+	        <field name="name">PP30</field>
+	        <field name="res_model">account.period</field>
+	        <field name="view_mode">tree,form</field>        
+	    </record>	   
+
+    	<menuitem name="PP30" 
+    		id="menu_ineco_pp30" 
+    		parent="menu_ineco_account" 
+    		sequence="11" 
+    		action="ineco_pp30_action"/>            
     </data>
 </openerp>
                 

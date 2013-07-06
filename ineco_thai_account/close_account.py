@@ -91,8 +91,95 @@ class account_period_close(osv.osv_memory):
 class account_period(osv.osv):
     _inherit = "account.period"
     _description = "Add close account in period"
+    
+    def _sale_amount(self, cr, uid, ids, name, args, context=None):
+        
+        res = {}
+        invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('period_id','in',ids),('type','=','out_invoice'),('state','not in',('draft','cancel'))], context=context)
+        invoice_obj = self.pool.get('account.invoice').browse(cr, uid, invoice_ids, context=context) 
+        for invoce_sale in self.browse(cr, uid, ids, context=context):
+            res[invoce_sale.id] = {'sale_amount_untaxed': 0.0,
+                                   'sale_amount_tax': 0.0
+                                   }
+            sale_untaxed = 0.0
+            sale_tax = 0.0
+            for line in invoice_obj:
+                sale_untaxed +=  line.amount_untaxed
+                sale_tax += line.amount_tax
+            res[invoce_sale.id]['sale_amount_untaxed'] = sale_untaxed
+            res[invoce_sale.id]['sale_amount_tax'] = sale_tax
+        return res
+    
+    def _sale_refund_amount(self, cr, uid, ids, name, args, context=None):
+        
+        res = {}
+        invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('period_id','in',ids),('type','=','out_refund'),('state','not in',('draft','cancel'))], context=context)
+        invoice_obj = self.pool.get('account.invoice').browse(cr, uid, invoice_ids, context=context) 
+        for invoce_sale in self.browse(cr, uid, ids, context=context):
+            res[invoce_sale.id] = {'sale_refund_amount_untaxed': 0.0,
+                                   'sale_refund_amount_tax': 0.0
+                                   }
+            sale_untaxed = 0.0
+            sale_tax = 0.0
+            for line in invoice_obj:
+                sale_untaxed +=  line.amount_untaxed
+                sale_tax += line.amount_tax
+            res[invoce_sale.id]['sale_refund_amount_untaxed'] = sale_untaxed
+            res[invoce_sale.id]['sale_refund_amount_tax'] = sale_tax
+        return res  
+      
+    def _purchase_amount(self, cr, uid, ids, name, args, context=None):
+        
+        res = {}
+        invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('period_id','in',ids),('type','=','in_invoice'),('state','not in',('draft','cancel'))], context=context)
+        invoice_obj = self.pool.get('account.invoice').browse(cr, uid, invoice_ids, context=context) 
+        for invoce_sale in self.browse(cr, uid, ids, context=context):
+            res[invoce_sale.id] = {'purchase_amount_untaxed': 0.0,
+                                   'purchase_amount_tax': 0.0
+                                   }
+            sale_untaxed = 0.0
+            sale_tax = 0.0
+            for line in invoice_obj:
+                sale_untaxed +=  line.amount_untaxed
+                sale_tax += line.amount_tax
+            res[invoce_sale.id]['purchase_amount_untaxed'] = sale_untaxed
+            res[invoce_sale.id]['purchase_amount_tax'] = sale_tax
+        return res
+
+    def _purchase_refund_amount(self, cr, uid, ids, name, args, context=None):
+        
+        res = {}
+        invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('period_id','in',ids),('type','=','in_refund'),('state','not in',('draft','cancel'))], context=context)
+        invoice_obj = self.pool.get('account.invoice').browse(cr, uid, invoice_ids, context=context) 
+        for invoce_sale in self.browse(cr, uid, ids, context=context):
+            res[invoce_sale.id] = {'purchase_refund_amount_untaxed': 0.0,
+                                   'purchase_refund_amount_tax': 0.0
+                                   }
+            sale_untaxed = 0.0
+            sale_tax = 0.0
+            for line in invoice_obj:
+                sale_untaxed +=  line.amount_untaxed
+                sale_tax += line.amount_tax
+            res[invoce_sale.id]['purchase_refund_amount_untaxed'] = sale_untaxed
+            res[invoce_sale.id]['purchase_refund_amount_tax'] = sale_tax
+        return res
+    
+    
     _columns = {
-        'close_line_ids': fields.one2many('ineco.close.account', 'period_id', 'Account'),
+        'close_line_ids': fields.one2many('ineco.close.account', 'period_id', 'Account', readonly=True),
+        'customer_invoice_ids': fields.one2many('account.invoice', 'period_id','Customer Invoice', domain=[('type','=','out_invoice')], readonly=True),        
+        'customer_refund_ids': fields.one2many('account.invoice',  'period_id','Customer Refund',  domain=[('type','=','out_refund')], readonly=True),   
+        'supplier_invoice_ids': fields.one2many('account.invoice', 'period_id','Supplier Invoice', domain=[('type','=','in_invoice')], readonly=True),   
+        'supplier_refund_ids': fields.one2many('account.invoice',  'period_id','Supplier Refund',  domain=[('type','=','in_refund')], readonly=True),
+        'sale_amount_untaxed': fields.function(_sale_amount,digits_compute=dp.get_precision('Account'), string='Amount Untaxed',multi='sums'),
+        'sale_amount_tax': fields.function(_sale_amount,digits_compute=dp.get_precision('Account'), string='Amount Tax',multi='sums'),
+        'sale_refund_amount_untaxed': fields.function(_sale_refund_amount,digits_compute=dp.get_precision('Account'), string='Amount Untaxed',multi='sumsr'),
+        'sale_refund_amount_tax': fields.function(_sale_refund_amount,digits_compute=dp.get_precision('Account'), string='Amount Tax',multi='sumsr'),
+        'purchase_amount_untaxed': fields.function(_purchase_amount,digits_compute=dp.get_precision('Account'), string='Amount Untaxed',multi='sumss'),
+        'purchase_amount_tax': fields.function(_purchase_amount,digits_compute=dp.get_precision('Account'), string='Amount Tax',multi='sumss'),
+        'purchase_refund_amount_untaxed': fields.function(_purchase_refund_amount,digits_compute=dp.get_precision('Account'), string='Amount Untaxed',multi='sumsp'),
+        'purchase_refund_amount_tax': fields.function(_purchase_refund_amount,digits_compute=dp.get_precision('Account'), string='Amount Tax',multi='sumsp'),
+       
     }
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
