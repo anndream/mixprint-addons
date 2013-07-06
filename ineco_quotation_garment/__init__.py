@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import dashboard
 import sale
 import stock
 import stock_partial_picking

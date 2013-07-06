@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<openerp>
+     <data>
+     
+		<!-- Sale Summary Dashboard -->
+        <record id="view_ineco_sale_summary_tree" model="ir.ui.view">
+            <field name="name">ineco.sale.summary.tree</field>
+            <field name="model">ineco.sale.summary</field>
+            <field name="arch" type="xml">
+                <tree string="Problem Type">
+                    <field name="user_id" />
+                    <field name="so" />
+                    <field name="mo" />
+                    <field name="lose" />
+                    <field name="percent10" />
+                    <field name="percent50" />
+                    <field name="percent90" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_sale_summary_form" model="ir.ui.view">
+            <field name="name">ineco.sale.summary.form</field>
+            <field name="model">ineco.sale.summary</field>
+            <field name="arch" type="xml">
+                <form string="Problem Type">
+                    <field name="user_id" />
+                    <field name="so" />
+                    <field name="mo" />
+                    <field name="lose" />
+                    <field name="percent10" />
+                    <field name="percent50" />
+                    <field name="percent90" />
+                </form>
+            </field>
+        </record>		
+        
+        <record id="view_ineco_sale_summary_filter" model="ir.ui.view">
+            <field name="name">ineco.sale.summary.select</field>
+            <field name="model">ineco.sale.summary</field>
+            <field name="arch" type="xml">
+                <search string="Search Sale Summary">
+                	<field name="user_id" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_sale_summary" model="ir.actions.act_window">
+            <field name="name">Sale Summary</field>
+            <field name="res_model">ineco.sale.summary</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_sale_summary_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale summary. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem 
+            id="menu_ineco_sale_summary"
+        	action="action_ineco_sale_summary" 
+        	parent="base.menu_sales"
+        	sequence="0"/> 
+     
+     </data>
+</openerp>
