@@ -80,13 +80,13 @@ class ineco_sale_summary(osv.osv):
     _name = 'ineco.sale.summary'
     _auto = False
     _columns = {
-        'user_id': fields.many2one('res.users'),
+        'user_id': fields.many2one('res.users', 'Sale'),
         'so': fields.char('SO', size=32),
         'mo': fields.char('MO', size=32),
-        'lose': fields.char('Lose', size=32),
-        'percent10': fields.char('10 Percents', size=32),
-        'percent50': fields.char('50 Percents', size=32),
-        'percent90': fields.char('9O Percents', size=32),
+        'lose': fields.char('Opp Lost', size=32),
+        'percent10': fields.char('Opp 10%', size=32),
+        'percent50': fields.char('Opp 50%', size=32),
+        'percent90': fields.char('Opp 90%', size=32),
     }     
     
     def init(self, cr):
