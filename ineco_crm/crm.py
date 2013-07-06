@@ -159,11 +159,13 @@ class crm_lead(osv.osv):
     def _my_opportunity(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for lead in self.browse(cr, uid, ids, context=context): 
-            sql = "select create_uid from crm_lead where id = %s"
+            sql = """select crm_lead.create_uid as lead_uid, res_partner.create_uid as partner_uid from crm_lead
+                     left join res_partner on crm_lead.partner_id = res_partner.id where crm_lead.id = %s"""
             cr.execute(sql % (lead.id))
             result = cr.dictfetchone()
-            create_uid = result['create_uid']
-            if create_uid == lead.user_id.id:       
+            create_uid = result['lead_uid']
+            partner_uid = result['partner_uid']
+            if create_uid == lead.user_id.id == partner_uid:       
                 res[lead.id] = True
             else:
                 res[lead.id] = False
