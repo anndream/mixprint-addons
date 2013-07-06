@@ -71,7 +71,7 @@ class ineco_sale_summary2(osv.osv):
             from 
               res_users ru
             left join res_partner rp on ru.partner_id = rp.id
-            where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1)
+            where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18)
             order by rp.name        
         )
         """)    
