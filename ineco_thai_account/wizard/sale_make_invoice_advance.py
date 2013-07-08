@@ -145,11 +145,16 @@ class ineco_sale_advance_payment_inv(osv.osv_memory):
                 'invoice_line_tax_id': res.get('invoice_line_tax_id'),
                 'account_analytic_id': sale.project_id.id or False,
             }
+            this_section_id = False
+            try:
+                this_section_id = sale.section_id.id
+            except:
+                pass
             inv_values = {
                 'name': sale.client_order_ref or sale.name,
                 'origin': sale.name,
                 'user_id': sale.user_id and sale.user_id.id or False,
-                'section_id': sale.section_id and sale.section_id.id or False,
+                'section_id': this_section_id,
                 'type': 'out_invoice',
                 'reference': False,
                 'account_id': sale.partner_id.property_account_receivable.id,
