@@ -109,3 +109,110 @@ class ineco_sale_summary(osv.osv):
                     ) b
                 ) c
             )""")
+
+class ineco_sale_summary3(osv.osv):
+    _name = "ineco.sale.summary3"
+    _auto = False
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_summary3')
+        cr.execute("""
+            CREATE VIEW ineco_sale_summary3 AS (
+            select 
+              ru.id as user_id,
+              (select count(*) from sale_order so 
+               where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
+                     and so.state <> 'cancel'
+              ) as so1,
+              (select sum(amount_untaxed) from sale_order so 
+               where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
+                     and so.state <> 'cancel'
+              ) as so2,
+              (select count(*)::numeric  from sale_order so 
+               where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
+                     and so.state <> 'cancel'
+              ) as mo1,
+              (select sum(amount_untaxed) from sale_order so 
+               where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
+                     and so.state <> 'cancel'
+              ) as mo2,
+              (select count(*)::numeric from crm_lead cl  
+               where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
+               and date_part('month',now()) = date_part('month', date_closed)  
+              ) as lose1,  
+              (select sum(planned_revenue) from crm_lead cl  
+               where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
+               and date_part('month',now()) = date_part('month', date_closed)  
+              ) as lose2,  
+              (select count(*)::numeric from crm_lead cl  
+               where user_id = ru.id and stage_id = 1 
+               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+              ) as percent101, 
+              (select sum(planned_revenue) from crm_lead cl  
+               where user_id = ru.id and stage_id = 1 
+               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+              ) as percent102, 
+              (select count(*)::numeric from crm_lead cl  
+               where user_id = ru.id and stage_id = 3   
+               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+              ) as percent501, 
+              (select sum(planned_revenue) from crm_lead cl  
+               where user_id = ru.id and stage_id = 3   
+               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+              ) as percent502,               
+              (select count(*)::numeric   from crm_lead cl  
+               where user_id = ru.id and stage_id = 5  
+               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+              ) as percent901,
+              (select sum(planned_revenue) from crm_lead cl  
+               where user_id = ru.id and stage_id = 5  
+               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+              ) as percent902    
+            from 
+              res_users ru
+            left join res_partner rp on ru.partner_id = rp.id
+            where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60)
+            order by rp.name    
+            )    
+        """)
+        
+class ineco_sale_summary4(osv.osv):
+    _name = 'ineco.sale.summary4'
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Sale'),
+        'so1': fields.integer('SO',),
+        'so2': fields.integer('SO',),
+        'mo1': fields.integer('MO',),
+        'mo2': fields.integer('MO',),
+        'lose1': fields.integer('Opp Lose',),
+        'lose2': fields.integer('Opp Lose',),
+        'percent101': fields.integer('10%',),
+        'percent102': fields.integer('10%',),
+        'percent501': fields.integer('50%',),
+        'percent502': fields.integer('50%',),
+        'percent901': fields.integer('90%',),
+        'percent902': fields.integer('90%',),
+    }     
+    
+    def init(self, cr):
+
+        """
+            CRM Lead Report
+            @param cr: the current row, from the database cursor
+        """
+        tools.drop_view_if_exists(cr, 'ineco_sale_summary4')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_sale_summary4 AS (
+                select id, (a[id]).*
+                from (
+                    select a, generate_series(1, array_upper(a,1)) as id
+                        from (
+                            select array (
+                                select ineco_sale_summary3 from ineco_sale_summary3
+
+                            ) as a
+                    ) b
+                ) c
+            )""")
+        

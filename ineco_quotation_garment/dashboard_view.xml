@@ -63,11 +63,63 @@
             </field>
         </record>
         
+
+
+		<!-- Sale Summary Dashboard 4 -->
+        <record id="view_ineco_sale_summary4_tree" model="ir.ui.view">
+            <field name="name">ineco.sale.summary4.tree</field>
+            <field name="model">ineco.sale.summary4</field>
+            <field name="arch" type="xml">
+                <tree string="Problem Type">
+                    <field name="user_id" />
+                    <field name="so1" sum="Total"/>
+                    <field name="so2" sum="Total" string=""/>
+                    <field name="mo1" sum="Total"/>
+                    <field name="mo2" sum="Total" string=""/>
+                    <field name="lose1" sum="Total"/>
+                    <field name="lose2" sum="Total" string=""/>
+                    <field name="percent901" sum="Total"/>
+                    <field name="percent902" sum="Total" string=""/>
+                    <field name="percent501" sum="Total"/>
+                    <field name="percent502" sum="Total" string=""/>
+                    <field name="percent101" sum="Total"/>
+                    <field name="percent102" sum="Total" string=""/>
+                </tree>
+            </field>
+        </record>		
+        
+        <record id="view_ineco_sale_summary4_filter" model="ir.ui.view">
+            <field name="name">ineco.sale.summary4.select</field>
+            <field name="model">ineco.sale.summary4</field>
+            <field name="arch" type="xml">
+                <search string="Search Sale Summary">
+                	<field name="user_id" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_sale_summary4" model="ir.actions.act_window">
+            <field name="name">Sale Summary</field>
+            <field name="res_model">ineco.sale.summary4</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_sale_summary4_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale summary. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>     
+        
         <menuitem 
             id="menu_ineco_sale_summary"
-        	action="action_ineco_sale_summary" 
+        	action="action_ineco_sale_summary4" 
         	parent="base.menu_sales"
-        	sequence="0"/> 
-     
+        	sequence="0"/>         
      </data>
 </openerp>
