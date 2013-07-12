@@ -146,27 +146,27 @@ class ineco_sale_summary3(osv.osv):
               ) as lose2,  
               (select count(*)::numeric from crm_lead cl  
                where user_id = ru.id and stage_id = 1 
-               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
               ) as percent101, 
               (select sum(planned_revenue) from crm_lead cl  
                where user_id = ru.id and stage_id = 1 
-               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
               ) as percent102, 
               (select count(*)::numeric from crm_lead cl  
                where user_id = ru.id and stage_id = 3   
-               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
               ) as percent501, 
               (select sum(planned_revenue) from crm_lead cl  
                where user_id = ru.id and stage_id = 3   
-               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
               ) as percent502,               
               (select count(*)::numeric   from crm_lead cl  
                where user_id = ru.id and stage_id = 5  
-               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
               ) as percent901,
               (select sum(planned_revenue) from crm_lead cl  
                where user_id = ru.id and stage_id = 5  
-               and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
               ) as percent902    
             from 
               res_users ru

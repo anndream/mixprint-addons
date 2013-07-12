@@ -2,7 +2,8 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012 - INECO PARTNERSHIP LIMITE (<http://www.ineco.co.th>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,12 +20,13 @@
 #
 ##############################################################################
 
-import dashboard
-import sale
-import stock
-import stock_partial_picking
-import partner
-import problem
-import res_users
+import openerp
+from openerp import SUPERUSER_ID
+from openerp import pooler, tools
+from openerp.osv import fields,osv
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class res_users(osv.osv):
+    _inherit = "res.users"
+    _columns = {
+        'nickname': fields.char('Nick Name', size=32),
+    }
