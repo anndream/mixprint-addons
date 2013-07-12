@@ -123,7 +123,13 @@ class res_partner(osv.osv):
             set last_date_count = 366 + date_part('day', now() - '2013-01-01 00:00:00')
             where last_phonecall is null
         """)
-        print 'Finish'
+        cr.execute("""
+            update crm_lead
+            set last_date_count = date_part('day',now() - create_date)
+            where state not in ('cancel','done')        
+        """
+        )
+        #print 'Finish'
     
     standard_date_count = 365
 
