@@ -71,7 +71,7 @@
             <field name="model">ineco.sale.summary4</field>
             <field name="arch" type="xml">
                 <tree string="Problem Type">
-                    <field name="user_id" />
+                    <field name="nickname" />
                     <field name="so1" sum="Total"/>
                     <field name="so2" sum="Total" string=""/>
                     <field name="mo1" sum="Total"/>
@@ -82,6 +82,8 @@
                     <field name="percent902" sum="Total" string=""/>
                     <field name="percent501" sum="Total"/>
                     <field name="percent502" sum="Total" string=""/>
+                    <field name="percent301" sum="Total"/>
+                    <field name="percent302" sum="Total" string=""/>
                     <field name="percent101" sum="Total"/>
                     <field name="percent102" sum="Total" string=""/>
                 </tree>
@@ -94,6 +96,7 @@
             <field name="arch" type="xml">
                 <search string="Search Sale Summary">
                 	<field name="user_id" />
+                	<field name="nickname" />
                	</search>
             </field>
         </record>

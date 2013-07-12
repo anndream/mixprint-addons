@@ -167,7 +167,17 @@ class ineco_sale_summary3(osv.osv):
               (select sum(planned_revenue) from crm_lead cl  
                where user_id = ru.id and stage_id = 5  
                --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
-              ) as percent902    
+              ) as percent902,
+              ru.nickname as nickname,
+              (select count(*)::numeric from crm_lead cl  
+               where user_id = ru.id and stage_id = 10   
+               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+              ) as percent301, 
+              (select sum(planned_revenue) from crm_lead cl  
+               where user_id = ru.id and stage_id = 10   
+               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+              ) as percent302           
+                  
             from 
               res_users ru
             left join res_partner rp on ru.partner_id = rp.id
@@ -193,6 +203,9 @@ class ineco_sale_summary4(osv.osv):
         'percent502': fields.integer('50%',),
         'percent901': fields.integer('90%',),
         'percent902': fields.integer('90%',),
+        'nickname': fields.char('Nick Name', size=32),
+        'percent301': fields.integer('30%',),
+        'percent302': fields.integer('30%',),
     }     
     
     def init(self, cr):
