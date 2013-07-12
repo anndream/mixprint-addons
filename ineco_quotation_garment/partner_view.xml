@@ -25,6 +25,17 @@
             </field>
         </record>
         
+       <record id="ineco_partner_filter2" model="ir.ui.view">
+            <field name="name">ineco.partner.select2</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+            	<field name="user_id" position="before">
+                   <filter help="My Customer" icon="terp-personal+" name="mycustomer" domain="[('user_id','=',uid)]"/>            	
+            	</field>
+            </field>
+       </record>
+        
     
 	</data>
 </openerp>
