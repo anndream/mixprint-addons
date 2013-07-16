@@ -148,7 +148,7 @@ class crm_lead(osv.osv):
         res = {}
         for lead in self.browse(cr, uid, ids, context=context):
             last_date_count = 0
-            if lead.state != 'done':
+            if lead.state not in ('done','cancel'):
                 date_now = time.strftime('%Y-%m-%d %H:%M:%S')
                 date_start = datetime.strptime(lead.create_date,'%Y-%m-%d %H:%M:%S')
                 date_finished = datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
@@ -187,6 +187,7 @@ class crm_lead(osv.osv):
             store={
                 'crm.lead': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             }),
+        'last_contact_date': fields.related('partner_id', 'last_date_count', type='integer', string="Last Contact", readonly=True, store=True),
     }
     
     _defaults = {
