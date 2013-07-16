@@ -118,71 +118,71 @@ class ineco_sale_summary3(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_summary3')
         cr.execute("""
             CREATE VIEW ineco_sale_summary3 AS (
-            select 
-              ru.id as user_id,
-              (select count(*) from sale_order so 
-               where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
-                     and so.state <> 'cancel'
-              ) as so1,
-              (select sum(amount_untaxed) from sale_order so 
-               where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
-                     and so.state <> 'cancel'
-              ) as so2,
-              (select count(*)::numeric  from sale_order so 
-               where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
-                     and so.state <> 'cancel'
-              ) as mo1,
-              (select sum(amount_untaxed) from sale_order so 
-               where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
-                     and so.state <> 'cancel'
-              ) as mo2,
-              (select count(*)::numeric from crm_lead cl  
-               where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
-               and date_part('month',now()) = date_part('month', date_closed)  
-              ) as lose1,  
-              (select sum(planned_revenue) from crm_lead cl  
-               where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
-               and date_part('month',now()) = date_part('month', date_closed)  
-              ) as lose2,  
-              (select count(*)::numeric from crm_lead cl  
-               where user_id = ru.id and stage_id = 1 
-               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
-              ) as percent101, 
-              (select sum(planned_revenue) from crm_lead cl  
-               where user_id = ru.id and stage_id = 1 
-               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
-              ) as percent102, 
-              (select count(*)::numeric from crm_lead cl  
-               where user_id = ru.id and stage_id = 3   
-               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
-              ) as percent501, 
-              (select sum(planned_revenue) from crm_lead cl  
-               where user_id = ru.id and stage_id = 3   
-               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
-              ) as percent502,               
-              (select count(*)::numeric   from crm_lead cl  
-               where user_id = ru.id and stage_id = 5  
-               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
-              ) as percent901,
-              (select sum(planned_revenue) from crm_lead cl  
-               where user_id = ru.id and stage_id = 5  
-               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
-              ) as percent902,
-              ru.nickname as nickname,
-              (select count(*)::numeric from crm_lead cl  
-               where user_id = ru.id and stage_id = 10   
-               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
-              ) as percent301, 
-              (select sum(planned_revenue) from crm_lead cl  
-               where user_id = ru.id and stage_id = 10   
-               --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
-              ) as percent302           
-                  
-            from 
-              res_users ru
-            left join res_partner rp on ru.partner_id = rp.id
-            where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60)
-            order by rp.name    
+                select 
+                  ru.id as user_id,
+                  (select count(*) from sale_order so 
+                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
+                         and so.state <> 'cancel'
+                  ) as so1,
+                  (select coalesce(sum(amount_untaxed),0) from sale_order so 
+                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
+                         and so.state <> 'cancel'
+                  ) as so2,
+                  (select count(*)::numeric  from sale_order so 
+                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
+                         and so.state <> 'cancel'
+                  ) as mo1,
+                  (select coalesce(sum(amount_untaxed),0) from sale_order so 
+                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
+                         and so.state <> 'cancel'
+                  ) as mo2,
+                  (select count(*)::numeric from crm_lead cl  
+                   where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
+                   and date_part('month',now()) = date_part('month', date_closed)  
+                  ) as lose1,  
+                  (select coalesce(sum(planned_revenue),0) from crm_lead cl  
+                   where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
+                   and date_part('month',now()) = date_part('month', date_closed)  
+                  ) as lose2,  
+                  (select count(*)::numeric from crm_lead cl  
+                   where user_id = ru.id and stage_id = 1 
+                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                  ) as percent101, 
+                  (select coalesce(sum(planned_revenue),0) from crm_lead cl  
+                   where user_id = ru.id and stage_id = 1 
+                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                  ) as percent102, 
+                  (select count(*)::numeric from crm_lead cl  
+                   where user_id = ru.id and stage_id = 3   
+                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                  ) as percent501, 
+                  (select coalesce(sum(planned_revenue),0) from crm_lead cl  
+                   where user_id = ru.id and stage_id = 3   
+                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                  ) as percent502,               
+                  (select count(*)::numeric   from crm_lead cl  
+                   where user_id = ru.id and stage_id = 5  
+                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                  ) as percent901,
+                  (select coalesce(sum(planned_revenue),0) from crm_lead cl  
+                   where user_id = ru.id and stage_id = 5  
+                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                  ) as percent902,
+                  ru.nickname as nickname,
+                  (select count(*)::numeric from crm_lead cl  
+                   where user_id = ru.id and stage_id = 10   
+                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                  ) as percent301, 
+                  (select coalesce(sum(planned_revenue),0) from crm_lead cl  
+                   where user_id = ru.id and stage_id = 10   
+                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                  ) as percent302           
+                      
+                from 
+                  res_users ru
+                left join res_partner rp on ru.partner_id = rp.id
+                where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60)
+                order by rp.name                
             )    
         """)
         
