@@ -115,6 +115,27 @@ class res_partner(osv.osv):
             where id not in (select distinct partner_id from sale_order where state in ('done'))                
         """ )
         cr.execute("""
+            update
+              res_partner
+            set
+              last_phonecall = b.last_update
+            from 
+                (select
+                  a.id,
+                  greatest(a.last_phonecall, a.lead_create, a.lead_update) as last_update
+                from
+                    (select 
+                      res_partner.id,
+                      last_phonecall,
+                      (select max(create_date) from crm_lead
+                       where partner_id = res_partner.id) as lead_create,
+                      (select max(write_date) from crm_lead
+                       where partner_id = res_partner.id) as lead_update  
+                    from res_partner) as a) as b
+            where
+              b.id = res_partner.id        
+        """)
+        cr.execute("""
             update res_partner
             set last_date_count = date_part('day',now() - last_phonecall)
         """)
