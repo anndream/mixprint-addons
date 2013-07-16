@@ -122,7 +122,7 @@ class res_partner(osv.osv):
             from 
                 (select
                   a.id,
-                  greatest(a.last_phonecall, a.lead_create, a.lead_update) as last_update
+                  greatest(a.last_phonecall, a.lead_create, a.lead_update)::timestamp(0) as last_update
                 from
                     (select 
                       res_partner.id,
