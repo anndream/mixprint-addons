@@ -240,10 +240,11 @@ class ineco_sale_advance_payment_inv(osv.osv_memory):
 
     def onchange_amount(self, cr, uid, ids, amount, context=None):
         
-        sale_amount = self._get_order_amount(cr, uid, ids, context) 
-        if  sale_amount > 0.00 and amount > 0.00:
-            percent  = (amount / sale_amount) * 100.00
-            return {'value': {'percent_advance': percent}}
+#         sale_amount = self._get_order_amount(cr, uid, ids, context) 
+#         if  sale_amount > 0.00 and amount > 0.00:
+#             percent  = (amount / sale_amount) * 100.00
+#             return {'value': {'percent_advance': percent}}
+        
         return {'value': {'percent_advance': 0}}        
 
 ineco_sale_advance_payment_inv()
