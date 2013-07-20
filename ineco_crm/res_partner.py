@@ -324,7 +324,7 @@ class res_partner(osv.osv):
 
     _columns = {
         'last_phonecall': fields.datetime('Last Contact Date'),
-        'last_date_count': fields.function(_last_date_count, type="integer", string='Contact Count',
+        'last_date_count': fields.function(_last_date_count, type="integer", string='Contacted Update',
             store={
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, [], 10),
                 'crm.lead': (_get_ids_from_lead,[],10),
