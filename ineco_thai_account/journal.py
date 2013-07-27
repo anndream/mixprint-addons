@@ -19,17 +19,13 @@
 #
 ##############################################################################
 
-import delivery
-import sale
-import invoice
-import wizard
-import wht
-import report
-import cheque
-import res_partner
-import res_company
-import stock
-import close_account
-import journal
+from openerp.osv import osv, fields
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class account_journal(osv.osv):
+    _inherit = 'account.journal'
+    _columns = {
+        'print_sale_tax': fields.boolean('Print Sale Tax')
+    }
+    _default = {
+        'print_sale_tax': True,
+    }

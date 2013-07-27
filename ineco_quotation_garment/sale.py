@@ -27,7 +27,7 @@ from openerp.osv import fields, osv
 #from tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
 #import decimal_precision as dp
-import netsvc
+import openerp.netsvc
 
 
 class sale_property(osv.osv):
