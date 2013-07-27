@@ -41,7 +41,18 @@ class res_partner(osv.osv):
     _defaults = {
         'use_parent_address': False,  
     }
-    
+
+    def onchange_type(self, cr, uid, ids, is_company, context=None):
+        value = {}
+        value['title'] = False
+        if is_company:
+            #value['parent_id'] = False
+            domain = {'title': [('domain', '=', 'partner')]}
+        else:
+            domain = {'title': [('domain', '=', 'contact')]}
+            
+        return {'value': value, 'domain': domain}
+        
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
