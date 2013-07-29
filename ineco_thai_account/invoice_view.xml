@@ -24,6 +24,7 @@
 	        	</page>
 	        	<field name="move_id" position="after">
 	        		<field name="bill_due" />
+	        		<field name="service" />
 	        	</field>
 <!-- 	        	<field name="date_due" position="after"> -->
 <!-- 	        		<field name="bill_due" /> -->
