@@ -248,7 +248,170 @@
                     <field name="billing_term" />
                 </tree>
             </field>
+        </record>       
+        
+        <record id="view_ineco_account_invoice_filter" model="ir.ui.view">
+            <field name="name">ineco.account.invoice.select</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter" />
+            <field name="arch" type="xml">
+            	<filter name="unpaid" position="after">
+                    <filter name="nodue" icon="terp-gtk-media-pause" string="No Due Date" domain="[('date_due','=',False),('state','=','draft')]" help="No due date."/>
+                    <filter name="nobill" icon="terp-gtk-media-pause" string="No Billing Date" domain="[('bill_due','=',False),('state','=','draft')]" help="No bill date."/>
+                    <filter name="todaydue" icon="terp-go-today" string="Today Due" domain="[('date_due','=',time.strftime('%%Y-%%m-%%d')),('state','=','draft')]" />
+					<filter name="todaybill" icon="terp-go-today" string="Today Billing" domain="[('bill_due','=',time.strftime('%%Y-%%m-%%d')),('state','=','draft')]" />
+            	</filter>
+            </field>
+       	</record>
+
+        <record id="view_ineco_invoice_tree" model="ir.ui.view">
+            <field name="name">ineco.account.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree" />
+            <field name="arch" type="xml">
+            	<field name="date_due" position="after">
+            		<field name="bill_due" />
+            	</field>
+            	<field name="amount_untaxed" position="replace">
+            		<field name="amount_untaxed" invisible="1" sum="Untaxed Amount"/>
+            	</field>
+            </field>
+       	</record>
+       	
+        <!-- Customer Invoices By Due Date -->
+        <record id="view_ineco_invoice_calendar" model="ir.ui.view">
+            <field name="name">ineco.account.invoice.calendar</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <calendar string="Invoices By Due Date" color="partner_id" date_start="date_due">
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="ineco_invoice_due_tree" model="ir.ui.view">
+            <field name="name">ineco.due.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice By Due Date">
+                    <field name="partner_id" groups="base.group_user"/>
+                    <field name="date_due"/>
+                    <field name="number"/>
+                    <field name="reference" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="period_id" invisible="1" groups="account.group_account_user"/>
+                    <field name="user_id"/>
+                    <field name="origin"/>
+                    <field name="residual" sum="Residual Amount"/>
+                    <field name="amount_untaxed" sum="Untaxed Amount"/>
+                    <field name="amount_total" sum="Total Amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_ineco_invoice_due" model="ir.actions.act_window">
+            <field name="name">Invoices By Due Date</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_id" ref="ineco_invoice_due_tree"/>
+            <field name="context">{'type':'out_invoice'}</field>
+            <field name="domain">[('date_due','!=',False),('state','!=','cancel')]</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         </record>
         
+        <record id="action_ineco_invoice_due_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="ineco_invoice_due_tree" />
+            <field name="act_window_id" ref="action_ineco_invoice_due"/>
+        </record>
+        
+        <record id="action_ineco_invoice_due_form" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="act_window_id" ref="action_ineco_invoice_due"/>
+        </record>        
+
+        <record id="action_ineco_invoice_due_calendar" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="view_ineco_invoice_calendar" />
+            <field name="act_window_id" ref="action_ineco_invoice_due"/>
+        </record>
+        
+        <menuitem action="action_ineco_invoice_due" id="menu_ineco_invoice_due" parent="account.menu_finance_receivables" sequence="100"/>
+
+        <!-- Customer Invoices By Billing Date -->
+        <record id="view_ineco_invoice_billing_calendar" model="ir.ui.view">
+            <field name="name">ineco.billing.invoice.calendar</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <calendar string="Invoices By Billing Date" color="partner_id" date_start="bill_due">
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="ineco_invoice_billing_tree" model="ir.ui.view">
+            <field name="name">ineco.billing.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice By Due Date">
+                    <field name="partner_id" groups="base.group_user"/>
+                    <field name="bill_due"/>
+                    <field name="number"/>
+                    <field name="reference" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="period_id" invisible="1" groups="account.group_account_user"/>
+                    <field name="user_id"/>
+                    <field name="origin"/>
+                    <field name="residual" sum="Residual Amount"/>
+                    <field name="amount_untaxed" sum="Untaxed Amount"/>
+                    <field name="amount_total" sum="Total Amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_ineco_invoice_billing" model="ir.actions.act_window">
+            <field name="name">Invoices By Billing Date</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_id" ref="ineco_invoice_due_tree"/>
+            <field name="context">{'type':'out_invoice'}</field>
+            <field name="domain">[('bill_due','!=',False),('state','!=','cancel')]</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        </record>
+        
+        <record id="action_ineco_invoice_billing_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="ineco_invoice_billing_tree" />
+            <field name="act_window_id" ref="action_ineco_invoice_billing"/>
+        </record>
+        
+        <record id="action_ineco_invoice_billine_form" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="act_window_id" ref="action_ineco_invoice_billing"/>
+        </record>        
+
+        <record id="action_ineco_invoice_billing_calendar" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="view_ineco_invoice_billing_calendar" />
+            <field name="act_window_id" ref="action_ineco_invoice_billing"/>
+        </record>
+        
+        <menuitem action="action_ineco_invoice_billing" id="menu_ineco_invoice_billing" parent="account.menu_finance_receivables" sequence="110"/>        
     </data>
 </openerp>
