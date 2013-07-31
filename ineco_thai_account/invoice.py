@@ -19,6 +19,9 @@
 #
 ##############################################################################
 
+# POP-001    2013-07-31    Disable when change partner to change due date too.
+
+
 from openerp.osv import fields, osv
 
 #from datetime import datetime, timedelta
@@ -82,79 +85,18 @@ class account_invoice(osv.osv):
         'service': False,
     }
 
-#     def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
-#             date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
-#         partner_payment_term = False
-#         acc_id = False
-#         bank_id = False
-#         fiscal_position = False
-# 
-#         opt = [('uid', str(uid))]
-#         if partner_id:
-# 
-#             opt.insert(0, ('id', partner_id))
-#             p = self.pool.get('res.partner').browse(cr, uid, partner_id)
-#             if company_id:
-#                 if (p.property_account_receivable.company_id and (p.property_account_receivable.company_id.id != company_id)) and (p.property_account_payable.company_id and (p.property_account_payable.company_id.id != company_id)):
-#                     property_obj = self.pool.get('ir.property')
-#                     rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
-#                     pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
-#                     if not rec_pro_id:
-#                         rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id)])
-#                     if not pay_pro_id:
-#                         pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id)])
-#                     rec_line_data = property_obj.read(cr,uid,rec_pro_id,['name','value_reference','res_id'])
-#                     pay_line_data = property_obj.read(cr,uid,pay_pro_id,['name','value_reference','res_id'])
-#                     rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
-#                     pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
-#                     if not rec_res_id and not pay_res_id:
-#                         raise osv.except_osv(_('Configuration Error!'),
-#                             _('Cannot find a chart of accounts for this company, you should create one.'))
-#                     account_obj = self.pool.get('account.account')
-#                     rec_obj_acc = account_obj.browse(cr, uid, [rec_res_id])
-#                     pay_obj_acc = account_obj.browse(cr, uid, [pay_res_id])
-#                     p.property_account_receivable = rec_obj_acc[0]
-#                     p.property_account_payable = pay_obj_acc[0]
-# 
-#             if type in ('out_invoice', 'out_refund'):
-#                 acc_id = p.property_account_receivable.id
-#                 partner_payment_term = p.property_payment_term and p.property_payment_term.id or False
-#             else:
-#                 acc_id = p.property_account_payable.id
-#                 partner_payment_term = p.property_supplier_payment_term and p.property_supplier_payment_term.id or False
-#             fiscal_position = p.property_account_position and p.property_account_position.id or False
-#             if p.bank_ids:
-#                 bank_id = p.bank_ids[0].id
-# 
-#         result = {'value': {
-#             'account_id': acc_id,
-#             'payment_term': partner_payment_term,
-#             'fiscal_position': fiscal_position
-#             }
-#         }
-# 
-#         if type in ('in_invoice', 'in_refund'):
-#             result['value']['partner_bank_id'] = bank_id
-# 
-#         if payment_term != partner_payment_term:
-#             if partner_payment_term:
-#                 to_update = self.onchange_payment_term_date_invoice(
-#                     cr, uid, ids, partner_payment_term, date_invoice)
-#                 result['value'].update(to_update['value'])
-#                 #Change Billing Date
-#                 if p.billing_payment_id:
-#                     bill_update = self.onchange_payment_term_date_due(
-#                     cr, uid, ids, p.billing_payment_id.id, to_update['value'])
-#                     result['value'].update(bill_update['value'])
-#                 else:
-#                     result['value']['bill_due'] = False
-#             else:
-#                 result['value']['date_due'] = False
-# 
-#         if partner_bank_id != bank_id:
-#             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
-#             result['value'].update(to_update['value'])
-#         return result    
+    def action_date_assign(self, cr, uid, ids, *args):
+        for inv in self.browse(cr, uid, ids):
+            if not inv.date_due:
+                res = self.onchange_payment_term_date_invoice(cr, uid, inv.id, inv.payment_term.id, inv.date_invoice)
+                if res and res['value']:
+                    self.write(cr, uid, [inv.id], res['value'])
+            if not inv.bill_due:
+                if inv.partner_id and inv.partner_id.billing_payment_id:
+                    res = self.onchange_payment_term_date_due(cr, uid, inv.id, inv.partner_id.billing_payment_id.id, inv.date_invoice)
+                    if res and res['value']:
+                        self.write(cr, uid, [inv.id], res['value'])
+        return True
 
     def onchange_payment_term_date_due(self, cr, uid, ids, payment_term_id, date_invoice):
         res = {}        
@@ -171,18 +113,6 @@ class account_invoice(osv.osv):
             raise osv.except_osv(_('Insufficient Data!'), _('The payment term of supplier does not have a payment term line.'))
         return res
 
-#     def create(self, cr, uid, vals, context=None):
-#         if vals.get('partner_id', False) and vals.get('date_due', False) :
-#             partner = self.pool.get('res.partner').browse(cr, uid, vals['partner_id'])[0]
-#             if partner.billing_payment_id:
-#                 pterm_list = self.pool.get('account.payment.term').compute(cr, uid, partner.billing_payment_id.id, value=1, date_ref=vals['date_due'])
-#                 if pterm_list:
-#                     pterm_list = [line[0] for line in pterm_list]
-#                     pterm_list.sort()
-#                     vals['bill_due'] = pterm_list[-1]
-#                 
-#         return super(account_invoice, self).create(cr, uid, vals, context=context)
-    
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('date_due',False):
             for line in self.browse(cr, uid, ids):
@@ -194,6 +124,236 @@ class account_invoice(osv.osv):
                         vals['bill_due'] = pterm_list[-1]
         return super(account_invoice, self).write(cr, uid, ids, vals, context=context)
 
+    def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
+            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
+        partner_payment_term = False
+        acc_id = False
+        bank_id = False
+        fiscal_position = False
+
+        opt = [('uid', str(uid))]
+        if partner_id:
+
+            opt.insert(0, ('id', partner_id))
+            p = self.pool.get('res.partner').browse(cr, uid, partner_id)
+            if company_id:
+                if (p.property_account_receivable.company_id and (p.property_account_receivable.company_id.id != company_id)) and (p.property_account_payable.company_id and (p.property_account_payable.company_id.id != company_id)):
+                    property_obj = self.pool.get('ir.property')
+                    rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
+                    pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
+                    if not rec_pro_id:
+                        rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id)])
+                    if not pay_pro_id:
+                        pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id)])
+                    rec_line_data = property_obj.read(cr,uid,rec_pro_id,['name','value_reference','res_id'])
+                    pay_line_data = property_obj.read(cr,uid,pay_pro_id,['name','value_reference','res_id'])
+                    rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
+                    pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
+                    if not rec_res_id and not pay_res_id:
+                        raise osv.except_osv(_('Configuration Error!'),
+                            _('Cannot find a chart of accounts for this company, you should create one.'))
+                    account_obj = self.pool.get('account.account')
+                    rec_obj_acc = account_obj.browse(cr, uid, [rec_res_id])
+                    pay_obj_acc = account_obj.browse(cr, uid, [pay_res_id])
+                    p.property_account_receivable = rec_obj_acc[0]
+                    p.property_account_payable = pay_obj_acc[0]
+
+            if type in ('out_invoice', 'out_refund'):
+                acc_id = p.property_account_receivable.id
+                partner_payment_term = p.property_payment_term and p.property_payment_term.id or False
+            else:
+                acc_id = p.property_account_payable.id
+                partner_payment_term = p.property_supplier_payment_term and p.property_supplier_payment_term.id or False
+            fiscal_position = p.property_account_position and p.property_account_position.id or False
+            if p.bank_ids:
+                bank_id = p.bank_ids[0].id
+
+        result = {'value': {
+            'account_id': acc_id,
+            'payment_term': partner_payment_term,
+            'fiscal_position': fiscal_position
+            }
+        }
+
+        if type in ('in_invoice', 'in_refund'):
+            result['value']['partner_bank_id'] = bank_id
+
+        if payment_term != partner_payment_term:
+            if partner_payment_term:
+                to_update = self.onchange_payment_term_date_invoice(
+                    cr, uid, ids, partner_payment_term, date_invoice)
+                result['value'].update(to_update['value'])
+# POP-001                
+#             else:
+#                 result['value']['date_due'] = False
+
+        if partner_bank_id != bank_id:
+            to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
+            result['value'].update(to_update['value'])
+        return result
+ 
+    def action_move_create(self, cr, uid, ids, context=None):
+        """Creates invoice related analytics and financial move lines"""
+        ait_obj = self.pool.get('account.invoice.tax')
+        cur_obj = self.pool.get('res.currency')
+        period_obj = self.pool.get('account.period')
+        payment_term_obj = self.pool.get('account.payment.term')
+        journal_obj = self.pool.get('account.journal')
+        move_obj = self.pool.get('account.move')
+        if context is None:
+            context = {}
+        for inv in self.browse(cr, uid, ids, context=context):
+            if not inv.journal_id.sequence_id:
+                raise osv.except_osv(_('Error!'), _('Please define sequence on the journal related to this invoice.'))
+            if not inv.invoice_line:
+                raise osv.except_osv(_('No Invoice Lines !'), _('Please create some invoice lines.'))
+            if inv.move_id:
+                continue
+
+            ctx = context.copy()
+            ctx.update({'lang': inv.partner_id.lang})
+            if not inv.date_invoice:
+                self.write(cr, uid, [inv.id], {'date_invoice': fields.date.context_today(self,cr,uid,context=context)}, context=ctx)
+            company_currency = inv.company_id.currency_id.id
+            # create the analytical lines
+            # one move line per invoice line
+            iml = self._get_analytic_lines(cr, uid, inv.id, context=ctx)
+            # check if taxes are all computed
+            compute_taxes = ait_obj.compute(cr, uid, inv.id, context=ctx)
+            self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
+
+            # I disabled the check_total feature
+            group_check_total_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'group_supplier_inv_check_total')[1]
+            group_check_total = self.pool.get('res.groups').browse(cr, uid, group_check_total_id, context=context)
+            if group_check_total and uid in [x.id for x in group_check_total.users]:
+                if (inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0)):
+                    raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe encoded total does not match the computed total.'))
+
+            if inv.payment_term:
+                total_fixed = total_percent = 0
+                for line in inv.payment_term.line_ids:
+                    if line.value == 'fixed':
+                        total_fixed += line.value_amount
+                    if line.value == 'procent':
+                        total_percent += line.value_amount
+                total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
+                if (total_fixed + total_percent) > 100:
+                    raise osv.except_osv(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
+
+            # one move line per tax line
+            iml += ait_obj.move_line_get(cr, uid, inv.id)
+
+            entry_type = ''
+            if inv.type in ('in_invoice', 'in_refund'):
+                ref = inv.reference
+                entry_type = 'journal_pur_voucher'
+                if inv.type == 'in_refund':
+                    entry_type = 'cont_voucher'
+            else:
+                ref = self._convert_ref(cr, uid, inv.number)
+                entry_type = 'journal_sale_vou'
+                if inv.type == 'out_refund':
+                    entry_type = 'cont_voucher'
+
+            diff_currency_p = inv.currency_id.id <> company_currency
+            # create one move line for the total and possibly adjust the other lines amount
+            total = 0
+            total_currency = 0
+            total, total_currency, iml = self.compute_invoice_totals(cr, uid, inv, company_currency, ref, iml, context=ctx)
+            acc_id = inv.account_id.id
+
+            name = inv['name'] or '/'
+            totlines = False
+            if inv.payment_term:
+                totlines = payment_term_obj.compute(cr,
+                        uid, inv.payment_term.id, total, inv.date_invoice or False, context=ctx)
+            if totlines:
+                res_amount_currency = total_currency
+                i = 0
+                ctx.update({'date': inv.date_invoice})
+                for t in totlines:
+                    if inv.currency_id.id != company_currency:
+                        amount_currency = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, t[1], context=ctx)
+                    else:
+                        amount_currency = False
+
+                    # last line add the diff
+                    res_amount_currency -= amount_currency or 0
+                    i += 1
+                    if i == len(totlines):
+                        amount_currency += res_amount_currency
+
+                    iml.append({
+                        'type': 'dest',
+                        'name': name,
+                        'price': t[1],
+                        'account_id': acc_id,
+                        'date_maturity': inv.date_due or t[0],
+                        'amount_currency': diff_currency_p \
+                                and amount_currency or False,
+                        'currency_id': diff_currency_p \
+                                and inv.currency_id.id or False,
+                        'ref': ref,
+                    })
+            else:
+                iml.append({
+                    'type': 'dest',
+                    'name': name,
+                    'price': total,
+                    'account_id': acc_id,
+                    'date_maturity': inv.date_due or False,
+                    'amount_currency': diff_currency_p \
+                            and total_currency or False,
+                    'currency_id': diff_currency_p \
+                            and inv.currency_id.id or False,
+                    'ref': ref
+            })
+
+            date = inv.date_invoice or time.strftime('%Y-%m-%d')
+
+            part = self._find_partner(inv)
+
+            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part.id, date, context=ctx)),iml)
+
+            line = self.group_lines(cr, uid, iml, line, inv)
+
+            journal_id = inv.journal_id.id
+            journal = journal_obj.browse(cr, uid, journal_id, context=ctx)
+            if journal.centralisation:
+                raise osv.except_osv(_('User Error!'),
+                        _('You cannot create an invoice on a centralized journal. Uncheck the centralized counterpart box in the related journal from the configuration menu.'))
+
+            line = self.finalize_invoice_move_lines(cr, uid, inv, line)
+
+            move = {
+                'ref': inv.reference and inv.reference or inv.name,
+                'line_id': line,
+                'journal_id': journal_id,
+                'date': date,
+                'narration':inv.comment
+            }
+            period_id = inv.period_id and inv.period_id.id or False
+            ctx.update(company_id=inv.company_id.id,
+                       account_period_prefer_normal=True)
+            if not period_id:
+                period_ids = period_obj.find(cr, uid, inv.date_invoice, context=ctx)
+                period_id = period_ids and period_ids[0] or False
+            if period_id:
+                move['period_id'] = period_id
+                for i in line:
+                    i[2]['period_id'] = period_id
+
+            ctx.update(invoice=inv)
+            move_id = move_obj.create(cr, uid, move, context=ctx)
+            new_move_name = move_obj.browse(cr, uid, move_id, context=ctx).name
+            # make the invoice point to that move
+            self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name}, context=ctx)
+            # Pass invoice in context in method post: used if you want to get the same
+            # account move reference when creating the same invoice after a cancelled one:
+            move_obj.post(cr, uid, [move_id], context=ctx)
+        self._log_event(cr, uid, ids)
+        return True
+    
 
 class account_voucher(osv.osv):
     
