@@ -525,10 +525,11 @@
                     <filter icon="terp-check" string="Sales" name="sales" domain="[('state','in',('manual','progress'))]"/>
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
                     <filter icon="terp-dolar_ok!" string="Done" domain="[('state','=','done')]" help="Sales Order done"/>
+                    <filter icon="terp-dolar_ok!" name="notcofirm" string="Close Date not Confirm" domain="[('date_sale_close','!=',False),('state','=','draft')]"  />
                     <separator/>
                     <filter string="My Sale Orders" domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal" name="my_sale_orders_filter"/>
-                    <field name="partner_id"/>
-                    <field name="user_id"/>
+                    <field name="partner_id" />
+                    <field name="user_id" />
                     <field name="project_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
