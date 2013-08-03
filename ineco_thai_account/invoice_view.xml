@@ -38,6 +38,9 @@
 	      	<field name="model">account.voucher</field>
 	      	<field name="inherit_id" ref="account_voucher.view_sale_receipt_form"/>
 	      	<field name="arch" type="xml">
+	      	    <field name="date_due" position="replace">
+	      	   		<field name="date_due" />
+	      	    </field>
 	        	<page string="Sales Information" position="after" version="7.0">
 	        	    <page string="General Ledger">
 	        	    	<field name="account_move_lines" readonly="1">
@@ -78,7 +81,10 @@
 	      	<field name="model">account.voucher</field>
 	      	<field name="inherit_id" ref="account_voucher.view_vendor_receipt_form"/>
 	      	<field name="arch" type="xml">
-	        	<page string="Payment Information" position="after" version="7.0">
+		      	<field name="date" position="after">
+		      		<field name="date_due" />
+		      	</field>		      	    
+	        	<page string="Payment Information" position="after" version="7.0">        	    
 	        	    <page string="General Ledger">
 	        	    	<field name="account_move_lines" readonly="1">
 	        	    		<tree string="General ledgers">
@@ -182,6 +188,9 @@
 	      	<field name="model">account.voucher</field>
 	      	<field name="inherit_id" ref="account_voucher.view_vendor_payment_form"/>
 	      	<field name="arch" type="xml">
+	      	    <field name="date" position="after">
+		      		<field name="date_due" />
+		      	</field>
 	        	<page string="Payment Information" position="after" version="7.0">
 	        	    <page string="General Ledger">
 	        	    	<field name="account_move_lines" readonly="1">
@@ -413,5 +422,76 @@
         </record>
         
         <menuitem action="action_ineco_invoice_billing" id="menu_ineco_invoice_billing" parent="account.menu_finance_receivables" sequence="110"/>        
-    </data>
+
+        
+        
+        <!-- Customer Payment By Receipt Date -->
+        <record id="view_ineco_customer_payment_receipt_calendar" model="ir.ui.view">
+            <field name="name">ineco.customer.payment.receipt.calendar</field>
+            <field name="model">account.voucher</field>
+            <field name="arch" type="xml">
+                <calendar string="Customer Payment By Receipt Date" color="partner_id" date_start="date_due">
+                    <field name="partner_id"/>
+                    <field name="amount"/>
+                </calendar>
+            </field>
+        </record>
+        
+        <record id="ineco_customer_payment_receipt_tree" model="ir.ui.view">
+            <field name="name">ineco.customer.payment.receipt.invoice.tree</field>
+            <field name="model">account.voucher</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries">
+                    <field name="date_due"/>
+                    <field name="date"/>
+                    <field name="number"/>
+                    <field name="reference"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id" groups="account.group_account_user"/>
+                    <field name="period_id" invisible="context.get('visible', True)"/>
+                    <field name="type" invisible="context.get('visible', True)"/>
+                    <field name="amount" sum="Total Amount"/>
+                    <field name="audit" invisible="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>        
+        
+        <record id="action_ineco_customer_payment_receipt" model="ir.actions.act_window">
+            <field name="name">Receipt Date</field>
+            <field name="res_model">account.voucher</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_id" ref="ineco_customer_payment_receipt_tree"/>
+            <field name="context">{'type':'receipt'}</field>
+            <field name="domain">[('date_due','!=',False),('state','!=','cancel')]</field>
+            <field name="search_view_id" ref="account_voucher.view_voucher_filter_customer_pay"/>
+        </record>
+        
+        <record id="action_ineco_customer_payment_receipt_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="ineco_customer_payment_receipt_tree" />
+            <field name="act_window_id" ref="action_ineco_customer_payment_receipt"/>
+        </record>        
+        
+        <record id="action_ineco_customer_payment_receipt_form" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_voucher.view_vendor_receipt_form"/>
+            <field name="act_window_id" ref="action_ineco_customer_payment_receipt"/>
+        </record>         
+        
+        
+        <record id="action_ineco_customer_payment_receipt_calendar" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="view_ineco_customer_payment_receipt_calendar" />
+            <field name="act_window_id" ref="action_ineco_customer_payment_receipt"/>
+        </record>
+        
+        <menuitem action="action_ineco_customer_payment_receipt" id="menu_ineco_customer_payment_receipt" parent="account.menu_finance_receivables" sequence="111"/>        
+        
+        
+        </data>
 </openerp>
