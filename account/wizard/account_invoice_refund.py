@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+#POP-001    2013-08-06    Stamp Invoice No when refund invoice.
+
 import time
 
 from openerp.osv import fields, osv
@@ -149,7 +151,9 @@ class account_invoice_refund(osv.osv_memory):
                 refund_id = inv_obj.refund(cr, uid, [inv.id], date, period, description, journal_id, context=context)
                 refund = inv_obj.browse(cr, uid, refund_id[0], context=context)
                 inv_obj.write(cr, uid, [refund.id], {'date_due': date,
-                                                'check_total': inv.check_total})
+                                                'check_total': inv.check_total,
+                                                #POP-001
+                                                'origin': inv.number},)
                 inv_obj.button_compute(cr, uid, refund_id)
 
                 created_inv.append(refund_id[0])
