@@ -50,6 +50,7 @@ A. Sale Module:
         'res_company_view.xml',
         'close_account_view.xml',
         'journal_view.xml',
+        'stock_view.xml',
     ],
     'demo': [],
     'installable': True,

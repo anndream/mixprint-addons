@@ -35,6 +35,12 @@ import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 
+class stock_picking_out(osv.osv):
+    _inherit = 'stock.picking.out'
+    _columns = {
+        'account_internal_no': fields.char('Internal Ref', size=64),
+        'account_note': fields.text('Account Note'),
+    }
 
 class stock_picking(osv.osv):
     
