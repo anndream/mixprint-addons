@@ -175,7 +175,7 @@ class crm_lead(osv.osv):
     _description = "Add Reason of LEAD/OPPORTUNITY"
     _inherit = "crm.lead"
     _columns = {
-        'last_date_count': fields.function(_last_date_count, type="integer", string='Date Count',
+        'last_date_count': fields.function(_last_date_count, type="integer", string='Age',
             store={
                 'crm.lead': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             }, help="The amount without tax.", track_visibility='always'),
@@ -187,7 +187,7 @@ class crm_lead(osv.osv):
             store={
                 'crm.lead': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             }),
-        'last_contact_date': fields.related('partner_id', 'last_date_count', type='integer', string="Last Contact", readonly=True, store=True),
+        'last_contact_date': fields.related('partner_id', 'last_date_count', type='integer', string="Update", readonly=True, store=True),
     }
     
     _defaults = {
