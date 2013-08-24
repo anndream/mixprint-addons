@@ -528,6 +528,7 @@
                     <filter icon="terp-dolar_ok!" name="notcofirm" string="Close Date not Confirm" domain="[('date_sale_close','!=',False),('state','=','draft')]"  />
                     <separator/>
                     <filter string="My Sale Orders" domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal" name="my_sale_orders_filter"/>
+                    <filter string="No MO" domain="[('date_sale_close','!=',False),('garment_order_date','=',False)]" name="date_error" />
                     <field name="partner_id" />
                     <field name="user_id" />
                     <field name="project_id"/>
