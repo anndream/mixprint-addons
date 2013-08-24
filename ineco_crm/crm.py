@@ -187,7 +187,7 @@ class crm_lead(osv.osv):
             store={
                 'crm.lead': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             }),
-        'last_contact_date': fields.related('partner_id', 'last_date_count', type='integer', string="Update", readonly=True, store=True),
+        'last_contact_date': fields.related('partner_id', 'last_date_count', type='integer', string="Update", readonly=True), #store=True
     }
     
     _defaults = {

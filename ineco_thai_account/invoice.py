@@ -20,6 +20,7 @@
 ##############################################################################
 
 # POP-001    2013-07-31    Disable when change partner to change due date too.
+# POP-002    2013-08-24    Cancel invoice reset period_id = False
 
 
 from openerp.osv import fields, osv
@@ -83,7 +84,37 @@ class account_invoice(osv.osv):
     _defaults = {
         'service': False,
     }
+    
+    #POP-002
+    def action_cancel(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        account_move_obj = self.pool.get('account.move')
+        invoices = self.read(cr, uid, ids, ['move_id', 'payment_ids'])
+        move_ids = [] # ones that we will need to remove
+        for i in invoices:
+            if i['move_id']:
+                move_ids.append(i['move_id'][0])
+            if i['payment_ids']:
+                account_move_line_obj = self.pool.get('account.move.line')
+                pay_ids = account_move_line_obj.browse(cr, uid, i['payment_ids'])
+                for move_line in pay_ids:
+                    if move_line.reconcile_partial_id and move_line.reconcile_partial_id.line_partial_ids:
+                        raise osv.except_osv(_('Error!'), _('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
 
+        # First, set the invoices as cancelled and detach the move ids
+        # POP-002
+        self.write(cr, uid, ids, {'state':'cancel', 'move_id':False, 'period_id': False})
+        if move_ids:
+            # second, invalidate the move(s)
+            account_move_obj.button_cancel(cr, uid, move_ids, context=context)
+            # delete the move this invoice was pointing to
+            # Note that the corresponding move_lines and move_reconciles
+            # will be automatically deleted too
+            account_move_obj.unlink(cr, uid, move_ids, context=context)
+        self._log_event(cr, uid, ids, -1.0, 'Cancel Invoice')
+        return True
+    
     def action_date_assign(self, cr, uid, ids, *args):
         for inv in self.browse(cr, uid, ids):
             if not inv.date_due:
