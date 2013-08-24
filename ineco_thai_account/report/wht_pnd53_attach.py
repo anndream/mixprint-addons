@@ -53,10 +53,11 @@ class report_custom(report_int):
         for line in vouch.wht_ids:
             k += 1
             no[i] = k
-            vat[i] = line.partner_id.vat and fmt_tin(line.partner_id.vat) or ""
+            vat[i] = line.partner_id.pid and fmt_tin(line.partner_id.pid) or ""
             sup_name[i] = line.partner_id.name 
-            sup_address[i]= str(line.partner_id.street) +"  "+str(line.partner_id.street2) or ""
-            sup_address2[i]= str(line.partner_id.city)  +"  "+str(line.partner_id.zip)     or ""
+            province = line.partner_id.state_id and line.partner_id.state_id.name or ""
+            sup_address[i]= line.partner_id.street +"  "+ line.partner_id.street2 or ""
+            sup_address2[i]= line.partner_id.city  +"  "+ province
             for wht_line in line.line_ids:
                 wht_date[j] = line.date_doc and fmt_thaidate(line.date_doc) or ""                
                 wht_name_line[j] = wht_line.wht_type_id.printed
@@ -68,14 +69,14 @@ class report_custom(report_int):
             i += 1
             vals={
                     "Text42":  company.ineco_tax and fmt_tin(company.ineco_tax) or "",
-                    "Text30":  company.ineco_branch,
+                    "Text30":  company.ineco_branch or "",
                     "Text31":   pages,
                     "Text32":   vouch.attach_no,  
                     "Text46":"      "+ company.ineco_name,   
                     "Text47":"        "+ company.ineco_position,     
-                    "Text48":   daynow,
-                    "Text49":"    "+ str(monthnow),  
-                    "Text50":   yearnow,   
+                    "Text48":   day,
+                    "Text49":"    "+ str(month+1),  
+                    "Text50":   year,   
                     "Text44":  lang.format("%.2f",vouch.total_amount,grouping=True).replace("."," "),
                     "Text45":  lang.format("%.2f", vouch.total_tax_send,grouping=True).replace("."," "),
                     "Text33.0.0": no.has_key(1) and no[1] or "",

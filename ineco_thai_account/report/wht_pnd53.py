@@ -34,7 +34,10 @@ class report_custom(report_int):
             company = vouch.company_id
             
             year=int(vouch.date_pnd[0:4])+543
-            month=int(vouch.date_pnd[5:7]) - 1
+            month=int(vouch.date_pnd[5:7]) - 2
+            if month == -1: 
+                month = 11
+            #print month
             day=int(vouch.date_pnd[8:10])
                             
             daynow = datetime.datetime.now().day
@@ -86,9 +89,9 @@ class report_custom(report_int):
                 "Text51.5":lang.format("%.2f",vouch.total_tax_send,grouping=True).replace("."," "),
                 "Text55":"      "+ company.ineco_position,
                 "Text54":"      "+ company.ineco_name,
-                "Text56":daynow,  
-                "Text57":"    "+ str(monthnow),  
-                "Text58":yearnow,   
+                "Text56":day,  
+                "Text57":"    "+ str(month+2),  
+                "Text58":year,   
                 "'Check Box6'": section3,
                 "'Check Box8'": section65,
                 "'Check Box7'": section69,

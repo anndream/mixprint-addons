@@ -87,7 +87,7 @@
 	                    </h1>	        	    
 	        	    	<group>
 		        	    	<group>
-	                    		<field name="partner_id" class="oe_inline"/>
+	                    		<field name="partner_id" class="oe_inline" on_change="on_change_partner(partner_id)"/>
 		        	    		<field name="date_doc" />
 		        	    		<field name="company_id" />
 		        	    		<field name="seq" />
@@ -101,7 +101,7 @@
 	        	    	</group>
 						<notebook>
 							<page string="Detail">
-								<field name="line_ids">
+								<field name="line_ids" context="{'default_date_doc':date_doc,'default_wht_type_id':15}">
 									<tree string="WHT Lines">
 										<field name="date_doc" />
 										<field name="wht_type_id" />
@@ -151,12 +151,13 @@
       		<field name="model">ineco.wht</field>
       		<field name="arch" type="xml">
 		        <tree string="With holding tax">
-		        	<field name="name" />
+		        	<field name="seq" />
+		        	<field name="name" />		        	
 		        	<field name="date_doc" />
 		        	<field name="partner_id" />
 		        	<field name="wht_type" />
 		       		<field name="wht_kind" />
-		        	<field name="wht_payment" />
+<!-- 		        	<field name="wht_payment" /> -->
 	        	  	<field name="base_amount" />
 	        	  	<field name="tax" />
 		        </tree>

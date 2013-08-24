@@ -56,8 +56,10 @@
 	        	    	</field>
 	        	    </page>
 	        	    <page string="With Holding Tax">
-	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" context="{'default_partner_id': partner_id or False, 'default_wht_type':'sale'}" >
+	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" 
+	        	    		   context="{'default_partner_id': partner_id or False, 'default_wht_type':'sale','default_date_doc': date }" >
 	        	    		<tree string="With Holding Tax">
+	        	    			<field name="seq" />
 	        	    			<field name="name" />
 	        	    			<field name="date_doc" />
 	        	    			<field name="base_amount" />
@@ -99,8 +101,11 @@
 	        	    	</field>
 	        	    </page>
 	        	    <page string="With Holding Tax">
-	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" context="{'default_partner_id': partner_id or False, 'default_wht_type':'sale'}" >
+	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" 
+	        	    		context="{'default_partner_id': partner_id or False, 'default_wht_type':'sale', 
+	        	    			'default_date_doc': date}" >
 	        	    		<tree string="With Holding Tax">
+	        	    			<field name="seq" />
 	        	    			<field name="name" />
 	        	    			<field name="date_doc" />
 	        	    			<field name="base_amount" />
@@ -163,8 +168,10 @@
 	        	    	</field>
 	        	    </page>
 	        	    <page string="With Holding Tax">
-	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" context="{'default_partner_id': partner_id or False, 'default_wht_type':'purchase'}" >
+	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" 
+	        	    		   context="{'default_partner_id': partner_id or False, 'default_wht_type':'purchase', 'default_date_doc': date }" >
 	        	    		<tree string="With Holding Tax">
+	        	    			<field name="seq" />
 	        	    			<field name="name" />
 	        	    			<field name="date_doc" />
 	        	    			<field name="base_amount" />
@@ -206,8 +213,10 @@
 	        	    	</field>
 	        	    </page>
 	        	    <page string="With Holding Tax">
-	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" context="{'default_partner_id': partner_id or False, 'default_wht_type':'sale'}" >
+	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" 
+	        	    		   context="{'default_partner_id': partner_id or False, 'default_wht_type':'sale', 'default_date_doc': date }" >
 	        	    		<tree string="With Holding Tax">
+	        	    			<field name="seq" />
 	        	    			<field name="name" />
 	        	    			<field name="date_doc" />
 	        	    			<field name="base_amount" />

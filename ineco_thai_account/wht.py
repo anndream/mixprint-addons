@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import decimal_precision as dp
+from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
 
 #from datetime import datetime, timedelta
 #from dateutil.relativedelta import relativedelta
@@ -130,7 +130,15 @@ class ineco_wht(osv.osv):
         'state': 'draft',
         'wht_type': 'purchase'
     }
-    
+    _order = "seq, date_doc"
+
+    def on_change_partner(self, cr, uid, ids, partner_id, context=None):
+        value = {}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            value = {'wht_kind': partner.with_holding_type or False}
+        return {'value': value}  
+      
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}           

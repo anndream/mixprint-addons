@@ -52,9 +52,11 @@ class report_custom(report_int):
         for line in vouch.wht_ids:
             k += 1
             no[i] = k
-            vat[i] = line.partner_id.vat and fmt_tin(line.partner_id.vat) or ""
+            vat[i] = line.partner_id.pid and fmt_tin(line.partner_id.pid) or ""
             sup_name[i] = line.partner_id.name 
-            sup_address[i]= str(str(line.partner_id.street)+"  "+str(line.partner_id.street2) + "   "+ str(line.partner_id.city) + "   " +  str(line.partner_id.zip)) or ""
+            province = line.partner_id.state_id and line.partner_id.state_id.name or ""
+            sup_address[i]= line.partner_id.street + " " + line.partner_id.street2 + " "+ line.partner_id.city + " " + province ;
+                            
             for wht_line in line.line_ids:
                 wht_date[j] = line.date_doc and fmt_thaidate(line.date_doc) or ""                
                 wht_name_line[j] = wht_line.wht_type_id.printed
@@ -66,14 +68,14 @@ class report_custom(report_int):
             i += 1
             vals={
                     "Text2.0":  company.ineco_tax and fmt_tin(company.ineco_tax) or "",
-                    "Text4":    company.ineco_branch,
+                    "Text4":    company.ineco_branch or "",
                     "Text18":   pages,
                     "Text19":   vouch.attach_no,  
                     "Text21":"      "+ company.ineco_name,   
                     "Text22":"        "+ company.ineco_position,     
-                    "Text23":   daynow,
-                    "Text24":"    "+ str(monthnow),  
-                    "Text25":   yearnow,   
+                    "Text23":   day,
+                    "Text24":"    "+ str(month+1),  
+                    "Text25":   year,   
                     "Text9.7":  lang.format("%.2f",vouch.total_amount,grouping=True).replace("."," "),
                     "Text10.7": lang.format("%.2f", vouch.total_tax_send,grouping=True).replace("."," "),
                     "Text20.0.0":       no.has_key(1) and no[1] or "",

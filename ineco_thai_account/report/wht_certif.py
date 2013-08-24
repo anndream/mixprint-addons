@@ -48,10 +48,14 @@ class report_custom(report_int):
                 "id1": partner.vat and fmt_tin(partner.vat) or "",
                 "name2": supp.name,
                 "add2": supp and fmt_addr(supp) or "",
-                "tin1_2": supp.pid or "",
-                "id1_2": supp.vat and fmt_tin(supp.vat) or "",
-                "chk4": supp.vat and "Yes" or "",
-                "chk7": supp.pid and "Yes" or "",
+                #"tin1_2": supp.pid or "",
+                #"id1_2": supp.vat and fmt_tin(supp.vat) or "",
+                "id1_2": fmt_tin(supp.pid) or "",
+                "tin1_2": supp.vat and fmt_tin(supp.vat) or "",
+                #"chk4": supp.vat and "Yes" or "",
+                #"chk7": supp.pid and "Yes" or "",
+                "chk4": vouch.wht_kind == 'pp3' and "Yes" or "",
+                "chk7": vouch.wht_kind == 'pp7' and "Yes" or "",
                 "date_pay": day,
                 "month_pay": month,
                 "year_pay": year,
@@ -59,7 +63,7 @@ class report_custom(report_int):
             #book_no
             vals.update({'book_no':'1'})
             #run no
-            vals.update({'run_no':'IV0091'})
+            vals.update({'run_no':vouch.id})
             #ภงด
     #         vals.update({
     #             'chk1': "Yes",
@@ -100,7 +104,7 @@ class report_custom(report_int):
                 vals.update({'chk11': "Yes"})
             
             #Item No
-            #vals.update({'item':'Item'})
+            vals.update({'item':vouch.seq or ""})
             
             #Spec unknow
             #vals.update({'spec1':'1'}) #Other 1

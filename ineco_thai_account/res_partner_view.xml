@@ -10,6 +10,7 @@
 	        	<field name="property_payment_term" position="after">
 	        		<field name="pid" />
 	        		<field name="billing_payment_id" domain="[('billing_term','=',True)]"/>
+	        		<field name="with_holding_type" />
 	        	</field>
 	        </field>  	
 	    </record>
