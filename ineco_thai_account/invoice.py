@@ -28,8 +28,7 @@ from openerp.osv import fields, osv
 #from dateutil.relativedelta import relativedelta
 import time
 #import pooler
-
-#from tools.translate import _
+from openerp.tools.translate import _
 #from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
 #import decimal_precision as dp
 #import netsvc
