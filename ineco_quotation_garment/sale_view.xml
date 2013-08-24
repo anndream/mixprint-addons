@@ -294,6 +294,7 @@
                     <field name="amount_total" sum="Total Tax Included"/>
                     <field name="sale_revision" />
                     <field name="state"/>
+                    <field name="date_sale_close" invisible="0" />
                 </tree>
             </field>
         </record>
@@ -537,6 +538,7 @@
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Close Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_sale_close'}"/>
                     </group>
                </search>
             </field>
