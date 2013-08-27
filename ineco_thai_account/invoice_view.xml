@@ -21,6 +21,17 @@
 	        	    		</tree>
 	        	    	</field>
 	        	    </page>
+	        	    <page string="Commission" groups="ineco_thai_account.group_account_commission" >
+	        	    	<group>
+	        	    		<group>
+	        	    			<field name="commission_sale" />
+	        	    		</group>
+	        	    		<group>
+			        	    	<field name="commission_note" />
+			        	    	<field name="commission_other"  />
+	        	    		</group>
+	        	    	</group>
+	        	    </page>        	    
 	        	</page>
 	        	<field name="move_id" position="after">
 	        		<field name="bill_due" />

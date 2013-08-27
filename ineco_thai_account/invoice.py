@@ -21,7 +21,7 @@
 
 # POP-001    2013-07-31    Disable when change partner to change due date too.
 # POP-002    2013-08-24    Cancel invoice reset period_id = False
-
+# POP-003    2013-08-27    Add Commission
 
 from openerp.osv import fields, osv
 
@@ -80,9 +80,14 @@ class account_invoice(osv.osv):
         'bill_due': fields.date('Billing Date', select=True),
         'partner_delivery_id': fields.many2one('res.partner', 'Delivery Address'),
         'service': fields.boolean('Service'),
+        'commission_sale': fields.float('Sale Commission'),
+        'commission_other': fields.float('Other Commission'),
+        'commission_note': fields.char('Commission Note', size=256),
     }
     _defaults = {
         'service': False,
+        'commission_sale': 0.0,
+        'commission_other': 0.0,
     }
     
     #POP-002
