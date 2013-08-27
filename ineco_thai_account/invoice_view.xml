@@ -25,6 +25,7 @@
 	        	    	<group>
 	        	    		<group>
 	        	    			<field name="commission_sale" />
+	        	    			<field name="commission_pay" />
 	        	    		</group>
 	        	    		<group>
 			        	    	<field name="commission_note" />

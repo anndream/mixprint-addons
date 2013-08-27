@@ -83,11 +83,13 @@ class account_invoice(osv.osv):
         'commission_sale': fields.float('Sale Commission'),
         'commission_other': fields.float('Other Commission'),
         'commission_note': fields.char('Commission Note', size=256),
+        'commission_pay': fields.boolean('Pay Commission'),
     }
     _defaults = {
         'service': False,
         'commission_sale': 0.0,
         'commission_other': 0.0,
+        'commission_pay': False,
     }
     
     #POP-002
