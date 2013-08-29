@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+       	<record model="ir.ui.view" id="view_ineco_closesale_invoice_form">
+	      	<field name="name">ineco.closesale.invoice.form</field>
+	      	<field name="model">account.invoice</field>
+	      	<field name="inherit_id" ref="account.invoice_form"/>
+	      	<field name="arch" type="xml">    
+	      		<button name="action_cancel_draft" position="before">
+	      			<button name="button_close_sale" string="Close Sale" type="object" groups="base.group_user"/>
+	      		</button>
+	      	</field>
+	    </record>
+    </data>
+</openerp>
