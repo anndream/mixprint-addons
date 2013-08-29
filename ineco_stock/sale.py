@@ -42,3 +42,34 @@ class sale_shop(osv.osv):
         'sequence_id': fields.many2one('ir.sequence', 'Sequence'),
         'stock_journal_id': fields.many2one('stock.journal','Stock Journal'),
     }
+    
+class sale_order(osv.osv):
+    
+    _inherit = 'sale.order'
+
+    def copy(self, cr, uid, ids, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['name'] = '/'
+        return super(sale_order, self).copy(cr, uid, ids, default, context=context)
+        
+    def _prepare_order_picking(self, cr, uid, order, context=None):
+        if order.shop_id.stock_journal_id and order.shop_id.stock_journal_id.sequence_id:
+            pick_name = self.pool.get('ir.sequence').get(cr, uid, order.shop_id.stock_journal_id.sequence_id.code)
+        else:
+            pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
+        return {
+            'stock_journal_id': order.shop_id.stock_journal_id and order.shop_id.stock_journal_id.id or False,
+            'name': pick_name,
+            'origin': order.name,
+            'date': order.date_order,
+            'type': 'out',
+            'state': 'auto',
+            'move_type': order.picking_policy,
+            'sale_id': order.id,
+            'partner_id': order.partner_shipping_id.id,
+            'note': order.note,
+            'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
+            'company_id': order.company_id.id,
+        }    

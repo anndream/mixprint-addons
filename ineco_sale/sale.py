@@ -43,7 +43,7 @@ class sale_order(osv.osv):
                 res[order.id]['sale_year'] = so_date.year
                 res[order.id]['sale_month'] = '%.2d' % so_date.month
         return res
-    
+            
     _inherit = "sale.order"
     _description = "Add Year/Month Function Field"
     _columns = {

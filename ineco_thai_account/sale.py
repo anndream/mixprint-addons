@@ -31,12 +31,12 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 #import decimal_precision as dp
 #import netsvc
 
-class sale_shop(osv.osv):
-    _inherit = "sale.shop"
-    _description = "Add Auto Sequence"
-    _columns = {
-        'sequence_id': fields.many2one('ir.sequence', 'Sequence')
-    }
+#class sale_shop(osv.osv):
+#    _inherit = "sale.shop"
+#    _description = "Add Auto Sequence"
+#    _columns = {
+#        'sequence_id': fields.many2one('ir.sequence', 'Sequence')
+#    }
 
 class sale_order(osv.osv):
     

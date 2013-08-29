@@ -73,7 +73,7 @@ class sale_order(osv.osv):
             'state': 'draft',
             'invoice_ids': [],
             'date_confirm': False,
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
+            #'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
 

@@ -1985,7 +1985,7 @@ class stock_move(osv.osv):
                         'location_dest_id': dest[0].id})
                     if m.picking_id and (dest[3] or dest[5]):
                         self.pool.get('stock.picking').write(cr, uid, [m.picking_id.id], {
-                            'stock_journal_id': dest[3] or m.picking_id.stock_journal_id.id,
+                            'stock_journal_id': m.picking_id.stock_journal_id.id or dest[3],
                             'type': dest[5] or m.picking_id.type
                         }, context=context)
                     m.location_dest_id = dest[0]
