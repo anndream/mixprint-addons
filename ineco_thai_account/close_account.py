@@ -26,6 +26,7 @@ import time
 from osv import fields, osv
 import decimal_precision as dp
 from operator import itemgetter
+from openerp.tools.translate import _
 
 class account_period_close(osv.osv_memory):
     _inherit = "account.period.close"
