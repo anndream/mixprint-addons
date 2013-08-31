@@ -58,5 +58,13 @@ class sale_order(osv.osv):
             },
             multi='sums', track_visibility='always'),                
     }
+    
+    def copy(self, cr, uid, ids, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['name'] = '/'
+        default['message_ids'] = []
+        return super(sale_order, self).copy(cr, uid, ids, default, context=context)    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

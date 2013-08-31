@@ -158,6 +158,25 @@ class sale_order(osv.osv):
         'cancel_sample_order': False,
         'cancel_garment_order': False,
     }
+
+    def copy(self, cr, uid, ids, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['sale_revision'] = False
+        default['sample_order_no'] = False
+        default['garment_order_no'] = False
+        default['sample_order_date'] = False
+        default['garment_order_date'] = False
+        default['sample_deliver_date'] = False
+        default['cancel_sample_order'] = False
+        default['cancel_garment_order'] = False
+        default['date_sale_close'] = False
+        default['sample_revision_no'] = False
+        default['sample_revision_date'] = False
+        default['date_delivery'] = False
+        default['date_order'] = time.strftime('%Y-%m-%d')
+        return super(sale_order, self).copy(cr, uid, ids, default, context=context)
     
     def action_gen_sampling_no(self, cr, uid, ids, context=None):
         sample_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.sampling.order')
@@ -165,7 +184,11 @@ class sale_order(osv.osv):
         return True
 
     def action_gen_garment_no(self, cr, uid, ids, context=None):
-        garment_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.garment.order')
+        sale_obj = self.browse(cr, uid, ids)[0]
+        if sale_obj.shop_id and sale_obj.shop_id.production_sequence_id:
+            garment_order_no = self.pool.get('ir.sequence').get_id(cr, uid, sequence_code_or_id=sale_obj.shop_id.production_sequence_id.id )
+        else:
+            garment_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.garment.order')
         self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
         return True
 

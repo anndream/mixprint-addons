@@ -10,6 +10,7 @@
 	      	<field name="arch" type="xml">
 	        	<field name="project_id" position="after">
 	        		<field name="sequence_id" />
+	        		<field name="production_sequence_id" />
 	        		<field name="stock_journal_id" />
 	        	</field>
 	      	</field>
@@ -22,6 +23,7 @@
 	      	<field name="arch" type="xml">
 	        	<field name="project_id" position="after">
 	        		<field name="sequence_id" />
+	        		<field name="production_sequence_id" />
 	        		<field name="stock_journal_id" />
 	        	</field>
 	      	</field>

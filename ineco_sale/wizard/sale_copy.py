@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012 - INECO PARTNERSHIP LIMITE (<http://www.ineco.co.th>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,8 +18,25 @@
 #
 ##############################################################################
 
-import sale
-import res_partner
-import wizard
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
+import time
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class ineco_sale_copy(osv.osv_memory):
+    _name = "ineco.sale.copy"
+    _description = "Sale Copy"
+
+    _columns = {
+        'shop_id': fields.many2one('sale.shop','Shop', required=True),
+    }
+    
+    def create_sale(self, cr, uid, ids, context=None):
+        data = self.browse(cr, uid, ids)[0]
+        default = {}
+        default['name'] = '/'
+        default['shop_id'] = data.shop_id.id
+        for id in context['active_ids']:
+            sale_obj = self.pool.get('sale.order').browse(cr, uid, id)
+            self.pool.get('sale.order').copy(cr, uid, sale_obj.id, default=default, context=context)
+        return {'type': 'ir.actions.act_window_close'}

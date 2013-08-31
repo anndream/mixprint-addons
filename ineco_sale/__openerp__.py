@@ -31,6 +31,7 @@
     'data': [],
     'update_xml': [
         'sale_view.xml',
+        'wizard/sale_copy_view.xml',
     ],
     'demo': [],
     'installable': True,

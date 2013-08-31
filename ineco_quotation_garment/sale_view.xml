@@ -674,6 +674,7 @@
 			              		<field name="garment_order_date" />
 			              		<field name="cancel_garment_order" attrs="{'invisible': [('garment_order_no','=',False)]}" groups="base.group_erp_manager"/>		              	
 		                    	<button name="action_gen_garment_no"
+		                    			class="oe_highlight" 
 		                            	string="Get Garment No"
 		                            	type="object" 
 		                            	icon="gtk-justify-fill"

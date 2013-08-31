@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import sale
-import res_partner
-import wizard
+import sale_copy
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

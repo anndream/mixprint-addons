@@ -39,24 +39,19 @@ class sale_shop(osv.osv):
     _inherit = "sale.shop"
     _description = "Add Auto Sequence, Stock Journal"
     _columns = {
-        'sequence_id': fields.many2one('ir.sequence', 'Sequence'),
+        'sequence_id': fields.many2one('ir.sequence', 'Sale Order Sequence'),
+        'production_sequence_id': fields.many2one('ir.sequence', 'Production Sequence'),
         'stock_journal_id': fields.many2one('stock.journal','Stock Journal'),
     }
     
 class sale_order(osv.osv):
     
     _inherit = 'sale.order'
-
-    def copy(self, cr, uid, ids, default=None, context=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default['name'] = '/'
-        return super(sale_order, self).copy(cr, uid, ids, default, context=context)
         
     def _prepare_order_picking(self, cr, uid, order, context=None):
         if order.shop_id.stock_journal_id and order.shop_id.stock_journal_id.sequence_id:
-            pick_name = self.pool.get('ir.sequence').get(cr, uid, order.shop_id.stock_journal_id.sequence_id.code)
+            pick_name = self.pool.get('ir.sequence').get_id(cr, uid, sequence_code_or_id=order.shop_id.stock_journal_id.sequence_id.id )
+            #pick_name = self.pool.get('ir.sequence').get(cr, uid, order.shop_id.stock_journal_id.sequence_id.code)
         else:
             pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         return {
