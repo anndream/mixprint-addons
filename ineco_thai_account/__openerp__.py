@@ -52,6 +52,7 @@ A. Sale Module:
         'journal_view.xml',
         'stock_view.xml',
         'security.xml',
+        'account_view.xml',
     ],
     'demo': [],
     'installable': True,

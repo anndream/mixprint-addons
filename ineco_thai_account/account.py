@@ -19,18 +19,29 @@
 #
 ##############################################################################
 
-import delivery
-import sale
-import invoice
-import wizard
-import wht
-import report
-import cheque
-import res_partner
-import res_company
-import stock
-import close_account
-import journal
-import account
 
+
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
+import time
+from osv import fields, osv
+import decimal_precision as dp
+from openerp.tools.translate import _
+
+
+class account_account(osv.osv):
+
+    _inherit = "account.account"
+    _columns = {
+                'report_type': fields.selection([('owner','Balance Sheet (owner account)'),
+                                                ('income', 'Profit & Loss (Income account)'),
+                                                ('expense', 'Profit & Loss (Expense account)'),
+                                                ('asset', 'Balance Sheet (Asset account)'),
+                                                ('liability','Balance Sheet (Liability account)')], 'P&L / BS Category', )             
+                                        
+                }      
+    _defaults = {
+        'report_type': 'owner',
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
