@@ -35,8 +35,10 @@ class ineco_sale_copy(osv.osv_memory):
         data = self.browse(cr, uid, ids)[0]
         default = {}
         default['name'] = '/'
-        default['shop_id'] = data.shop_id.id
+        default['shop_id'] = data.shop_id.id    
         for id in context['active_ids']:
             sale_obj = self.pool.get('sale.order').browse(cr, uid, id)
+            if sale_obj.shop_id.id != data.shop_id.id:
+                context['change_shop'] = True
             self.pool.get('sale.order').copy(cr, uid, sale_obj.id, default=default, context=context)
         return {'type': 'ir.actions.act_window_close'}

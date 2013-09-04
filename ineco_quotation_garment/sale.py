@@ -160,22 +160,25 @@ class sale_order(osv.osv):
     }
 
     def copy(self, cr, uid, ids, default=None, context=None):
+        if context is None:
+            context = {}
         if default is None:
             default = {}
         default = default.copy()
-        default['sale_revision'] = False
-        default['sample_order_no'] = False
-        default['garment_order_no'] = False
-        default['sample_order_date'] = False
-        default['garment_order_date'] = False
-        default['sample_deliver_date'] = False
-        default['cancel_sample_order'] = False
-        default['cancel_garment_order'] = False
-        default['date_sale_close'] = False
-        default['sample_revision_no'] = False
-        default['sample_revision_date'] = False
-        default['date_delivery'] = False
-        default['date_order'] = time.strftime('%Y-%m-%d')
+        if 'change_shop' in context:
+            default['sale_revision'] = False
+            default['sample_order_no'] = False
+            default['garment_order_no'] = False
+            default['sample_order_date'] = False
+            default['garment_order_date'] = False
+            default['sample_deliver_date'] = False
+            default['cancel_sample_order'] = False
+            default['cancel_garment_order'] = False
+            default['date_sale_close'] = False
+            default['sample_revision_no'] = False
+            default['sample_revision_date'] = False
+            default['date_delivery'] = False
+            default['date_order'] = time.strftime('%Y-%m-%d')
         return super(sale_order, self).copy(cr, uid, ids, default, context=context)
     
     def action_gen_sampling_no(self, cr, uid, ids, context=None):
