@@ -134,7 +134,58 @@
 		        </field>	        	       	
 			</field>
 		</record>    
+		
+        
+	<!-- Search Voucher -->  
+	     
+        <record id="view_voucher_filter_vendor_ineco" model="ir.ui.view">
+            <field name="name">account.voucher.select</field>
+            <field name="model">account.voucher</field>
+			<field name="inherit_id" ref="account_voucher.view_voucher_filter_vendor"/>            
+            <field name="arch" type="xml">
+		      	<field name="number" position="after">
+		      		<field name="reference" string="Ref #"/>
+		      	</field>	                
+            </field>
+        </record>
 
+        <record id="view_voucher_filter_vendor_pay_ineco" model="ir.ui.view">
+            <field name="name">account.voucher.select</field>
+            <field name="model">account.voucher</field>
+			<field name="inherit_id" ref="account_voucher.view_voucher_filter_vendor_pay"/>            
+            <field name="arch" type="xml">
+		      	<field name="number" position="after">
+		      		<field name="reference" string="Ref #"/>
+		      	</field>	                
+            </field>
+        </record>        
+        
+        <record id="view_voucher_filter_customer_pay_ineco" model="ir.ui.view">
+            <field name="name">account.voucher.select</field>
+            <field name="model">account.voucher</field>
+			<field name="inherit_id" ref="account_voucher.view_voucher_filter_customer_pay"/>            
+            <field name="arch" type="xml">
+		      	<field name="number" position="after">
+		      		<field name="reference" string="Ref #"/>
+		      	</field>	                
+            </field>
+        </record>        
+        
+        
+        <record id="view_voucher_filter_sale_ineco" model="ir.ui.view">
+            <field name="name">account.voucher.select</field>
+            <field name="model">account.voucher</field>
+			<field name="inherit_id" ref="account_voucher.view_voucher_filter_sale"/>            
+            <field name="arch" type="xml">
+		      	<field name="number" position="after">
+		      		<field name="reference" string="Ref #"/>
+		      	</field>	                
+            </field>
+        </record>        
+        
+        
+        
+        
     	<!-- Supplier Invoice -->
         <record model="ir.ui.view" id="view_ineco_account_supplierinvoice_form">
 	      	<field name="name">ineco.account.supplierinvoice.form</field>

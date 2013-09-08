@@ -37,6 +37,19 @@
                 </field>
         	</field>
         </record>        
+
+        <record id="view_sales_order_iyara_filter" model="ir.ui.view">
+            <field name="name">sale.order.list.select</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <filter string="Order Date" position="replace">
+               		<filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_sale_order'}"/>
+            	    <filter string="Delivery Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+            	</filter>
+            </field>
+        </record>        
+        
         
         
     </data>

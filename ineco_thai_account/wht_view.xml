@@ -164,6 +164,21 @@
       		</field>
     	</record>
 
+    	<record model="ir.ui.view" id="ineco_wht_search">
+      		<field name="name">ineco.wht.search</field>
+      		<field name="model">ineco.wht</field>
+      		<field name="arch" type="xml">
+		        <search string="With holding tax">
+		        	<field name="name" />		        	
+		        	<field name="partner_id" />
+		        	<field name="wht_type" />
+		       		<field name="wht_kind" />
+	        	  	<field name="base_amount" />
+	        	  	<field name="tax" />
+		        </search>
+      		</field>
+    	</record>
+    	    	
 	    <record model="ir.actions.act_window" id="ineco_wht_action">
 	        <field name="name">With Holding Tax</field>
 	        <field name="res_model">ineco.wht</field>
