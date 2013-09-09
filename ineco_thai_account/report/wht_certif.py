@@ -16,6 +16,8 @@ def fmt_addr(addr):
         s+=" "+addr.street2
     if addr.city:
         s+=" "+addr.city
+    if addr.state_id:
+        s+=" "+addr.state_id.name
     if addr.zip:
         s+=" "+addr.zip
     return s
