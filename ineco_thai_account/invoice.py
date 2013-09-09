@@ -22,6 +22,7 @@
 # POP-001    2013-07-31    Disable when change partner to change due date too.
 # POP-002    2013-08-24    Cancel invoice reset period_id = False
 # POP-003    2013-08-27    Add Commission
+# POP-004    2013-09-09    Change Manual Post when validate invoice
 
 from openerp.osv import fields, osv
 
@@ -387,9 +388,39 @@ class account_invoice(osv.osv):
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name}, context=ctx)
             # Pass invoice in context in method post: used if you want to get the same
             # account move reference when creating the same invoice after a cancelled one:
-            move_obj.post(cr, uid, [move_id], context=ctx)
+            # POP-004 
+            #move_obj.post(cr, uid, [move_id], context=ctx)
         self._log_event(cr, uid, ids)
         return True
+    
+    def view_entry(self, cr, uid, ids, context=None):
+        if not ids: return []
+        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'view_move_form')
+
+        inv = self.browse(cr, uid, ids[0], context=context)
+        return {
+            'name':_("View Entry"),
+            'view_mode': 'form',
+            'view_id': view_id,
+            'view_type': 'form',
+            'res_model': 'account.move.line',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+#             'context': {
+#                 'default_partner_id': self._find_partner(inv).id,
+#                 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
+#                 'default_reference': inv.number or inv.name,
+#                 'default_name': inv.name,
+#                 'close_after_process': True,
+#                 'invoice_type': inv.type,
+#                 'invoice_id': inv.id,
+#                 'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
+#                 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
+#            }
+        }
+    
     
 
 class account_voucher(osv.osv):
