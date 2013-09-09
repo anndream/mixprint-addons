@@ -43,7 +43,8 @@ class invoice(osv.osv):
             'context': {
                 'default_partner_id': self._find_partner(inv).id,
                 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
-                'default_reference': inv.name,
+                'default_reference': inv.number or inv.name,
+                'default_name': inv.name,
                 'close_after_process': True,
                 'invoice_type': inv.type,
                 'invoice_id': inv.id,
