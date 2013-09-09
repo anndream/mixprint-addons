@@ -419,9 +419,7 @@ class account_invoice(osv.osv):
 #                 'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
 #                 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
 #            }
-        }
-    
-    
+        }  
 
 class account_voucher(osv.osv):
     
