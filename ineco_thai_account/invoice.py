@@ -389,7 +389,7 @@ class account_invoice(osv.osv):
             # Pass invoice in context in method post: used if you want to get the same
             # account move reference when creating the same invoice after a cancelled one:
             # POP-004 
-            #move_obj.post(cr, uid, [move_id], context=ctx)
+            move_obj.post(cr, uid, [move_id], context=ctx)
         self._log_event(cr, uid, ids)
         return True
     
