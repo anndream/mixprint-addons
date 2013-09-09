@@ -2088,7 +2088,7 @@ class account_tax(osv.osv):
         # the 'Account' decimal precision + 5), and that way it's like
         # rounding after the sum of the tax amounts of each line
         precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        tax_compute_precision = precision
+        tax_compute_precision = precision + 2
         if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
             tax_compute_precision += 5
         totalin = totalex = float_round(price_unit * quantity, precision)
