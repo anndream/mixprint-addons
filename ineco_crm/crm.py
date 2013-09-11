@@ -20,7 +20,7 @@
 ##############################################################################
 
 # 2013-02-10     POP-001    ADD New notification on sale user
-from datetime import datetime
+from datetime import datetime, timedelta
 from openerp.osv import fields, osv
 import time
 #import openerp.tools
@@ -151,6 +151,7 @@ class crm_lead(osv.osv):
             if lead.state not in ('done','cancel'):
                 date_now = time.strftime('%Y-%m-%d %H:%M:%S')
                 date_start = datetime.strptime(lead.create_date,'%Y-%m-%d %H:%M:%S')
+                date_start = date_start - timedelta(hours=7)
                 date_finished = datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
                 last_date_count = (date_finished-date_start).days 
             res[lead.id] = last_date_count
