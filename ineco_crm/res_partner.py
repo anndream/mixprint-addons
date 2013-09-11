@@ -91,6 +91,13 @@ class res_partner(osv.osv):
                   )
                 where id = %s            
             """  % (partner_id))
+            cr.execute("""
+                update res_partner
+                set last_phonecall = (select max(last_phonecall) from res_partner rp2 where rp2.parent_id = res_partner.id and rp2.last_phonecall is not null)
+                where 
+                   id = %s
+                   and parent_id is null        
+            """ % (partner_id))
             #count = partner.refresh_count or 0.0 + 1
             #partner.write({'refresh_count': count})
             #print partner_id
@@ -134,13 +141,6 @@ class res_partner(osv.osv):
                     from res_partner) as a) as b
             where
               b.id = res_partner.id        
-        """)
-        cr.execute("""
-            update res_partner
-            set last_phonecall = (select max(last_phonecall) from res_partner rp2 where rp2.parent_id = res_partner.id and rp2.last_phonecall is not null)
-            where 
-               last_phonecall <= (select max(last_phonecall) from res_partner rp2 where rp2.parent_id = res_partner.id and rp2.last_phonecall is not null)
-               and parent_id is null        
         """)
         cr.execute("""
             update res_partner
