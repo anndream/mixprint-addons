@@ -137,6 +137,13 @@ class res_partner(osv.osv):
         """)
         cr.execute("""
             update res_partner
+            set last_phonecall = (select max(last_phonecall) from res_partner rp2 where rp2.parent_id = res_partner.id and rp2.last_phonecall is not null)
+            where 
+               last_phonecall <= (select max(last_phonecall) from res_partner rp2 where rp2.parent_id = res_partner.id and rp2.last_phonecall is not null)
+               and parent_id is null        
+        """)
+        cr.execute("""
+            update res_partner
             set last_date_count = date_part('day',now() - last_phonecall)
         """)
         cr.execute("""
