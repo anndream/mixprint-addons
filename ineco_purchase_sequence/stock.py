@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012 - INECO PARTNERSHIP LIMITED (<http://www.ineco.co.th>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,21 +19,25 @@
 #
 ##############################################################################
 
+from lxml import etree
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+import time
+from operator import itemgetter
+from itertools import groupby
 
-{
-    'name': 'Ineco Partner Extended',
-    'version': '0.1',
-    'category': 'Extended',
-    'description': """
-    """,
-    'author': 'Mr.Tititab Srisookco',
-    'website': 'http://www.ineco.co.th',
-    'depends': ['base'],
-    'data': [],
-    'demo': [],
-    'test':[],
-    'update_xml': ['res_partner_view.xml'],
-    'installable': True,
-    'images': [],
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import netsvc
+from openerp import tools
+#from openerp.tools import float_compare
+#import openerp.addons.decimal_precision as dp
+import logging
+_logger = logging.getLogger(__name__)
+
+class stock_warehouse(osv.osv):
+    _inherit = 'stock.warehouse'
+    _columns = {
+        'incoming_journal_id': fields.many2one('stock.journal', 'Incoming Journal'),
+        'purchase_sequence_id': fields.many2one('ir.sequence','Purchase Sequence No'),
+    }

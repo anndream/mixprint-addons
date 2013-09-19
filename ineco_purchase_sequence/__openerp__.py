@@ -21,18 +21,20 @@
 
 
 {
-    'name': 'Ineco Partner Extended',
+    'name': 'Ineco Purchase Sequence',
     'version': '0.1',
     'category': 'Extended',
     'description': """
     """,
     'author': 'Mr.Tititab Srisookco',
     'website': 'http://www.ineco.co.th',
-    'depends': ['base'],
+    'depends': ['base','purchase','stock'],
     'data': [],
     'demo': [],
     'test':[],
-    'update_xml': ['res_partner_view.xml'],
+    'update_xml': [
+        'stock_view.xml',
+    ],
     'installable': True,
     'images': [],
 }

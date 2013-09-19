@@ -19,21 +19,7 @@
 #
 ##############################################################################
 
+import stock 
+import purchase
 
-{
-    'name': 'Ineco Partner Extended',
-    'version': '0.1',
-    'category': 'Extended',
-    'description': """
-    """,
-    'author': 'Mr.Tititab Srisookco',
-    'website': 'http://www.ineco.co.th',
-    'depends': ['base'],
-    'data': [],
-    'demo': [],
-    'test':[],
-    'update_xml': ['res_partner_view.xml'],
-    'installable': True,
-    'images': [],
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

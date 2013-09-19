@@ -684,14 +684,24 @@ class purchase_order(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        default.update({
-            'state':'draft',
-            'shipped':False,
-            'invoiced':False,
-            'invoice_ids': [],
-            'picking_ids': [],
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
-        })
+        if context.get('purchase_sequence',False):
+            default.update({
+                'state':'draft',
+                'shipped':False,
+                'invoiced':False,
+                'invoice_ids': [],
+                'picking_ids': [],
+                #'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
+            })
+        else:
+            default.update({
+                'state':'draft',
+                'shipped':False,
+                'invoiced':False,
+                'invoice_ids': [],
+                'picking_ids': [],
+                'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
+            })
         return super(purchase_order, self).copy(cr, uid, id, default, context)
 
     def do_merge(self, cr, uid, ids, context=None):
