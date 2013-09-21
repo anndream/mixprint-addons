@@ -456,7 +456,7 @@ class account_voucher(osv.osv):
         voucher = self.browse(cr, uid, voucher_id)
         for wht in voucher.wht_ids:
             _amount_tax += wht.tax or 0.0
-        return _amount_tax
+        return round(_amount_tax, 2)
     
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
