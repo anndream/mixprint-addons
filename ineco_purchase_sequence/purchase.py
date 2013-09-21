@@ -33,6 +33,27 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 
 class purchase_order(osv.osv):
 
+    def _prepare_order_picking(self, cr, uid, order, context=None):
+        data = {}
+        if order.warehouse_id and order.warehouse_id.incoming_journal_id and order.warehouse_id.incoming_journal_id.sequence_id:
+            data['name'] = self.pool.get('ir.sequence').get_id(cr, uid, sequence_code_or_id = order.warehouse_id.incoming_journal_id.sequence_id.id )
+            data['stock_journal_id'] = order.warehouse_id.incoming_journal_id.id 
+        else:
+            data['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in')
+        data.update({
+            #'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
+            'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
+            'date': order.date_order,
+            'partner_id': order.dest_address_id.id or order.partner_id.id,
+            'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
+            'type': 'in',
+            'partner_id': order.dest_address_id.id or order.partner_id.id,
+            'purchase_id': order.id,
+            'company_id': order.company_id.id,
+            'move_lines' : [],
+        })
+        return data
+        
     _inherit = 'purchase.order'
 
     def create(self, cr, uid, vals, context=None):
