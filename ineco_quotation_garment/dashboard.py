@@ -145,11 +145,11 @@ class ineco_sale_summary3(osv.osv):
                    and date_part('month',now()) = date_part('month', date_closed)  
                   ) as lose2,  
                   (select count(*)::numeric from crm_lead cl  
-                   where user_id = ru.id and stage_id = 1 
+                   where user_id = ru.id and stage_id = 1 and type = 'opportunity'
                    --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
                   ) as percent101, 
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
-                   where user_id = ru.id and stage_id = 1 
+                   where user_id = ru.id and stage_id = 1 and type = 'opportunity'
                    --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
                   ) as percent102, 
                   (select count(*)::numeric from crm_lead cl  
@@ -181,7 +181,8 @@ class ineco_sale_summary3(osv.osv):
                 from 
                   res_users ru
                 left join res_partner rp on ru.partner_id = rp.id
-                where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60)
+                where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+                   signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
                 order by rp.name                
             )    
         """)

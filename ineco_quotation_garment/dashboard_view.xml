@@ -76,8 +76,6 @@
                     <field name="so2" sum="Total" string=""/>
                     <field name="mo1" sum="Total"/>
                     <field name="mo2" sum="Total" string=""/>
-                    <field name="lose1" sum="Total"/>
-                    <field name="lose2" sum="Total" string=""/>
                     <field name="percent901" sum="Total"/>
                     <field name="percent902" sum="Total" string=""/>
                     <field name="percent501" sum="Total"/>
@@ -86,6 +84,8 @@
                     <field name="percent302" sum="Total" string=""/>
                     <field name="percent101" sum="Total"/>
                     <field name="percent102" sum="Total" string=""/>
+                    <field name="lose1" sum="Total"/>
+                    <field name="lose2" sum="Total" string=""/>
                 </tree>
             </field>
         </record>		
