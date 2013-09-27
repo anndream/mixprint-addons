@@ -41,9 +41,9 @@
 	        		<field name="bill_due" />
 	        		<field name="service" />
 	        	</field>
-<!-- 	        	<field name="date_due" position="after"> -->
-<!-- 	        		<field name="bill_due" /> -->
-<!-- 	        	</field> -->
+	        	<field name="date_due" position="after">
+	        		<field name="receipt_due" />
+	        	</field>
 			</field>
 		</record>   
 		
@@ -401,7 +401,7 @@
         </record>
 
         <record id="action_ineco_invoice_due" model="ir.actions.act_window">
-            <field name="name">Invoices By Due Date</field>
+            <field name="name">Plan Due Date</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
@@ -469,7 +469,7 @@
         </record>
 
         <record id="action_ineco_invoice_billing" model="ir.actions.act_window">
-            <field name="name">Invoices By Billing Date</field>
+            <field name="name">Plan Billing Date</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
@@ -501,7 +501,75 @@
         </record>
         
     	<menuitem action="action_ineco_invoice_billing" id="menu_ineco_invoice_billing" parent="menu_ineco_accounting_calendar" sequence="2"/>        
+
+        <!-- Customer Invoices By Receipt Date -->
+        <record id="view_ineco_invoice_receipt_calendar" model="ir.ui.view">
+            <field name="name">ineco.receipt.invoice.calendar</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <calendar string="Invoices By Receipt Date" color="partner_id" date_start="receipt_due">
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="ineco_invoice_receipt_tree" model="ir.ui.view">
+            <field name="name">ineco.receipt.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice By Due Date">
+                    <field name="partner_id" groups="base.group_user"/>
+                    <field name="receipt_due"/>
+                    <field name="number"/>
+                    <field name="reference" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="period_id" invisible="1" groups="account.group_account_user"/>
+                    <field name="user_id"/>
+                    <field name="origin"/>
+                    <field name="residual" sum="Residual Amount"/>
+                    <field name="amount_untaxed" sum="Untaxed Amount"/>
+                    <field name="amount_total" sum="Total Amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_ineco_invoice_receipt" model="ir.actions.act_window">
+            <field name="name">Plan Receipt Date</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_id" ref="ineco_invoice_due_tree"/>
+            <field name="context">{'type':'out_invoice'}</field>
+            <field name="domain">[('bill_due','!=',False),('type','=','out_invoice'),('state','!=','cancel')]</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        </record>
         
+        <record id="action_ineco_invoice_receipt_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="ineco_invoice_receipt_tree" />
+            <field name="act_window_id" ref="action_ineco_invoice_receipt"/>
+        </record>
+        
+        <record id="action_ineco_invoice_receipt_form" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="act_window_id" ref="action_ineco_invoice_receipt"/>
+        </record>        
+
+        <record id="action_ineco_invoice_receipt_calendar" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="view_ineco_invoice_receipt_calendar" />
+            <field name="act_window_id" ref="action_ineco_invoice_receipt"/>
+        </record>
+        
+    	<menuitem action="action_ineco_invoice_receipt" id="menu_ineco_invoice_receipt" parent="menu_ineco_accounting_calendar" sequence="3"/>        
+    		
         
         <!-- Customer Payment By Cheque Receipt Date -->
         <record id="view_ineco_customer_payment_receipt_calendar" model="ir.ui.view">
@@ -536,7 +604,7 @@
         </record>        
         
         <record id="action_ineco_customer_payment_receipt" model="ir.actions.act_window">
-            <field name="name">Cheque Receipt Date</field>
+            <field name="name">Receipt Date</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
@@ -636,7 +704,7 @@
             <field name="act_window_id" ref="action_ineco_customer_payment_billing"/>
         </record>
         
-    	<menuitem action="action_ineco_customer_payment_billing" id="menu_ineco_customer_payment_billing" parent="menu_ineco_accounting_calendar" sequence="3"/> 
+    	<menuitem action="action_ineco_customer_payment_billing" id="menu_ineco_customer_payment_billing" parent="menu_ineco_accounting_calendar" sequence="5"/> 
 
         <!-- Supplier Invoices By Due Date -->
         <record id="view_ineco_supplier_invoice_due_calendar" model="ir.ui.view">
@@ -707,7 +775,7 @@
             <field name="act_window_id" ref="action_ineco_supplier_invoice_due"/>
         </record>
         
-    	<menuitem action="action_ineco_supplier_invoice_due" id="menu_ineco_supplier_invoice_due" parent="menu_ineco_accounting_calendar" sequence="5"/>
+    	<menuitem action="action_ineco_supplier_invoice_due" id="menu_ineco_supplier_invoice_due" parent="menu_ineco_accounting_calendar" sequence="6"/>
         
 
         
@@ -776,7 +844,7 @@
             <field name="act_window_id" ref="action_ineco_supplier_payment"/>
         </record>
         
-    	<menuitem action="action_ineco_supplier_payment" id="menu_ineco_supplier_payment" parent="menu_ineco_accounting_calendar" sequence="6"/>        
+    	<menuitem action="action_ineco_supplier_payment" id="menu_ineco_supplier_payment" parent="menu_ineco_accounting_calendar" sequence="7"/>        
         	
   	</data>
 </openerp>
