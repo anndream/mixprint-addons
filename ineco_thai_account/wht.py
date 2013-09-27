@@ -186,7 +186,7 @@ class ineco_wht_line(osv.osv):
                 'tax': 0.0,
             }
             data = self.browse(cr, uid, [id], context=context)[0]
-            total = (((data.percent / 100) or 0.0) * data.base_amount) or 0.0
+            total = round((((data.percent / 100) or 0.0) * data.base_amount),3) or 0.0
             result[id]['tax'] = total
         return result
     
