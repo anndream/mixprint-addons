@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-Today INECO LTD,. PART. (<http://www.ineco.co.th>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,26 @@
 #
 ##############################################################################
 
-import sale
-import purchase
+#import time
+from datetime import datetime
+#from dateutil.relativedelta import relativedelta
 
+from openerp.osv import fields, osv
+#from openerp import netsvc
+#from openerp import pooler
+#from openerp.tools.translate import _
+#import openerp.addons.decimal_precision as dp
+#from openerp.osv.orm import browse_record, browse_null
+#from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+
+class purchase_order(osv.osv):
+    
+    _inherit = "purchase.order"
+    _description = "TERMS & Sale BY"
+    _columns = {
+        'sale_by': fields.char('BY', size=64,),
+        'iraya_terms': fields.selection([('ex_china','Ex-Warehouse China'),
+                                         ('ex_singapore','Ex-Warehouse Singapore')],'TERMS'),
+        }
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
