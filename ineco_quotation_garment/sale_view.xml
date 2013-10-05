@@ -533,6 +533,7 @@
                     <field name="partner_id" />
                     <field name="user_id" />
                     <field name="project_id"/>
+                    <field name="garment_order_no" />
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
@@ -754,6 +755,18 @@
         	id="menu_action_sale_invoice" 
         	parent="base.menu_sales"
         	sequence="10" />
+        	
+        <record id="view_sale_order_extend_search" model="ir.ui.view">
+            <field name="name">mo_sale_order_search</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+              	<field name="name" position="after">
+              		<field name="garment_order_no" />
+              	</field>
+            </field>
+        </record>         	
+        	
         
     </data>
 </openerp>
