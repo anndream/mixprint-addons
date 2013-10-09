@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    	
+	    <record model="ir.ui.view" id="view_fleet_picking_out_form">
+	        <field name="name">fleet.picking.out.form</field>
+	        <field name="model">stock.picking.out</field>
+	        <field name="inherit_id" ref="stock.view_picking_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="/form/sheet/notebook" position="inside">	        	
+	        	 	<page string="Vehicle">
+	        	 		<group>	
+	        	 			<group>
+	        	 				<field name="vehicle_id" />
+	        	 				<field name="driver_id" />	
+	        	 			</group>
+	        	 			<group>
+		        	 				<field name="date_vehicle_start" />
+		        	 				<field name="odometer_start" />
+
+		        	 				<field name="date_vehicle_stop" />
+		        	 				<field name="odometer_stop" />
+		        	 		</group>	        	 			
+			        	 </group>        
+			        		 			
+	        	 	</page>
+	        	 </xpath>
+			</field>
+		</record>    	
+    	
+	</data>
+</openerp>

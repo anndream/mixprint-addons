@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+	    <record model="ir.ui.view" id="view_ineco_odometer_tree">
+	        <field name="name">ineco.odometer.tree</field>
+	        <field name="model">fleet.vehicle.odometer</field>
+	        <field name="inherit_id" ref="fleet.fleet_vehicle_odometer_tree"/>
+	        <field name="arch" type="xml">
+	        	<field name="date" position="replace">
+	        		<field name="date_start" required="1"/>	        		
+	        	</field>
+	        	<field name="vehicle_id" position="after">
+	        		<field name="driver_id" required="1"/>
+	        		<field name="partner_id" />
+	        	</field>
+	        </field>
+	    </record>
+	        
+    </data>
+</openerp>
