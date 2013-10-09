@@ -48,7 +48,7 @@ class stock_picking_out(osv.osv):
 
     def _set_odometer_start(self, cr, uid, id, name, value, args=None, context=None):
         if not value:
-            raise except_orm(_('Operation not allowed!'), _('Emptying the odometer value of a vehicle is not allowed.'))
+            return True
         date = self.browse(cr, uid, id, context=context).date_vehicle_start
         if not(date):
             date = fields.date.context_today(self, cr, uid, context=context)
@@ -79,7 +79,7 @@ class stock_picking_out(osv.osv):
 
     def _set_odometer_stop(self, cr, uid, id, name, value, args=None, context=None):
         if not value:
-            raise except_orm(_('Operation not allowed!'), _('Emptying the odometer value of a vehicle is not allowed.'))
+            return True
         date = self.browse(cr, uid, id, context=context).date_vehicle_stop
         if not(date):
             date = fields.date.context_today(self, cr, uid, context=context)
