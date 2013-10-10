@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-Today INECO LTD,. PART. (<http://www.ineco.co.th>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,19 +19,28 @@
 #
 ##############################################################################
 
-import delivery
-import sale
-import invoice
-import wizard
-import wht
-import report
-import cheque
-import res_partner
-import res_company
-import stock
-import close_account
-import journal
-import account
-import account_move_line
+import sys
+import time
+from datetime import datetime
+from operator import itemgetter
+
+from lxml import etree
+
+from openerp import netsvc
+from openerp.osv import fields, osv, orm
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
+from openerp import tools
+
+class account_move_line(osv.osv):
+    
+    _inherit = "account.move.line"
+    _description = "Add amount_untaxed"
+    _columns = {
+                'ineco_date_tax': fields.date('Date', select=True),
+                'ineco_tax_amount': fields.float('Untaxed Amount', digits_compute=dp.get_precision('Account'), select=True),                                                        
+                }    
+
+account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
