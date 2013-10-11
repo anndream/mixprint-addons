@@ -18,15 +18,22 @@
                     <field name="state" widget="statusbar" statusbar_visible="cancel,draft,assigned,pending,reject,done" statusbar_colors='{"assigned":"blue"}'/>
                 </header>                    
                   <sheet>
-                    <group col="4">
-                        <field name="name" attrs="{'readonly': [('state','not in',('draft'))]}"/>
-                        <field name="cheque_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                    <group>
+                        <group>
+	                        <field name="name"       attrs="{'readonly': [('state','not in',('draft'))]}"/>
+	                        <field name="bank"       attrs="{'readonly': [('state','not in',('draft'))]}"/>
+	                        <field name="partner_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>   
+	                        <field name="amount"     attrs="{'readonly': [('state','not in',('draft'))]}"/>                                                    
+                        </group>
+                        <group>
+	                        <field name="cheque_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>                            
+                        </group>                     
                     </group>
                     <group>
                         <group>
-                        	<field name="bank"       attrs="{'readonly': [('state','not in',('draft'))]}"/>
-                           	<field name="partner_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>
-                            <field name="amount"     attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="move_name"/>
+                            <field name="move_ref"/>
+                            <field name="move_id"/>
                             <field name="active"     attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         </group>
                         <group>
@@ -36,7 +43,7 @@
 		        	    	<field name="type" required="1" invisible="1"/>
 		        	    </group>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
 		        	    <page string="General Ledger">
 		        	    	<field name="account_move_lines" readonly="1">
 		        	    		<tree string="General ledgers">
@@ -49,7 +56,21 @@
 									<field name="quantity" invisible="1" />
 		        	    		</tree>
 		        	    	</field>
-		        	    </page>                         
+		        	    </page>
+		        	    <page string="Account Voucher">
+		        	        <field name="voucher_id"> 
+		        	    		<tree string="Account Voucher">
+		        	    		    <field name="date" />
+									<field name="name" invisible="1" />
+									<field name="number"/>
+									<field name="reference"/>
+									<field name="partner_id"/>
+									<field name="journal_id" />
+									<field name="amount"/>
+									<field name="state"/>
+		        	    		</tree>	
+		        	    	</field>	        	        
+		        	    </page>
                     </notebook>
                   </sheet>
                 </form>
