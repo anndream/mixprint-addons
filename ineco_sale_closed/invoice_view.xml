@@ -9,6 +9,9 @@
 	      		<button name="action_cancel_draft" position="before">
 	      			<button name="button_close_sale" string="Close Sale" type="object" groups="base.group_user"/>
 	      		</button>
+	      		<field name="account_id" position="after">
+	      			<field name="close_sale_no" />
+	      		</field>
 	      	</field>
 	    </record>
     </data>

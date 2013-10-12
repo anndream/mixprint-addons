@@ -32,8 +32,27 @@ from openerp.tools.translate import _
 import re
 
 class account_invoice(osv.osv):
-    
+ 
+    def get_close_sale_no(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        sql = """
+            select sale_close_no from sale_order where name = '%s' 
+        """
+        for data in self.browse(cr, uid, ids):
+            sale_close_no = False
+            if data.origin:
+                docs = re.findall(r':[\w-]+[\w_]+[\w/]+',data.origin) or [data.origin]
+                cr.execute(sql % (docs[0]).replace(':',''))
+                sale_data = cr.dictfetchone()
+                if sale_data:
+                    sale_close_no = sale_data['sale_close_no']
+            res[data.id] = sale_close_no
+        return res
+        
     _inherit = "account.invoice"
+    _columns = {
+        'close_sale_no': fields.function(get_close_sale_no, type='char', size=64, string="Sale Close No", readonly=True),
+    }
     
     def button_close_sale(self, cr, uid, ids, context=None):
         if not context:
