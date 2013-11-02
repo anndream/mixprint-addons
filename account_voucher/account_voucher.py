@@ -322,7 +322,7 @@ class account_voucher(osv.osv):
         ],'Payment', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'tax_id': fields.many2one('account.tax', 'Tax', readonly=True, states={'draft':[('readonly',False)]}, domain=[('price_include','=', False)], help="Only for tax excluded from price"),
         'pre_line':fields.boolean('Previous Payments ?', required=False),
-        'date_due': fields.date('Due Date', readonly=True, select=True, states={'draft':[('readonly',False)]}),
+        'date_due': fields.date('Due Date', readonly=True, select=True),
         'payment_option':fields.selection([
                                            ('without_writeoff', 'Keep Open'),
                                            ('with_writeoff', 'Reconcile Payment Balance'),
