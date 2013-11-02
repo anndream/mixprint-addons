@@ -21,3 +21,4 @@
 
 import fleet
 import stock
+import res_partner

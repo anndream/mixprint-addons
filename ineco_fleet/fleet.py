@@ -32,7 +32,7 @@ class fleet_driver(osv.osv):
     _columns = {
         'name': fields.char('Driver Name', size=128, required=True),
         'mobile': fields.char('Mobile', size=64),   
-        'odometer_ids': fields.one2many('fleet.vehicle_odometer','driver_id', 'Odometers'),   
+        'odometer_ids': fields.one2many('fleet.vehicle.odometer','driver_id', 'Odometers'),   
     }
     
 class fleet_vehicle_odometer(osv.Model):
@@ -50,4 +50,12 @@ class fleet_vehicle_odometer(osv.Model):
     _defaults = {
         'date_start': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
+        
+class ineco_fleet_route(osv.osv):
+    _name = 'ineco.fleet.route'
+    _columns = {
+        'code': fields.char('Code', size=16, required=True),
+        'name': fields.char('Route Name', size=128, required=True),
+    }
+
         

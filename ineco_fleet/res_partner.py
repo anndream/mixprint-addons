@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,29 +18,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name' : 'Fleet Management Addons',
-    'version' : '0.1',
-    'author' : 'INECO Part.,Ltd.',
-    'category': 'Managing vehicles and contracts',
-    'website' : 'http://www.ineco.co.th',
-    'summary' : 'Add Driver and Odometer addons',
-    'description' : """
-Add more field depedency
-""",
-    'depends' : [
-        'base',
-        'fleet',
-        'stock',
-    ],
-    'data' : [
-    ],
-    'update_xml' : [
-        'fleet_view.xml',
-        'stock_view.xml',
-        'fleet_security.xml',
-        'res_partner_view.xml',
-    ],
-    'installable' : True,
-    'application' : False,
-}
+
+import datetime
+from lxml import etree
+import math
+import pytz
+import re
+
+import openerp
+from openerp import SUPERUSER_ID
+from openerp import pooler, tools
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
+from openerp.tools.yaml_import import is_comment
+
+class res_partner(osv.osv):
+    _inherit = "res.partner"
+    _columns = {
+        'route_id': fields.many2one('ineco.fleet.route','Route')
+    }
+    
