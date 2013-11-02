@@ -30,6 +30,31 @@ from openerp.tools.translate import _
 
 class account_invoice(osv.osv):
 
+    def _get_mo(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            sql = """
+                select 
+                  so.name,
+                  ai.origin,
+                  so.garment_order_no as garment_order_no
+                from account_invoice ai
+                left join sale_order_invoice_rel soi on soi.invoice_id = ai.id
+                left join sale_order so on soi.order_id = so.id
+                where ai.id = %s            
+            """
+            cr.execute(sql % order.id)
+            output = cr.fetchone()
+            if output:
+                res[order.id] = output[2]
+        return res
+
+    def _get_order(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('account.invoice.line').browse(cr, uid, ids, context=context):
+            result[line.invoice_id.id] = True
+        return result.keys()
+    
     def _find_partner(self, inv):
         '''
         Find the partner for which the accounting entries will be created
@@ -42,4 +67,13 @@ class account_invoice(osv.osv):
         return part
         
     _inherit = 'account.invoice'
+    _columns = {
+        'garment_order_no': fields.function(_get_mo, type='char', size=32, string='Germent Order No',
+            store={
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+                'account.invoice.line': (_get_order, [], 10),
+            },
+        ),
+
+    }
     

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        <record id="view_invoice_mo_form" model="ir.ui.view">
+            <field name="name">mo.account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="fiscal_position" position="after">
+                	<field name="garment_order_no" />
+                </field>
+            </field>
+        </record>
+           
+        <record id="view_invoice_mo_tree" model="ir.ui.view">
+            <field name="name">mo.account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="before">
+                	<field name="garment_order_no" />
+                </field>
+            </field>
+        </record>        <record id="view_invoice_mo_tree" model="ir.ui.view">
+            <field name="name">mo.account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="before">
+                	<field name="garment_order_no" />
+                </field>
+            </field>
+        </record>
+        
+        <record id="view_mo_account_invoice_search" model="ir.ui.view">
+            <field name="name">mo.account.invoice.search</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <field name="period_id" position="after">
+                	<field name="garment_order_no" />
+                </field>
+            </field>
+        </record>       
+                    
+    </data>
+</openerp>
