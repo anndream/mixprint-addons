@@ -46,11 +46,11 @@ class ineco_sale_summary2(osv.osv):
               ru.id as user_id,
               (select count(*)::numeric || '/' || ltrim(to_char(sum(amount_untaxed),'999,999,990.00')) from sale_order so 
                where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
-                     and so.state <> 'cancel'
+                     and so.state <> 'cancel' and left(so.name,2) = 'SO'
               ) as so,
               (select count(*)::numeric || '/' || ltrim(to_char(sum(amount_untaxed),'999,999,990.00')) from sale_order so 
                where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
-                     and so.state <> 'cancel'
+                     and so.state <> 'cancel' and left(so.name,2) = 'SO'
               ) as mo,
               (select count(*)::numeric || '/' || ltrim(to_char(sum(planned_revenue),'999,999,990.00'))  from crm_lead cl  
                where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
