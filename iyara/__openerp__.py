@@ -23,7 +23,7 @@
 {
     'name' : 'Iyara',
     'version' : '0.1',
-    'depends' : ["sale","purchase"],
+    'depends' : ["sale","purchase","analytic"],
     'author' : 'INECO LTD.,PART.',
     'category': 'sale',
     'description': """
@@ -36,6 +36,7 @@ A. Sale Module:
     'update_xml': [
         'sale_view.xml',
         'purchase_view.xml',
+        'analytic_view.xml',
 
     ],
     'demo': [],

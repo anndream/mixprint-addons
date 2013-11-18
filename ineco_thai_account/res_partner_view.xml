@@ -22,6 +22,8 @@
 	      	<field name="inherit_id" ref="base.view_partner_tree"/>            
             <field name="arch" type="xml">
 	        	<field name="name" position="after">
+	        		<field name="street" />
+	        		<field name="street2" />        	    
 	        		<field name="city" />
 	        		<field name="state_id" />
 	        		<field name="zip" />

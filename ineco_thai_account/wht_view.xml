@@ -96,7 +96,7 @@
 		        	    		<field name="wht_type" required="1" />
 		        	    		<field name="wht_kind" required="1" />
 		        	    		<field name="wht_payment" required="1" />
-		        	    		<field name="account_id" required="1" />
+		        	    		<field name="account_id" required="1" domain="[('account_wht','=',1)] "/>
 		        	    	</group>	        	    		
 	        	    	</group>
 						<notebook>

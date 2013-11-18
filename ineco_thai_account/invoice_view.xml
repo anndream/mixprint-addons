@@ -453,6 +453,7 @@
                 <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice By Due Date">
                     <field name="partner_id" groups="base.group_user"/>
                     <field name="bill_due"/>
+                    <field name="receipt_due"/>
                     <field name="number"/>
                     <field name="reference" invisible="1"/>
                     <field name="name" invisible="1"/>

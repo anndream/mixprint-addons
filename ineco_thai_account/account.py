@@ -34,6 +34,7 @@ class account_account(osv.osv):
 
     _inherit = "account.account"
     _columns = {
+                'account_wht':fields.boolean('With Holding Tax'),
                 'report_type': fields.selection([('owner','Balance Sheet (owner account)'),
                                                 ('income', 'Profit & Loss (Income account)'),
                                                 ('expense', 'Profit & Loss (Expense account)'),
