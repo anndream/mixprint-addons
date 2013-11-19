@@ -59,16 +59,14 @@ class account_invoice(osv.osv):
             context = {}
         for id in ids:
             invoice = self.browse(cr,uid,[id])[0]
-            if invoice.origin:
-                docs = re.findall(r':[\w-]+[\w_]+[\w/]+',invoice.origin) or [invoice.origin]
-                for doc in docs:
-                    sale_no = doc.replace(':','')
-                    sale_ids = self.pool.get('sale.order').search(cr, uid, [('name','=',sale_no)])
-                    if sale_ids:
-                        sale_obj = self.pool.get('sale.order').browse(cr, uid, sale_ids)[0]
-                        if not sale_obj.sale_close_no:
-                            next_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.sale.close') or False                      
-                            sale_obj.write({'sale_close_no':next_no})
+            if invoice:
+                child_ids = self.pool.get('res.partner').search(cr, uid, [('parent_id','child_of',invoice.partner_id.id)])
+                child_ids.append(invoice.partner_id.id)
+                sale_ids = self.pool.get('sale.order').search(cr, uid, [('partner_id','in',child_ids),('sale_close_no','=',False)])
+                if sale_ids:
+                    next_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.sale.close') or False
+                    self.pool.get('sale.order').write(cr, uid, sale_ids, {'sale_close_no': next_no})
+
         return True    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

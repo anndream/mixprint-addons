@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import sale
-import invoice
-import wizard
+import wizard_select_close_sale_order 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

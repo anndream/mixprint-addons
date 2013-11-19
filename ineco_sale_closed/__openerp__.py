@@ -31,6 +31,7 @@
     'data': [],
     'update_xml': [
         'sequence.xml',
+        'wizard/wizard_select_close_sale_order_view.xml',
         'invoice_view.xml',
     ],
     'demo': [],
