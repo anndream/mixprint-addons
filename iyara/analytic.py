@@ -64,6 +64,8 @@ class account_analytic_account(osv.osv):
         'date_three_payment': fields.related('invoice_three_payment', 'date_invoice', type='date', string='3 Payment Date'),
         'date_four_payment': fields.related('invoice_four_payment', 'date_invoice', type='date', string='4 Payment Date'),        
         'iyara_description': fields.text('Description'),
+        'end_project': fields.boolean('End Project'),
+
     }
     
 account_analytic_account()

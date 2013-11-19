@@ -7,6 +7,9 @@
 	      	<field name="model">account.analytic.account</field>
 	      	<field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>   
 	      	<field name="arch" type="xml">
+	      	    <field name="code" position='after' >
+	     			<field name="end_project" /> 	        
+	      	    </field>
             	<xpath expr='//page[@string="Contract Information"]' position='after'>   	     
 	      	        <page string="Project Status">
 		      	        <group string="Sale Information">	
@@ -18,7 +21,7 @@
 			      	   		<group>
 				      	   		<field name="quotation_date" />
 				      	   		<field name="sale_order_date" />
-				      	   		<field name="po_customer_date" />		      	   		
+				      	   		<field name="po_customer_date"/>		      	   		
 			      	   		</group> 
 		      	   		</group>
 		      	        <group string="Purchase Information">	
