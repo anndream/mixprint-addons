@@ -14,8 +14,8 @@
 	      	        <page string="Project Status">
 		      	        <group string="Sale Information">	
 		      	            <group >     	            
-				      	   		<field name="quotation_id" />
-				      	   		<field name="sale_order_id" />
+				      	   		<field name="quotation_id" domain="[('state','!=','cancel'),('partner_id','=',partner_id)]" />
+				      	   		<field name="sale_order_id" domain="[('state','!=','cancel'),('partner_id','=',partner_id)]"  />
 				      	   		<field name="po_customer" />
 			      	   		</group>
 			      	   		<group>
@@ -73,6 +73,22 @@
 	      	   		</page>
 	      	   	</xpath>	      	   		    	    
 			</field>
-		</record>       		      	            
+		</record>
+		
+        <record id="view_account_analytic_account_iyara_search" model="ir.ui.view">
+            <field name="name">account.analytic.account.iyara.search</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="account.view_account_analytic_account_search"/>
+            <field name="arch" type="xml">
+            	<xpath expr='//filter[@string="Pending"]' position='after'> 
+					<filter string="End Project" domain="[('end_project','=',1)]"/>	
+					<filter string="Not End Project" domain="[('end_project','=',0)]"/>	
+                </xpath>
+            	<xpath expr='//filter[@string="Status"]' position='after'> 
+                	<filter string="Salesperson" domain="[]" context="{'group_by':'manager_id'}"/>   
+                </xpath>                	
+            </field>   	
+        </record>
+   	            
      </data>
 </openerp>

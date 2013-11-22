@@ -67,7 +67,9 @@ class account_analytic_account(osv.osv):
         'end_project': fields.boolean('End Project'),
 
     }
-    
+    _defaults = {
+        'end_project': False,
+    }    
 account_analytic_account()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

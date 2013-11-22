@@ -23,7 +23,7 @@
 {
     'name' : 'Iyara',
     'version' : '0.1',
-    'depends' : ["sale","purchase","analytic"],
+    'depends' : ["sale","purchase","analytic","account"],
     'author' : 'INECO LTD.,PART.',
     'category': 'sale',
     'description': """
