@@ -28,6 +28,7 @@ class res_partner(osv.osv):
         'billing_payment_id': fields.many2one('account.payment.term', 'Billing Term', select=True),
         'with_holding_type': fields.selection([('pp4','PP3'),('pp7','PP53')], 'With Holding Tax'),
         'note_cheque': fields.char('Note Cheque', size=256),
+        'cheque_payment_id': fields.many2one('account.payment.term', 'Cheque Term', select=True),
     }
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -11,6 +11,7 @@
 	        		<field name="pid" />
 	        		<field name="billing_payment_id" domain="[('billing_term','=',True)]"/>
 	        		<field name="note_cheque" />
+	        		<field name="cheque_payment_id" />
 	        		<field name="with_holding_type" />
 	        	</field>	        	
 	        </field>  	
