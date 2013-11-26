@@ -228,6 +228,7 @@
             <field name="model">sale.property</field>
             <field name="arch" type="xml">
                 <tree string="Property">
+                	<field name="seq" />
                     <field name="name" />
                     <field name="active" />
                 </tree>
@@ -239,6 +240,7 @@
             <field name="model">sale.property</field>
             <field name="arch" type="xml">
                 <form string="Property">
+                	<field name="seq" />
                     <field name="name" />
                     <field name="active" />
                 </form>
