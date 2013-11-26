@@ -100,7 +100,7 @@ class sale_line_property(osv.osv):
     _sql_constraints = [
         ('name_property_unique', 'unique (name, property_id, sale_line_id)', 'Description and property must be unique !')
     ]
-    _order = 'seq, name'
+    _order = 'name, seq'
     
 class sale_line_property_other(osv.osv):
     _name = 'sale.line.property.other'
