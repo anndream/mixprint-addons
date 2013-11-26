@@ -130,7 +130,7 @@ class ineco_wht(osv.osv):
         'state': 'draft',
         'wht_type': 'purchase'
     }
-    _order = "seq, date_doc"
+    _order = "date_doc, seq"
 
     def on_change_partner(self, cr, uid, ids, partner_id, context=None):
         value = {}
@@ -144,6 +144,7 @@ class ineco_wht(osv.osv):
             default = {}           
         default.update({
             'line_ids':False,
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'ineco.wht') or '/',
         })
         return super(ineco_wht, self).copy(cr, uid, id, default, context)
     

@@ -34,7 +34,11 @@ class report_custom(report_int):
             company = vouch.company_id
             
             year=int(vouch.date_pnd[0:4])+543
-            month=int(vouch.date_pnd[5:7]) - 1
+            #month=int(vouch.date_pnd[5:7]) - 1
+            month=int(vouch.date_pnd[5:7]) - 2
+            if month == -1: 
+                month = 11
+
             day=int(vouch.date_pnd[8:10])
                             
             daynow = datetime.datetime.now().day

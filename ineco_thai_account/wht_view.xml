@@ -2,9 +2,12 @@
 <openerp>
     <data>
 
-    	<menuitem name="WHT" parent="account.menu_finance" 
-    		id="menu_ineco_account" sequence="11"  />	     		
-            	
+    	<menuitem name="Thai Tax" parent="account.menu_finance" 
+    		id="menu_ineco_account" sequence="11"  />	     
+    		
+    	<menuitem name="WHT" parent="menu_ineco_account"
+    		id="menu_ineco_wht" sequence="1" />
+    	
         <!-- WHT Type -->
     	<record model="ir.ui.view" id="ineco_wht_type_form">
       		<field name="name">ineco.wht.type.form</field>
@@ -158,7 +161,7 @@
 		        	<field name="wht_type" />
 		       		<field name="wht_kind" />
 <!-- 		        	<field name="wht_payment" /> -->
-	        	  	<field name="base_amount" />
+	        	  	<field name="base_amount" sum="Total"/>
 	        	  	<field name="tax" />
 		        </tree>
       		</field>
@@ -169,28 +172,48 @@
       		<field name="model">ineco.wht</field>
       		<field name="arch" type="xml">
 		        <search string="With holding tax">
-		        	<field name="name" />		        	
+		        	<field name="name" />		
+		        	<field name="date_doc" />        	
 		        	<field name="partner_id" />
 		        	<field name="wht_type" />
 		       		<field name="wht_kind" />
 	        	  	<field name="base_amount" />
 	        	  	<field name="tax" />
+                    <filter string="PP3" icon="terp-personal" domain="[('wht_kind','=','pp4')]" context=""/>
+                    <filter string="PP53" icon="terp-personal" domain="[('wht_kind','=','pp7')]" context=""/>	
+                    <group string="Group By...">
+                    	<filter string="Partner" icon="terp-personal" domain="" context="{'group_by': 'partner_id'}"/>     
+                    	<filter string="Date" icon="terp-personal" domain="" context="{'group_by':'date_doc'}" /> 
+                    </group>  	  	
 		        </search>
       		</field>
     	</record>
     	    	
-	    <record model="ir.actions.act_window" id="ineco_wht_action">
-	        <field name="name">With Holding Tax</field>
+	    <record model="ir.actions.act_window" id="ineco_wht_action_customer">
+	        <field name="name">WHT - Customer</field>
 	        <field name="res_model">ineco.wht</field>
 	        <field name="view_mode">tree,form</field>
+	        <field name="domain">[('wht_type','=','sale')]</field>
 	    </record>	   
 
-    	<menuitem name="With Holding Tax" 
-    		id="menu_ineco_wht" 
-    		parent="menu_ineco_account" 
+    	<menuitem name="WHT - Customer" 
+    		id="menu_ineco_wht_customer" 
+    		parent="menu_ineco_wht" 
     		sequence="10" 
-    		action="ineco_wht_action"/>
+    		action="ineco_wht_action_customer"/>
 
+	    <record model="ir.actions.act_window" id="ineco_wht_action_supplier">
+	        <field name="name">WHT - Supplier</field>
+	        <field name="res_model">ineco.wht</field>
+	        <field name="view_mode">tree,form</field>
+	        <field name="domain">[('wht_type','=','purchase')]</field>
+	    </record>	   
+
+    	<menuitem name="WHT - Supplier" 
+    		id="menu_ineco_wht_supplier" 
+    		parent="menu_ineco_wht" 
+    		sequence="20" 
+    		action="ineco_wht_action_supplier"/>
     	
     	<record model="ir.ui.view" id="ineco_wht_pnd_form">
       		<field name="name">ineco.wht.pnd.form</field>
@@ -226,8 +249,8 @@
 	        	    	</group>
 						<notebook>
 							<page string="Detail">
-								<field name="wht_ids" domain="[('wht_kind','=','pp4')]">
-									<tree string="WHT Lines">
+								<field name="wht_ids" domain="[('wht_type','=','purchase'),('wht_kind','=','pp4')]">
+									<tree string="WHT PND3 Lines">
 									    <field name="name" />
 										<field name="date_doc" />
 										<field name="partner_id" />
@@ -270,6 +293,20 @@
       		</field>
     	</record>    		
 
+    	<record model="ir.ui.view" id="ineco_wht_pnd53_tree">
+      		<field name="name">ineco.wht.pnd53.tree</field>
+      		<field name="model">ineco.wht.pnd</field>
+      		<field name="arch" type="xml">
+		        <tree string="With holding tax PND">
+		        	<field name="name" />
+		        	<field name="date_pnd" />
+		       		<field name="total_amount" />
+		        	<field name="total_tax" />
+	        	  	<field name="add_amount" />
+	        	  	<field name="total_tax_send" />
+		        </tree>
+      		</field>
+    	</record>    		
     	
     	<record model="ir.ui.view" id="ineco_wht_pnd53_form">
       		<field name="name">ineco.wht.pnd53.form</field>
@@ -305,8 +342,8 @@
 	        	    	</group>
 						<notebook>
 							<page string="Detail">
-								<field name="wht_ids" domain="[('wht_kind','=','pp7')]">
-									<tree string="WHT Lines">
+								<field name="wht_ids" domain="[('wht_type','=','purchase'),('wht_kind','=','pp7')]">
+									<tree string="WHT PND53 Lines">
 									    <field name="name" />
 										<field name="date_doc" />
 										<field name="partner_id" />
@@ -342,6 +379,18 @@
             <field name="context">{'default_pnd_type': 'pp4','pnd_type': 'pp4'}</field>	 	        
 	    </record>	   
 
+	    <record model="ir.actions.act_window.view" id="ineco_wht_pnd_action_tree">
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="ineco_wht_pnd_tree"/>
+	        <field name="act_window_id" ref="ineco_wht_pnd_action"/>
+	    </record>		    
+	    	    
+	    <record model="ir.actions.act_window.view" id="ineco_wht_pnd_action_from">
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="ineco_wht_pnd_form"/>
+	        <field name="act_window_id" ref="ineco_wht_pnd_action"/>     
+	    </record>	
+
     	<menuitem name="PND3" 
     		id="menu_ineco_wht_pnd" 
     		parent="menu_ineco_account" 
@@ -361,7 +410,7 @@
 
 	    <record model="ir.actions.act_window.view" id="ineco_wht_pnd_action53_tree">
 	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="ineco_wht_pnd_tree"/>
+	        <field name="view_id" ref="ineco_wht_pnd53_tree"/>
 	        <field name="act_window_id" ref="ineco_wht_pnd_action53"/>
 	    </record>		    
 	    	    
