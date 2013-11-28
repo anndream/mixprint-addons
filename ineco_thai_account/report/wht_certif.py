@@ -212,7 +212,7 @@ class report_custom(report_int):
             vals.update({
                 "pay1.14": lang.format("%.2f",total_base,grouping=True).replace("."," "),
                 "tax1.14": lang.format("%.2f",total_tax,grouping=True).replace("."," "),
-                "total": num2word_th(int(total_tax),"th").decode('utf-8'),
+                "total": num2word_th(total_tax,"th").decode('utf-8'),
             })
     
             pdf2=pdf_fill("openerp/addons/ineco_thai_account/report/pdf/wht_certif.pdf",vals)
