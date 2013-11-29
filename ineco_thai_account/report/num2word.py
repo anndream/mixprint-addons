@@ -93,7 +93,7 @@ def num2word_th(n,l="th"):
         if base!=0 and end==0:
             word=base+'บาทถ้วน'
         if base!=0 and end!=0:
-            word=base+' '+end+'สตางค์'
+            word=base+'บาท'+end+'สตางค์'
     return word
 
 if __name__ == '__main__':
