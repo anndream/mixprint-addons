@@ -23,7 +23,7 @@
 {
     'name' : 'Iyara',
     'version' : '0.1',
-    'depends' : ["sale","purchase","analytic","account"],
+    'depends' : ["sale","purchase","analytic","account",'hr_expense','mrp'],
     'author' : 'INECO LTD.,PART.',
     'category': 'sale',
     'description': """
@@ -34,10 +34,12 @@ A. Sale Module:
     'website': 'http://www.ineco.co.th',
     'data': [],
     'update_xml': [
+        'wizard/product_set_view.xml',
         'sale_view.xml',
         'purchase_view.xml',
         'analytic_view.xml',
-
+        'sequence.xml',
+        'hr_expense_view.xml'
     ],
     'demo': [],
     'installable': True,

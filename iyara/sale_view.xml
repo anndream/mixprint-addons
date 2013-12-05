@@ -11,6 +11,11 @@
                     <field name="date_sale_order"/>
                     <field name="date_order" string="Delivery Date"/>
                 </field>
+                <field name="name" position="after">
+	             	<div class="oe_right oe_button_box" name="buttons">
+						<button name="%(open_iyara_product_set_form)d" states="draft" type="action" string="Product Set" />	                    
+		           	</div>
+	           	</field> 
         	</field>
         </record>
         
