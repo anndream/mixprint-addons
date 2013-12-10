@@ -190,44 +190,53 @@ class sale_order(osv.osv):
 
     def action_gen_garment_no(self, cr, uid, ids, context=None):
         sale_obj = self.browse(cr, uid, ids)[0]
-        if sale_obj.shop_id and sale_obj.shop_id.production_sequence_id:
-            garment_order_no = self.pool.get('ir.sequence').get_id(cr, uid, sequence_code_or_id=sale_obj.shop_id.production_sequence_id.id )
-        else:
-            garment_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.garment.order')
-        self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
-        #Make MO
-        company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
+        #Check MRP when exist
         production_obj = self.pool.get('mrp.production')
-        #move_obj = self.pool.get('stock.move')
-        wf_service = netsvc.LocalService("workflow")
-        bom_obj = self.pool.get('mrp.bom')
-        #procurement_obj = self.pool.get('procurement.order')
-        #res_id = procurement.move_id.id
-        #newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.produce_delay or 0.0)
-        #newdate = newdate - relativedelta(days=company.manufacturing_lead)
-        stock_location_obj = self.pool.get('stock.warehouse').browse(cr, uid, [1])[0]
-        seq = 1
-        for line in sale_obj.order_line:
-            bom_id = False
-            bom_ids = bom_obj.search(cr, uid, [('product_id','=',line.product_id.id)])
-            if bom_ids:
-                bom_id = bom_ids[0]
-            produce_id = production_obj.create(cr, uid, {
-                'origin': sale_obj.name,
-                'product_id': line.product_id.id,
-                'product_qty': line.product_uom_qty,
-                'product_uom': line.product_uom.id,
-                'product_uos_qty': False,
-                'product_uos': False,
-                'location_src_id': stock_location_obj.lot_stock_id.id,
-                'location_dest_id': stock_location_obj.lot_stock_id.id,
-                'bom_id': bom_id,
-                'date_planned': time.strftime('%Y-%m-%d'),
-                'move_prod_id': False,
-                'company_id': company.id,
-                'name': garment_order_no+('#%s' % seq),
-            })        
-            seq += 1
+        production_ids = production_obj.search(cr, uid, [('origin','=',sale_obj.name)])
+        garment_order_no = False
+        if production_ids:
+            garment_order = production_obj.browse(cr, uid, production_ids)[0]
+            garment_order_no = garment_order.origin.split('#')[0]
+            self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
+        else:
+            if sale_obj.shop_id and sale_obj.shop_id.production_sequence_id:
+                garment_order_no = self.pool.get('ir.sequence').get_id(cr, uid, sequence_code_or_id=sale_obj.shop_id.production_sequence_id.id )
+            else:
+                garment_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.garment.order')
+            self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
+            #Make MO
+            company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
+            production_obj = self.pool.get('mrp.production')
+            #move_obj = self.pool.get('stock.move')
+            wf_service = netsvc.LocalService("workflow")
+            bom_obj = self.pool.get('mrp.bom')
+            #procurement_obj = self.pool.get('procurement.order')
+            #res_id = procurement.move_id.id
+            #newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.produce_delay or 0.0)
+            #newdate = newdate - relativedelta(days=company.manufacturing_lead)
+            stock_location_obj = self.pool.get('stock.warehouse').browse(cr, uid, [1])[0]
+            seq = 1
+            for line in sale_obj.order_line:
+                bom_id = False
+                bom_ids = bom_obj.search(cr, uid, [('product_id','=',line.product_id.id)])
+                if bom_ids:
+                    bom_id = bom_ids[0]
+                produce_id = production_obj.create(cr, uid, {
+                    'origin': sale_obj.name,
+                    'product_id': line.product_id.id,
+                    'product_qty': line.product_uom_qty,
+                    'product_uom': line.product_uom.id,
+                    'product_uos_qty': False,
+                    'product_uos': False,
+                    'location_src_id': stock_location_obj.lot_stock_id.id,
+                    'location_dest_id': stock_location_obj.lot_stock_id.id,
+                    'bom_id': bom_id,
+                    'date_planned': time.strftime('%Y-%m-%d'),
+                    'move_prod_id': False,
+                    'company_id': company.id,
+                    'name': garment_order_no+('#%s' % seq),
+                })        
+                seq += 1
         return True
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
