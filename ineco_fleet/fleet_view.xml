@@ -2,6 +2,29 @@
 <openerp>
     <data>
 
+        <record model='ir.ui.view' id='ineco_log_fuel_form'>
+            <field name="name">ineco.log.fuel.form</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_log_fuel_form"/>
+            <field name="arch" type="xml">
+            	<field name="amount" position="after">
+            		<field name="amount_actual" />
+            	</field>
+            </field>
+         </record>
+
+        <record model='ir.ui.view' id='ineco_log_fuel_tree'>
+            <field name="name">ineco.log.fuel.tree</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_log_fuel_tree"/>
+            <field name="arch" type="xml">
+            	<field name="amount" position="after">
+            		<field name="amount_actual" sum="Actual" />
+            	</field>
+            </field>
+        </record>
+
+
 	    <record model="ir.ui.view" id="view_ineco_odometer_tree">
 	        <field name="name">ineco.odometer.tree</field>
 	        <field name="model">fleet.vehicle.odometer</field>

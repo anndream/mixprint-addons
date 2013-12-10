@@ -57,5 +57,16 @@ class ineco_fleet_route(osv.osv):
         'code': fields.char('Code', size=16, required=True),
         'name': fields.char('Route Name', size=128, required=True),
     }
-
+    
+class fleet_vehicle_cost(osv.Model):
+    _inherit = 'fleet.vehicle.cost'
+    _columns = {
+        'amount_actual': fields.float('Actual Price'),
+    }
+    
+class fleet_vehicle_log_fuel(osv.Model):
+    _inherit = 'fleet.vehicle.log.fuel'
+    _columns = {
+        'cost_amount_actual': fields.related('cost_id', 'amount_actual', string='Amount Actual', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
+    }
         
