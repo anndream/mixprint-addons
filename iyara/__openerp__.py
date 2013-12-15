@@ -35,11 +35,13 @@ A. Sale Module:
     'data': [],
     'update_xml': [
         'wizard/product_set_view.xml',
+        'wizard/change_project_view.xml',
         'sale_view.xml',
         'purchase_view.xml',
         'analytic_view.xml',
         'sequence.xml',
-        'hr_expense_view.xml'
+        'hr_expense_view.xml',
+        
     ],
     'demo': [],
     'installable': True,

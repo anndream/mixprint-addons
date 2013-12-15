@@ -20,5 +20,6 @@
 ##############################################################################
 
 import product_set
+import change_project
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
