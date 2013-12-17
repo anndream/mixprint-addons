@@ -56,8 +56,8 @@ class report_custom(report_int):
             vat[i] = line.partner_id.pid and fmt_tin(line.partner_id.pid) or ""
             sup_name[i] = line.partner_id.name 
             province = line.partner_id.state_id and line.partner_id.state_id.name or ""
-            sup_address[i]= line.partner_id.street +"  "+ line.partner_id.street2 or ""
-            sup_address2[i]= line.partner_id.city  +"  "+ province
+            sup_address[i]= (line.partner_id.street or "") +"  "+ (line.partner_id.street2 or "")
+            sup_address2[i]= (line.partner_id.city or "")  +"  "+ (province or "")
             for wht_line in line.line_ids:
                 wht_date[j] = line.date_doc and fmt_thaidate(line.date_doc) or ""                
                 wht_name_line[j] = wht_line.wht_type_id.printed

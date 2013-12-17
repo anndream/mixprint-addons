@@ -55,7 +55,7 @@ class report_custom(report_int):
             vat[i] = line.partner_id.pid and fmt_tin(line.partner_id.pid) or ""
             sup_name[i] = line.partner_id.name 
             province = line.partner_id.state_id and line.partner_id.state_id.name or ""
-            sup_address[i]= line.partner_id.street + " " + line.partner_id.street2 + " "+ line.partner_id.city + " " + province ;
+            sup_address[i]= (line.partner_id.street or "") + " " + (line.partner_id.street2 or "") + " "+ (line.partner_id.city or "") + " " + (province or "") 
                             
             for wht_line in line.line_ids:
                 wht_date[j] = line.date_doc and fmt_thaidate(line.date_doc) or ""                
@@ -71,8 +71,8 @@ class report_custom(report_int):
                     "Text4":    company.ineco_branch or "",
                     "Text18":   pages,
                     "Text19":   vouch.attach_no,  
-                    "Text21":"      "+ company.ineco_name,   
-                    "Text22":"        "+ company.ineco_position,     
+                    "Text21":"      "+ (company.ineco_name or ""),   
+                    "Text22":"        "+ (company.ineco_position or ""),     
                     "Text23":   day,
                     "Text24":"    "+ str(month+1),  
                     "Text25":   year,   
