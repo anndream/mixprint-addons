@@ -27,6 +27,13 @@ from openerp.osv.orm import except_orm
 from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta
 
+
+class fleet_vehicle(osv.Model):
+    _inherit = 'fleet.vehicle'
+    _columns = {
+        'odometer_unit': fields.selection([('kilometers', 'Kilometers'),('miles','Miles'),('unit','Units')], 'Odometer Unit', help='Unit of the odometer ',required=True),
+} 
+
 class fleet_driver(osv.osv):
     _name = 'ineco.fleet.driver'
     _columns = {
