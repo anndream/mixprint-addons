@@ -9,6 +9,7 @@
 	      	<field name="arch" type="xml">	        	
 	        	<field name="property_payment_term" position="after">
 	        		<field name="pid" />
+	        		<field name="tax_detail" />
 	        		<field name="billing_payment_id" domain="[('billing_term','=',True)]"/>
 	        		<field name="note_cheque" />
 	        		<field name="cheque_payment_id" />
