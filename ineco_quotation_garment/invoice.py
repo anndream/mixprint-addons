@@ -72,6 +72,7 @@ class account_invoice(osv.osv):
         
     _inherit = 'account.invoice'
     _columns = {
+        'name': fields.char('Description', size=64, select=True,),
         'garment_order_no': fields.function(_get_mo, type='char', size=32, string='Germent Order No',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, [], 10),
