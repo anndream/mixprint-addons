@@ -34,19 +34,23 @@ class account_invoice(osv.osv):
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
             sql = """
-                select 
-                  so.name,
-                  ai.origin,
-                  so.garment_order_no as garment_order_no
-                from account_invoice ai
-                left join sale_order_invoice_rel soi on soi.invoice_id = ai.id
-                left join sale_order so on soi.order_id = so.id
-                where ai.id = %s            
+                select garment_order_no as garment_order_no from sale_order where name in 
+                    (select regexp_split_to_table(origin, E'\\:') as sale_no from account_invoice ai where ai.id = %s)            
             """
+#             sql = """
+#                 select 
+#                   so.name,
+#                   ai.origin,
+#                   so.garment_order_no as garment_order_no
+#                 from account_invoice ai
+#                 left join sale_order_invoice_rel soi on soi.invoice_id = ai.id
+#                 left join sale_order so on soi.order_id = so.id
+#                 where ai.id = %s            
+#             """
             cr.execute(sql % order.id)
             output = cr.fetchone()
             if output:
-                res[order.id] = output[2]
+                res[order.id] = output[0]
         return res
 
     def _get_order(self, cr, uid, ids, context=None):
