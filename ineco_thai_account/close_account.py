@@ -48,22 +48,22 @@ class account_period_close(osv.osv_memory):
         for form in self.read(cr, uid, ids, context=context):
             if form['sure']:
                 for id in context['active_ids']:
-                    account_move_ids = account_move_obj.search(cr, uid, [('period_id', '=', id), ('state', '=', "draft")], context=context)
+                    account_move_ids = account_move_obj.search(cr, uid, [('period_id', '=', id), ('state', '=', 'draft')], context=context)
                     if account_move_ids:
                         raise osv.except_osv(_('Invalid Action!'), _('In order to close a period, you must first post related journal entries.'))
 
                     account_account_ids = account_account.search(cr, uid, [('type', '!=', "view")])
-                    account_account_obj = account_account.browse(cr, uid,account_account_ids)
+                    account_account_obj = account_account.browse(cr, uid, account_account_ids)
                     for acc_line in account_account_obj:
                         debit = 0.00
                         credit = 0.00
                         before_balance = 0.00
                         balance = 0.00
-                        cr.execute('select sum(debit) as debit  from account_move_line  where period_id = %s  and account_id = %s',(id,acc_line.id))
+                        cr.execute('select sum(round(debit,2)) as debit  from account_move_line  where period_id = %s  and account_id = %s',(id,acc_line.id))
                         row_debit =  map(itemgetter(0), cr.fetchall())
-                        cr.execute('select sum(credit) as credit from account_move_line  where period_id = %s  and account_id = %s',(id,acc_line.id))
+                        cr.execute('select sum(round(credit,2)) as credit from account_move_line  where period_id = %s  and account_id = %s',(id,acc_line.id))
                         row_credit = map(itemgetter(0), cr.fetchall())
-                        cr.execute('select balance from ineco_close_account  where account_id ='+ str(acc_line.id) +'order by id desc limit 1')
+                        cr.execute('select round(balance,2) from ineco_close_account  where account_id ='+ str(acc_line.id) +'order by id desc limit 1')
                         row_balance = map(itemgetter(0), cr.fetchall())
                         
                         if row_debit != [] and row_debit[0] != None:
