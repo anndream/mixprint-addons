@@ -39,7 +39,8 @@ class account_account(osv.osv):
                                                 ('income', 'Profit & Loss (Income account)'),
                                                 ('expense', 'Profit & Loss (Expense account)'),
                                                 ('asset', 'Balance Sheet (Asset account)'),
-                                                ('liability','Balance Sheet (Liability account)')], 'P&L / BS Category', )             
+                                                ('liability','Balance Sheet (Liability account)')], 'P&L / BS Category', ),
+                'cashflow_report': fields.boolean('Cash Flow Report'),         
                                         
                 }      
     _defaults = {

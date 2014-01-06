@@ -348,6 +348,7 @@
                     <filter name="nobill" icon="terp-gtk-media-pause" string="No Billing Date" domain="[('bill_due','=',False),('state','=','draft')]" help="No bill date."/>
                     <filter name="todaydue" icon="terp-go-today" string="Today Due" domain="[('date_due','=',time.strftime('%%Y-%%m-%%d')),('state','=','draft')]" />
 					<filter name="todaybill" icon="terp-go-today" string="Today Billing" domain="[('bill_due','=',time.strftime('%%Y-%%m-%%d')),('state','=','draft')]" />
+					<filter name="todo" icon="terp-go-today" string="To Do" domain="[('state','in',['draft','open'])]" />
             	</filter>
             </field>
        	</record>

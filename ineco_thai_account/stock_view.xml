@@ -18,7 +18,17 @@
 	        	</page>	      		
 	        </field>
 	   	</record>
-	   	
+
+        <record id="view_delivery_todo_search" model="ir.ui.view">
+            <field name="name">stock.delivery.todo.search</field>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="stock.view_picking_out_search"/>
+            <field name="arch" type="xml">
+                <field name="stock_journal_id" position="after">
+					<filter name="todo" icon="terp-go-today" string="To Do" domain="[('state','in',['draft','assigned','confirmed'])]" />
+                </field>
+        	</field>
+       	</record>	   	
 	   	    
     </data>
 </openerp>
