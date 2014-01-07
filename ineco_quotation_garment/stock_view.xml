@@ -49,6 +49,7 @@
             <field name="arch" type="xml">
                 <field name="stock_journal_id" position="after">
                     <field name="delivery_type_id" />
+                    <field name="date_delivery" />
                     <field name="ineco_date_delivery" />
                     <field name="garment_order_no" />
                 </field>
@@ -68,7 +69,8 @@
                     <field name="batch_no" />
                 </xpath>
                 <xpath expr="//field[@name='date_done']" position="after">
-                    <field name="ineco_date_delivery" />
+                	<field name="date_delivery" />
+                    <!-- <field name="ineco_date_delivery" /> -->
                 </xpath>
             </field>
         </record>
@@ -79,14 +81,15 @@
             <field name="inherit_id" ref="stock.view_picking_out_tree"/>
             <field name="arch" type="xml">
             	<field name="invoice_state" position="before">
-            		<field name="delivery_type_id" />
+            		<field name="delivery_type_id" />         		
             	</field>
             	<field name="origin" position="before">
             		<field name="batch_no" />
             		<field name="garment_order_no" />
             	</field>
                 <field name="name" position="after">
-                	<field name="ineco_date_delivery" />
+                	<field name="date_delivery" />
+                	<!-- <field name="ineco_date_delivery" /> -->
                 </field>
             	
             </field>

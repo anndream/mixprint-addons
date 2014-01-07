@@ -64,7 +64,8 @@ class stock_picking_out(osv.osv):
         'shiping_cost': fields.float('Shipping Cost', digits_compute=dp.get_precision('Account')),
         'batch_no': fields.integer('Batch No'),
         'ineco_date_delivery': fields.date('Actual Delivery Date'),
-        'garment_order_no': fields.related('sale_id', 'garment_order_no', type="char", string="Garment No", readonly=True),        
+        'garment_order_no': fields.related('sale_id', 'garment_order_no', type="char", string="Garment No", readonly=True),
+        'date_delivery': fields.related('sale_id', 'date_delivery', type="date", string="Delivery Date", readonly=True),
     }
         
     

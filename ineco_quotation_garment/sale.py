@@ -275,8 +275,9 @@ class sale_order(osv.osv):
         }
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
-        date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=line.delay or 0.0)
-        date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        #date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=line.delay or 0.0)
+        #date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_planned = order.date_delivery
         return date_planned
 
     def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, context=None):
