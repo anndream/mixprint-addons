@@ -454,7 +454,7 @@ class account_voucher(osv.osv):
             relation='account.move.line', string='General Ledgers'),      
         'wht_ids': fields.one2many('ineco.wht', 'voucher_id', 'WHT'),
         'cheque_id': fields.many2one('ineco.cheque','Cheque'),        
-        
+        'bill_number': fields.char('Bill No', size=63),
     }
     
     def _get_wht_total(self, cr, uid, voucher_id, context=None):
