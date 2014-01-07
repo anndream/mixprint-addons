@@ -23,6 +23,7 @@
 # POP-002    2013-08-24    Cancel invoice reset period_id = False
 # POP-003    2013-08-27    Add Commission
 # POP-004    2013-09-09    Change Manual Post when validate invoice
+# POP-005    2014-01-07    Change Date Due in account.invoice
 
 from openerp.osv import fields, osv
 
@@ -86,6 +87,10 @@ class account_invoice(osv.osv):
         'commission_other': fields.float('Other Commission'),
         'commission_note': fields.char('Commission Note', size=256),
         'commission_pay': fields.boolean('Pay Commission'),
+        'date_due': fields.date('Due Date', select=True,
+            help="If you use payment terms, the due date will be computed automatically at the generation "\
+                "of accounting entries. The payment term may compute several due dates, for example 50% now and 50% in one month, but if you want to force a due date, make sure that the payment term is not set on the invoice. If you keep the payment term and the due date empty, it means direct payment."),
+
     }
     _defaults = {
         'service': False,
