@@ -25,6 +25,7 @@
     'version': '0.1',
     'category': 'Extended',
     'description': """
+1. Add Nick Name
     """,
     'author': 'Mr.Tititab Srisookco',
     'website': 'http://www.ineco.co.th',

@@ -55,6 +55,8 @@
 			                    <field name="mobile"/>
 		                        <field name="type" />
 			                    <field name="user_id" />         
+			                    <field name="customer" />
+			                    <field name="supplier" />
 			         		</group>
 			         	</group>
 	                </form>                 
