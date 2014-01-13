@@ -55,7 +55,9 @@ class iyara_product_set(osv.osv_memory):
                     'product_id': line.product_id.id,
                     'account_analytic_id': wizard.account_analytic_id.id,
                     'product_uom_qty': qty,
+                    'product_uom': line.product_uom.id,
                     'product_uos_qty': qty, 
+                    'price_unit': line.product_id.list_price or 0.00,
                     }            
             sale_line_id = sale_line_obj.create(cr, uid, vals, context=context)
             cr.execute('insert into sale_order_tax (order_line_id,tax_id) \
