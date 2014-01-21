@@ -102,7 +102,7 @@
         </record>
         
         <record id="action_ineco_sale_summary4" model="ir.actions.act_window">
-            <field name="name">Sale Summary</field>
+            <field name="name">Sale Summary 1</field>
             <field name="res_model">ineco.sale.summary4</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -117,12 +117,80 @@
                 logistics rules.
               </p>
             </field>
-        </record>     
-        
+        </record>
+                   
+        <menuitem
+        	id="menu_mixprint_dashboard"
+        	parent="base.menu_sales"
+        	name="Mixprint"
+        	sequence="0" />
+        	        
         <menuitem 
             id="menu_ineco_sale_summary"
         	action="action_ineco_sale_summary4" 
-        	parent="base.menu_sales"
-        	sequence="0"/>         
+        	parent="menu_mixprint_dashboard"
+        	sequence="1"/> 
+        	
+		<!-- Sale Summary Dashboard 5 -->
+        <record id="view_ineco_sale_summary5_tree" model="ir.ui.view">
+            <field name="name">ineco.sale.summary5.tree</field>
+            <field name="model">ineco.sale.summary5</field>
+            <field name="arch" type="xml">
+                <tree string="Problem Type">
+                    <field name="nickname" />
+                    <field name="so2" sum="Total" string="SO"/>
+                    <field name="mo2" sum="Total" string="MO"/>
+                    <field name="total_customer" sum="Total"/>
+                    <field name="total_customer_company" sum="Total" string="Com"/>
+                    <field name="total_customer_new" sum="Total"/>
+                    <field name="logcall_inbound" sum="Total" string="In"/>
+                    <field name="logcall_outbound" sum="Total" string="Out"/>
+                    <field name="logcall_visit" sum="Total" string="Vs"/>
+                    <field name="total_quotation" sum="Total" string="QO"/>
+                    <field name="total_quotation_saleorder" sum="Total" string="SO"/>
+                    <field name="total_picking_pc" sum="Total" string="PC"/>
+                    <field name="total_picking_ds" sum="Total" string="DS"/>
+                    <field name="total_picking_rp" sum="Total" string="PR"/>
+                    <field name="total_picking_mp" sum="Total" string="PM"/>
+                    <field name="total_picking_fr" sum="Total" string="PF"/>
+                </tree>
+            </field>
+        </record>		
+        
+        <record id="view_ineco_sale_summary5_filter" model="ir.ui.view">
+            <field name="name">ineco.sale.summary5.select</field>
+            <field name="model">ineco.sale.summary5</field>
+            <field name="arch" type="xml">
+                <search string="Search Sale Summary">
+                	<field name="user_id" />
+                	<field name="nickname" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_sale_summary5" model="ir.actions.act_window">
+            <field name="name">Sale Summary 2</field>
+            <field name="res_model">ineco.sale.summary5</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_sale_summary5_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale summary. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem 
+            id="menu_ineco_sale_summary5"
+        	action="action_ineco_sale_summary5" 
+        	parent="menu_mixprint_dashboard"
+        	sequence="2"/>            
+                	 
      </data>
 </openerp>
