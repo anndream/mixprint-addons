@@ -278,8 +278,8 @@ class ineco_sale_summary5_query(osv.osv):
                         and cp.user_id = ru.id
                   ) as logcall_inbound,
                   (select coalesce(count(*),0) from crm_phonecall cp
-            left join crm_case_categ ccc on cp.categ_id = ccc.id
-            where ccc.id = 10  and date_part('month',now()) = date_part('month', cp.create_date)
+            --left join crm_case_categ ccc on cp.categ_id = ccc.id
+            where (cp.categ_id is null or cp.categ_id = 10) and date_part('month',now()) = date_part('month', cp.create_date)
                         and date_part('year',now()) = date_part('year', cp.create_date)  
                         and cp.user_id = ru.id
                   ) as logcall_outbound,
