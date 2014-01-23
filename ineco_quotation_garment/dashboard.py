@@ -122,61 +122,81 @@ class ineco_sale_summary3(osv.osv):
                   ru.id as user_id,
                   (select count(*) from sale_order so 
                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
+                         and date_part('year',now()) = date_part('year',so.date_sale_close)
                          and so.state <> 'cancel'
                   ) as so1,
                   (select coalesce(sum(amount_untaxed),0) from sale_order so 
                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
+                         and date_part('year',now()) = date_part('year',so.date_sale_close)
                          and so.state <> 'cancel'
                   ) as so2,
                   (select count(*)::numeric  from sale_order so 
                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
-                         and so.state <> 'cancel'
+                        and date_part('year',now()) = date_part('year',so.garment_order_date)
+                        and so.state <> 'cancel'
                   ) as mo1,
                   (select coalesce(sum(amount_untaxed),0) from sale_order so 
                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
-                         and so.state <> 'cancel'
+                        and date_part('year',now()) = date_part('year',so.garment_order_date)
+                        and so.state <> 'cancel'
                   ) as mo2,
                   (select count(*)::numeric from crm_lead cl  
                    where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
-                   and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('year',now()) = date_part('year', date_closed) 
                   ) as lose1,  
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
                    where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
-                   and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('year',now()) = date_part('year', date_closed) 
                   ) as lose2,  
                   (select count(*)::numeric from crm_lead cl  
                    where user_id = ru.id and stage_id = 1 and type = 'opportunity'
-                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                       and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent101, 
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
                    where user_id = ru.id and stage_id = 1 and type = 'opportunity'
-                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                       and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent102, 
                   (select count(*)::numeric from crm_lead cl  
                    where user_id = ru.id and stage_id = 3   
-                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                       and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent501, 
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
                    where user_id = ru.id and stage_id = 3   
-                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                       and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent502,               
                   (select count(*)::numeric   from crm_lead cl  
                    where user_id = ru.id and stage_id = 5  
-                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                       and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent901,
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
                    where user_id = ru.id and stage_id = 5  
-                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                       and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent902,
                   ru.nickname as nickname,
                   (select count(*)::numeric from crm_lead cl  
                    where user_id = ru.id and stage_id = 10   
-                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
+                       and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent301, 
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
                    where user_id = ru.id and stage_id = 10   
-                   --and date_part('month',now()) = date_part('month', coalesce(date_lead_to_opportunity, create_date))  
-                  ) as percent302           
+                       and date_part('month',now()) = date_part('month', date_closed)  
+                       and date_part('year',now()) = date_part('year', date_closed)
+                  ) as percent302,
+                  (
+                  select count(*) from crm_lead where type = 'opportunity'
+                      and date_part('month',now()) = date_part('month',date_closed)
+                      and date_part('year',now()) = date_part('year',date_closed)
+                      and user_id = ru.id
+                  ) as total_opportunity   
                       
                 from 
                   res_users ru
@@ -207,6 +227,7 @@ class ineco_sale_summary4(osv.osv):
         'nickname': fields.char('Nick Name', size=32),
         'percent301': fields.integer('30%',),
         'percent302': fields.integer('30%',),
+        'total_opportunity': fields.integer('Total Opp',),
     }     
     
     def init(self, cr):
@@ -252,11 +273,13 @@ class ineco_sale_summary5_query(osv.osv):
                   /*
                   (select count(*)::numeric  from sale_order so 
                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
-                         and so.state <> 'cancel'
+                        and date_part('year',now()) = date_part('year',so.garment_order_date)
+                        and so.state <> 'cancel'
                   ) as mo1,*/
                   (select coalesce(sum(amount_untaxed),0) from sale_order so 
                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
-                         and so.state <> 'cancel'
+                        and date_part('year',now()) = date_part('year',so.garment_order_date)
+                        and so.state <> 'cancel'
                   ) as mo2,
                   (
                     select coalesce(count(*),0) from res_partner 
@@ -291,13 +314,13 @@ class ineco_sale_summary5_query(osv.osv):
                   ) as logcall_visit,
                   (
                     select count(*) from sale_order where state <> 'cancel'  and user_id = ru.id
-                        and date_part('month',now()) = date_part('month', sale_order.create_date)
-                        and date_part('year',now()) = date_part('year', sale_order.create_date)  
+                        and date_part('month',now()) = date_part('month', sale_order.date_sale_close)
+                        and date_part('year',now()) = date_part('year', sale_order.date_sale_close)  
                   ) as total_quotation,
                   (
                     select count(*) from sale_order where state in ('manual','send')  and user_id = ru.id
-                        and date_part('month',now()) = date_part('month', sale_order.create_date)
-                        and date_part('year',now()) = date_part('year', sale_order.create_date)  
+                        and date_part('month',now()) = date_part('month', sale_order.date_sale_close)
+                        and date_part('year',now()) = date_part('year', sale_order.date_sale_close)  
                   ) as total_quotation_saleorder,
                   (
                     select count(*) from stock_picking sp
@@ -381,3 +404,228 @@ class ineco_sale_summary5(osv.osv):
                     ) b
                 ) c
             )""")        
+        
+class ineco_sale_qty_amount_temp(osv.osv):
+    _name = "ineco.sale.qty.amount.temp"
+    _auto = False
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_qty_amount_query')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_sale_qty_amount_query AS (
+                select
+                    ru.id as user_id,
+                    '1. Q/O' as type,
+                    (select coalesce(count(*),0) from sale_order so 
+                                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
+                             and date_part('year',now()) = date_part('year',so.date_sale_close)
+                                         and so.state <> 'cancel') as qty,
+                    (select coalesce(sum(amount_untaxed),0.00) from sale_order so 
+                                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
+                             and date_part('year',now()) = date_part('year',so.date_sale_close)
+                                         and so.state <> 'cancel') as amount,
+                    (select coalesce(count(*),0) from sale_order so 
+                                   where user_id = ru.id 
+                             and date_part('year',now()) = date_part('year',so.date_sale_close)
+                                         and so.state <> 'cancel') as ytd_qty,
+                    (select coalesce(sum(amount_untaxed),0.00) from sale_order so 
+                                   where user_id = ru.id 
+                             and date_part('year',now()) = date_part('year',so.date_sale_close)
+                                         and so.state <> 'cancel') as ytd_amount
+                from 
+                    res_users ru
+                left join res_partner rp on ru.partner_id = rp.id
+                where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+                    signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
+                union
+                select
+                    ru.id as user_id,
+                    '2. S/O' as type,
+                    (select coalesce(count(*),0) from sale_order so 
+                                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
+                             and date_part('year',now()) = date_part('year',so.date_sale_close)
+                                         and so.state not in ('cancel','draft') ) as qty,
+                    (select coalesce(sum(amount_untaxed),0.00) from sale_order so 
+                                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
+                             and date_part('year',now()) = date_part('year',so.date_sale_close)
+                                         and so.state not in ('draft', 'cancel') ) as amount,
+                    (select coalesce(count(*),0) from sale_order so 
+                                   where user_id = ru.id 
+                             and date_part('year',now()) = date_part('year',so.date_sale_close)
+                                         and so.state not in ('draft','cancel') ) as ytd_qty,
+                    (select coalesce(sum(amount_untaxed),0.00) from sale_order so 
+                                   where user_id = ru.id 
+                             and date_part('year',now()) = date_part('year',so.date_sale_close)
+                                         and so.state not in ('draft','cancel') ) as ytd_amount
+                from 
+                    res_users ru
+                left join res_partner rp on ru.partner_id = rp.id
+                where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+                    signature like '%เจ้าหน้าที่งานฝ่ายขาย%'                
+                union
+                select
+                    ru.id as user_id,
+                    '3. M/O' as type,
+                    (select coalesce(count(*),0) from sale_order so 
+                                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
+                             and date_part('year',now()) = date_part('year',so.garment_order_date)
+                                         and so.state <> 'cancel') as qty,
+                    (select coalesce(sum(amount_untaxed),0.00) from sale_order so 
+                                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
+                             and date_part('year',now()) = date_part('year',so.garment_order_date)
+                                         and so.state <> 'cancel') as amount,
+                    (select coalesce(count(*),0) from sale_order so 
+                                   where user_id = ru.id 
+                             and date_part('year',now()) = date_part('year',so.garment_order_date)
+                                         and so.state <> 'cancel') as ytd_qty,
+                    (select coalesce(sum(amount_untaxed),0.00) from sale_order so 
+                                   where user_id = ru.id 
+                             and date_part('year',now()) = date_part('year',so.garment_order_date)
+                                         and so.state <> 'cancel') as ytd_amount
+                from 
+                    res_users ru
+                left join res_partner rp on ru.partner_id = rp.id
+                where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+                    signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
+                    
+                order by user_id, type      
+            )               
+            """)
+    
+class ineco_sale_qty_amount(osv.osv):
+    _name = 'ineco.sale.qty.amount'
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Sale'),
+        'type': fields.char('Type',size=32),
+        'qty': fields.integer('Qty',),
+        'amount': fields.integer('Amount',),
+        'ytd_qty': fields.integer('Year Qty',),
+        'ytd_amount': fields.integer('Year Amount',),
+    }
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_qty_amount')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_sale_qty_amount AS (
+                select id, (a[id]).*
+                from (
+                    select a, generate_series(1, array_upper(a,1)) as id
+                        from (
+                            select array (
+                                select ineco_sale_qty_amount_query from ineco_sale_qty_amount_query
+                            ) as a
+                    ) b
+                ) c
+            )""")     
+        
+class ineco_sale_qty_customer_temp(osv.osv):
+    _name = "ineco.sale.qty.customer.temp"
+    _auto = False
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_qty_customer_query')
+        cr.execute("""
+        CREATE OR REPLACE VIEW ineco_sale_qty_customer_query AS (        
+select 
+  ru.id as user_id,
+  '1. New' as type,
+  (select coalesce(count(*),0) from res_partner 
+                    where user_id = ru.id and date_part('month',now()) = date_part('month', res_partner.create_date)
+                        and date_part('year',now()) = date_part('year', res_partner.create_date)
+  ) as customer_total 
+from 
+    res_users ru
+    left join res_partner rp on ru.partner_id = rp.id
+where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+    signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
+union
+select 
+  ru.id as user_id,
+  '3. Total' as type,
+  (select count(*) from res_partner where user_id = ru.id and active = true) as customer_total 
+from 
+    res_users ru
+    left join res_partner rp on ru.partner_id = rp.id
+where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+    signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
+union
+select 
+  ru.id as user_id,
+  '2. Company' as type,
+  (select count(*) from res_partner where user_id = ru.id and active = true and is_company = true) as customer_total 
+from 
+    res_users ru
+    left join res_partner rp on ru.partner_id = rp.id 
+where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+    signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
+
+order by user_id, type        
+           )
+        """)
+        
+class ineco_sale_qty_customer(osv.osv):
+    _name = "ineco.sale.qty.customer"
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Sale'),
+        'type': fields.char('Type',size=32),
+        'customer_total': fields.integer('Quantity',),        
+    }
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_qty_customer')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_sale_qty_customer AS (
+                select id, (a[id]).*
+                from (
+                    select a, generate_series(1, array_upper(a,1)) as id
+                        from (
+                            select array (
+                                select ineco_sale_qty_customer_query from ineco_sale_qty_customer_query
+                            ) as a
+                    ) b
+                ) c
+        )""")
+
+class ineco_sale_mytop_opportunity_temp(osv.osv):
+    _name = "ineco.sale.mytop.opportunity.temp"
+    _auto = False
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_mytop_opportunity_temp')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_sale_mytop_opportunity_temp AS (
+                select user_id, partner_id, stage_id, planned_revenue from crm_lead where type = 'opportunity'
+                  and date_part('month',now()) = date_part('month',date_closed)
+                  and date_part('year',now()) = date_part('year',date_closed)      
+                  and state not in ('done','cancel')          
+                --order by user_id, planned_revenue desc            
+        )""")
+
+class ineco_sale_mytop_opportunity(osv.osv):
+    _name = "ineco.sale.mytop.opportunity"
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Sale'),
+        'partner_id': fields.many2one('res.partner','Customer'),
+        'stage_id': fields.many2one('crm.case.stage','Stage'),
+        'planned_revenue': fields.integer('Revenue',),        
+    }
+    _order = 'planned_revenue desc'
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_mytop_opportunity')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_sale_mytop_opportunity AS (
+                select id, (a[id]).*
+                from (
+                    select a, generate_series(1, array_upper(a,1)) as id
+                        from (
+                            select array (
+                                select ineco_sale_mytop_opportunity_temp from ineco_sale_mytop_opportunity_temp
+                            ) as a
+                    ) b
+                ) c
+        )""")
+    

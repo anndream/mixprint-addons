@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data noupdate="0">
+	
+	    <record id="secure_ineco_sale_qty_amount" model="ir.model.access">
+	        <field name="name">Employees</field>
+	        <field name="group_id" ref="base.group_user" />
+	        <field name="model_id" ref="model_ineco_sale_qty_amount" />
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_write" eval="0"/>
+	        <field name="perm_create" eval="0"/>
+	        <field name="perm_unlink" eval="0"/>
+	    </record>
+
+	    <record id="secure_ineco_sale_qty_customer" model="ir.model.access">
+	        <field name="name">Employees</field>
+	        <field name="group_id" ref="base.group_user" />
+	        <field name="model_id" ref="model_ineco_sale_qty_customer" />
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_write" eval="0"/>
+	        <field name="perm_create" eval="0"/>
+	        <field name="perm_unlink" eval="0"/>
+	    </record>
+
+	    <record id="secure_ineco_sale_mytop_opportunity" model="ir.model.access">
+	        <field name="name">Employees</field>
+	        <field name="group_id" ref="base.group_user" />
+	        <field name="model_id" ref="model_ineco_sale_mytop_opportunity" />
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_write" eval="0"/>
+	        <field name="perm_create" eval="0"/>
+	        <field name="perm_unlink" eval="0"/>
+	    </record>
+	    	
+	</data>
+</openerp>
