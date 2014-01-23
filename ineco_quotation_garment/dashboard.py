@@ -142,60 +142,39 @@ class ineco_sale_summary3(osv.osv):
                   ) as mo2,
                   (select count(*)::numeric from crm_lead cl  
                    where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
-                       and date_part('month',now()) = date_part('month', date_closed)  
-                       and date_part('year',now()) = date_part('year', date_closed) 
                   ) as lose1,  
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
                    where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
-                       and date_part('month',now()) = date_part('month', date_closed)  
-                       and date_part('year',now()) = date_part('year', date_closed) 
                   ) as lose2,  
                   (select count(*)::numeric from crm_lead cl  
                    where user_id = ru.id and stage_id = 1 and type = 'opportunity'
-                       and date_part('month',now()) = date_part('month', date_closed)  
-                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent101, 
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
                    where user_id = ru.id and stage_id = 1 and type = 'opportunity'
-                       and date_part('month',now()) = date_part('month', date_closed)  
-                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent102, 
                   (select count(*)::numeric from crm_lead cl  
                    where user_id = ru.id and stage_id = 3   
-                       and date_part('month',now()) = date_part('month', date_closed)  
-                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent501, 
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
                    where user_id = ru.id and stage_id = 3   
-                       and date_part('month',now()) = date_part('month', date_closed)  
-                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent502,               
                   (select count(*)::numeric   from crm_lead cl  
                    where user_id = ru.id and stage_id = 5  
-                       and date_part('month',now()) = date_part('month', date_closed)  
-                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent901,
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
                    where user_id = ru.id and stage_id = 5  
-                       and date_part('month',now()) = date_part('month', date_closed)  
-                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent902,
                   ru.nickname as nickname,
                   (select count(*)::numeric from crm_lead cl  
                    where user_id = ru.id and stage_id = 10   
-                       and date_part('month',now()) = date_part('month', date_closed)  
-                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent301, 
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
                    where user_id = ru.id and stage_id = 10   
-                       and date_part('month',now()) = date_part('month', date_closed)  
-                       and date_part('year',now()) = date_part('year', date_closed)
                   ) as percent302,
                   (
                   select count(*) from crm_lead where type = 'opportunity'
-                      and date_part('month',now()) = date_part('month',date_closed)
-                      and date_part('year',now()) = date_part('year',date_closed)
                       and user_id = ru.id
+                      and stage_id in (1,3,5,10)
                   ) as total_opportunity   
                       
                 from 
@@ -415,32 +394,7 @@ class ineco_sale_qty_amount_temp(osv.osv):
             CREATE OR REPLACE VIEW ineco_sale_qty_amount_query AS (
                 select
                     ru.id as user_id,
-                    '1. Q/O' as type,
-                    (select coalesce(count(*),0) from sale_order so 
-                                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
-                             and date_part('year',now()) = date_part('year',so.date_sale_close)
-                                         and so.state <> 'cancel') as qty,
-                    (select coalesce(sum(amount_untaxed),0.00) from sale_order so 
-                                   where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
-                             and date_part('year',now()) = date_part('year',so.date_sale_close)
-                                         and so.state <> 'cancel') as amount,
-                    (select coalesce(count(*),0) from sale_order so 
-                                   where user_id = ru.id 
-                             and date_part('year',now()) = date_part('year',so.date_sale_close)
-                                         and so.state <> 'cancel') as ytd_qty,
-                    (select coalesce(sum(amount_untaxed),0.00) from sale_order so 
-                                   where user_id = ru.id 
-                             and date_part('year',now()) = date_part('year',so.date_sale_close)
-                                         and so.state <> 'cancel') as ytd_amount
-                from 
-                    res_users ru
-                left join res_partner rp on ru.partner_id = rp.id
-                where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
-                    signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
-                union
-                select
-                    ru.id as user_id,
-                    '2. S/O' as type,
+                    '1. SO' as type,
                     (select coalesce(count(*),0) from sale_order so 
                                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
                              and date_part('year',now()) = date_part('year',so.date_sale_close)
@@ -465,7 +419,7 @@ class ineco_sale_qty_amount_temp(osv.osv):
                 union
                 select
                     ru.id as user_id,
-                    '3. M/O' as type,
+                    '2. MO' as type,
                     (select coalesce(count(*),0) from sale_order so 
                                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
                              and date_part('year',now()) = date_part('year',so.garment_order_date)
@@ -597,8 +551,8 @@ class ineco_sale_mytop_opportunity_temp(osv.osv):
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_mytop_opportunity_temp AS (
                 select user_id, partner_id, stage_id, planned_revenue from crm_lead where type = 'opportunity'
-                  and date_part('month',now()) = date_part('month',date_closed)
-                  and date_part('year',now()) = date_part('year',date_closed)      
+                  --and date_part('month',now()) = date_part('month',date_closed)
+                  --and date_part('year',now()) = date_part('year',date_closed)      
                   and state not in ('done','cancel')          
                 --order by user_id, planned_revenue desc            
         )""")
