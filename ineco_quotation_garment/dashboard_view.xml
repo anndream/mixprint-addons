@@ -394,7 +394,7 @@
                 <form string="Dashboard" version="7.0">
                     <board style="4-1">
                         <column>
-							<action string="Opportunity in action" name="%(action_ineco_sale_mytop_opportunity)d"/>
+							<action string="Top 10 Opportunity" name="%(action_ineco_sale_mytop_opportunity)d"/>
                         	<action string="My Opportunity Stages" name="%(action_ineco_sale_myopportunity)d"/>
                         	<action string="My Sale Logs" name="%(action_ineco_sale_mylog)d"/>                      	
                         	<action string="Opportunity Stages" name="%(action_ineco_sale_summary4)d"/>
