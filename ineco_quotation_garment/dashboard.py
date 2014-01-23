@@ -142,9 +142,13 @@ class ineco_sale_summary3(osv.osv):
                   ) as mo2,
                   (select count(*)::numeric from crm_lead cl  
                    where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
+                     and date_part('month',now()) = date_part('month',cl.date_closed)
+                     and date_part('year',now()) = date_part('year',cl.date_closed) 
                   ) as lose1,  
                   (select coalesce(sum(planned_revenue),0) from crm_lead cl  
                    where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
+                     and date_part('month',now()) = date_part('month',cl.date_closed)
+                     and date_part('year',now()) = date_part('year',cl.date_closed) 
                   ) as lose2,  
                   (select count(*)::numeric from crm_lead cl  
                    where user_id = ru.id and stage_id = 1 and type = 'opportunity'
@@ -550,7 +554,7 @@ class ineco_sale_mytop_opportunity_temp(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_mytop_opportunity_temp')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_mytop_opportunity_temp AS (
-                select user_id, partner_id, stage_id, planned_revenue from crm_lead where type = 'opportunity'
+                select user_id, partner_id, stage_id, planned_revenue, last_date_count, last_contact_date from crm_lead where type = 'opportunity'
                   --and date_part('month',now()) = date_part('month',date_closed)
                   --and date_part('year',now()) = date_part('year',date_closed)      
                   and state not in ('done','cancel')          
@@ -565,6 +569,8 @@ class ineco_sale_mytop_opportunity(osv.osv):
         'partner_id': fields.many2one('res.partner','Customer'),
         'stage_id': fields.many2one('crm.case.stage','Stage'),
         'planned_revenue': fields.integer('Revenue',),        
+        'last_date_count': fields.integer('Age',), 
+        'last_contact_date': fields.integer('Update',), 
     }
     _order = 'planned_revenue desc'
     

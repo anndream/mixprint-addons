@@ -295,6 +295,7 @@
             <field name="model">ineco.sale.summary4</field>
             <field name="arch" type="xml">
                 <tree string="My Opportunity">
+                    <field name="total_opportunity" />
                     <field name="percent901" />
                     <field name="percent902" string=""/>
                     <field name="percent501" />
@@ -305,7 +306,6 @@
                     <field name="percent102" string=""/>
                     <field name="lose1" />
                     <field name="lose2" string=""/>
-                    <field name="total_opportunity" />
                 </tree>
             </field>
         </record>	
@@ -369,6 +369,8 @@
                 	<field name="partner_id" />
                 	<field name="stage_id" />
                 	<field name="planned_revenue" />
+                	<field name="last_date_count" />
+                	<field name="last_contact_date" />
                 </tree>
             </field>
         </record>        
