@@ -181,6 +181,9 @@ class ineco_wht(osv.osv):
 class ineco_wht_line(osv.osv):
     
     def _compute_tax(self, cr, uid, ids, prop, unknow_none, context=None):
+        company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'ineco.wht')
+        cur_obj = self.pool.get('res.currency')
+        currency_obj = self.pool.get('res.company').browse(cr, uid, company_id).currency_id
         result = {}
         for id in ids:
             result[id] = {
@@ -188,6 +191,7 @@ class ineco_wht_line(osv.osv):
             }
             data = self.browse(cr, uid, [id], context=context)[0]
             total = round((((data.percent / 100) or 0.0) * data.base_amount),3) or 0.0
+            total = cur_obj.round(cr, uid, currency_obj, total) 
             result[id]['tax'] = total
         return result
     
