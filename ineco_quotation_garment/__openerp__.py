@@ -55,6 +55,7 @@ New Quotation Menu/View for Garment Business.
         'res_users_view.xml',
         'invoice_view.xml',
         'security.xml',
+        'dashboard_invoice_view.xml',
     ],
     'installable': True,
     'auto_install': False,
