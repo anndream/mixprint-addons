@@ -241,7 +241,7 @@ class sale_order(osv.osv):
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
         result = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
-        result.update({'invoice_state':'2binvoiced'})
+        result.update({'invoice_state':'2binvoiced', 'delivery_type_id': order.ineco_delivery_type_id.id or False})
         return result
     
     def _prepare_order_line_move_qty(self, cr, uid, order, line, picking_id, date_planned, new_qty, color, gender, size, note=None, context=None):
@@ -282,7 +282,7 @@ class sale_order(osv.osv):
 
     def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, context=None):
         move_obj = self.pool.get('stock.move')
-        picking_obj = self.pool.get('stock.picking')
+        picking_obj = self.pool.get('stock.picking.out')
         procurement_obj = self.pool.get('procurement.order')
         proc_ids = []
 

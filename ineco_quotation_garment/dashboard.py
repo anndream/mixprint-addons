@@ -589,3 +589,34 @@ class ineco_sale_mytop_opportunity(osv.osv):
                 ) c
         )""")
     
+class ineco_sale_all_opportunity(osv.osv):
+    _name = "ineco.sale.all.opportunity"
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Sale'),
+        'partner_id': fields.many2one('res.partner','Customer'),
+        'stage_id': fields.many2one('crm.case.stage','Stage'),
+        'planned_revenue': fields.integer('Revenue',),        
+        'last_date_count': fields.integer('Age',), 
+        'last_contact_date': fields.integer('Update',), 
+    }
+    _order = 'user_id'
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_all_opportunity')
+        cr.execute("""
+        CREATE OR REPLACE VIEW ineco_sale_all_opportunity AS
+            select t1.id, user_id, t1.partner_id, stage_id, planned_revenue, last_date_count, last_contact_date from crm_lead t1
+            left join res_users ru on user_id = ru.id
+            where (user_id, t1.partner_id, planned_revenue) in
+              (select user_id, partner_id, planned_revenue from crm_lead b
+               where b.user_id = t1.user_id
+                 and b.type = 'opportunity'
+                 and b.state not in ('done','cancel')
+               order by planned_revenue desc limit 10)
+               and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+                signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
+               and t1.state not in ('done','cancel')
+            order by user_id, planned_revenue desc;      
+        """)
+        
