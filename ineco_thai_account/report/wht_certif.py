@@ -203,7 +203,7 @@ class report_custom(report_int):
                     })
                 if line.wht_type_id.seq == 600:
                     vals.update({
-                        "spec3": line.wht_type_id.printed or 'ค่าบริการ',
+                        "spec3": vouch.note or line.wht_type_id.printed or 'ค่าบริการ',
                         "date14": "%d-%d-%d"%(day,month,year),
                         "pay1.13": lang.format("%.2f",line.base_amount,grouping=True).replace("."," "),
                         "tax1.13": lang.format("%.2f",line.tax,grouping=True).replace("."," "),
