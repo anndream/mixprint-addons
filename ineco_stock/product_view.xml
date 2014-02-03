@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+		<!-- Product UOM Category -->
+        <record id="view_ineco_uom_category" model="ir.ui.view">
+            <field name="name">ineco.uom.categ.form</field>
+            <field name="model">product.uom.categ</field>
+            <field name="inherit_id" ref="product.product_uom_categ_form_view"/>
+            <field name="arch" type="xml">
+            	<field name="name" position="after">
+            		<field name="active" />
+            	</field>
+            </field>
+        </record>		
+		
+		<!-- Product UOM -->
+        <record model="ir.ui.view" id="view_ineco_uom_tree">
+	      	<field name="name">ineco.product.uom.tree</field>
+	      	<field name="model">product.uom</field>
+	      	<field name="inherit_id" ref="product.product_uom_tree_view"/>
+	      	<field name="arch" type="xml">
+	        	<field name="name" position="after">
+	        		<field name="factor_name" />
+	        		<field name="uom_type" />
+	        	</field>
+	      	</field>
+	    </record>  
+	    
+        <record model="ir.ui.view" id="view_product_uom_search" >
+            <field name="name">product.uom.search</field>
+            <field name="model">product.uom</field>
+            <field name="arch" type="xml">
+            	<search string="Units of Measure">
+            		<field name="name" />
+            		<field name="category_id" />
+                   <group  expand='0' string='Group by...'>
+                       <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'category_id'}"/>
+                   </group>
+            	</search>
+            </field>
+        </record>
+        	        
+    </data>
+</openerp>

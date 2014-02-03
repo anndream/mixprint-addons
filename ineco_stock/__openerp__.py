@@ -33,6 +33,8 @@ Stock module addon.
     'update_xml': [
         'stock_view.xml',
         'sale_view.xml', 
+        'product_view.xml',
+        'stock_report_view.xml',
     ],
     'demo': [],
     'installable': True,
