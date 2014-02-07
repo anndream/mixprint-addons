@@ -23,7 +23,7 @@
 {
     'name' : 'INECO THAI Accounting',
     'version' : '0.1',
-    'depends' : ["base","sale","account","account_voucher","hr","stock"],
+    'depends' : ["base","sale","account","account_voucher","hr","stock","ineco_stock"],
     'author' : 'INECO LTD.,PART.',
     'category': 'Accounting',
     'description': """
