@@ -35,7 +35,7 @@ class res_partner(osv.osv):
     
 
     def schedule_refresh(self, cr, uid, context={}):
-        print 'Start'
+        #print 'Refresh Partner Start'
         partner_ids = self.pool.get('res.partner').search(cr, uid, [])
         for partner_id in partner_ids:
             #partner = self.pool.get('res.partner').browse(cr, uid, [partner_id])[0]
