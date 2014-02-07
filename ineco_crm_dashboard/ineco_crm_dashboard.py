@@ -22,6 +22,17 @@
 from openerp.osv import fields,osv
 from openerp import tools
 
+class ineco_dashboard_story(osv.osv):
+    _name = "ineco.dashboard.story"
+    _columns = {
+        'name': fields.char('Report Path', size=128, required=True),
+        'server': fields.char('Jasper Server', size=32, required=True),
+        'port': fields.char('Port', size=5,required=True),
+        'username': fields.char('Jasper User Name', size=32, required=True),
+        'password': fields.char('Jasper Password', size=32, required=True),
+        'type': fields.selection([('seq1','Type 1'),('seq2','Type 2')],'Report Type', required=True)
+    }
+
 class ineco_crm_dashboard_1(osv.osv):
     """ Ineco CRM Dashboard """
     _name = "ineco.crm.dashboard1"

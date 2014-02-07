@@ -22,7 +22,7 @@
 {
     'name' : 'INECO CRM Dashboard',
     'version' : '0.1',
-    'depends' : ['base'],
+    'depends' : ['base','ineco_jasper_report'],
     'author' : 'Mr.Tititab Srisookco',
     'category': 'INECO',
     'description': """
@@ -32,7 +32,11 @@
     'update_xml': [
         'ineco_crm_dashboard_view.xml',
         'security.xml',
+        'ineco_crm_data.xml',
     ],
+    'js': ['static/src/js/*.js'],
+    'css': ['static/src/css/*.css'],
+    'qweb': ['static/src/xml/*.xml'],    
     'demo': [],
     'installable': True,
     'auto_install': False,
