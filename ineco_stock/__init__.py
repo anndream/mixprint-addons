@@ -23,6 +23,7 @@ import stock
 import sale
 import product
 import stock_report
+import stock_lot_issue
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

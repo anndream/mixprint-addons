@@ -22,7 +22,7 @@
 {
     'name' : 'INECO STOCK',
     'version' : '0.1',
-    'depends' : ['base','sale','stock','sale_stock'],
+    'depends' : ['base','sale','stock','sale_stock','purchase','mrp'],
     'author' : 'Mr.Tititab Srisookco',
     'category': 'INECO',
     'description': """
@@ -35,6 +35,7 @@ Stock module addon.
         'sale_view.xml', 
         'product_view.xml',
         'stock_report_view.xml',
+        'stock_lot_issue_view.xml',
     ],
     'demo': [],
     'installable': True,

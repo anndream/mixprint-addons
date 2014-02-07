@@ -137,10 +137,11 @@ class ineco_stock_list(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_stock_list')
         cr.execute("""
 create or replace view ineco_stock_list as
+
 select 
   move.*,
   pt.uom_id,
-  coalesce((
+  round((coalesce((
   select sum(product_qty * case when uom_type = 'reference' then round(factor,0) when uom_type = 'bigger' then round(1/factor,0) else round(factor,0) end ) from stock_move
   left join product_uom on stock_move.product_uom = product_uom.id
                 where location_id <> move.location_dest_id
@@ -165,8 +166,8 @@ select
               else prodlot_id is null
             end 
                 and state in ('done')
-  ),0) as on_hand,
-  coalesce((
+  ),0)) * pu.factor) as on_hand,
+  round((coalesce((
   select sum(product_qty * case when uom_type = 'reference' then round(factor,0) when uom_type = 'bigger' then round(1/factor,0) else round(factor,0) end ) from stock_move
   left join product_uom on stock_move.product_uom = product_uom.id
                 where location_id <> move.location_dest_id
@@ -191,7 +192,7 @@ select
               else prodlot_id is null
             end 
                 and state in ('confirmed','waiting','assigned','done')
-  ),0) as forecast  
+  ),0)) * pu.factor)  as forecast
 from product_template pt
 left join product_product pp on pp.product_tmpl_id = pt.id
 left join product_uom pu on pt.uom_id = pu.id
@@ -216,6 +217,7 @@ left join
       ) 
   as move on move.product_id = pp.id
 order by default_code, prodlot_id, location_dest_id
+
             """)
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
