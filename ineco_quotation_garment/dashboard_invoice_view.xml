@@ -74,11 +74,11 @@
             <field name="view_id" ref="board_mixprint_invoice_dashboard"/>
         </record>
 
-        <menuitem 
+        <!-- <menuitem 
             id="menu_ineco_sale_invoice_balance"
         	action="action_mixprint_invoice_dashboard" 
         	parent="menu_mixprint_dashboard"
-        	sequence="4"/> 
+        	sequence="4"/> --> 
         	
 		<menuitem action="action_ineco_sale_invoice_balance" 
 		    id="menu_ineco_sale_invoice_balance_account" 

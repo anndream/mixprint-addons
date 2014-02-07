@@ -28,7 +28,7 @@ New Quotation Menu/View for Garment Business.
     """,
     'website': 'http://www.ineco.co.th',
     'images' : [],
-    'depends' : ['base','sale','crm','ineco_crm','stock','sale_stock','account','hr','ineco_stock'],
+    'depends' : ['base','sale','crm','ineco_crm','stock','sale_stock','account','hr','ineco_stock','purchase'],
     'data': [
     ],
     'js': [
@@ -56,6 +56,7 @@ New Quotation Menu/View for Garment Business.
         'invoice_view.xml',
         'security.xml',
         'dashboard_invoice_view.xml',
+        #'purchase_order_view.xml',
     ],
     'installable': True,
     'auto_install': False,
