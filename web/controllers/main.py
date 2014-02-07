@@ -763,7 +763,7 @@ class Database(openerpweb.Controller):
             return req.make_response(db_dump,
                [('Content-Type', 'application/octet-stream; charset=binary'),
                ('Content-Disposition', content_disposition(filename, req))],
-               {'fileToken': int(token)}
+               {'fileToken': token}
             )
         except xmlrpclib.Fault, e:
             return simplejson.dumps([[],[{'error': e.faultCode, 'title': _('Backup Database')}]])
@@ -1271,7 +1271,7 @@ class Binary(openerpweb.Controller):
             return req.make_response(filecontent,
                 headers=[('Content-Type', 'application/octet-stream'),
                         ('Content-Disposition', content_disposition(filename, req))],
-                cookies={'fileToken': int(token)})
+                cookies={'fileToken': token})
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):
@@ -1565,7 +1565,7 @@ class Export(View):
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model), req)),
                      ('Content-Type', self.content_type)],
-            cookies={'fileToken': int(token)})
+            cookies={'fileToken': token})
 
 class CSVExport(Export):
     _cp_path = '/web/export/csv'
@@ -1705,6 +1705,6 @@ class Reports(View):
                  ('Content-Disposition', content_disposition(file_name, req)),
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
-             cookies={'fileToken': int(token)})
+             cookies={'fileToken': token})
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

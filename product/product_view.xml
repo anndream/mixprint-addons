@@ -469,6 +469,7 @@
                 </form>
             </field>
         </record>
+        
         <record id="product_uom_categ_form_action" model="ir.actions.act_window">
             <field name="name">Unit of Measure Categories</field>
             <field name="type">ir.actions.act_window</field>
