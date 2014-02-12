@@ -44,8 +44,23 @@
 	        	<field name="date_due" position="after">
 	        		<field name="receipt_due" />
 	        	</field>
+	        	<field name="period_id" position="after">
+	        		<field name="period_tax_id" />
+	        	</field>
 			</field>
 		</record>   
+
+		<!-- Voucher Select -->
+        <record model="ir.ui.view" id="view_ineco_voucher_tree">
+            <field name="name">ineco.voucher.tree</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_voucher_tree"/>
+            <field name="arch" type="xml">
+            	<field name="period_id" position="after">
+            		<field name="period_tax_id" invisible="context.get('visible', True)" />
+            	</field>
+			</field>
+		</record>
 		
 		<!-- Sale receipt -->
         <record model="ir.ui.view" id="view_ineco_account_voucher_form">
@@ -89,6 +104,7 @@
 				<field name="partner_id" position="after">
 			    	<field name="cheque_id" context="{'default_type':'in'}"  domain="[('type','=','in'),('state','=','draft')]"/>
 			   		<field name="move_id" />
+			   		<field name="period_tax_id" />
 			   	</field>	        	     
 	        </field>
 		</record>    
@@ -101,7 +117,10 @@
 	      	<field name="arch" type="xml">
 		      	<field name="date" position="after">
 		      		<field name="date_due" />
-		      	</field>		      	    
+		      	</field>		      	  
+		      	<field name="period_id" position="after">
+		      		<field name="period_tax_id" />
+		      	</field>  
 	        	<page string="Payment Information" position="after" version="7.0">        	    
 	        	    <page string="General Ledger">
 	        	    	<field name="account_move_lines" readonly="1">
@@ -154,6 +173,7 @@
             <field name="arch" type="xml">
 		      	<field name="number" position="after">
 		      		<field name="reference" string="Ref #"/>
+		      		<field name="period_tax_id" />
 		      	</field>	                
             </field>
         </record>
@@ -165,6 +185,7 @@
             <field name="arch" type="xml">
 		      	<field name="number" position="after">
 		      		<field name="reference" string="Ref #"/>
+		      		<field name="period_tax_id" />
 		      	</field>	                
             </field>
         </record>        
@@ -176,6 +197,7 @@
             <field name="arch" type="xml">
 		      	<field name="number" position="after">
 		      		<field name="reference" string="Ref #"/>
+		      		<field name="period_tax_id" />
 		      	</field>	                
             </field>
         </record>        
@@ -188,6 +210,7 @@
             <field name="arch" type="xml">
 		      	<field name="number" position="after">
 		      		<field name="reference" string="Ref #"/>
+		      		<field name="period_tax_id" />
 		      	</field>	                
             </field>
         </record>        
@@ -216,6 +239,9 @@
 	        	    	</field>
 	        	    </page>
 	        	</page>
+	        	<field name="period_id" position="after">
+	        		<field name="period_tax_id" />
+	        	</field>
 			</field>
 		</record> 		
 		
@@ -353,6 +379,7 @@
                     <filter name="todaydue" icon="terp-go-today" string="Today Due" domain="[('date_due','=',time.strftime('%%Y-%%m-%%d')),('state','=','draft')]" />
 					<filter name="todaybill" icon="terp-go-today" string="Today Billing" domain="[('bill_due','=',time.strftime('%%Y-%%m-%%d')),('state','=','draft')]" />
 					<filter name="todo" icon="terp-go-today" string="To Do" domain="[('state','in',['draft','open'])]" />
+					
             	</filter>
             </field>
        	</record>
@@ -367,6 +394,9 @@
             	</field>
             	<field name="amount_untaxed" position="replace">
             		<field name="amount_untaxed" invisible="1" sum="Untaxed Amount"/>
+            	</field>
+            	<field name="period_id" position="after">
+            		<field name="period_tax_id" invisible="1" />
             	</field>
             </field>
        	</record>
@@ -851,6 +881,20 @@
         </record>
         
     	<menuitem action="action_ineco_supplier_payment" id="menu_ineco_supplier_payment" parent="menu_ineco_accounting_calendar" sequence="7"/>        
-        	
+
+		<!-- Search Tax Period Customer Invoice -->
+        <record id="view_ineco_invoice_filter" model="ir.ui.view">
+            <field name="name">ineco.invoice.select</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+            	<field name="period_id" position="after">
+            		<field name="period_tax_id" />
+            	</field>
+            	<filter string="Due Date" position="after">
+            		<filter string="Tax Period" icon="terp-go-month" domain="[]"  context="{'group_by':'period_tax_id'}"/>
+            	</filter>
+			</field>
+		</record>		        	
   	</data>
 </openerp>

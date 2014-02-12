@@ -90,7 +90,7 @@ class account_invoice(osv.osv):
         'date_due': fields.date('Due Date', select=True,
             help="If you use payment terms, the due date will be computed automatically at the generation "\
                 "of accounting entries. The payment term may compute several due dates, for example 50% now and 50% in one month, but if you want to force a due date, make sure that the payment term is not set on the invoice. If you keep the payment term and the due date empty, it means direct payment."),
-
+        'period_tax_id': fields.many2one('account.period', 'Tax Period'),
     }
     _defaults = {
         'service': False,
@@ -454,7 +454,8 @@ class account_voucher(osv.osv):
             relation='account.move.line', string='General Ledgers'),      
         'wht_ids': fields.one2many('ineco.wht', 'voucher_id', 'WHT'),
         'cheque_id': fields.many2one('ineco.cheque','Cheque'),        
-        'bill_number': fields.char('Bill No', size=63),
+        'bill_number': fields.char('Bill/Receipt No', size=63),
+        'period_tax_id': fields.many2one('account.period', 'Tax Period'),
     }
     
     def _get_wht_total(self, cr, uid, voucher_id, context=None):

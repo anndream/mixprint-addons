@@ -111,12 +111,14 @@
 										<field name="percent" />
 										<field name="base_amount" />
 										<field name="tax" />
+										<field name="note" />
 									</tree>
 									<form string="WHT Lines" version="7.0">
 										<group>
 											<group>
 												<field name="date_doc" />
 												<field name="wht_type_id" />
+												<field name="note" />
 											</group>
 											<group>
 												<field name="percent" />

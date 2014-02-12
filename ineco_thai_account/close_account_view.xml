@@ -56,29 +56,81 @@
 						<field name="close_line_ids" />	    	    	        	        
 		        	  </page>
                       <page string="Customer Invoice"> 	      	  		    
-						<field name="customer_invoice_ids" />	    	    	        	        
+						<field name="customer_invoice_ids">
+							<tree string="Customer Invoice" >
+								<field name="number" />
+								<field name="date_invoice" />
+								<field name="partner_id" />
+								<field name="amount_untaxed" sum="Total" />
+								<field name="amount_tax" sum="Tax" />
+								<field name="amount_total" sum="GrandTotal" />
+								<field name="state" />
+							</tree>
+						</field>						    	    	        	        
 		        	  </page>
                       <page string="Customer Refund"> 	        		    
-						<field name="customer_refund_ids" />	    	    	        	        
+						<field name="customer_refund_ids" >    	    	        	        
+							<tree string="Customer Invoice">
+								<field name="number" />
+								<field name="date_invoice" />
+								<field name="partner_id" />
+								<field name="amount_untaxed" sum="Total" />
+								<field name="amount_tax" sum="Tax" />
+								<field name="amount_total" sum="GrandTotal" />
+								<field name="state" />
+							</tree>
+						</field>
 		        	  </page>	
+		        	  <page string="Sale Receipt">
+		        	  	<field name="sale_receipt_ids" />
+		        	  </page>
                       <page string="Supplier Invoice"> 	        		    
-						<field name="supplier_invoice_ids" />	    	    	        	        
+						<field name="supplier_invoice_ids">
+							<tree string="Customer Invoice">
+								<field name="number" />
+								<field name="date_invoice" />
+								<field name="partner_id" />
+								<field name="amount_untaxed" sum="Total" />
+								<field name="amount_tax" sum="Tax" />
+								<field name="amount_total" sum="GrandTotal" />
+								<field name="state" />
+							</tree>					
+						</field>    	    	        	        
 		        	  </page>
                       <page string="Supplier Refund"> 	        		    
-						<field name="supplier_refund_ids" />	    	    	        	        
+						<field name="supplier_refund_ids">
+							<tree string="Customer Invoice">
+								<field name="number" />
+								<field name="date_invoice" />
+								<field name="partner_id" />
+								<field name="amount_untaxed" sum="Total" />
+								<field name="amount_tax" sum="Tax" />
+								<field name="amount_total" sum="GrandTotal" />
+								<field name="state" />
+							</tree>
+						</field>    	        	        
 		        	  </page>	
+		        	  <page string="Purchase Receipt">
+		        	  	<field name="purchase_receipt_ids" />
+		        	  </page>
 		        	  <page string="PP30"> 	
-		        	    <group>
+		        	  	<group colspan="4">
+
+		        	    <group >
 		        	        <group string="Customer Invoice" >
-			        	    <field name="sale_amount_untaxed" />
-							<field name="sale_amount_tax" />
+				        	    <field name="sale_amount_untaxed" />
+								<field name="sale_amount_tax" />
 							</group>
 		        	        <group string="Customer Refund" >
-			        	    <field name="sale_refund_amount_untaxed" />
-							<field name="sale_refund_amount_tax" />
+				        	    <field name="sale_refund_amount_untaxed" />
+								<field name="sale_refund_amount_tax" />
+							</group>							
+		        	        <group string="Sale Receipt" >
+				        	    <field name="sale_receipt_amount_untaxed" />
+								<field name="sale_receipt_amount_tax" />
 							</group>							
 						</group>
-						<group>
+						<group >
 							<group string="Supplier Invoice">
 				        	    <field name="purchase_amount_untaxed" />
 								<field name="purchase_amount_tax" />
@@ -87,6 +139,11 @@
 				        	    <field name="purchase_refund_amount_untaxed" />
 								<field name="purchase_refund_amount_tax" />
 							</group>	
+		        	        <group string="Purchase Receipt" >
+				        	    <field name="purchase_receipt_amount_untaxed" />
+								<field name="purchase_receipt_amount_tax" />
+							</group>							
+						</group>
 						</group>
 					  </page>	        	  	        	  		        	  
 	        		</notebook>        		

@@ -59,7 +59,7 @@ class report_custom(report_int):
                             
             for wht_line in line.line_ids:
                 wht_date[j] = line.date_doc and fmt_thaidate(line.date_doc) or ""                
-                wht_name_line[j] = wht_line.wht_type_id.printed
+                wht_name_line[j] = wht_line.note or ""
                 wht_percent_line[j] = wht_line.percent
                 wht_base_amount[j] = wht_line.base_amount
                 wht_tax_line[j] =   wht_line.tax

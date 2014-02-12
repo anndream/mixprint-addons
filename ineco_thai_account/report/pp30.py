@@ -42,10 +42,10 @@ class report_custom(report_int):
             yearnow = int(datetime.datetime.now().year)+543
                         
                 
-            sale_untax = vouch.sale_amount_untaxed - vouch.sale_refund_amount_untaxed
-            sale_tax = vouch.sale_amount_tax - vouch.sale_refund_amount_tax
-            purchase_untax = vouch.purchase_amount_untaxed - vouch.purchase_refund_amount_untaxed
-            purchase_tax = vouch.purchase_amount_tax - vouch.purchase_refund_amount_tax
+            sale_untax = vouch.sale_amount_untaxed - vouch.sale_refund_amount_untaxed + (vouch.sale_receipt_amount_untaxed - vouch.sale_receipt_amount_tax)
+            sale_tax = vouch.sale_amount_tax - vouch.sale_refund_amount_tax + vouch.sale_receipt_amount_tax
+            purchase_untax = vouch.purchase_amount_untaxed - vouch.purchase_refund_amount_untaxed + (vouch.purchase_receipt_amount_untaxed - vouch.purchase_receipt_amount_tax)
+            purchase_tax = vouch.purchase_amount_tax - vouch.purchase_refund_amount_tax + vouch.purchase_receipt_amount_tax
             
     
             vals={

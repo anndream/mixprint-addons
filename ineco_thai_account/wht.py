@@ -209,7 +209,8 @@ class ineco_wht_line(osv.osv):
 #                store={'ineco.wht.line': (lambda self, cr, uid, ids, c={}: ids, [], 10),
 #                      },
                                 multi="sums"),   
-        'wht_id': fields.many2one('ineco.wht','WHT')
+        'wht_id': fields.many2one('ineco.wht','WHT'),
+        'note': fields.char('Note', size=64),
     }
     _defaults = {
         'name': '/',
