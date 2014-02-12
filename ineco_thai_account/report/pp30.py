@@ -33,13 +33,13 @@ class report_custom(report_int):
             vouch = pool.get("account.period").browse(cr,uid,id)          
             company = vouch.company_id
             
-#            year=int(vouch.date_start[0:4])+543
-#            month=int(vouch.date_start[5:7])
-#            day=int(vouch.date_start[8:10])
+            yearnow=int(vouch.date_pp30[0:4])+543
+            monthnow=int(vouch.date_pp30[5:7])
+            daynow=int(vouch.date_pp30[8:10])
                             
-            daynow = datetime.datetime.now().day
-            monthnow  = datetime.datetime.now().month
-            yearnow = int(datetime.datetime.now().year)+543
+#             daynow = datetime.datetime.now().day
+#             monthnow  = datetime.datetime.now().month
+#             yearnow = int(datetime.datetime.now().year)+543
                         
                 
             sale_untax = vouch.sale_amount_untaxed - vouch.sale_refund_amount_untaxed + (vouch.sale_receipt_amount_untaxed - vouch.sale_receipt_amount_tax)

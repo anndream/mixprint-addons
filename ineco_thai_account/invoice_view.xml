@@ -284,6 +284,7 @@
 		        <field name="partner_id" position="after">
 		        	<field name="cheque_id"  context="{'default_type':'out'}" domain="[('type','=','out'),('state','=','draft')]"/>
 		        	<field name="move_id" />
+		        	<field name="period_tax_id" />
 		        </field>	        	       		        	
 			</field>
 		</record>    

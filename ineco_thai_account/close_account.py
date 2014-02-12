@@ -167,7 +167,7 @@ class account_period(osv.osv):
     
     def _sale_receipt_amount(self, cr, uid, ids, name, args, context=None):        
         res = {}
-        invoice_ids = self.pool.get('account.voucher').search(cr, uid, [('journal_id.print_sale_tax','!=',False),('period_tax_id','in',ids),('type','=','receipt'),('state','not in',('draft','cancel'))], context=context)
+        invoice_ids = self.pool.get('account.voucher').search(cr, uid, [('journal_id.print_sale_tax','!=',False),('period_tax_id','in',ids),('type','=','sale'),('state','not in',('draft','cancel'))], context=context)
         invoice_obj = self.pool.get('account.voucher').browse(cr, uid, invoice_ids, context=context) 
         for invoce_sale in self.browse(cr, uid, ids, context=context):
             res[invoce_sale.id] = {'sale_receipt_amount_untaxed': 0.0,
@@ -176,8 +176,8 @@ class account_period(osv.osv):
             sale_untaxed = 0.0
             sale_tax = 0.0
             for line in invoice_obj:
-                sale_untaxed +=  line.amount_untaxed or 0.0
-                sale_tax += line.amount_tax or 0.0
+                sale_untaxed +=  line.amount or 0.0
+                sale_tax += line.tax_amount or 0.0
             res[invoce_sale.id]['sale_receipt_amount_untaxed'] = sale_untaxed
             res[invoce_sale.id]['sale_receipt_amount_tax'] = sale_tax
         return res
@@ -193,8 +193,8 @@ class account_period(osv.osv):
             sale_untaxed = 0.0
             sale_tax = 0.0
             for line in invoice_obj:
-                sale_untaxed +=  line.amount_untaxed or 0.0
-                sale_tax += line.amount_tax or 0.0
+                sale_untaxed +=  line.amount or 0.0
+                sale_tax += line.tax_amount or 0.0
             res[invoce_sale.id]['purchase_receipt_amount_untaxed'] = sale_untaxed
             res[invoce_sale.id]['purchase_receipt_amount_tax'] = sale_tax
         return res
@@ -205,7 +205,7 @@ class account_period(osv.osv):
         'customer_refund_ids': fields.one2many('account.invoice',  'period_tax_id', 'Customer Refund',  domain=[('type','=','out_refund'),('journal_id.print_sale_tax','!=',False)], readonly=True),   
         'supplier_invoice_ids': fields.one2many('account.invoice', 'period_tax_id', 'Supplier Invoice', domain=[('type','=','in_invoice'),('journal_id.print_sale_tax','!=',False)], readonly=True),   
         'supplier_refund_ids': fields.one2many('account.invoice',  'period_tax_id', 'Supplier Refund',  domain=[('type','=','in_refund'),('journal_id.print_sale_tax','!=',False)], readonly=True),
-        'sale_receipt_ids': fields.one2many('account.voucher', 'period_tax_id', 'Sale Receipt', domain=[('type','=','receipt'),('journal_id.print_sale_tax','!=',False)], readonly=True),        
+        'sale_receipt_ids': fields.one2many('account.voucher', 'period_tax_id', 'Sale Receipt', domain=[('type','=','sale'),('journal_id.print_sale_tax','!=',False)], readonly=True),        
         'purchase_receipt_ids': fields.one2many('account.voucher', 'period_tax_id', 'Purchase Receipt', domain=[('type','=','purchase'),('journal_id.print_sale_tax','!=',False)], readonly=True),        
         'sale_amount_untaxed': fields.function(_sale_amount,digits_compute=dp.get_precision('Account'), string='Amount Untaxed',multi='sums'),
         'sale_amount_tax': fields.function(_sale_amount,digits_compute=dp.get_precision('Account'), string='Amount Tax',multi='sums'),
@@ -219,8 +219,10 @@ class account_period(osv.osv):
         'sale_receipt_amount_tax': fields.function(_sale_receipt_amount,digits_compute=dp.get_precision('Account'), string='Amount Tax',multi='sumss1'),
         'purchase_receipt_amount_untaxed': fields.function(_purchase_receipt_amount,digits_compute=dp.get_precision('Account'), string='Amount Untaxed',multi='sumss2'),
         'purchase_receipt_amount_tax': fields.function(_purchase_receipt_amount,digits_compute=dp.get_precision('Account'), string='Amount Tax',multi='sumss2'),
-       
+        'date_pp30': fields.date('Date PP30'),
+        'date_wht': fields.date('Date WHT'),
     }
+    
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
         cr.execute('delete from ineco_close_account where period_id =%s',tuple(ids))

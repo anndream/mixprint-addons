@@ -36,13 +36,25 @@ class report_custom(report_int):
             year=int(vouch.date_pnd[0:4])+543
             #month=int(vouch.date_pnd[5:7]) - 1
             month=int(vouch.date_pnd[5:7]) - 2
+            month_sign = int(vouch.date_pnd[5:7])
             if month == -1: 
                 month = 11
+            if month == 11:
+                month_radio = 11
+                year = year - 1 
+            elif month == 0:
+                month_radio = 1
+            elif month == 1:
+                month_radio = 2
+            elif month == 2:
+                month_radio = 3
+            else:
+                month_radio = month
 
             day=int(vouch.date_pnd[8:10])
                             
             daynow = datetime.datetime.now().day
-            monthnow  = datetime.datetime.now().month
+            monthnow  = datetime.datetime.now().month 
             yearnow = int(datetime.datetime.now().year)+543
                    
             typepnd = 0
@@ -91,15 +103,16 @@ class report_custom(report_int):
                 "Text55":"      "+ company.ineco_position,
                 "Text54":"      "+ company.ineco_name,
                 "Text56":day,  
-                "Text57":"    "+ str(month+1),  
+                "Text57":"    "+ str(month_sign),  
                 "Text58":yearnow,   
                 "'Check Box6'": section3,
                 "'Check Box7'": section48,
                 "'Check Box8'": section50,
                 "'Check Box36'": attachpnd,
-                "'Radio Button23'":month ,
+                "'Radio Button23'": month_radio ,
                 "'Radio Button19'":typepnd ,
             }
+            #may = 0, #june = 4
     
             pdf2=pdf_fill("openerp/addons/ineco_thai_account/report/pdf/wht_pnd3.pdf",vals)
             if pdf:

@@ -48,7 +48,11 @@
 	      	<field name="name">ineco.close.account.period.form</field>
 	      	<field name="model">account.period</field>
 	      	<field name="inherit_id" ref="account.view_account_period_form"/>
-	      	<field name="arch" type="xml">        
+	      	<field name="arch" type="xml">      
+	      		<field name="special" position="after">
+	      			<field name="date_pp30" required="1" />
+	      			
+	      		</field>  
 	            <xpath expr="//group" position="after">
 	        	    <newline/>   
  	        		<notebook colspan="4">  
