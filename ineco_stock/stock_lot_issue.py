@@ -74,6 +74,7 @@ class stock_picking(osv.osv):
     _columns = {
         'prodlot_ids': fields.one2many('ineco.stock.lot.issue','picking_id','Production Lots'),
         'production_id': fields.many2one('mrp.production','Manufacturing Order'),
+        'production_ids': fields.many2many('mrp.production', 'picking_production_rel', 'picking_id', 'production_id', 'Productions'),
     }
         
     def button_create_stockmove(self, cr, uid, ids, context=None):
