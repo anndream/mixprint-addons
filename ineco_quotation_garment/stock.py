@@ -203,7 +203,8 @@ class split_in_production_lot(osv.osv_memory):
                     if not prodlot_id:
                         prodlot_id = prodlot_obj.create(cr, uid, {
                             'name': line.name,
-                            'product_id': move.product_id.id},
+                            'product_id': move.product_id.id,
+                            'ref': move.prodlot_id.ref or False},
                         context=context)
 
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id, 'state':move.state, 'product_weight':line.product_weight or 0.0})
