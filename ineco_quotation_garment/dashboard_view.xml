@@ -432,6 +432,93 @@
             <field name="help" type="html">
             </field>
         </record>    
+        
+        <!-- Cotton's Stock -->
+        <record model="ir.ui.view" id="view_ineco_product_category_cotton_tree">
+            <field name="name">ineco.product.category.cotton.tree</field>
+            <field name="model">product.category</field>
+            <field name="arch" type="xml">
+                <tree string="Cotton" >
+                	<field name="parent_id" invisible="1"/>
+                	<field name="name" />
+                	<field name="product_onhand" />
+                	<field name="product_forecast" />
+                </tree>
+            </field>
+        </record>        
+        
+        <record id="actino_ineco_product_category_cotton" model="ir.actions.act_window">
+            <field name="name">Cotton's Stock</field>
+            <field name="res_model">product.category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ineco_product_category_cotton_tree"/>     
+            <field name="domain">[('parent_id','=',43)]</field>    
+           <!--  <field name="context">{'default_tc':42}</field> -->
+           <!--  <field name="context">{'default_mixtect':41}</field> -->
+            <!-- <field name="limit">20</field> -->
+            <field name="help" type="html">
+            </field>
+        </record>    
+
+        <!-- TC's Stock -->
+        <record model="ir.ui.view" id="view_ineco_product_category_tc_tree">
+            <field name="name">ineco.product.category.tc.tree</field>
+            <field name="model">product.category</field>
+            <field name="arch" type="xml">
+                <tree string="TC" >
+                	<field name="parent_id" invisible="1"/>
+                	<field name="name" />
+                	<field name="product_onhand" />
+                	<field name="product_forecast" />
+                </tree>
+            </field>
+        </record>        
+        
+        <record id="actino_ineco_product_category_tc" model="ir.actions.act_window">
+            <field name="name">TC's Stock</field>
+            <field name="res_model">product.category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ineco_product_category_tc_tree"/>     
+            <field name="domain">[('parent_id','=',42)]</field>    
+           <!--  <field name="context">{'default_tc':42}</field> -->
+           <!--  <field name="context">{'default_mixtect':41}</field> -->
+            <!-- <field name="limit">20</field> -->
+            <field name="help" type="html">
+            </field>
+        </record>    
+
+        <!-- Mix Tech's Stock -->
+        <record model="ir.ui.view" id="view_ineco_product_category_mixtech_tree">
+            <field name="name">ineco.product.category.mixtech.tree</field>
+            <field name="model">product.category</field>
+            <field name="arch" type="xml">
+                <tree string="Mix Tech" >
+                	<field name="parent_id" invisible="1"/>
+                	<field name="name" />
+                	<field name="product_onhand" />
+                	<field name="product_forecast" />
+                </tree>
+            </field>
+        </record>        
+        
+        <record id="actino_ineco_product_category_mixtech" model="ir.actions.act_window">
+            <field name="name">Mix Tech's Stock</field>
+            <field name="res_model">product.category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ineco_product_category_mixtech_tree"/>     
+            <field name="domain">[('parent_id','=',41)]</field>    
+           <!--  <field name="context">{'default_tc':42}</field> -->
+           <!--  <field name="context">{'default_mixtect':41}</field> -->
+            <!-- <field name="limit">20</field> -->
+            <field name="help" type="html">
+            </field>
+        </record>    
                     
       <!-- Dashboard Columns -->
       <record model="ir.ui.view" id="board_mixprint_dashboard_form">
@@ -450,6 +537,9 @@
 						<column>
 							<action string="Volume" name="%(action_ineco_sale_volume_graph)d"/>
 							<action string="Customer" name="%(action_ineco_sale_customer)d"/>
+							<action string="Cotton" name="%(actino_ineco_product_category_cotton)d"/>
+							<action string="TC" name="%(actino_ineco_product_category_tc)d"/>
+							<action string="Mix Tech" name="%(actino_ineco_product_category_mixtech)d"/>
 						</column>
                     </board>
                 </form>
