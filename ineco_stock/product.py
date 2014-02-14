@@ -83,3 +83,32 @@ class product_uom(osv.osv):
     _columns = {
         'factor_name': fields.function(_name_get_fnc, type="integer", string='Factor'),                
     }  
+    
+class product_category(osv.osv):
+    
+    def _get_product_stock(self, cr, uid, ids, name, arg, context=None):
+        res = {'product_count': False,
+               'product_onhand':False,
+               'product_forecast': False,
+        }
+        product_obj = self.pool.get('product.product')
+        for id in ids:
+            product_ids = product_obj.search(cr, uid, [('categ_id','=',id)])
+            onhand = 0
+            forecast = 0
+            for product in product_obj.browse(cr, uid, product_ids):
+                onhand += product.qty_available
+                forecast += product.virtual_available
+            res[id] = { 
+                        'product_count': len(product_ids),
+                        'product_onhand': onhand,
+                        'product_forecast': forecast
+            }
+        return res 
+    
+    _inherit = 'product.category'
+    _columns = {
+        'product_count': fields.function(_get_product_stock, string='Product Count', type='integer', multi='inventory', readonly=True),                
+        'product_onhand': fields.function(_get_product_stock, string='On Hand', type='float', multi='inventory', readonly=True),                
+        'product_forecast': fields.function(_get_product_stock, string='Forecast', type='float', multi='inventory', readonly=True),                
+    }

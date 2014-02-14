@@ -22,7 +22,7 @@
 {
     'name' : 'INECO STOCK',
     'version' : '0.1',
-    'depends' : ['base','sale','stock','sale_stock','purchase','mrp'],
+    'depends' : ['base','sale','stock','sale_stock','purchase','mrp','product'],
     'author' : 'Mr.Tititab Srisookco',
     'category': 'INECO',
     'description': """
