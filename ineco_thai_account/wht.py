@@ -144,6 +144,7 @@ class ineco_wht(osv.osv):
             default = {}           
         default.update({
             'line_ids':False,
+            'voucher_id':False,
             'name': self.pool.get('ir.sequence').get(cr, uid, 'ineco.wht') or '/',
         })
         return super(ineco_wht, self).copy(cr, uid, id, default, context)
@@ -217,6 +218,14 @@ class ineco_wht_line(osv.osv):
         'date_doc': fields.date.context_today,
         'percent': 3.0
     }
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}           
+        default.update({
+            'wht_id':False,
+        })
+        return super(ineco_wht_line, self).copy(cr, uid, id, default, context)
     
 class ineco_wht_pnd(osv.osv):
     _name = 'ineco.wht.pnd'
