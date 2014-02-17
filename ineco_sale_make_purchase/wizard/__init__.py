@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-Today INECO LTD., Part. (<http://www.ineco.co.th>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,36 +20,6 @@
 ##############################################################################
 
 
-{
-    'name' : 'Iyara',
-    'version' : '0.1',
-    'depends' : ["sale","crm","sale_crm","purchase","analytic","account",'hr_expense','mrp'],
-    'author' : 'INECO LTD.,PART.',
-    'category': 'sale',
-    'description': """
-Feature: 
-A. Sale Module:
-1. Add Delivery Date on Sale Order
-    """,
-    'website': 'http://www.ineco.co.th',
-    'data': [],
-    'update_xml': [
-        'wizard/product_set_view.xml',
-        'wizard/change_project_view.xml',
-        'wizard/crm_make_sale_view.xml',
-        'sale_view.xml',
-        'purchase_view.xml',
-        'analytic_view.xml',
-        'sequence.xml',
-        'hr_expense_view.xml',
-        'crm_lead_view.xml',
-        
-        
-    ],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
-    'images': [],
-}
+import sale_make_purchase
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

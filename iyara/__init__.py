@@ -24,6 +24,7 @@ import sale
 import purchase
 import analytic
 import hr_expense
+import crm_lead
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

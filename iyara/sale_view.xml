@@ -15,7 +15,18 @@
 	             	<div class="oe_right oe_button_box" name="buttons">
 						<button name="%(open_iyara_product_set_form)d" states="draft" type="action" string="Product Set" />	                    
 		           	</div>
-	           	</field> 
+	           	</field> 	
+	           	<label for="discount" position="replace">
+ 					<label for="discounts" groups="sale.group_discount_per_so_line"/>	           	    
+	           	</label>
+                <field name="discount" position="replace">
+	               	<div name="discounts" groups="sale.group_discount_per_so_line">
+	                	<field name="discounts" class="oe_inline"/>               
+	                </div>	  
+	           	</field>     
+             	<xpath expr='//tree/field[@name="discount"]' position='replace'> 
+					<field name="discounts" groups="sale.group_discount_per_so_line"/>
+                </xpath>	                        	          	
         	</field>
         </record>
         
@@ -27,6 +38,7 @@
                 <field name="date_order" position="replace">
                     <field name="date_sale_order"/>
                     <field name="date_order" string="Delivery Date"/>
+                    <field name="project_id" string="Analytic"/>
                 </field>
         	</field>
         </record>
@@ -39,6 +51,7 @@
                 <field name="date_order" position="replace">
                     <field name="date_sale_order"/>
                     <field name="date_order" string="Delivery Date"/>
+                    <field name="project_id" string="Analytic"/>
                 </field>
         	</field>
         </record>        
@@ -47,10 +60,11 @@
             <field name="name">sale.order.list.select</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-            <field name="arch" type="xml">
+            <field name="arch" type="xml">            
                 <filter string="Order Date" position="replace">
                		<filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_sale_order'}"/>
             	    <filter string="Delivery Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+            	 	<filter  string="Analytic" domain="[]" context="{'group_by':'project_id'}"/>
             	</filter>
             </field>
         </record>        

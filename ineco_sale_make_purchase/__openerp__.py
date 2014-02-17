@@ -21,31 +21,22 @@
 
 
 {
-    'name' : 'Iyara',
-    'version' : '0.1',
-    'depends' : ["sale","crm","sale_crm","purchase","analytic","account",'hr_expense','mrp'],
+    'name' : 'Sale Make Purchase',
+    'version' : '1.0',
+    'depends' : ["sale","purchase","product"],
     'author' : 'INECO LTD.,PART.',
     'category': 'sale',
     'description': """
 Feature: 
 A. Sale Module:
-1. Add Delivery Date on Sale Order
+1. Add Create Purchase From on Sale Order
     """,
     'website': 'http://www.ineco.co.th',
     'data': [],
-    'update_xml': [
-        'wizard/product_set_view.xml',
-        'wizard/change_project_view.xml',
-        'wizard/crm_make_sale_view.xml',
-        'sale_view.xml',
-        'purchase_view.xml',
-        'analytic_view.xml',
-        'sequence.xml',
-        'hr_expense_view.xml',
-        'crm_lead_view.xml',
-        
-        
-    ],
+    'update_xml': ['product_view.xml',
+                   'wizard/sale_make_purchase_view.xml',
+                   'sale_view.xml',],
+    
     'demo': [],
     'installable': True,
     'auto_install': False,

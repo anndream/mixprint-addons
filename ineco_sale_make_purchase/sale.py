@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-Today INECO LTD., Part. (<http://www.ineco.co.th>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,37 +19,29 @@
 #
 ##############################################################################
 
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+import time
+from openerp import pooler
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
+import openerp.addons.decimal_precision as dp
+from openerp import netsvc
 
-{
-    'name' : 'Iyara',
-    'version' : '0.1',
-    'depends' : ["sale","crm","sale_crm","purchase","analytic","account",'hr_expense','mrp'],
-    'author' : 'INECO LTD.,PART.',
-    'category': 'sale',
-    'description': """
-Feature: 
-A. Sale Module:
-1. Add Delivery Date on Sale Order
-    """,
-    'website': 'http://www.ineco.co.th',
-    'data': [],
-    'update_xml': [
-        'wizard/product_set_view.xml',
-        'wizard/change_project_view.xml',
-        'wizard/crm_make_sale_view.xml',
-        'sale_view.xml',
-        'purchase_view.xml',
-        'analytic_view.xml',
-        'sequence.xml',
-        'hr_expense_view.xml',
-        'crm_lead_view.xml',
-        
-        
-    ],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
-    'images': [],
-}
+class sale_order(osv.osv):
+    
+    _inherit = "sale.order"
+    _description = "Add Sale make purchase"
+    _columns = {
+        'purchase_ids' : fields.one2many('purchase.order','sale_order_id','Purchase Orders',states={'done': [('readonly', True)]}),
+    }    
+   
+class purchase_order(osv.osv):
+    _inherit = "purchase.order"
+    _columns = {
+        'sale_order_id' : fields.many2one('sale.order','Sale Order')
+    }
 
+purchase_order()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

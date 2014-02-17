@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-Today INECO LTD., Part. (<http://www.ineco.co.th>).
+#    Copyright (C) 2004-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,37 +19,23 @@
 #
 ##############################################################################
 
+from openerp.addons.base_status.base_stage import base_stage
+import crm
+from datetime import datetime
+from openerp.osv import fields, osv
+import time
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.tools import html2plaintext
 
-{
-    'name' : 'Iyara',
-    'version' : '0.1',
-    'depends' : ["sale","crm","sale_crm","purchase","analytic","account",'hr_expense','mrp'],
-    'author' : 'INECO LTD.,PART.',
-    'category': 'sale',
-    'description': """
-Feature: 
-A. Sale Module:
-1. Add Delivery Date on Sale Order
-    """,
-    'website': 'http://www.ineco.co.th',
-    'data': [],
-    'update_xml': [
-        'wizard/product_set_view.xml',
-        'wizard/change_project_view.xml',
-        'wizard/crm_make_sale_view.xml',
-        'sale_view.xml',
-        'purchase_view.xml',
-        'analytic_view.xml',
-        'sequence.xml',
-        'hr_expense_view.xml',
-        'crm_lead_view.xml',
-        
-        
-    ],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
-    'images': [],
-}
+
+class crm_lead(osv.osv):
+    
+    _inherit = "crm.lead"
+    _description = "Add Analytic Account"
+    
+    _columns = {
+        'project_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False),('type','=','normal')]),        
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
