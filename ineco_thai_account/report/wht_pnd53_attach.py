@@ -47,6 +47,8 @@ class report_custom(report_int):
         wht_base_amount = {}
         wht_tax_line = {}
         vals = {}
+        amount = {}
+        vat_amount = {}
         
         count_line = vouch.attach_count
         pages = 1
@@ -64,6 +66,15 @@ class report_custom(report_int):
                 wht_percent_line[j] = wht_line.percent
                 wht_base_amount[j] = wht_line.base_amount
                 wht_tax_line[j] =   wht_line.tax
+                if amount.has_key(pages) and amount[pages]:
+                    amount[pages] = amount[pages] + wht_line.base_amount
+                else:
+                    amount[pages] = wht_line.base_amount
+                if vat_amount.has_key(pages) and vat_amount[pages]:
+                    vat_amount[pages] = vat_amount[pages] + wht_line.tax
+                else:
+                    vat_amount[pages] = wht_line.tax
+
                 j += 1
             j = (3 * i) + 1
             i += 1
@@ -77,8 +88,10 @@ class report_custom(report_int):
                     "Text48":   day,
                     "Text49":"    "+ str(month+1),  
                     "Text50":   year,   
-                    "Text44":  lang.format("%.2f",vouch.total_amount,grouping=True).replace("."," "),
-                    "Text45":  lang.format("%.2f", vouch.total_tax_send,grouping=True).replace("."," "),
+                    "Text44":  lang.format("%.2f",amount[pages],grouping=True).replace("."," "),
+                    "Text45": lang.format("%.2f", vat_amount[pages],grouping=True).replace("."," "),
+#                    "Text44":  lang.format("%.2f",vouch.total_amount,grouping=True).replace("."," "),
+#                    "Text45":  lang.format("%.2f", vouch.total_tax_send,grouping=True).replace("."," "),
                     "Text33.0.0": no.has_key(1) and no[1] or "",
                     "Text33.0.1": no.has_key(2) and no[2] or "",
                     "Text33.0.2": no.has_key(3) and no[3] or "",

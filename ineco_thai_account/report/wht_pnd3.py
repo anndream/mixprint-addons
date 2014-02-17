@@ -35,7 +35,8 @@ class report_custom(report_int):
             
             year=int(vouch.date_pnd[0:4])+543
             #month=int(vouch.date_pnd[5:7]) - 1
-            month=int(vouch.date_pnd[5:7]) - 2
+            #month=int(vouch.date_pnd[5:7]) - 2
+            month=int(vouch.period_tax_id.date_start[5:7]) - 1
             month_sign = int(vouch.date_pnd[5:7])
             if month == -1: 
                 month = 11

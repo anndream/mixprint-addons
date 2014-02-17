@@ -33,11 +33,16 @@ class report_custom(report_int):
             vouch = pool.get("ineco.wht.pnd").browse(cr,uid,id)          
             company = vouch.company_id
             
-            year=int(vouch.date_pnd[0:4])+543
+            year=int(vouch.period_tax_id.date_start[0:4])+543
             month=int(vouch.date_pnd[5:7]) - 2
             if month == -1: 
                 month = 11
             #print month
+            year_sign=int(vouch.date_pnd[0:4])+543
+            #month=int(vouch.date_pnd[5:7]) - 1
+            #month=int(vouch.date_pnd[5:7]) - 2
+            month_sign = int(vouch.date_pnd[5:7])
+            
             day=int(vouch.date_pnd[8:10])
                             
             daynow = datetime.datetime.now().day
@@ -90,8 +95,8 @@ class report_custom(report_int):
                 "Text55":"      "+ company.ineco_position,
                 "Text54":"      "+ company.ineco_name,
                 "Text56":day,  
-                "Text57":"    "+ str(month+2),  
-                "Text58":year,   
+                "Text57":"    "+ str(month_sign),  
+                "Text58":year_sign,   
                 "'Check Box6'": section3,
                 "'Check Box8'": section65,
                 "'Check Box7'": section69,

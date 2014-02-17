@@ -69,6 +69,7 @@ class iyara_contract(osv.osv):
         'controlpanel_id': fields.many2one('iyara.type','Control Panel',domain=[('type','=','panel')]),
         'avr_id': fields.many2one('iyara.type','AVR Model',domain=[('type','=','avr')]),
         'battery_id': fields.many2one('iyara.type','Battery Type',domain=[('type','=','battery')]),
+        'battery_charger_id': fields.many2one('iyara.type','Charger Type',domain=[('type','=','charger')]),
         'battery_qty': fields.integer('Battery Qty'),
         'gift_qty': fields.integer('Gift Qty'),
         'date_contract_start': fields.date('Date Contract Start', required=True),

@@ -231,6 +231,7 @@
 	                    </h1>	        	    
 	        	    	<group>
 		        	    	<group>
+		        	    		<field name="period_tax_id" required="1"/>
 	                    		<field name="date_pnd"/>
 		        	    		<field name="type_normal" />
 		        	    		<field name="type_special" />
@@ -286,6 +287,7 @@
       		<field name="arch" type="xml">
 		        <tree string="With holding tax PND">
 		        	<field name="name" />
+		        	<field name="period_tax_id" />
 		        	<field name="date_pnd" />
 		       		<field name="total_amount" />
 		        	<field name="total_tax" />
@@ -301,6 +303,7 @@
       		<field name="arch" type="xml">
 		        <tree string="With holding tax PND">
 		        	<field name="name" />
+		        	<field name="period_tax_id" />
 		        	<field name="date_pnd" />
 		       		<field name="total_amount" />
 		        	<field name="total_tax" />
@@ -324,6 +327,7 @@
 	                    </h1>	        	    
 	        	    	<group>
 		        	    	<group>
+		        	    		<field name="period_tax_id" required="1"/>
 	                    		<field name="date_pnd"/>
 		        	    		<field name="type_normal" />
 		        	    		<field name="type_special" />

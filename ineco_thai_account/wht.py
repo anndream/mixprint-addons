@@ -292,7 +292,7 @@ class ineco_wht_pnd(osv.osv):
         'note': fields.text('Note'),
         'company_id': fields.many2one('res.company','Company', required=True),
         'pnd_type': fields.selection([('pp4','(4) PP3'),('pp7','(7) PP53')], 'PND Type', required=True, select=True),
-    
+        'period_tax_id': fields.many2one('account.period','Tax Period'),
     }
     _defaults = {
         'name': '/',
