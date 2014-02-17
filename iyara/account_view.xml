@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="crm_ineco_iyara_account_account_form_view" model="ir.ui.view">
+            <field name="name">ineco.iyara.account.account.form</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="name2"/>
+                </field>
+        	</field>
+        </record>        
+        
+        <record id="ineco_iyara_view_account_list" model="ir.ui.view">
+            <field name="name">ineco.iyara.view.account.list</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_list"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="name2"/>
+                </field>
+        	</field>
+        </record>   
+             
+        <record id="ineco_iyara_view_account_search" model="ir.ui.view">
+            <field name="name">ineco.iyara.view.account.search</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_search"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="name2"/>
+                </field>
+        	</field>
+        </record>                  
+	</data>
+</openerp>

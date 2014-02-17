@@ -43,7 +43,7 @@ A. Sale Module:
         'sequence.xml',
         'hr_expense_view.xml',
         'crm_lead_view.xml',
-        
+        'account_view.xml',
         
     ],
     'demo': [],
