@@ -42,7 +42,7 @@ class iyara_controlpanel(osv.osv):
     _name = 'iyara.type'
     _columns = {
         'name': fields.char('Control Panel', size=64, required=True),
-        'type': fields.selection([('panel','Control Panel'),('avr','AVR Model'),('batter','Battery')],'Type')
+        'type': fields.selection([('panel','Control Panel'),('avr','AVR Model'),('batter','Battery'),('charger','Charger')],'Type')
     }
 
 class iyara_contract(osv.osv):
