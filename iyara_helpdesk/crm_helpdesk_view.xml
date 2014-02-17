@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        <record model="ir.ui.view" id="view_iyara_helpdesk_from">
+            <field name="name">CRM - Helpdesk Support Form</field>
+            <field name="model">crm.helpdesk</field>
+            <field name="inherit_id" ref="crm_helpdesk.crm_case_form_view_helpdesk"/>
+            <field name="arch" type="xml">
+            	<page string="Extra Info" position="after" version="7.0">
+            		<page string="Contract Information">
+            			<group>
+	            			<field name="contract_id" />
+	            			<field name="picking_id" />
+            			</group>
+            		</page>
+            	</page>
+			</field>
+		</record>    
+    
+    </data>
+</openerp>
