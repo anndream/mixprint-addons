@@ -100,12 +100,12 @@ class iyara_contract(osv.osv):
                 date_length = int((date_finish - date_start).days / contract.service_qty)
                 #print date_length
             for i in range(contract.service_qty):
-                date_start = date_start + timedelta(days=date_length)
                 helpdesk_data = {
                     'name': 'No.'+str(i+1)+'/'+str(contract.service_qty),
                     'contract_id': contract.id,
                     'partner_id': contract.customer_id.id,
                     'date': date_start.strftime('%Y-%m-%d 00:00:00')
                 }
+                date_start = date_start + timedelta(days=date_length)
                 helpdesk_obj.create(cr, uid, helpdesk_data)
         return True

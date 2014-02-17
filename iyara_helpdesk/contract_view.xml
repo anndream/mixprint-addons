@@ -12,7 +12,7 @@
       				<sheet>
       					<group>
       						<group>
-      							<field name="name" />
+      							<field name="name" string="Description"/>
       							<field name="type" />
       						</group>
       					</group>
