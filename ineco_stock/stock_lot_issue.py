@@ -41,30 +41,56 @@ _logger = logging.getLogger(__name__)
 class ineco_stock_lot_issue(osv.osv):
     _name = 'ineco.stock.lot.issue'
     _columns = {
-        'name': fields.char('Description', size=128,),
+        'name': fields.char('Barcode', size=128, required=True),
         'prodlot_id': fields.many2one('stock.production.lot','Serial Number', required=True),
-        'product_id': fields.related('prodlot_id','product_id',type='many2one',relation='product.product',string='Product',readonly=True),
+        'product_id': fields.related('prodlot_id','product_id',type='many2one',relation='product.product',string='Product'),
         'location_id': fields.many2one('stock.location','Location',required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
             required=True),
         'picking_id': fields.many2one('stock.picking', 'Picking', ),
-        'uom_id': fields.related('product_id','uom_id',type='many2one',relation='product.uom',string='Uom',readonly=True),
+        'uom_id': fields.related('product_id','uom_id',type='many2one',relation='product.uom',string='Uom'),
     }
     _defaults = {
-        'name':'...',
+        'name': False,
     }
+
+    def on_barcode(self, cr, uid, ids, barcode, context=None):
+        value = {}
+
+        if barcode:
+            prodlot = self.pool.get('stock.production.lot').browse(cr, uid, [barcode])[0]
+            if prodlot:
+                list_ids = self.pool.get('ineco.stock.list').search(cr, uid, [('prodlot_id.id','=',prodlot.id),('on_hand','>',0),('is_stock','=','STOCK')])
+                if list_ids:
+                    list_stock_obj = self.pool.get('ineco.stock.list').browse(cr, uid, list_ids)[0]
+                    value = {
+                             'prodlot_id':prodlot.id,
+                             'product_id':list_stock_obj.product_id.id,
+                             'location_id': list_stock_obj.location_dest_id.id, 
+                             'product_qty':list_stock_obj.on_hand,
+                             'uom_id':list_stock_obj.product_id.uom_id.id}
+                else:
+                    value = {'prodlot_id':False,'product_id':False, 'location_id': False, 'product_qty':False,'uom_id':False}
+                    raise osv.except_osv('Error!', 'Serial Number Not Found in Stock List!')
+
+        return {'value': value}
      
     def on_prodlot_id(self, cr, uid, ids, prodlot_id, context=None):
         value = {}
 
         if prodlot_id:
-            list_ids = self.pool.get('ineco.stock.list').search(cr, uid, [('prodlot_id','=',prodlot_id),('on_hand','>',0),('location_dest_id.is_stock','=',True)])
+            list_ids = self.pool.get('ineco.stock.list').search(cr, uid, [('prodlot_id','=',prodlot_id),('on_hand','>',0),('is_stock','=','STOCK')])
             if list_ids:
                 list_stock_obj = self.pool.get('ineco.stock.list').browse(cr, uid, list_ids)[0]
-                value = {'location_id': list_stock_obj.location_dest_id.id, 'product_qty':list_stock_obj.on_hand}
+                value = {'product_id':list_stock_obj.product_id.id,
+                         'location_id': list_stock_obj.location_dest_id.id, 
+                         'product_qty':list_stock_obj.on_hand,
+                         'uom_id':list_stock_obj.product_id.uom_id.id,
+                         'name': prodlot_id}
             else:
-                value = {'location_id': False, 'product_qty':False}
-                #raise osv.except_osv('Error!',"Forcast stock < 0")
+                value = {'prodlot_id':False,'product_id':False, 'location_id': False, 'product_qty':False,'uom_id':False}
+                raise osv.except_osv('Error!', 'Serial Number Not Found!')
+
         return {'value': value}
     
 
@@ -91,8 +117,8 @@ class stock_picking(osv.osv):
                     'product_id': lot.product_id.id,
                     'product_qty': lot.product_qty,
                     'product_uos_qty': lot.product_qty,
-                    'product_uom': lot.product_id.uom_id.id,
-                    'product_uos': lot.product_id.uom_id.id,
+                    'product_uom': lot.uom_id.id,
+                    'product_uos': lot.uom_id.id,
                     'date': pick.date,
                     'date_expected': pick.date,
                     'location_id': lot.location_id.id,

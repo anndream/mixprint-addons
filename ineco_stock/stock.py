@@ -38,6 +38,37 @@ import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 
+class stock_production_lot(osv.osv):
+    
+    _inherit = 'stock.production.lot'
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        reads = self.read(cr, uid, ids, ['name', 'prefix', 'ref'], context)
+        res = []
+        for record in reads:
+            name = record['name']
+            prefix = record['prefix']
+            if prefix:
+                name = prefix + '/' + name
+            if record['ref']:
+                name = '%s/%s' % (name, record['ref'])
+            res.append((record['id'], name))
+        return res
+    
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        args = args or []
+        ids = []
+        if name:
+            ids = self.search(cr, uid, [('ref', operator, name)] + args, limit=limit, context=context)
+            if not ids:
+                ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context)
+    
+
 class stock_journal(osv.osv):
     _inherit = 'stock.journal'
     _columns = {

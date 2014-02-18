@@ -16,7 +16,7 @@
 	                                  		type="object" class="oe_highlight" />
 	                            <newline />
 	                        	<field name="barcode_product_ids" nolabel="1" >
-	                        		<tree string="Barcode" editable="bottom">
+	                        		<tree string="Barcode" editable="top">
 	                        			<field name="name" on_change="on_change_barcode(name)" />
 	                        			<field name="product_id" />
 	                        			<field name="product_qty" />

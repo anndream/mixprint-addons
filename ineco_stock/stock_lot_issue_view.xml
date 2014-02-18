@@ -20,8 +20,9 @@
                                   		type="object" class="oe_highlight" />
                                 <newline />
                                 <field name="prodlot_ids" nolabel="1">
-                                	<tree string="Issue" editable="bottom">
-                                		<field name="prodlot_id" domain="[('stock_available','>',0)]" on_change="on_prodlot_id(prodlot_id)" />
+                                	<tree string="Issue" editable="top">
+                                		<field name="name" on_change="on_barcode(name)" />
+                                		<field name="prodlot_id" domain="[('stock_available','>',0)]" />
                                 		<field name="product_id" />
                                 		<field name="location_id" />
                                 		<field name="product_qty" />
