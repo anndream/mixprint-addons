@@ -128,9 +128,9 @@ class ineco_stock_list(osv.osv):
         'prodlot_id': fields.many2one('stock.production.lot','Serial Number', readonly=True),
         'location_dest_id': fields.many2one('stock.location','Location',readonly=True),
         'is_stock': fields.char('Is Stock', size=32, readonly=True),
-        'on_hand': fields.float('On Hand', readonly=True),
-        'forecast': fields.float('Forecast', readonly=True),
-        'uom_id': fields.many2one('product.uom','UOM',readonly=True),
+        'on_hand': fields.float('On Hand', digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
+        'forecast': fields.float('Forecast', digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
+        'uom_id': fields.many2one('product.uom', 'UOM' ,readonly=True),
     }
     
     def init(self, cr):
@@ -141,7 +141,7 @@ create or replace view ineco_stock_list as
 select 
   move.*,
   pt.uom_id,
-  round((coalesce((
+  (coalesce((
   select sum(product_qty * case when uom_type = 'reference' then round(factor,0) when uom_type = 'bigger' then round(1/factor,0) else round(factor,0) end ) from stock_move
   left join product_uom on stock_move.product_uom = product_uom.id
                 where location_id <> move.location_dest_id
@@ -166,8 +166,8 @@ select
               else prodlot_id is null
             end 
                 and state in ('done')
-  ),0)) * pu.factor) as on_hand,
-  round((coalesce((
+  ),0)) * pu.factor as on_hand,
+  (coalesce((
   select sum(product_qty * case when uom_type = 'reference' then round(factor,0) when uom_type = 'bigger' then round(1/factor,0) else round(factor,0) end ) from stock_move
   left join product_uom on stock_move.product_uom = product_uom.id
                 where location_id <> move.location_dest_id
@@ -192,7 +192,7 @@ select
               else prodlot_id is null
             end 
                 and state in ('confirmed','waiting','assigned','done')
-  ),0)) * pu.factor)  as forecast
+  ),0)) * pu.factor  as forecast
 from product_template pt
 left join product_product pp on pp.product_tmpl_id = pt.id
 left join product_uom pu on pt.uom_id = pu.id

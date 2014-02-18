@@ -112,3 +112,9 @@ class product_category(osv.osv):
         'product_onhand': fields.function(_get_product_stock, string='On Hand', type='float', multi='inventory', readonly=True),                
         'product_forecast': fields.function(_get_product_stock, string='Forecast', type='float', multi='inventory', readonly=True),                
     }
+    
+class product_product(osv.osv):
+    _inherit = 'product.product'
+    _columns = {
+        'internal_barcode': fields.char('Internal Barcode', size=64)
+    }    

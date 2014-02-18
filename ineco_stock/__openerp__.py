@@ -36,6 +36,7 @@ Stock module addon.
         'product_view.xml',
         'stock_report_view.xml',
         'stock_lot_issue_view.xml',
+        'stock_barcode_view.xml',
     ],
     'demo': [],
     'installable': True,

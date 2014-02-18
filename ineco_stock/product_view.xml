@@ -82,6 +82,28 @@
               	</field>
             </field>
         </record>
+        
+        <!-- <record id=view_ineco_product_barcode_search model="ir.ui.view">
+            <field name="name">ineco.product.barcode.search</field>
+            <field name="model">product.product</field>
+	      	<field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+            	<field name="categ_id" position="after">
+            		<field name="internal_barcode"/>
+            	</field>
+            </field>
+        </record>
+ -->
+        <record id="view_ineco_product_barcode" model="ir.ui.view">
+            <field name="name">ineco.product.barcode.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+            	<field name="default_code" position="after">
+            		<field name="internal_barcode" />
+            	</field>
+    		</field>
+    	</record>
         	        
     </data>
 </openerp>
