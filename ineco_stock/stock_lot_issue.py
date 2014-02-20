@@ -140,4 +140,51 @@ class stock_picking(osv.osv):
         default['prodlot_ids'] = False
         res=super(stock_picking, self).copy(cr, uid, id, default, context)
         return res
+
+class stock_picking_out(osv.osv):
+    
+    _inherit = 'stock.picking.out'
+    _columns = {
+        'prodlot_ids': fields.one2many('ineco.stock.lot.issue','picking_id','Production Lots'),
+        'production_id': fields.many2one('mrp.production','Manufacturing Order'),
+        'production_ids': fields.many2many('mrp.production', 'picking_production_rel', 'picking_id', 'production_id', 'Productions'),
+    }
+        
+    def button_create_stockmove(self, cr, uid, ids, context=None):
+        for pick in self.browse(cr, uid, ids):
+            for move in pick.move_lines:
+                self.pool.get('stock.move').unlink(cr, uid, [move.id])
+            for lot in pick.prodlot_ids:
+                if lot.product_qty <= 0:
+                    raise osv.except_osv('Error!',"Please change quantity > 0")
+
+                new_data = {
+                    'picking_id': pick.id,
+                    'name': lot.product_id.name or '',
+                    'product_id': lot.product_id.id,
+                    'product_qty': lot.product_qty,
+                    'product_uos_qty': lot.product_qty,
+                    'product_uom': lot.uom_id.id,
+                    'product_uos': lot.uom_id.id,
+                    'date': pick.date,
+                    'date_expected': pick.date,
+                    'location_id': lot.location_id.id,
+                    'location_dest_id': lot.location_id.id,
+                    'partner_id': pick.partner_id.id or False,
+                    'move_dest_id': lot.location_id.id,
+                    'state': 'draft',
+                    'type':'internal',
+                    'company_id': pick.company_id.id,
+                    'prodlot_id': lot.prodlot_id.id,
+                }
+                self.pool.get('stock.move').create(cr, uid, new_data)
+        return True
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['prodlot_ids'] = False
+        res=super(stock_picking_out, self).copy(cr, uid, id, default, context)
+        return res
     

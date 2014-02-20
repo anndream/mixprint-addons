@@ -41,6 +41,9 @@ _logger = logging.getLogger(__name__)
 class stock_production_lot(osv.osv):
     
     _inherit = 'stock.production.lot'
+    _columns = {
+        'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
+    }
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:

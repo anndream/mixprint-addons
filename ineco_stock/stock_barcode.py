@@ -127,3 +127,115 @@ class stock_picking(osv.osv):
         res=super(stock_picking, self).copy(cr, uid, id, default, context)
         return res
     
+class stock_picking_in(osv.osv):
+    
+    _inherit = 'stock.picking.in'
+    _columns = {
+        'barcode_product_ids': fields.one2many('ineco.barcode.product.line','picking_id','Barcode by Product'),
+    }
+    
+    def button_create_stockmove_barcode(self, cr, uid, ids, context=None):
+
+        for pick in self.browse(cr, uid, ids):
+            model_ids = self.pool.get('ir.model.data').search(cr, uid, [('name','=','stock_location_stock')])
+            default_stock_id = False
+            default_stock_dest_id = False
+            if model_ids:
+                default_stock_id = self.pool.get('ir.model.data').browse(cr, uid, model_ids)[0].res_id
+            if pick.stock_journal_id:
+                default_stock_id = pick.stock_journal_id.location_id or default_stock_id
+                default_stock_dest_id = pick.stock_journal_id.location_dest_id or default_stock_id
+            else:
+                raise osv.except_osv('Error!', 'Stock Journal Not Found!')
+            for move in pick.move_lines:
+                self.pool.get('stock.move').unlink(cr, uid, [move.id])
+            for lot in pick.barcode_product_ids:
+                if lot.product_qty <= 0:
+                    raise osv.except_osv('Error!',"Please change quantity > 0")
+
+                new_data = {
+                    'picking_id': pick.id,
+                    'name': lot.product_id.name or '',
+                    'product_id': lot.product_id.id,
+                    'product_qty': lot.product_qty,
+                    'product_uos_qty': lot.product_qty,
+                    'product_uom': lot.product_uom.id,
+                    'product_uos': lot.product_uom.id,
+                    'date': pick.date,
+                    'date_expected': pick.date,
+                    'location_id': default_stock_id,
+                    'location_dest_id': default_stock_dest_id,
+                    'partner_id': pick.partner_id.id or False,
+                    #'move_dest_id': lot.location_id.id,
+                    'state': 'draft',
+                    'type':'internal',
+                    'company_id': pick.company_id.id,
+                    #'prodlot_id': lot.prodlot_id.id,
+                }
+                self.pool.get('stock.move').create(cr, uid, new_data)
+        return True
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['barcode_product_ids'] = False
+        res=super(stock_picking_in, self).copy(cr, uid, id, default, context)
+        return res
+    
+class stock_picking_out(osv.osv):
+    
+    _inherit = 'stock.picking.out'
+    _columns = {
+        'barcode_product_ids': fields.one2many('ineco.barcode.product.line','picking_id','Barcode by Product'),
+    }
+    
+    def button_create_stockmove_barcode(self, cr, uid, ids, context=None):
+
+        for pick in self.browse(cr, uid, ids):
+            model_ids = self.pool.get('ir.model.data').search(cr, uid, [('name','=','stock_location_stock')])
+            default_stock_id = False
+            default_stock_dest_id = False
+            if model_ids:
+                default_stock_id = self.pool.get('ir.model.data').browse(cr, uid, model_ids)[0].res_id
+            if pick.stock_journal_id:
+                default_stock_id = pick.stock_journal_id.location_id or default_stock_id
+                default_stock_dest_id = pick.stock_journal_id.location_dest_id or default_stock_id
+            else:
+                raise osv.except_osv('Error!', 'Stock Journal Not Found!')
+            for move in pick.move_lines:
+                self.pool.get('stock.move').unlink(cr, uid, [move.id])
+            for lot in pick.barcode_product_ids:
+                if lot.product_qty <= 0:
+                    raise osv.except_osv('Error!',"Please change quantity > 0")
+
+                new_data = {
+                    'picking_id': pick.id,
+                    'name': lot.product_id.name or '',
+                    'product_id': lot.product_id.id,
+                    'product_qty': lot.product_qty,
+                    'product_uos_qty': lot.product_qty,
+                    'product_uom': lot.product_uom.id,
+                    'product_uos': lot.product_uom.id,
+                    'date': pick.date,
+                    'date_expected': pick.date,
+                    'location_id': default_stock_id,
+                    'location_dest_id': default_stock_dest_id,
+                    'partner_id': pick.partner_id.id or False,
+                    #'move_dest_id': lot.location_id.id,
+                    'state': 'draft',
+                    'type':'internal',
+                    'company_id': pick.company_id.id,
+                    #'prodlot_id': lot.prodlot_id.id,
+                }
+                self.pool.get('stock.move').create(cr, uid, new_data)
+        return True
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['barcode_product_ids'] = False
+        res=super(stock_picking_out, self).copy(cr, uid, id, default, context)
+        return res
+    
