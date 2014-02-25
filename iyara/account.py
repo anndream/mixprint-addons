@@ -35,4 +35,15 @@ class account_account(osv.osv):
 
 account_account()
 
+
+class account_voucher(osv.osv):
+    
+    _inherit = "account.voucher"
+    _description = "Add Date Bank"
+    _columns = {
+        'iyara_bank_date': fields.date('Bank Date', select=True),
+    }
+
+account_voucher()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
