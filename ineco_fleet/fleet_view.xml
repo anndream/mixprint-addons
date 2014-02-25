@@ -143,6 +143,19 @@
 	    <menuitem name="Driver" 
 	    	parent="fleet.fleet_configuration" 
 	    	id="menu_ineco_fleet_driver" action="action_ineco_fleet_driver" sequence="90"/>    	
+
+        <record model='ir.ui.view' id='ineco_fleet_vehicle_note_form'>
+            <field name="name">ineco.fleet.vehicle.note.form</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
+            <field name="arch" type="xml">
+            	<xpath expr="/form/sheet" position="inside">
+            		<group col="2">
+            			<field name="note" />
+            		</group>
+            	</xpath>
+            </field>
+        </record>
 	    	    
     </data>
 </openerp>

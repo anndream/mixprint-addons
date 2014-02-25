@@ -32,6 +32,7 @@ class fleet_vehicle(osv.Model):
     _inherit = 'fleet.vehicle'
     _columns = {
         'odometer_unit': fields.selection([('kilometers', 'Kilometers'),('miles','Miles'),('unit','Units')], 'Odometer Unit', help='Unit of the odometer ',required=True),
+        'note': fields.text('Note'),
 } 
 
 class fleet_driver(osv.osv):
