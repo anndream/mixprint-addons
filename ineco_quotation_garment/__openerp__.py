@@ -28,7 +28,9 @@ New Quotation Menu/View for Garment Business.
     """,
     'website': 'http://www.ineco.co.th',
     'images' : [],
-    'depends' : ['base','sale','crm','ineco_crm','stock','sale_stock','account','hr','ineco_stock','purchase'],
+    'depends' : ['base','sale','crm','ineco_crm',
+                 'stock','sale_stock','account','hr','ineco_stock','purchase',
+                 'account_cancel'],
     'data': [
     ],
     'js': [

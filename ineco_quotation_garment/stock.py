@@ -72,6 +72,11 @@ class stock_picking_out(osv.osv):
 class stock_picking(osv.osv):
     
     _inherit = "stock.picking"
+    _columns = {
+        'order_color': fields.char('Color',size=64),
+        'order_type': fields.char('Type', size=64),
+        'order_weight': fields.char('Weight', size=64),
+    }
 
 #     def name_get(self, cr, uid, ids, context=None):
 #         if not ids:

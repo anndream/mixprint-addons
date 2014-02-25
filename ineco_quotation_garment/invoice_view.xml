@@ -9,9 +9,62 @@
             <field name="arch" type="xml">
                 <field name="fiscal_position" position="after">
                 	<field name="garment_order_no" />
-                </field>
+                </field>                               
+                
             </field>
         </record>
+        
+        <record id="view_ineco_invoice_cancel_form" model="ir.ui.view">
+            <field name="name">cancel.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account_cancel.invoice_form_cancel_inherit"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//button[@name='invoice_cancel']" position="replace">
+                    <button name="invoice_cancel" states="draft,proforma2,open" string="Cancel" groups="base.group_erp_manager"/>
+                </xpath>
+                
+                <xpath expr="//button[@name='action_cancel_draft']" position="replace">
+                    <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object" groups="base.group_erp_manager"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_ineco_supplierinvoice_cancel_form" model="ir.ui.view">
+            <field name="name">cancel.supplier.invoice.form.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account_cancel.invoice_supplier_cancel_form_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='invoice_cancel']" position="replace">
+                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" groups="base.group_erp_manager"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="view_ineco_receipt_voucher_cancel_form" model="ir.ui.view">
+            <field name="name">cancel.receipt.voucher.form</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_vendor_receipt_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@string='Unreconcile']" position="replace">
+					<button name="cancel_voucher" string="Unreconcile" type="object" states="posted" groups="base.group_erp_manager" confirm="Are you sure to unreconcile and cancel this record ?"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_ineco_payment_voucher_cancel_form" model="ir.ui.view">
+            <field name="name">cancel.payment.voucher.form</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_vendor_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@string='Unreconcile']" position="replace">
+					<button name="cancel_voucher" string="Unreconcile" type="object" states="posted" groups="base.group_erp_manager" confirm="Are you sure to unreconcile and cancel this record ?"/>
+                </xpath>
+            </field>
+        </record>
+        
+        
            
         <record id="view_invoice_mo_tree" model="ir.ui.view">
             <field name="name">mo.account.invoice.form</field>
@@ -22,7 +75,9 @@
                 	<field name="garment_order_no" />
                 </field>
             </field>
-        </record>        <record id="view_invoice_mo_tree" model="ir.ui.view">
+        </record>        
+        
+        <record id="view_invoice_mo_tree" model="ir.ui.view">
             <field name="name">mo.account.invoice.form</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_tree"/>
