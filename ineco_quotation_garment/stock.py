@@ -76,7 +76,17 @@ class stock_picking(osv.osv):
         'order_color': fields.char('Color',size=64),
         'order_type': fields.char('Type', size=64),
         'order_weight': fields.char('Weight', size=64),
+        'picking_note_id': fields.many2one('ineco.picking.note', 'Picking Note',)
     }
+
+    def onchange_note_id(self, cr, uid, ids, note_id=False, context=None):
+        note_obj = self.pool.get('ineco.picking.note')
+        if not note_id:
+            return {'value':{}}
+        val = {}
+        note = note_obj.read(cr, uid, note_id, ['note'],context=context)
+        val['note'] = note.get('note', False) and note.get('note') or False
+        return {'value': val}
 
 #     def name_get(self, cr, uid, ids, context=None):
 #         if not ids:
@@ -222,3 +232,10 @@ class split_in_production_lot(osv.osv_memory):
                         move_obj.write(cr, uid, [move.id], update_val)
 
         return new_move
+    
+class ineco_picking_note(osv.osv):
+    _name = 'ineco.picking.note'
+    _columns = {
+        'name': fields.char('description', size=128, reqruied=True),
+        'note': fields.text('Note', required=True),
+    }

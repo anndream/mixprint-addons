@@ -104,9 +104,68 @@
                     <field name="order_color" />
                     <field name="order_type" />
                     <field name="order_weight" />
+                    <field name="picking_note_id" on_change="onchange_note_id(picking_note_id)"/>
                 </field>
             </field>
         </record>        
+
+        <record id="view_ineco_picking_note_tree" model="ir.ui.view">
+            <field name="name">ineco.picking.note.tree</field>
+            <field name="model">ineco.picking.note</field>
+            <field name="arch" type="xml">
+                <tree string="Picking Note">
+                    <field name="name" />
+                    <field name="note" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_picking_note_search" model="ir.ui.view">
+            <field name="name">ineco.picking.note.select</field>
+            <field name="model">ineco.picking.note</field>
+            <field name="arch" type="xml">
+                <search string="Search Type">
+                	<field name="name" />
+                	<field name="note" />
+               	</search>
+            </field>
+        </record>
+        <record id="view_ineco_picking_note_form" model="ir.ui.view">
+            <field name="name">ineco.picking.note.form</field>
+            <field name="model">ineco.picking.note</field>
+            <field name="arch" type="xml">
+                <form string="Picking Note">
+                    <field name="name" />
+                    <newline />
+                    <field name="note" />
+                </form>
+            </field>
+        </record>		
+
+        <record id="action_ineco_picking_note" model="ir.actions.act_window">
+            <field name="name">Picking Note</field>
+            <field name="res_model">ineco.picking.note</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_picking_note_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a problem type. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+        <menuitem 
+            id="menu_ineco_picking_note"
+        	action="action_ineco_picking_note" 
+        	parent="stock.menu_stock_configuration"
+        	
+        	/> 
         
     </data>
 </openerp>
