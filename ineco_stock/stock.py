@@ -484,7 +484,7 @@ select
               and subquery.date_stock_card < sm.date_stock_card 
               --and subquery.id < sm.id 
     )    
-    when sl1.is_stock = true and sl2.is_stock isnull and sm.state = 'done' then 
+    when sl1.is_stock = true and (sl2.is_stock isnull or sl2.is_stock = 'f') and sm.state = 'done' then 
     (
         select coalesce(sum(receive) - sum(issue),0.00) as balance
         from 
@@ -517,7 +517,7 @@ select
               and subquery.date_stock_card < sm.date_stock_card 
               --and subquery.id < sm.id 
     ) - round(sm.product_qty/pu.factor,2)      
-    when sl1.is_stock isnull and sl2.is_stock = true and sm.state = 'done' then 
+    when (sl1.is_stock isnull or sl1.is_stock = 'f') and sl2.is_stock = true and sm.state = 'done' then 
     (
         select coalesce(sum(receive) - sum(issue),0.00) as balance
         from 
@@ -550,7 +550,39 @@ select
               and subquery.date_stock_card < sm.date_stock_card
               --and subquery.id < sm.id 
     ) +  round(sm.product_qty/pu.factor,2)
-    else 0.00
+    else 
+
+    (
+        select coalesce(sum(receive) - sum(issue), 0.00) as balance
+        from 
+        (
+            select 
+              smm.id,
+              smm.product_id,
+              smm.date_stock_card,
+              case
+                when (sl1.is_stock isnull or sl1.is_stock = false) and sl2.is_stock = true and smm.state = 'done' then round(smm.product_qty/pu.factor,2)     
+                else 0.00
+              end as receive,
+              case
+                when sl1.is_stock = true and (sl2.is_stock isnull or sl2.is_stock = false) and smm.state = 'done' then round(smm.product_qty/pu.factor,2)     
+                else 0.00
+              end as issue,
+              case
+                when sl1.is_stock = sl2.is_stock and smm.state = 'done' then round(smm.product_qty/pu.factor,2)     
+                else 0.00
+              end as transfer
+            from stock_move smm
+            left join stock_location sl1 on sl1.id = smm.location_id
+            left join stock_location sl2 on sl2.id = smm.location_dest_id
+            left join product_uom pu on pu.id = smm.product_uom
+            where smm.product_id = sm.product_id
+        ) as subquery
+        where subquery.product_id = sm.product_id 
+              and subquery.date_stock_card < sm.date_stock_card  
+              --and subquery.id < sm.id
+    )
+
   end as next
 from stock_move sm
 left join stock_location sl1 on sl1.id = sm.location_id
