@@ -168,9 +168,10 @@ class ineco_jasper_report(osv.osv):
                                    ('mrp', 'Manufacturing'),
                                    ('account', 'Account'),
                                    ('warehouse', 'Warehouse')], 'Module' ),
+        'group_ids': fields.many2many('res.groups', 'jasperreport_group_rel', 'jasperreport_id', 'group_id', 'Groups'),                
     }
     _sql_constraints = [
-        ('name_uniq', 'unique(name,server_id,uristring)', 'Server and Report must be unique!'),
+        ('name_uniq', 'unique(name, server_id, uristring)', 'Server and Report must be unique!'),
     ]
     _order = 'server_id, name'
     

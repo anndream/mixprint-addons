@@ -124,7 +124,11 @@
 					<field name="name" />
 					<field name="label" />
 					<field name="module"/>
-					<field name="uristring" />		
+					<field name="uristring" />	
+	               <group expand="0" string="Group By...">
+	                   <filter string="Module" icon="terp-partner" domain="[]" context="{'group_by':'module'}"/>
+	               </group>
+						
               	</search>
             </field>
         </record>
@@ -155,6 +159,7 @@
 					        <field name="param_uristring" />
 					    </form>  -->
 					</field>	
+					<field name="group_ids" colspan="4" />						
 				</form>
             </field>
         </record>
