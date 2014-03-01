@@ -48,7 +48,13 @@ class stock_production_lot(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name', 'prefix', 'ref'], context)
+        new_ids = []
+        for id in ids:
+            if isinstance(id,str):
+                new_ids.append(int(id))
+            else:
+                new_ids.append(id)
+        reads = self.read(cr, uid, new_ids, ['name', 'prefix', 'ref'], context)
         res = []
         for record in reads:
             name = record['name']
