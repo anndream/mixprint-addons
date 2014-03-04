@@ -143,7 +143,8 @@
 					<field name="name" />
 					<field name="label" />
 					<field name="uristring" colspan="4" />
-					<field name="module"/>
+					<field name="module" />
+					<field name="server_id" />
 					<button name="browse_report" string="Run" type="object" icon="gtk-ok"/>										
 					<newline />		
 					<field name="param_ids" colspan="4">
