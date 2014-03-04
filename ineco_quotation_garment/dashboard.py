@@ -251,6 +251,7 @@ class ineco_sale_summary5_query(osv.osv):
                   ) as so1,*/
                   (select coalesce(sum(amount_untaxed),0) from sale_order so 
                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.date_sale_close)
+                         and date_part('year',now()) = date_part('year',so.date_sale_close)
                          and so.state <> 'cancel'
                   ) as so2,
                   /*
