@@ -16,15 +16,16 @@
 						<button name="%(open_iyara_product_set_form)d" states="draft" type="action" string="Product Set" />	                    
 		           	</div>
 	           	</field> 	
-	           	<label for="discount" position="replace">
+<!-- 	           	<label for="discount" position="before">
  					<label for="discounts" groups="sale.group_discount_per_so_line"/>	           	    
-	           	</label>
-                <field name="discount" position="replace">
-	               	<div name="discounts" groups="sale.group_discount_per_so_line">
+	           	</label> -->
+                <field name="discount" position="before">
+<!-- 	               	<div name="discounts" groups="sale.group_discount_per_so_line">
 	                	<field name="discounts" class="oe_inline"/>               
-	                </div>	  
+	                </div>	  --> 
+	                <field name="discounts"/>
 	           	</field>     
-             	<xpath expr='//tree/field[@name="discount"]' position='replace'> 
+             	<xpath expr='//tree/field[@name="discount"]' position='before'> 
 					<field name="discounts" groups="sale.group_discount_per_so_line"/>
                 </xpath>	                        	          	
         	</field>

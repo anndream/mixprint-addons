@@ -118,8 +118,22 @@
                 </field>
         	</field>
         </record>            
-        
-        
-        
+		
+        <!-- Iyara Account Move  -->
+        <record id="iyara_account_move_inherit_form_view" model="ir.ui.view">
+            <field name="name">iyara.account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="period_id" position="after">
+                    <field name="period_tax_id"/>
+                </field>               
+            	<xpath expr='//tree/field[@name="account_id"]' position='after'> 
+					<field name="ineco_date_tax"/> 
+					<field name="ineco_tax_amount"/>
+                </xpath>                
+        	</field>
+        </record>      
+
 	</data>
 </openerp>

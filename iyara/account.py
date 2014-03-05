@@ -46,4 +46,14 @@ class account_voucher(osv.osv):
 
 account_voucher()
 
+class account_move(osv.osv):
+    
+    _inherit = "account.move"
+    _description = "Add Tax Period"
+    _columns = {   
+        'period_tax_id': fields.many2one('account.period', 'Tax Period'),
+    }    
+    
+account_move()
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

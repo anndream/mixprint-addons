@@ -23,7 +23,8 @@
 {
     'name' : 'Iyara',
     'version' : '0.1',
-    'depends' : ["sale","crm","sale_crm","purchase","analytic","account","account_voucher",'hr_expense','mrp'],
+    'depends' : ["sale","crm","sale_crm","purchase","analytic",
+                 "account","account_voucher",'hr_expense','mrp','ineco_thai_account'],
     'author' : 'INECO LTD.,PART.',
     'category': 'sale',
     'description': """
