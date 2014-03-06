@@ -52,6 +52,7 @@
                     <field name="date_delivery" />
                     <field name="ineco_date_delivery" />
                     <field name="garment_order_no" />
+                    <field name="picking_transfer_id" />
                 </field>
         	</field>
        	</record>
@@ -70,6 +71,7 @@
                 </xpath>
                 <xpath expr="//field[@name='date_done']" position="after">
                 	<field name="date_delivery" />
+                	<field name="picking_transfer_id" readonly="1" />
                     <!-- <field name="ineco_date_delivery" /> -->
                 </xpath>
             </field>
@@ -166,6 +168,28 @@
         	parent="stock.menu_stock_configuration"
         	
         	/> 
-        
+
+        <record id="view_garment_stock_journal_tree" model="ir.ui.view">
+            <field name="name">ineco.garment.journal.tree</field>
+            <field name="model">stock.journal</field>
+            <field name="inherit_id" ref="stock.view_stock_journal_tree"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                	<field name="transfer_fg" />
+				</field>
+			</field>
+		</record>
+
+        <record id="view_garment_stock_journal_form" model="ir.ui.view">
+            <field name="name">ineco.garment.journal.form</field>
+            <field name="model">stock.journal</field>
+            <field name="inherit_id" ref="stock.view_stock_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="transfer_fg"  />
+                </field>
+        	</field>
+        </record>
+		        
     </data>
 </openerp>

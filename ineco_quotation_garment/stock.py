@@ -28,7 +28,7 @@ import time
 
 from openerp.osv import fields, osv
 #from tools.translate import _
-#import netsvc
+from openerp import netsvc
 #import tools
 #from tools import float_compare
 import openerp.addons.decimal_precision as dp
@@ -66,6 +66,7 @@ class stock_picking_out(osv.osv):
         'ineco_date_delivery': fields.date('Actual Delivery Date'),
         'garment_order_no': fields.related('sale_id', 'garment_order_no', type="char", string="Garment No", readonly=True),
         'date_delivery': fields.related('sale_id', 'date_delivery', type="date", string="Delivery Date", readonly=True),
+        'picking_transfer_id': fields.many2one('stock.picking','Transfers Doc')
     }
         
     
@@ -99,8 +100,40 @@ class stock_picking(osv.osv):
 #         return res
     
     def action_done(self, cr, uid, ids, context=None):
-        self.pool.get('stock.picking.out').write(cr, uid, ids, {'ineco_date_delivery': time.strftime('%Y-%m-%d')})
-        return super(stock_picking, self).action_done(cr, uid, ids, context)
+        wf_service = netsvc.LocalService("workflow")
+        picking_obj = self.pool.get("stock.picking")
+        journal_obj = self.pool.get('stock.journal')
+        journal_ids = journal_obj.search(cr, uid, [('transfer_fg','=',True)])
+        location_production_id = 7
+        location_stock_id = 12
+        data = self.browse(cr, uid, ids)[0]
+        data_out = self.pool.get('stock.picking.out').browse(cr, uid, ids)[0]
+        if data_out.picking_transfer_id:
+            picking_obj.action_done_draft(cr, uid, [data_out.picking_transfer_id.id])
+            wf_service.trg_validate(uid, 'stock.picking', data_out.picking_transfer_id.id, 'button_cancel', cr)
+        production_obj = self.pool.get('mrp.production')
+        production = production_obj.search(cr, uid, [('origin','ilike',data.origin)])
+        new_picking = False
+        if production:
+            new_picking = picking_obj.copy(cr, uid, data.id,
+                                {
+                                    'name': '/',
+                                    'type': 'internal',
+                                    'stock_journal_id': journal_ids and journal_ids[0] or False,
+                                    'state':'draft',
+
+                                })
+            new_data = self.browse(cr, uid, [new_picking])[0]
+            for move in new_data.move_lines:
+                move.write({'location_id': location_production_id, 
+                            'location_dest_id': location_stock_id,
+                            'state': 'done' })
+            new_data.write({'state':'done'})
+
+        self.pool.get('stock.picking.out').write(cr, uid, ids, {'ineco_date_delivery': time.strftime('%Y-%m-%d'),
+                                                                'picking_transfer_id': new_picking or False})
+        result = super(stock_picking, self).action_done(cr, uid, ids, context)
+        return result 
     
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -239,3 +272,10 @@ class ineco_picking_note(osv.osv):
         'name': fields.char('description', size=128, reqruied=True),
         'note': fields.text('Note', required=True),
     }
+    
+class stock_journal(osv.osv):
+    _inherit = 'stock.journal'
+    _columns = {
+        'transfer_fg': fields.boolean('Is Transfer FG'),
+    }
+
