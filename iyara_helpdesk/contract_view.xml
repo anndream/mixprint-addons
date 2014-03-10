@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+		<!-- Type -->
     	<record model="ir.ui.view" id="iayra_type_form">
       		<field name="name">iyara.type.form</field>
       		<field name="model">iyara.type</field>
@@ -50,6 +50,56 @@
 	    </record>	   
 
     	<menuitem name="Type" parent="base.menu_base_config" id="iayra_type_menu" sequence="100" action="iayra_type_action"/>
+
+		<!-- Task Type-->
+    	<record model="ir.ui.view" id="iayra_task_type_form">
+      		<field name="name">iyara.task.type.form</field>
+      		<field name="model">iyara.type.task</field>
+      		<field name="arch" type="xml">
+      			<form string="Type" version="7.0">
+      				<header>
+      				</header>
+      				<sheet>
+      					<group>
+      						<group>
+      							<field name="name" />
+      							<field name="description" />
+      						</group>
+      					</group>
+      				</sheet>
+      			</form>
+      		</field>
+      	</record>
+
+    	<record model="ir.ui.view" id="iayra_task_type_tree">
+      		<field name="name">iyara.task.type.tree</field>
+      		<field name="model">iyara.type.task</field>
+      		<field name="arch" type="xml">
+      			<tree string="Type">
+      				<field name="name" />
+      				<field name="description" />
+      			</tree>
+      		</field>
+      	</record>
+
+    	<record model="ir.ui.view" id="iayra_task_type_search">
+      		<field name="name">iyara.task.type.search</field>
+      		<field name="model">iyara.type.task</field>
+      		<field name="arch" type="xml">
+      			<search string="Type">
+      				<field name="name" />
+      				<field name="description" />
+      			</search>
+      		</field>
+      	</record>
+      	
+	    <record model="ir.actions.act_window" id="iayra_task_type_action">
+	        <field name="name">Task Type</field>
+	        <field name="res_model">iyara.type.task</field>
+	        <field name="view_mode">tree,form</field>
+	    </record>	   
+
+    	<menuitem name="Task Type" parent="base.menu_base_config" id="iayra_task_type_menu" sequence="110" action="iayra_task_type_action"/>
 	    
     	<record model="ir.ui.view" id="iyara_contract_from">
       		<field name="name">iyara.contract.form</field>
@@ -109,7 +159,8 @@
 			        	    		<page string="Contract Detail">
 			        	    			<group>
 					        	        	<field name="warranty_qty" />
-					        	        	<field name="service_qty" />		        	    		
+					        	        	<field name="service_qty" />	
+					        	        	<field name="type_task_id" required="1" />	        	    		
 			        	    				<button name="button_genhelpdesk" type="object" string="Generate Service" />	
 			        	    				<newline />        	        
 				        	    			<field colspan="4" name="helpdesk_ids" nolabel="1" context="{'default_partner_id': customer_id,'default_contract_id':id}">

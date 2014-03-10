@@ -36,7 +36,13 @@ class crm_helpdesk(osv.osv):
         'picking_id': fields.many2one('stock.picking','Picking'),
     }
     _order = "date, id"
-    
+
+class iyara_type_task(osv.osv):
+    _name = 'iyara.type.task'
+    _columns = {
+        'name': fields.char('Code', size=16,required=True),
+        'description': fields.char('Description',size=128,required=True),
+    }    
 
 class iyara_controlpanel(osv.osv):
     _name = 'iyara.type'
@@ -78,6 +84,7 @@ class iyara_contract(osv.osv):
         'warranty_qty': fields.integer('Warranty Qty'),
         'service_qty': fields.integer('Service Qty'),
         'helpdesk_ids': fields.one2many('crm.helpdesk','contract_id','Task'),
+        'type_task_id': fields.many2one('iyara.type.task','Type Task'),
     }
     
     _defaults = {
@@ -100,9 +107,11 @@ class iyara_contract(osv.osv):
                 date_finish = datetime.strptime(contract.date_contract_finish, '%Y-%m-%d')                
                 date_length = int((date_finish - date_start).days / contract.service_qty)
                 #print date_length
+            default_prefix = contract.type_task_id and contract.type_task_id.name + '. ' or 'No.'
+            default_prefix = default_prefix + (contract.project_id and contract.project_id.name or '')+' '
             for i in range(contract.service_qty):
                 helpdesk_data = {
-                    'name': 'No.'+str(i+1)+'/'+str(contract.service_qty),
+                    'name': default_prefix+str(i+1)+'/'+str(contract.service_qty),
                     'contract_id': contract.id,
                     'partner_id': contract.customer_id.id,
                     'date': date_start.strftime('%Y-%m-%d 00:00:00')
