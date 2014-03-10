@@ -285,7 +285,10 @@
 		        	<field name="cheque_id"  context="{'default_type':'out'}" domain="[('type','=','out'),('state','=','draft')]"/>
 		        	<field name="move_id" />
 		        	<field name="period_tax_id" />
-		        </field>	        	       		        	
+		        </field>
+		        <field name="journal_id" position="before">
+		        	<field name="bill_number" string="Sup Invocie"/>
+		        </field>		        	        	       		        	
 			</field>
 		</record>    
 
