@@ -398,6 +398,14 @@ class account_invoice(osv.osv):
             move_obj.post(cr, uid, [move_id], context=ctx)
         self._log_event(cr, uid, ids)
         return True
+
+    #Ad
+    def invoice_validate(self, cr, uid, ids, context=None):
+        for data in self.browse(cr, uid, ids):
+            if data.period_id and not data.period_tax_id:
+                data.write({'period_tax_id': data.period_id.id})
+        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        return True
     
     def view_entry(self, cr, uid, ids, context=None):
         if not ids: return []
