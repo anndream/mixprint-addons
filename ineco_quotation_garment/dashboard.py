@@ -614,7 +614,7 @@ class ineco_sale_all_opportunity(osv.osv):
                where b.user_id = t1.user_id
                  and b.type = 'opportunity'
                  and b.state not in ('done','cancel')
-               order by planned_revenue desc limit 10)
+               order by planned_revenue desc limit 50)
                and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
                 signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
                and t1.state not in ('done','cancel') and ru.active = true

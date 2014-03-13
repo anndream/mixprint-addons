@@ -571,7 +571,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_mixprint_opportunity_dashboard">
-            <field name="name">Top 10 Opportunity</field>
+            <field name="name">Top 50 Opportunity</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>

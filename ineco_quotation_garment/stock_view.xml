@@ -53,6 +53,7 @@
                     <field name="ineco_date_delivery" />
                     <field name="garment_order_no" />
                     <field name="picking_transfer_id" />
+                    <filter string="Delivery Type" domain="[]" context="{'group_by':'delivery_type_id'}"/>
                 </field>
         	</field>
        	</record>
