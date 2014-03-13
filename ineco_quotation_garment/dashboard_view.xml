@@ -590,6 +590,100 @@
         	action="action_mixprint_opportunity_dashboard" 
         	parent="menu_mixprint_dashboard"
         	sequence="3"/> 
+        	
+		<!-- Sale Fix Dashboard -->
+        <record id="view_ineco_sale_fix_tree" model="ir.ui.view">
+            <field name="name">ineco.sale.fix.tree</field>
+            <field name="model">ineco.sale.fix</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Fix">
+                    <field name="property_id" />
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="product_id" />
+                    <field name="price_unit" />
+                    <field name="product_uom_qty" />
+                    <field name="product_uom" />
+                    <field name="order_id" />
+                    <field name="garment_order_no" />
+                    <field name="note" />
+                    <field name="date_order" />
+                    <field name="garment_order_date" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_sale_fix_form" model="ir.ui.view">
+            <field name="name">ineco.sale.fix.form</field>
+            <field name="model">ineco.sale.fix</field>
+            <field name="arch" type="xml">
+                <form string="Sale Fix">
+                    <field name="property_id" />
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="product_id" />
+                    <field name="price_unit" />
+                    <field name="product_uom_qty" />
+                    <field name="product_uom" />
+                    <field name="order_id" />
+                    <field name="garment_order_no" />
+                    <field name="note" />
+                    <field name="date_order" />
+                    <field name="garment_order_date" />
+                </form>
+            </field>
+        </record>		
+        
+        <record id="view_ineco_sale_fix_filter" model="ir.ui.view">
+            <field name="name">ineco.sale.fix.select</field>
+            <field name="model">ineco.sale.fix</field>
+            <field name="arch" type="xml">
+                <search string="Search Sale Fix">
+                    <field name="property_id" />
+                    <field name="name" />
+                    <field name="product_id" />
+                    <field name="partner_id" />
+                    <field name="order_id" />
+                    <field name="garment_order_no" />
+                    <field name="note" />
+                    <field name="date_order" />
+                    <field name="garment_order_date" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Property" domain="[]" context="{'group_by':'property_id'}"/>
+                        <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Sale" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="Date Order" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Date Mo" domain="[]" context="{'group_by':'garment_order_date'}"/>
+                    </group>
+
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_sale_fix" model="ir.actions.act_window">
+            <field name="name">Sale Fix</field>
+            <field name="res_model">ineco.sale.fix</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_sale_fix_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale summary. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        	
+        <menuitem 
+            id="menu_ineco_sale_fix"
+        	action="action_ineco_sale_fix" 
+        	parent="menu_mixprint_dashboard"
+        	sequence="4"/> 
         	                	 
      </data>
 </openerp>

@@ -555,11 +555,11 @@ class ineco_sale_mytop_opportunity_temp(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_mytop_opportunity_temp')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_mytop_opportunity_temp AS (
-                select user_id, partner_id, stage_id, planned_revenue, last_date_count, last_contact_date from crm_lead where type = 'opportunity'
-                  --and date_part('month',now()) = date_part('month',date_closed)
-                  --and date_part('year',now()) = date_part('year',date_closed)      
-                  and state not in ('done','cancel')          
-                --order by user_id, planned_revenue desc            
+                select user_id, cl.partner_id, stage_id, planned_revenue, last_date_count, last_contact_date 
+                from crm_lead cl
+                left join res_users ru on ru.id = user_id
+                where type = 'opportunity' and ru.active = true
+                  and state not in ('done','cancel')                        
         )""")
 
 class ineco_sale_mytop_opportunity(osv.osv):
@@ -617,7 +617,73 @@ class ineco_sale_all_opportunity(osv.osv):
                order by planned_revenue desc limit 10)
                and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
                 signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
-               and t1.state not in ('done','cancel')
+               and t1.state not in ('done','cancel') and ru.active = true
             order by user_id, planned_revenue desc;      
         """)
+        
+class ineco_sale_fix_temp(osv.osv):
+    _name = "ineco.sale.fix.temp"
+    _auto = False
+
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_fix_temp')
+        cr.execute("""
+            create or replace view ineco_sale_fix_temp as 
+            select 
+              sp.id as property_id,
+              slp.name as name,
+              sol.product_id,
+              sol.price_unit,
+              sol.product_uom_qty,
+              sol.product_uom,
+              so.id as order_id,
+              so.garment_order_no,
+              so.note,
+              so.date_order,
+              so.garment_order_date,
+              so.partner_id
+            from sale_line_property slp
+            join sale_property sp on slp.property_id = sp.id
+            join sale_order_line sol on slp.sale_line_id = sol.id
+            join sale_order so on sol.order_id = so.id
+            join product_product pp on pp.id = sol.product_id
+            join product_template pt on pt.id = pp.product_tmpl_id
+            where so.state not in ('draft','cancel') 
+              and (sp.name like '%ซ่อม%' or sp.name like '%แผนก   %')
+              and so.shop_id = 2
+          """)
+        
+class ineco_sale_fix(osv.osv):
+    _name = "ineco.sale.fix"
+    _auto = False
+    _columns = {
+        'property_id': fields.many2one('sale.property','Property',readonly=True),
+        'name': fields.char('Description',size=254,readonly=True),
+        'product_id': fields.many2one('product.product','Product',readonly=True),
+        'price_unit': fields.float('Price Unit',readonly=True),
+        'product_uom_qty': fields.float('Quantity',readonly=True),
+        'product_uom': fields.many2one('product.uom','UOM',readonly=True),
+        'order_id': fields.many2one('sale.order','Sale Order', readonly=True),
+        'garment_order_no': fields.char('MO No', size=64, readonly=True),
+        'note': fields.text('Note',readonly=True),
+        'date_order': fields.date('Date Order',readonly=True),
+        'garment_order_date': fields.date('Date Mo', readonly=True),
+        'partner_id': fields.many2one('res.partner','Customer',readonly=True),
+    }
+    _order = 'garment_order_no desc'
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_fix')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_sale_fix AS (
+                select id, (a[id]).*
+                from (
+                    select a, generate_series(1, array_upper(a,1)) as id
+                        from (
+                            select array (
+                                select ineco_sale_fix_temp from ineco_sale_fix_temp
+                            ) as a
+                    ) b
+                ) c
+        )""")
         
