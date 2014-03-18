@@ -63,11 +63,9 @@
                 </xpath>
             </field>
         </record>
-        
-        
            
         <record id="view_invoice_mo_tree" model="ir.ui.view">
-            <field name="name">mo.account.invoice.form</field>
+            <field name="name">mo.account.invoice.tree</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_tree"/>
             <field name="arch" type="xml">
@@ -77,7 +75,7 @@
             </field>
         </record>        
         
-        <record id="view_invoice_mo_tree" model="ir.ui.view">
+<!--         <record id="view_invoice_mo_tree" model="ir.ui.view">
             <field name="name">mo.account.invoice.form</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_tree"/>
@@ -86,7 +84,7 @@
                 	<field name="garment_order_no" />
                 </field>
             </field>
-        </record>
+        </record> -->
         
         <record id="view_mo_account_invoice_search" model="ir.ui.view">
             <field name="name">mo.account.invoice.search</field>

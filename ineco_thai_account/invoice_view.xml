@@ -371,6 +371,17 @@
                 </tree>
             </field>
         </record>       
+
+        <record id="view_ineco_account_invoice_filter2" model="ir.ui.view">
+            <field name="name">ineco.account.invoice.select2</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter" />
+            <field name="arch" type="xml">
+            	<field name="number" position="after">
+            		<field name="supplier_invoice_number" />
+            	</field>
+           	</field>
+        </record>
         
         <record id="view_ineco_account_invoice_filter" model="ir.ui.view">
             <field name="name">ineco.account.invoice.select</field>
@@ -383,7 +394,7 @@
                     <filter name="todaydue" icon="terp-go-today" string="Today Due" domain="[('date_due','=',time.strftime('%%Y-%%m-%%d')),('state','=','draft')]" />
 					<filter name="todaybill" icon="terp-go-today" string="Today Billing" domain="[('bill_due','=',time.strftime('%%Y-%%m-%%d')),('state','=','draft')]" />
 					<filter name="todo" icon="terp-go-today" string="To Do" domain="[('state','in',['draft','open'])]" />
-					
+					<filter name="nosupplierinvoice" icon="terp-go-today" string="No Supplier Invoice" domain="[('supplier_invoice_number','=',False)]" />					
             	</filter>
             </field>
        	</record>

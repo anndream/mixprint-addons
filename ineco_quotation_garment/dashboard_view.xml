@@ -563,7 +563,7 @@
                 <form string="Dashboard" version="7.0">
                     <board style="1">
                         <column>
-                       		<action string="Top 10 Opportunity by Sale" name="%(action_ineco_sale_all_opportunity)d"/>
+                       		<action string="Top 50 Opportunity by Sale" name="%(action_ineco_sale_all_opportunity)d"/>
  						</column>
                     </board>
                 </form>
