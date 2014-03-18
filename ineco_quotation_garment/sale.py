@@ -134,6 +134,8 @@ class sale_order_line(osv.osv):
         'order_line_property_ids': fields.one2many('sale.line.property', 'sale_line_id', 'Property'),
         'order_line_property_other_ids': fields.one2many('sale.line.property.other', 'sale_line_id', 'Color, Gender and Sizing'),
         'sampling_qty': fields.integer('Sampling Quantity'),
+        'garment_order_date':fields.related('order_id', 'garment_order_date', type='date', store=True, string='MO Date'),
+        'date_order':fields.related('order_id', 'date_order', type='date', store=True, string='Date Order'),      
     }    
     _defaults = {
         'sampling_qty': 0,

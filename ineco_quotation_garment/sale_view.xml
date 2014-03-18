@@ -900,7 +900,39 @@
               	</field>
             </field>
         </record>         	
-        	
+
+        <record id="view_sales_order_line_filter2" model="ir.ui.view">
+            <field name="name">sale.order.line.select2</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_sales_order_line_filter"/>
+            <field name="arch" type="xml">
+				<field name="salesman_id" position="after">
+					<field name="garment_order_date" />
+					<field name="date_order" />
+					<filter name="statedone" string="Done" icon="terp-stock_effects-object-colorize" domain="[('state','=','done')]" context="{}"/>
+					<filter name="stateconfirm" string="Confirm" icon="terp-stock_effects-object-colorize" domain="[('state','=','confirmed')]" context="{}"/>
+				</field>       	
+				<filter string="Status" position="after">
+					<filter string="MO Date" icon="terp-personal" domain="[]" context="{'group_by':'garment_order_date'}"/>
+					<filter string="Order Date" icon="terp-personal" domain="[]" context="{'group_by':'date_order'}"/>
+				</filter>
+			</field>
+		</record>        	
+
+        <record id="view_order_line_tree2" model="ir.ui.view">
+            <field name="name">sale.order.line.tree2</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree"/>
+            <field name="arch" type="xml">	
+            	<field name="order_partner_id" position="after">
+            		<field name="garment_order_date" />
+            		<field name="date_order" />
+            	</field>
+            	<field name="salesman_id" position="after">
+            		<field name="price_unit" />
+            	</field>
+			</field>
+		</record>
         
     </data>
 </openerp>
