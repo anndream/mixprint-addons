@@ -128,14 +128,30 @@ class sale_line_property_other(osv.osv):
     _order = 'color_id, gender_id, size_id'
     
 class sale_order_line(osv.osv):
+    
+    def _get_order_line(self, cr, uid, ids, context=None):
+        result = {}
+        for data in self.pool.get('sale.order').browse(cr, uid, ids, context=context):
+            for line in data.order_line:
+                result[line.id] = True
+        return result.keys()
+    
     _inherit = 'sale.order.line'
     _columns = {
         'name': fields.text('Description', required=True),
         'order_line_property_ids': fields.one2many('sale.line.property', 'sale_line_id', 'Property'),
         'order_line_property_other_ids': fields.one2many('sale.line.property.other', 'sale_line_id', 'Color, Gender and Sizing'),
         'sampling_qty': fields.integer('Sampling Quantity'),
-        'garment_order_date':fields.related('order_id', 'garment_order_date', type='date', store=True, string='MO Date'),
-        'date_order':fields.related('order_id', 'date_order', type='date', store=True, string='Date Order'),      
+        'garmentorder_date':fields.related('order_id', 'garment_order_date', type='date', 
+            store={
+                'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+                'sale.order': (_get_order_line, [], 10),
+            }, string='MO Date'),
+        'dateorder':fields.related('order_id', 'date_order', type='date', 
+            store={
+                'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+                'sale.order': (_get_order_line, [], 10),
+            }, string='Date Order'),      
     }    
     _defaults = {
         'sampling_qty': 0,
