@@ -71,7 +71,8 @@ class sale_size(osv.osv):
     _name = 'sale.size'
     _description = 'Size of Product Sale'
     _columns = {
-        'name': fields.char('Description',size=64,required=True)
+        'name': fields.char('Description',size=64,required=True),
+        'seq': fields.integer('Sequence'),
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')
