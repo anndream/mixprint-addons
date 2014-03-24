@@ -195,6 +195,7 @@
       		<field name="arch" type="xml">
       			<tree string="Contract">
       				<field name="name" />
+      				<field name="project_id" />
       				<field name="customer_id" />
       				<field name="gen_model" />
       				<field name="alternator_model" />
@@ -215,6 +216,7 @@
       				<field name="gen_model" />
       				<field name="alternator_model" />
       				<field name="engine_model" />
+      				<field name="project_id" />
       				<field name="date_contract_start" />
       				<field name="date_contract_finish" />
       			</search>

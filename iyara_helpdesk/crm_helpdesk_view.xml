@@ -15,6 +15,9 @@
             			</group>
             		</page>
             	</page>
+            	<field name="date" position="after">
+            		<field name="project_id" />
+            	</field>
 			</field>
 		</record>    
     

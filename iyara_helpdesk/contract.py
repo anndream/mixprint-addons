@@ -34,6 +34,7 @@ class crm_helpdesk(osv.osv):
     _columns = {
         'contract_id': fields.many2one('iyara.contract','Contract'),
         'picking_id': fields.many2one('stock.picking','Picking'),
+        'project_id': fields.many2one('account.analytic.account','Project')
     }
     _order = "date, id"
 
