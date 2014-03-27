@@ -52,13 +52,21 @@ class ineco_problem(osv.osv):
         'name': fields.char('Problem No', size=32, required=True,),
         'date': fields.date('Date',required=True),
         'sale_order_id': fields.many2one('sale.order','Sale Order'),
-        'target_user_id': fields.many2one('hr.employee','Target User', required=True),
+        'target_user_id': fields.many2one('hr.employee','Responsible', required=True),
+        'supervisor_user_id': fields.many2one('hr.employee','Supervisor', required=True),
+        'manager_user_id': fields.many2one('hr.employee','Manager', required=True),
         'department_id': fields.many2one('hr.department','Department', required=True),
         'type_id': fields.many2one('ineco.problem.type','Type', required=True),
         'note': fields.text('Note', required=True),
         'partner_id': fields.related('sale_order_id', 'partner_id', type='many2one', relation="res.partner", string='Customer', readonly=True),
         'line_ids': fields.related('sale_order_id','order_line',type='one2many', relation="sale.order.line", string="Order Line", readonly=True),
         'cost': fields.float('Cost', digits_compute= dp.get_precision('Account'), required=True),
+        'level': fields.selection([
+            ('1','1'),
+            ('2','2'),
+            ('3','3'),
+            ('4','4')
+            ],'Level', readonly=True),
         'state': fields.selection([
             ('draft','Draft'),
             ('pending','Pending'),
