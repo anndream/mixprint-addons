@@ -104,9 +104,9 @@
 	                        <group>
 			                    <field name="type_id" />
 			                    <field name="department_id" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
-			                    <field name="target_user_id" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
-			                    <field name="supervisor_user_id" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
-			                    <field name="manager_user_id" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
+			                    <field name="target_user_id" on_change="on_change_user_id(target_user_id)" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
+			                    <field name="supervisor_user_id" on_change="on_change_supervisor_id(supervisor_user_id)"  required="1" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
+			                    <field name="manager_user_id" required="1" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
 	                        </group>
 	                    </group>
 	                    <notebook>
@@ -148,15 +148,17 @@
                 	<field name="manager_user_id" />
                 	<field name="type_id" />
                 	<field name="state" />
+
+	                <filter string="Draft" name="draft_filter" icon="terp-personal" domain="[('state','=','draft')]" context="{}"/>
                 	
                     <group expand="0" string="Group By...">
-	                	<filter name="date" icon="terp-personal" domain="[]" context="{'group_by':'date'}"/>
-	                	<filter name="sale_order_id" icon="terp-personal" domain="[]" context="{'group_by':'sale_order_id'}"/>
-	                	<filter name="partner_id" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
-	                	<filter name="target_user_id" icon="terp-personal" domain="[]" context="{'group_by':'target_user_id'}"/>
-	                	<filter name="supervisor_user_id" icon="terp-personal" domain="[]" context="{'group_by':'supervisor_user_id'}"/>
-	                	<filter name="manager_user_id" icon="terp-personal" domain="[]" context="{'group_by':'manager_user_id'}"/>
-	                	<filter name="type_id" icon="terp-personal" domain="[]" context="{'group_by':'type'}"/>
+	                	<filter name="Date" icon="terp-personal" domain="[]" context="{'group_by':'date'}"/>
+	                	<filter name="Sale Order" icon="terp-personal" domain="[]" context="{'group_by':'sale_order_id'}"/>
+	                	<filter name="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+	                	<filter name="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'target_user_id'}"/>
+	                	<filter name="Supervisor" icon="terp-personal" domain="[]" context="{'group_by':'supervisor_user_id'}"/>
+	                	<filter name="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_user_id'}"/>
+	                	<filter name="Type" icon="terp-personal" domain="[]" context="{'group_by':'type'}"/>
                     </group>
              
                	</search>
@@ -170,6 +172,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('level','=','1')]</field>
+            <field name="context">{'search_default_draft_filter':1}</field>
             <field name="search_view_id" ref="view_ineco_problem_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -189,6 +192,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('level','=','2')]</field>
+            <field name="context">{'search_default_draft_filter':1}</field>
             <field name="search_view_id" ref="view_ineco_problem_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

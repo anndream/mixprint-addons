@@ -80,6 +80,34 @@ class ineco_problem(osv.osv):
         'date': fields.date.context_today,
     }
 
+    def on_change_user_id(self, cr, uid, ids, user_id, context=None):
+        if context is None:
+            context = {}
+        if user_id:
+            employee = self.pool.get('hr.employee').browse(cr, uid, user_id)
+            if employee  and employee.parent_id:
+                manager = self.pool.get('hr.employee').browse(cr, uid, employee.parent_id.id)
+                if manager and manager.parent_id:
+                    return {'value': {'supervisor_user_id': employee.parent_id.id, 'manager_user_id': manager.parent_id.id}}
+                else:
+                    return {'value': {'supervisor_user_id': employee.parent_id.id}}
+            else:
+                return {}
+        else:
+            return {}
+
+    def on_change_supervisor_id(self, cr, uid, ids, user_id, context=None):
+        if context is None:
+            context = {}
+        if user_id:
+            employee = self.pool.get('hr.employee').browse(cr, uid, user_id)
+            if employee  and employee.parent_id:
+                return {'value': {'manager_user_id': employee.parent_id.id}}
+            else:
+                return {}
+        else:
+            return {}
+        
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'ineco.problem') or '/'
