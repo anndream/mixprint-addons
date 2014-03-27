@@ -116,6 +116,10 @@ class ineco_problem(osv.osv):
     def button_approve(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'approve'})
         return True
+
+    def button_draft(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'draft'})
+        return True
     
     def button_pending(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'pending'})

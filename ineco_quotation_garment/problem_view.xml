@@ -86,6 +86,7 @@
                         <button name="button_approve" states="draft,pending" string="Approve" type="object" class="oe_highlight" />
                         <button name="button_pending" states="draft" string="Pending" type="object"/>
                         <button name="button_cancel" states="draft,pending" string="Cancel" type="object"/>	                
+                        <button name="button_draft" states="approve.cancel" string="Approve" type="object" class="oe_highlight" />
 	                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,approve,cancel" statusbar_colors='{"draft":"blue","pending":"red"}'/>
 	                </header>
 	                <sheet string="Problem">
