@@ -218,6 +218,21 @@
         	action="action_ineco_problem2" 
         	parent="menu_ineco_problem_root"
         	sequence="11"/> 
-      	
+  
+       <menuitem name="Problem"
+            id="menu_ineco_warehouse_problem_root"
+            parent="stock.menu_stock_root" sequence="90" />
+
+        <menuitem 
+            id="menu_ineco_warehouse_problem"
+        	action="action_ineco_problem" 
+        	parent="menu_ineco_warehouse_problem_root"
+        	sequence="10"/> 
+
+        <menuitem 
+            id="menu_ineco_warehouse_emergency"
+        	action="action_ineco_problem2" 
+        	parent="menu_ineco_warehouse_problem_root"
+        	sequence="11"/>      	
     </data>
 </openerp>
