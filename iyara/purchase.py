@@ -19,17 +19,9 @@
 #
 ##############################################################################
 
-#import time
 from datetime import datetime
-#from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
-#from openerp import netsvc
-#from openerp import pooler
-#from openerp.tools.translate import _
-#import openerp.addons.decimal_precision as dp
-#from openerp.osv.orm import browse_record, browse_null
-#from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
 class purchase_order(osv.osv):
     
@@ -38,7 +30,8 @@ class purchase_order(osv.osv):
     _columns = {
         'sale_by': fields.char('BY', size=64,),
         'iraya_terms': fields.selection([('ex_china','Ex-Warehouse China'),
-                                         ('ex_singapore','Ex-Warehouse Singapore')],'TERMS'),
+                                         ('ex_singapore','Ex-Warehouse Singapore'),
+                                         ('deduct_from_commission','Deduct from Commission')],'TERMS'),
         }
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
