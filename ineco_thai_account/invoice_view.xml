@@ -135,6 +135,20 @@
 	        	    		</tree>
 	        	    	</field>
 	        	    </page>
+	        	    <page string="Template">
+	        	    	<group>
+	        	    		<group><field name="account_model_id" /></group>
+	        	    		<group><button name="button_loadtemplate" string="Load Template" type="object" /></group>
+	        	    	</group>
+	        	    	<field name="addline_ids">
+	        	    		<tree string="Template" editable="bottom">
+	        	    			<field name="account_id" />
+	        	    			<field name="account_name" />
+	        	    			<field name="debit" />
+	        	    			<field name="credit" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
 	        	    <page string="With Holding Tax">
 	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" 
 	        	    		context="{'default_partner_id': partner_id or False, 'default_wht_type':'sale', 
@@ -312,6 +326,20 @@
 								<field name="credit" sum="Total Credit"/>
 								<field name="analytic_account_id" invisible="1" />
 								<field name="quantity" invisible="1" />
+	        	    		</tree>
+	        	    	</field>
+	        	    </page>
+	        	    <page string="Template">
+	        	    	<group>
+	        	    		<group><field name="account_model_id" /></group>
+	        	    		<group><button name="button_loadtemplate" string="Load Template" type="object" /></group>
+	        	    	</group>
+	        	    	<field name="addline_ids" colspan="4">
+	        	    		<tree string="Add Line" editable="bottom">
+	        	    			<field name="account_id" />
+	        	    			<field name="account_name" />
+	        	    			<field name="debit" />
+	        	    			<field name="credit" />
 	        	    		</tree>
 	        	    	</field>
 	        	    </page>

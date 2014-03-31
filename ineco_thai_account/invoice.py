@@ -33,8 +33,22 @@ import time
 #import pooler
 from openerp.tools.translate import _
 #from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
-#import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 #import netsvc
+
+class account_voucher_addline(osv.osv):
+    _name = 'account.voucher.addline'
+    _columns = {
+        'name': fields.char('Description', size=64),
+        'account_name': fields.related('account_id','name', type='char', size=128, relation='account.account', store=True, string='Account Name'),
+        'account_id': fields.many2one('account.account','Account',required=True),
+        'voucher_id': fields.many2one('account.voucher','Voucher'),
+        'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
+        'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
+    }
+    _defaults = {
+        'name': '...',
+    }
 
 class account_invoice(osv.osv):
 
@@ -157,16 +171,16 @@ class account_invoice(osv.osv):
             raise osv.except_osv(_('Insufficient Data!'), _('The payment term of supplier does not have a payment term line.'))
         return res
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if vals.get('date_due',False):
-            for line in self.browse(cr, uid, ids):
-                if line.partner_id.billing_payment_id:
-                    pterm_list = self.pool.get('account.payment.term').compute(cr, uid, line.partner_id.billing_payment_id.id, value=1, date_ref=vals['date_due'])
-                    if pterm_list:
-                        pterm_list = [line[0] for line in pterm_list]
-                        pterm_list.sort()
-                        vals['bill_due'] = pterm_list[-1]
-        return super(account_invoice, self).write(cr, uid, ids, vals, context=context)
+#     def write(self, cr, uid, ids, vals, context=None):
+#         if vals.get('date_due',False):
+#             for line in self.browse(cr, uid, ids):
+#                 if line.partner_id.billing_payment_id:
+#                     pterm_list = self.pool.get('account.payment.term').compute(cr, uid, line.partner_id.billing_payment_id.id, value=1, date_ref=vals['date_due'])
+#                     if pterm_list:
+#                         pterm_list = [line[0] for line in pterm_list]
+#                         pterm_list.sort()
+#                         vals['bill_due'] = pterm_list[-1]
+#         return super(account_invoice, self).write(cr, uid, ids, vals, context=context)
 
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
             date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
@@ -464,13 +478,44 @@ class account_voucher(osv.osv):
         'cheque_id': fields.many2one('ineco.cheque','Cheque'),        
         'bill_number': fields.char('Bill/Receipt No', size=63),
         'period_tax_id': fields.many2one('account.period', 'Tax Period'),
+        'account_model_id': fields.many2one('account.model', 'Model'),
+        'addline_ids': fields.one2many('account.voucher.addline','voucher_id','Add Line'),
     }
+
+    def button_loadtemplate(self, cr, uid, ids, context=None):
+        for data in self.browse(cr, uid, ids):
+            if data.account_model_id:
+                for line in data.account_model_id.lines_id:
+                    addline = self.pool.get('account.voucher.addline')
+                    addline.create(cr, uid, {
+                        'account_id': line.account_id.id,
+                        'name': line.name,
+                        'debit': line.debit,
+                        'credit': line.credit,
+                        'voucher_id': data.id,
+                    })
+        #self.write(cr, uid, ids, {'state':'approve'})
+        return True
     
     def _get_wht_total(self, cr, uid, voucher_id, context=None):
         _amount_tax = 0.0
         voucher = self.browse(cr, uid, voucher_id)
         for wht in voucher.wht_ids:
             _amount_tax += wht.tax or 0.0
+        return round(_amount_tax, 2)
+
+    def _get_template_debit_total(self, cr, uid, voucher_id, context=None):
+        _amount_tax = 0.0
+        voucher = self.browse(cr, uid, voucher_id)
+        for wht in voucher.addline_ids:
+            _amount_tax += wht.debit or 0.0
+        return round(_amount_tax, 2)
+
+    def _get_template_credit_total(self, cr, uid, voucher_id, context=None):
+        _amount_tax = 0.0
+        voucher = self.browse(cr, uid, voucher_id)
+        for wht in voucher.addline_ids:
+            _amount_tax += wht.credit or 0.0
         return round(_amount_tax, 2)
     
     def copy(self, cr, uid, id, default=None, context=None):
@@ -480,6 +525,34 @@ class account_voucher(osv.osv):
             'wht_ids':False,
         })
         return super(account_voucher, self).copy(cr, uid, id, default, context)
+
+    def template_move_line_create(self, cr, uid, voucher_id, move_id, company_currency, current_currency, context=None):
+        voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        move_line_pool = self.pool.get('account.move.line')
+        for line in voucher_brw.addline_ids:
+            debit = credit = 0.0
+            debit = line.debit
+            credit = line.credit 
+            if debit < 0: credit = -debit; debit = 0.0
+            if credit < 0: debit = -credit; credit = 0.0
+            sign = debit - credit < 0 and -1 or 1
+            #set the first line of the voucher
+            move_line = {
+                    'name': line.name or line.account_name or '/',
+                    'debit': debit,
+                    'credit': credit,
+                    'account_id': line.account_id.id,
+                    'move_id': move_id,
+                    'journal_id': voucher_brw.journal_id.id,
+                    'period_id': voucher_brw.period_id.id,
+                    'partner_id': voucher_brw.partner_id.id,
+                    'currency_id': company_currency <> current_currency and  current_currency or False,
+                    'amount_currency': company_currency <> current_currency and sign * voucher_brw.amount or 0.0,
+                    'date': voucher_brw.date,
+                    'date_maturity': voucher_brw.date_due
+                }
+            move_line_pool.create(cr, uid, move_line)
+        return True
 
     def wht_move_line_create(self, cr, uid, voucher_id, move_id, company_currency, current_currency, context=None):
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
@@ -564,6 +637,7 @@ class account_voucher(osv.osv):
             # Create the first line of the voucher
             move_line_id = move_line_pool.create(cr, uid, self.first_move_line_get(cr,uid,voucher.id, move_id, company_currency, current_currency, context), context)
             move_line_brw = move_line_pool.browse(cr, uid, move_line_id, context=context)
+            
             #WHT Tax Amount
             wht_total = self._get_wht_total(cr, uid, voucher.id, context)
             if voucher.type in {'sale','receipt'}:
@@ -574,14 +648,34 @@ class account_voucher(osv.osv):
                 line_total = move_line_brw.debit - move_line_brw.credit
             if wht_total:
                 self.wht_move_line_create(cr, uid, voucher.id, move_id, company_currency, current_currency, context)
+                
+            #Create Template Move Line    
+            if voucher.addline_ids and voucher.payment_option == 'without_writeoff':
+                self.template_move_line_create(cr, uid, voucher.id, move_id, company_currency, current_currency, context)
+            template_debit = self._get_template_debit_total(cr, uid, voucher.id, context)
+            template_credit = self._get_template_credit_total(cr, uid, voucher.id, context)
+            
+            if voucher.payment_option == 'without_writeoff':
+                line_total = (move_line_brw.debit + template_debit) - (move_line_brw.credit + template_credit)
+                
             rec_list_ids = []
             if voucher.type == 'sale':
                 line_total = line_total - self._convert_amount(cr, uid, voucher.tax_amount, voucher.id, context=ctx)
             elif voucher.type == 'purchase':
                 line_total = line_total + self._convert_amount(cr, uid, voucher.tax_amount, voucher.id, context=ctx)
+            
             # Create one move line per voucher line where amount is not 0.0
             line_total, rec_list_ids = self.voucher_move_line_create(cr, uid, voucher.id, line_total, move_id, company_currency, current_currency, context)
 
+            if wht_total:
+                if voucher.type in {'purchase','payment'}:
+                    line_total = line_total - wht_total
+                elif voucher.type in {'sale','receipt'}: 
+                    line_total = line_total + wht_total
+            
+            if voucher.payment_option == 'without_writeoff' and line_total:
+                raise osv.except_osv('Unreconciled', 'Please input data in template tab to balance debit and credit.')
+            
             # Create the writeoff line if needed
             ml_writeoff = self.writeoff_move_line_get(cr, uid, voucher.id, line_total, move_id, name, company_currency, current_currency, context)
             if ml_writeoff:
