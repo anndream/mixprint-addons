@@ -669,9 +669,9 @@ class account_voucher(osv.osv):
 
             if wht_total:
                 if voucher.type in {'purchase','payment'}:
-                    line_total = line_total - wht_total
+                    line_total = round(line_total,4) - round(wht_total,4)
                 elif voucher.type in {'sale','receipt'}: 
-                    line_total = line_total + wht_total
+                    line_total = round(line_total,4) + round(wht_total,4)
             
             if voucher.payment_option == 'without_writeoff' and line_total:
                 raise osv.except_osv('Unreconciled', 'Please input data in template tab to balance debit and credit.')
