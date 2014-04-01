@@ -174,10 +174,12 @@ class sale_order(osv.osv):
         'date_sale_close': fields.date('Closed Date'),
         'sample_revision_no': fields.char('Sampling Revision No', size=32,),
         'sample_revision_date': fields.date('Sampling Revision Date',),
+        'to_correct': fields.boolean('To Corrected'),
     }
     _defaults = {
         'cancel_sample_order': False,
         'cancel_garment_order': False,
+        'to_correct': False,
     }
 
     def copy(self, cr, uid, ids, default=None, context=None):

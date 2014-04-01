@@ -345,7 +345,7 @@
                             <field name="shop_id" groups="base.group_no_one" on_change="onchange_shop_id(shop_id, context)" widget="selection"/>
                             <field name="client_order_ref"/>
                             <field name="payment_term" required="1" widget="selection"/>      
-                            <field name="sale_revision" />                     
+                            <field name="sale_revision" />      
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
@@ -817,6 +817,7 @@
                 <field name="client_order_ref" position="after">
                 	<field name="payment_term" />
                 	<field name="sale_revision" />
+                	<field name="to_correct" groups="account.group_account_manager" />                          	
                 	<field name="lead_id" />
                 </field>
               
