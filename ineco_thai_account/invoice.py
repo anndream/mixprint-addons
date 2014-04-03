@@ -52,6 +52,17 @@ class account_voucher_addline(osv.osv):
 
 class account_invoice(osv.osv):
 
+    def _find_partner(self, inv):
+        '''
+        Find the partner for which the accounting entries will be created
+        '''
+        #if the chosen partner is not a company and has a parent company, use the parent for the journal entries 
+        #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
+        part = inv.partner_id
+        if part.parent_id and not part.is_company:
+            part = part.parent_id
+        return part
+
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
         res = {}        
         if not date_invoice:
