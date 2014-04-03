@@ -43,8 +43,17 @@ class ineco_problem_type(osv.osv):
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')
     ]
+    _order = 'name'
 
 class ineco_problem(osv.osv):
+    
+    def _check_cost(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids, context=context)
+        for data in record:
+            if data.cost <= 0:
+                return False
+        return True
+    
     _name = 'ineco.problem'
     _inherit = ['mail.thread']    
     _description = "Daily Problem"
@@ -79,6 +88,7 @@ class ineco_problem(osv.osv):
         'state': 'draft',
         'date': fields.date.context_today,
     }
+    _constraints = [(_check_cost, 'Error: Cost <= 0', ['cost'])]
 
     def on_change_user_id(self, cr, uid, ids, user_id, context=None):
         if context is None:
@@ -107,7 +117,7 @@ class ineco_problem(osv.osv):
                 return {}
         else:
             return {}
-        
+            
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'ineco.problem') or '/'

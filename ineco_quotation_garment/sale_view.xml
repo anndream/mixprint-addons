@@ -346,6 +346,7 @@
                             <field name="client_order_ref"/>
                             <field name="payment_term" required="1" widget="selection"/>      
                             <field name="sale_revision" />      
+                            <field name="to_correct" groups="account.group_account_manager" />
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="currency_id" invisible="1"/>
                         </group>

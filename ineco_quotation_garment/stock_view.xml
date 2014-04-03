@@ -117,6 +117,7 @@
             <field name="model">ineco.picking.note</field>
             <field name="arch" type="xml">
                 <tree string="Picking Note">
+                 	<field name="seq" />
                     <field name="name" />
                     <field name="note" />
                 </tree>
@@ -130,6 +131,7 @@
                 <search string="Search Type">
                 	<field name="name" />
                 	<field name="note" />
+                	<field name="seq" />
                	</search>
             </field>
         </record>
@@ -139,6 +141,7 @@
             <field name="arch" type="xml">
                 <form string="Picking Note">
                     <field name="name" />
+                    <field name="seq" />
                     <newline />
                     <field name="note" />
                 </form>

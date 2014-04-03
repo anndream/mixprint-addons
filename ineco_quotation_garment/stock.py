@@ -271,6 +271,11 @@ class ineco_picking_note(osv.osv):
     _columns = {
         'name': fields.char('description', size=128, reqruied=True),
         'note': fields.text('Note', required=True),
+        'seq': fields.integer('Sequence')
+    }
+    _order = 'seq'
+    _defaults = {
+        'seq': 0,
     }
     
 class stock_journal(osv.osv):
