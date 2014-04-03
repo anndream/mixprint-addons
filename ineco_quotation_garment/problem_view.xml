@@ -72,7 +72,8 @@
                     <field name="supervisor_user_id" invisible="1" />
                     <field name="manager_user_id" invisible="1" />
                     <field name="note" />
-                    <field name="state" />
+                    <field name="cost" />
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>		
@@ -160,7 +161,7 @@
 	                	<filter name="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'target_user_id'}"/>
 	                	<filter name="Supervisor" icon="terp-personal" domain="[]" context="{'group_by':'supervisor_user_id'}"/>
 	                	<filter name="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_user_id'}"/>
-	                	<filter name="Type" icon="terp-personal" domain="[]" context="{'group_by':'type'}"/>
+	                	<filter name="Type" icon="terp-personal" domain="[]" context="{'group_by':'type_id'}"/>
                     </group>
              
                	</search>
