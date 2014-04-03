@@ -69,6 +69,7 @@
                 </xpath>
                 <xpath expr="//field[@name='origin']" position="after">
                     <field name="batch_no" />
+                    <field name="sale_id" attrs="{'readonly':[('origin', '=', False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='date_done']" position="after">
                 	<field name="date_delivery" />
