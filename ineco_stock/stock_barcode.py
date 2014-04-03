@@ -79,6 +79,7 @@ class stock_picking(osv.osv):
     }
     
     def button_create_stockmove_barcode(self, cr, uid, ids, context=None):
+        raise osv.except_osv('Error!',"Do This")
 
         for pick in self.browse(cr, uid, ids):
             model_ids = self.pool.get('ir.model.data').search(cr, uid, [('name','=','stock_location_stock')])
@@ -110,7 +111,7 @@ class stock_picking(osv.osv):
                     'location_id': default_stock_id,
                     'location_dest_id': default_stock_dest_id,
                     'partner_id': pick.partner_id.id or False,
-                    #'move_dest_id': lot.location_id.id,
+                    #'move_dest_id': default_stock_id,
                     'state': 'draft',
                     'type':'internal',
                     'company_id': pick.company_id.id,

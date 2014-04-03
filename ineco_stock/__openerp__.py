@@ -27,6 +27,10 @@
     'category': 'INECO',
     'description': """
 Stock module addon.
+1. Please update query after install this modules
+    ALTER TABLE STOCK_MOVE DROP CONSTRAINT IF EXISTS stock_move_move_dest_id_fkey;
+    DROP INDEX IF EXISTS stock_move_move_dest_id_index;
+
     """,
     'website': 'http://www.ineco.co.th',
     'data': [],
