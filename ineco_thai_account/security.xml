@@ -5,7 +5,11 @@
 	    <record id="ineco_thai_account.group_account_commission" model="res.groups">
 	        <field name="name">Accountant with Commission</field>
 	        <field name="category_id" ref="base.module_category_accounting_and_finance"/>
-<!-- 	        <field name="implied_ids" eval="[(4, ref('account.group_account_invoice'))]"/> -->
+	    </record>     
+
+	    <record id="ineco_thai_account.group_account_cancel" model="res.groups">
+	        <field name="name">Accountant Cancel</field>
+	        <field name="category_id" ref="base.module_category_accounting_and_finance"/>
 	    </record>     
 	    
 	</data>
