@@ -31,7 +31,7 @@ class purchase_order(osv.osv):
         'sale_by': fields.char('BY', size=64,),
         'iraya_terms': fields.selection([('ex_china','Ex-Warehouse China'),
                                          ('ex_singapore','Ex-Warehouse Singapore'),
-                                         ('deduct_from_commission','Deduct from Commission')],'TERMS'),
+                                         ('tt_advance','T/T in advance.')],'TERMS'),
         }
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
