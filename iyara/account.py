@@ -55,5 +55,26 @@ class account_move(osv.osv):
     }    
     
 account_move()
+
+
+class account_invoice(osv.osv):
+    
+    _inherit = "account.invoice"
+    _description = "update unlink"
+
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        invoices = self.read(cr, uid, ids, ['state','internal_number'], context=context)
+        unlink_ids = []
+        for t in invoices:
+            if t['state'] in ('draft', 'cancel'):
+                unlink_ids.append(t['id'])
+            else:
+                raise osv.except_osv(_('Invalid Action!'), _('You can not delete an invoice which is not cancelled. You should refund it instead.'))
+        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+        return True
+
+account_invoice()
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
