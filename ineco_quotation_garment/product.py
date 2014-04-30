@@ -41,6 +41,8 @@ class ineco_product_category_stock(osv.osv):
         'virtual_available': fields.related('product_id', 'virtual_available', type='float', string='Forecast', readonly=True),
         'qty_available': fields.related('product_id', 'qty_available', type='float', string='On Hand', readonly=True),
     }
+    
+    _order = 'category_id desc, category_child_id'
         
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'ineco_product_category_stock')  
@@ -56,8 +58,42 @@ class ineco_product_category_stock(osv.osv):
             join product_template pt on pc.id = pt.categ_id
             join product_product pp on pt.id = pp.product_tmpl_id
             where 
-              (pc.id in (41,42,43) or pc.parent_id in (41,42,43)) 
-              and pc.parent_id <> 26
+               (pc.id in (41,42,43) or pc.parent_id in (41,42,43)) 
+               and pc.parent_id <> 26
             order by
-              pc.parent_id, pc.id        
+               pc2.id, pc.id, pt.name       
+        """) 
+        
+class ineco_product_category_stock_option(osv.osv):
+    _name = 'ineco.product.category.stock.option'
+    _auto = False
+
+    _columns = {
+        'category_id': fields.many2one('product.category','Category'),
+        'category_child_id': fields.many2one('product.category','Child Category'),
+        'product_id': fields.many2one('product.product','Product'),
+        'virtual_available': fields.related('product_id', 'virtual_available', type='float', string='Forecast', readonly=True),
+        'qty_available': fields.related('product_id', 'qty_available', type='float', string='On Hand', readonly=True),
+    }
+    
+    _order = 'category_id desc, category_child_id'
+        
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_product_category_stock_option')  
+        cr.execute("""
+            create or replace view ineco_product_category_stock_option as
+            select 
+              pp.id::integer as id, 
+              pc2.id as category_id, 
+              pc.id as category_child_id, 
+              pp.id::integer as product_id 
+            from product_category pc
+            join product_category pc2 on pc2.id = pc.parent_id
+            join product_template pt on pc.id = pt.categ_id
+            join product_product pp on pt.id = pp.product_tmpl_id
+            where 
+               (pc.id in (96,84,108) or pc.parent_id in (96,84,108)) 
+               and pc.parent_id <> 26
+            order by
+               pc2.id, pc.id, pt.name       
         """) 
