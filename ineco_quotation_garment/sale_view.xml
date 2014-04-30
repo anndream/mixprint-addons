@@ -650,6 +650,7 @@
               		<field name="sample_order_no" />
               		<field name="garment_order_no" />
               		<field name="garment_order_date" />
+              		<field name="date_sale_close" invisible="1"/>
               	</field>
             </field>
         </record>
@@ -814,6 +815,7 @@
                 </xpath>
                 <field name="partner_id" position="after">
                 	<field name="date_delivery" />
+                	<field name="sale_close_no" groups="account.group_account_manager" />
                 </field>
                 <field name="client_order_ref" position="after">
                 	<field name="payment_term" />
@@ -901,6 +903,8 @@
             <field name="arch" type="xml">
               	<field name="name" position="after">
               		<field name="garment_order_no" />
+					<field name="date_sale_close" />
+					<filter string="Close Date" icon="terp-personal" domain="[]" context="{'group_by':'date_sale_close'}"/>
               	</field>
             </field>
         </record>         	

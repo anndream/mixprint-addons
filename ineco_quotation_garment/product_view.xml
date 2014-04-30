@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<openerp>
+     <data>
+     
+		<!-- Product Category Stock Tree -->
+        <record id="view_ineco_product_category_stock_tree" model="ir.ui.view">
+            <field name="name">ineco.product.category.stock.tree</field>
+            <field name="model">ineco.product.category.stock</field>
+            <field name="arch" type="xml">
+                <tree string="Product Category Stock">
+                    <field name="category_id" />
+                    <field name="category_child_id" />
+                    <field name="product_id" />
+                    <field name="virtual_available" />
+                    <field name="qty_available" />
+                </tree>
+            </field>
+        </record>	
+
+		<!-- Product Category Stock Form -->
+        <record id="view_ineco_product_category_stock_form" model="ir.ui.view">
+            <field name="name">ineco.product.category.stock.form</field>
+            <field name="model">ineco.product.category.stock</field>
+            <field name="arch" type="xml">
+                <form string="Product Category Stock">
+                    <field name="category_id" />
+                    <field name="category_child_id" />
+                    <field name="product_id" />
+                    <field name="virtual_available" />
+                    <field name="qty_available" />
+                </form>
+            </field>
+        </record>	
+
+        <record id="view_ineco_product_category_stock_filter" model="ir.ui.view">
+            <field name="name">ineco.product.category.stock.select</field>
+            <field name="model">ineco.product.category.stock</field>
+            <field name="arch" type="xml">
+                <search string="Search Product Cateogry Stock">
+                    <field name="category_id" />
+                    <field name="category_child_id" />
+                    <field name="product_id" />
+
+                    <group expand="0" string="Group By...">
+                        <filter name="category_group" string="Category" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter name="category_child_group" string="Child Category" domain="[]" context="{'group_by':'category_child_id'}"/>
+                        <filter name="product_group" string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                    </group>
+
+               	</search>
+            </field>
+        </record>
+
+<!--         <record id="action_ineco_product_category_stock" model="ir.actions.act_window">
+            <field name="name">Product Category Stock</field>
+            <field name="res_model">ineco.product.category.stock</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_product_category_stock_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale summary. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record> 
+-->
+             
+     </data>
+</openerp>

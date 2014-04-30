@@ -555,12 +555,26 @@ class ineco_sale_mytop_opportunity_temp(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_mytop_opportunity_temp')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_mytop_opportunity_temp AS (
-                select user_id, cl.partner_id, stage_id, planned_revenue, last_date_count, last_contact_date 
+                select 
+                  cl.user_id, 
+                  cl.partner_id, 
+                  stage_id, 
+                  planned_revenue, 
+                  cl.last_date_count, 
+                  rp.last_date_count as last_contact_date 
                 from crm_lead cl
                 left join res_users ru on ru.id = user_id
-                where type = 'opportunity' and ru.active = true
-                  and state not in ('done','cancel')                        
+                left join res_partner rp on rp.id = cl.partner_id
+                where 
+                    cl.type = 'opportunity' and ru.active = true
+                    and cl.state not in ('done','cancel')            
         )""")
+
+#                select user_id, cl.partner_id, stage_id, planned_revenue, last_date_count, last_contact_date 
+#                from crm_lead cl
+#                left join res_users ru on ru.id = user_id
+#                where type = 'opportunity' and ru.active = true
+#                  and state not in ('done','cancel')                        
 
 class ineco_sale_mytop_opportunity(osv.osv):
     _name = "ineco.sale.mytop.opportunity"

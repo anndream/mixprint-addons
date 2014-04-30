@@ -27,6 +27,7 @@ import partner
 import problem
 import res_users
 import invoice
+import product
 import dashboard_invoice
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
