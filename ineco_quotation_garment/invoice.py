@@ -79,6 +79,6 @@ class account_invoice(osv.osv):
                 'account.invoice.line': (_get_order, [], 10),
             },
         ),
-
+        'garment_order_other': fields.char('Other MO',size=64)
     }
     
