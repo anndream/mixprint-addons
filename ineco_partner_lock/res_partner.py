@@ -52,7 +52,7 @@ class res_partner(osv.osv):
     }
     
     def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, long):
+        if isinstance(ids, long) or isinstance(ids, int) :
             ids = [ids]
         for id in ids:
             data = self.browse(cr, uid, id, context=context)
