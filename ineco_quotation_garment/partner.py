@@ -45,5 +45,9 @@ class res_partner(osv.osv):
     _columns = {
         'account_comment': fields.text('Account Information'),     
         'review': fields.function(_get_account_comment, type='boolean', string='Review'),
-
+        'grade_by_volumne': fields.selection([('a','A'),('b','B'),('c','C'),('d','D')], 'Grade by Quantity' 
+            ),
+        'grade_by_price': fields.selection([('a','A'),('b','B'),('c','C'),('d','D')], 'Grade by Price'
+            ),
+                
     }

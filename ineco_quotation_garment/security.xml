@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data noupdate="0">
+
+	    <record id="base.group_sale_grade" model="res.groups">
+	        <field name="name">Sale Grade</field>
+	        <field name="category_id" ref="base.module_category_hidden"/>
+	    </record>
 	
 	    <record id="secure_ineco_sale_qty_amount" model="ir.model.access">
 	        <field name="name">Employees</field>

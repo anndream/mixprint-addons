@@ -13,6 +13,10 @@
                 <field name="website" position="after">
                 	<field name="review" />
                 </field>
+                <field name="email" position="after">
+                	<field name="grade_by_volumne" groups="base.group_sale_grade"/>
+                	<field name="grade_by_price" groups="base.group_sale_grade" />
+                </field>
             </field>
         </record>
         
@@ -24,6 +28,8 @@
             <field name="arch" type="xml">
                 <field name="phone" position="after">
                 	<field name="review" />
+                	<field name="grade_by_volumne" />
+                	<field name="grade_by_price" />
                 </field>
             </field>
         </record>
@@ -35,6 +41,10 @@
             <field name="arch" type="xml">
             	<field name="user_id" position="before">
                    <filter help="My Customer" icon="terp-personal+" name="mycustomer" domain="[('user_id','=',uid)]"/>            	
+            	</field>
+            	<field name="user_id" position="after">
+            		<field name="grade_by_volumne" />
+                	<field name="grade_by_price" />
             	</field>
             </field>
        </record>
