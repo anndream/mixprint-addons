@@ -90,6 +90,7 @@
             	<field name="origin" position="before">
             		<field name="batch_no" />
             		<field name="garment_order_no" />
+            		<field name="quantity" sum="Total"  />
             	</field>
                 <field name="name" position="after">
                 	<field name="date_delivery" />

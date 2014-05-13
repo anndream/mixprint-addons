@@ -58,6 +58,23 @@ class stock_move(osv.osv):
     }
     
 class stock_picking_out(osv.osv):
+    
+    def _get_quantity(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for stock in self.browse(cr, uid, ids, context=context):
+            res[stock.id] = {'quantity': 0.0}
+            sql = "select sum(product_qty) from stock_move where picking_id = %s"
+            cr.execute(sql % stock.id)
+            product_qty =  cr.fetchone()[0] or 0.0
+            res[stock.id]['quantity'] = product_qty
+        return res    
+
+    def _get_picking(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
+            result[line.picking_id.id] = True
+        return result.keys()
+        
     _inherit = "stock.picking.out"
     _columns = {
         'delivery_type_id': fields.many2one('ineco.delivery.type','Delivery Type'),
@@ -66,7 +83,16 @@ class stock_picking_out(osv.osv):
         'ineco_date_delivery': fields.date('Actual Delivery Date'),
         'garment_order_no': fields.related('sale_id', 'garment_order_no', type="char", string="Garment No", readonly=True),
         'date_delivery': fields.related('sale_id', 'date_delivery', type="date", string="Delivery Date", readonly=True),
-        'picking_transfer_id': fields.many2one('stock.picking','Transfers Doc')
+        'picking_transfer_id': fields.many2one('stock.picking','Transfers Doc'),
+        'quantity': fields.function(_get_quantity, 
+                                    digits_compute=dp.get_precision('Product Unit of Measure'), 
+                                    string='Quantity',
+                                    type="float",
+            store={
+                'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 10),
+                'stock.move': (_get_picking, ['product_qty'], 10),
+            },
+            multi='sums', help="Summary Product."),
     }
         
     
