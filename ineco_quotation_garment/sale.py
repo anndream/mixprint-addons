@@ -50,7 +50,8 @@ class sale_gender(osv.osv):
     _name = 'sale.gender'
     _description = 'Gender of Sale'
     _columns = {
-        'name': fields.char('Description',size=64,required=True)
+        'name': fields.char('Description',size=64,required=True),
+        'code': fields.char('Code', size=10),
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')

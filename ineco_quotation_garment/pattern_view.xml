@@ -14,6 +14,7 @@
             <field name="arch" type="xml">
                 <tree string="Pattern Type">
                     <field name="name" />
+                    <field name="code" />
                 </tree>
             </field>
         </record>		
@@ -24,6 +25,7 @@
             <field name="arch" type="xml">
                 <form string="Pattern Type">
                     <field name="name" />
+                    <field name="code" />
                 </form>
             </field>
         </record>	
@@ -34,6 +36,7 @@
             <field name="arch" type="xml">
                 <search string="Search Type">
                 	<field name="name" />
+                	<field name="code" />
                	</search>
             </field>
         </record>
@@ -61,6 +64,64 @@
             parent="menu_mrp_pattern_menu"
             action="action_ineco_pattern_type"
             sequence="10"/>
+
+		<!-- Pattern Product Type -->
+        <record id="view_ineco_pattern_producttype_tree" model="ir.ui.view">
+            <field name="name">ineco.pattern.producttype.tree</field>
+            <field name="model">ineco.pattern.product.type</field>
+            <field name="arch" type="xml">
+                <tree string="Pattern Product Type">
+                    <field name="name" />
+                    <field name="code" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_pattern_producttype_form" model="ir.ui.view">
+            <field name="name">ineco.pattern.producttype.form</field>
+            <field name="model">ineco.pattern.product.type</field>
+            <field name="arch" type="xml">
+                <form string="Pattern Product Type">
+                    <field name="name" />
+                    <field name="code" />
+                </form>
+            </field>
+        </record>	
+        
+        <record id="view_ineco_pattern_producttype_filter" model="ir.ui.view">
+            <field name="name">ineco.pattern.producttype.select</field>
+            <field name="model">ineco.pattern.product.type</field>
+            <field name="arch" type="xml">
+                <search string="Search Product Type">
+                	<field name="name" />
+                	<field name="code" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_pattern_producttype" model="ir.actions.act_window">
+            <field name="name">Pattern Product Type</field>
+            <field name="res_model">ineco.pattern.product.type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_pattern_producttype_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a product type. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+        <menuitem name="Product Type"
+            id="menu_mrp_pattern_producttype"
+            parent="menu_mrp_pattern_menu"
+            action="action_ineco_pattern_producttype"
+            sequence="11"/>
 
 		<!-- Pattern -->
         <record id="view_ineco_pattern_tree" model="ir.ui.view">
@@ -99,10 +160,30 @@
                 			<group>
 			                    <field name="product_id" />
 			                    <field name="garment_order_no" />
+			                    <field name="product_type_id" />
                 			</group>
 
                 				<notebook colspan="4">
                 					<page string="Component">
+                						<group>
+                							<group>
+                								<field name="gender_ids" widget="many2many_tags" class="oe_inline" />
+                							</group>
+                							<group>
+                								<field name="size_ids" widget="many2many_tags" class="oe_inline" />
+                							</group>
+                							<group colspan="4">
+                								<field name="component_ids" >
+                									<tree string="Components" editable="top">
+                										<field name="seq" />
+                										<field name="type_id" />
+                										<field name="last_updated" />
+                									</tree>
+                								</field>
+                							</group>
+                						</group>
+                					</page>
+                					<page string="Line">
                 						<field name="line_ids" nolabel="1">
                 							<tree string="Line" editable="top">
                 								<field name="name" />

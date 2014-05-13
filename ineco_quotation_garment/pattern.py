@@ -33,8 +33,12 @@ class ineco_pattern(osv.osv):
         'saleorder_id': fields.many2one('sale.order','Sale Order', required=True),
         'garment_order_no': fields.related('saleorder_id', 'garment_order_no', type='char', string='Garment Order No', readonly=True),
         'partner_id': fields.related('saleorder_id', 'partner_id', type='many2one', relation='res.partner', string='Customer', readonly=True),
+        'product_type_id': fields.many2one('ineco.pattern.product.type','Product Type',required=True),
         'line_ids': fields.one2many('ineco.pattern.line','pattern_id','Lines'),
         'log_ids': fields.one2many('ineco.pattern.log','pattern_id','Logs'),
+        'component_ids': fields.one2many('ineco.pattern.component','pattern_id','Components'),
+        'gender_ids': fields.many2many('sale.gender', 'ineco_pattern_sale_gender_rel', 'child_id', 'parent_id', 'Gender'),
+        'size_ids': fields.many2many('sale.size', 'ineco_pattern_sale_size_rel', 'child_id', 'parent_id', 'Size'),
         'state': fields.selection([('ready','Ready'),('used','Used'),('damage','Damage')],'Status', readonly=True),
     }
     
@@ -62,12 +66,43 @@ class ineco_pattern_type(osv.osv):
     _name = 'ineco.pattern.type'
     _description = 'Type of Pattern Line'
     _columns = {
-        'name': fields.char('Description',size=64,required=True)
+        'name': fields.char('Description',size=64,required=True),
+        'code': fields.char('Code', size=10, required=True),
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')
     ]   
     
+class ineco_pattern_product_type(osv.osv):
+    _name = 'ineco.pattern.product.type'
+    _description = 'Product Type of Pattern Line'
+    _columns = {
+        'name': fields.char('Description',size=64,required=True),
+        'code': fields.char('Code', size=10, required=True),
+    }
+    _sql_constraints = [
+        ('name_unique', 'unique (name)', 'Description must be unique !')
+    ]   
+    
+class ineco_pattern_component(osv.osv):
+    _name = 'ineco.pattern.component'
+    _description = "Pattern Component"
+    _columns = {
+        'name': fields.char('Description',size=64,),
+        'seq': fields.integer('Sequence'),
+        'type_id': fields.many2one('ineco.pattern.type','Type',required=True),
+        'last_updated': fields.datetime('Last Updated'),
+        'pattern_id': fields.many2one('ineco.pattern','Pattern'),
+    }
+    _defaults = {
+        'name': '...',
+        'last_updated': time.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    def write(self, cr, uid, ids, vals, context=None):
+        vals.update({'last_updated': time.strftime("%Y-%m-%d %H:%M:%S")})
+        res = super(ineco_pattern_component, self).write(cr, uid, ids, vals, context=context)
+        return res    
+        
 class ineco_pattern_line(osv.osv):
     _name = 'ineco.pattern.line'
     _description = "Pattern Line"

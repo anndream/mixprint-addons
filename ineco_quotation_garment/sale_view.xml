@@ -941,6 +941,64 @@
             	</field>
 			</field>
 		</record>
+ 
+		<!-- Gender -->
+        <record id="view_ineco_gender_tree" model="ir.ui.view">
+            <field name="name">sale.gender.tree</field>
+            <field name="model">sale.gender</field>
+            <field name="arch" type="xml">
+                <tree string="Gender">
+                    <field name="name" />
+                    <field name="code" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_gender_form" model="ir.ui.view">
+            <field name="name">sale.gender.form</field>
+            <field name="model">sale.gender</field>
+            <field name="arch" type="xml">
+                <form string="Gender">
+                    <field name="name" />
+                    <field name="code" />
+                </form>
+            </field>
+        </record>	
+        
+        <record id="view_ineco_gender_filter" model="ir.ui.view">
+            <field name="name">sale.gender.select</field>
+            <field name="model">sale.gender</field>
+            <field name="arch" type="xml">
+                <search string="Search Gender">
+                	<field name="name" />
+                	<field name="code" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_gender" model="ir.actions.act_window">
+            <field name="name">Gender</field>
+            <field name="res_model">sale.gender</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_gender_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a gender. 
+              </p><p>
+                This is the list of all color that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem 
+            id="menu_ineco_gender"
+        	action="action_ineco_gender" 
+        	parent="base.menu_base_config"
+        	sequence="7"/>    
         
     </data>
 </openerp>
