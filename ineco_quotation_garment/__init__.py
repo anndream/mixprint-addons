@@ -29,5 +29,6 @@ import res_users
 import invoice
 import product
 import dashboard_invoice
+import pattern
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

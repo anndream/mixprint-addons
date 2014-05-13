@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<openerp>
+     <data>
+
+        <menuitem name="Pattern"
+            id="menu_mrp_pattern_menu"
+            parent="base.menu_mrp_root"
+            sequence="10"/>
+
+		<!-- Pattern Type -->
+        <record id="view_ineco_pattern_type_tree" model="ir.ui.view">
+            <field name="name">ineco.pattern.type.tree</field>
+            <field name="model">ineco.pattern.type</field>
+            <field name="arch" type="xml">
+                <tree string="Pattern Type">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_pattern_type_form" model="ir.ui.view">
+            <field name="name">ineco.pattern.type.form</field>
+            <field name="model">ineco.pattern.type</field>
+            <field name="arch" type="xml">
+                <form string="Pattern Type">
+                    <field name="name" />
+                </form>
+            </field>
+        </record>	
+        
+        <record id="view_ineco_pattern_type_filter" model="ir.ui.view">
+            <field name="name">ineco.pattern.type.select</field>
+            <field name="model">ineco.pattern.type</field>
+            <field name="arch" type="xml">
+                <search string="Search Type">
+                	<field name="name" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_pattern_type" model="ir.actions.act_window">
+            <field name="name">Pattern Type</field>
+            <field name="res_model">ineco.pattern.type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_pattern_type_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a problem type. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+        <menuitem name="Type"
+            id="menu_mrp_pattern_type"
+            parent="menu_mrp_pattern_menu"
+            action="action_ineco_pattern_type"
+            sequence="10"/>
+
+		<!-- Pattern -->
+        <record id="view_ineco_pattern_tree" model="ir.ui.view">
+            <field name="name">ineco.pattern.tree</field>
+            <field name="model">ineco.pattern</field>
+            <field name="arch" type="xml">
+                <tree string="Pattern">
+                    <field name="name" />
+                    <field name="product_id" />
+                    <field name="garment_order_no" />
+                    <field name="saleorder_id" invisible="1" />
+                    <field name="partner_id" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>		
+ 
+        <record id="view_ineco_pattern_form" model="ir.ui.view">
+            <field name="name">ineco.pattern.form</field>
+            <field name="model">ineco.pattern</field>
+            <field name="arch" type="xml">
+                <form string="Pattern" version="7.0">
+                	<header>
+                		<button name="button_ready" string="Ready" states="used,damage" type="object" class="oe_highlight" />
+                		<button name="button_used" string="Used" states="ready" type="object" class="oe_highlight"/>
+                		<button name="button_damage" string="Damage" states="used,ready" type="object" class="oe_highlight"/>
+	                    <field name="state" widget="statusbar" statusbar_visible="ready,used,damage" />
+                	</header>
+                	<sheet>
+                		<group>
+                			<group>
+			                    <field name="name" />
+			                    <field name="saleorder_id" />
+			                    <field name="partner_id" />
+                			</group>
+                			<group>
+			                    <field name="product_id" />
+			                    <field name="garment_order_no" />
+                			</group>
+
+                				<notebook colspan="4">
+                					<page string="Component">
+                						<field name="line_ids" nolabel="1">
+                							<tree string="Line" editable="top">
+                								<field name="name" />
+                								<field name="type_id" />
+                								<field name="gender_id" />
+                								<field name="size_id" />
+                								<field name="last_updated" invisible="1" />
+                							</tree>
+                							<form string="Lines">
+                								<field name="name" />
+                								<field name="type_id" />
+                								<field name="gender_id" />
+                								<field name="size_id" />
+                							</form>
+                						</field>
+                					</page>
+                					<page string="Log">
+                						<field name="log_ids" nolabel="1" readonly="1">
+                							<tree string="Log">
+                								<field name="type" />
+                								<field name="user_id" />
+                								<field name="last_updated" />
+                							</tree>
+                						</field>
+                					</page>
+                				</notebook>
+                				
+                		</group>
+                	</sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>	
+
+        <record id="view_ineco_pattern_filter" model="ir.ui.view">
+            <field name="name">ineco.pattern.filter</field>
+            <field name="model">ineco.pattern</field>
+            <field name="arch" type="xml">
+                <search string="Pattern">
+                    <field name="name" />
+                    <field name="product_id" />
+                    <field name="garment_order_no" />
+                    <field name="saleorder_id" />
+                    <field name="partner_id" />
+                    <field name="state" />
+                </search>
+            </field>
+        </record>
+
+        <record id="action_ineco_pattern" model="ir.actions.act_window">
+            <field name="name">Pattern</field>
+            <field name="res_model">ineco.pattern</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_pattern_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a problem type. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+        <menuitem name="Pattern"
+            id="menu_mrp_pattern"
+            parent="menu_mrp_pattern_menu"
+            action="action_ineco_pattern"
+            sequence="20"/>
+
+      
+     </data>
+</openerp>

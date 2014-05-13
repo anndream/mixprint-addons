@@ -30,7 +30,7 @@ New Quotation Menu/View for Garment Business.
     'images' : [],
     'depends' : ['base','sale','crm','ineco_crm','product',
                  'stock','sale_stock','account','hr','ineco_stock','purchase',
-                 'account_cancel'],
+                 'account_cancel','mrp'],
     'data': [
     ],
     'js': [
@@ -59,6 +59,7 @@ New Quotation Menu/View for Garment Business.
         'product_view.xml',
         'dashboard_view.xml',
         'dashboard_invoice_view.xml',
+        'pattern_view.xml',
         #'purchase_order_view.xml',
     ],
     'installable': True,
