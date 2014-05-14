@@ -24,11 +24,7 @@ import time
 #import openerp.addons.decimal_precision as dp
 
 class ineco_pattern(osv.osv):
-    
-    def _get_sizes(self, cr, uid, ids, context=None):
-        all_size_ids = self.pool.get('sale.size').search(cr ,uid, [])
-        return all_size_ids
-    
+        
     _name = 'ineco.pattern'
     _inherit = ['mail.thread']
     _description = "Pattern"
@@ -47,6 +43,7 @@ class ineco_pattern(osv.osv):
         'state': fields.selection([('ready','Ready'),('used','Used'),('damage','Damage')],'Status', readonly=True),
         'last_updated': fields.datetime('Last Update'),
         'rev_no': fields.integer('Revision No'),
+        'location_id': fields.many2one('ineco.pattern.location','Location', required=True)
     }
     
     _sql_constraints = [
@@ -118,6 +115,16 @@ class ineco_pattern_type(osv.osv):
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')
     ]   
+
+class ineco_pattern_location(osv.osv):
+    _name = 'ineco.pattern.location'
+    _description = 'Pattern Location'
+    _columns = {
+        'name': fields.char('Description',size=128,required=True),
+    }
+    _sql_constraints = [
+        ('name_unique', 'unique (name)', 'Description must be unique !')
+    ]     
     
 class ineco_pattern_product_type(osv.osv):
     _name = 'ineco.pattern.product.type'

@@ -123,6 +123,61 @@
             action="action_ineco_pattern_producttype"
             sequence="11"/>
 
+		<!-- Pattern Location -->
+        <record id="view_ineco_pattern_location_tree" model="ir.ui.view">
+            <field name="name">ineco.pattern.location.tree</field>
+            <field name="model">ineco.pattern.location</field>
+            <field name="arch" type="xml">
+                <tree string="Pattern Location">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_pattern_location_form" model="ir.ui.view">
+            <field name="name">ineco.pattern.location.form</field>
+            <field name="model">ineco.pattern.location</field>
+            <field name="arch" type="xml">
+                <form string="Pattern Location">
+                    <field name="name" />
+                </form>
+            </field>
+        </record>	
+        
+        <record id="view_ineco_pattern_location_filter" model="ir.ui.view">
+            <field name="name">ineco.pattern.location.select</field>
+            <field name="model">ineco.pattern.location</field>
+            <field name="arch" type="xml">
+                <search string="Search Location">
+                	<field name="name" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_pattern_location" model="ir.actions.act_window">
+            <field name="name">Pattern Location</field>
+            <field name="res_model">ineco.pattern.location</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_pattern_location_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a product type. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+        <menuitem name="Pattern Location"
+            id="menu_mrp_pattern_location"
+            parent="menu_mrp_pattern_menu"
+            action="action_ineco_pattern_location"
+            sequence="12"/>
+
 		<!-- Pattern -->
         <record id="view_ineco_pattern_tree" model="ir.ui.view">
             <field name="name">ineco.pattern.tree</field>
@@ -157,12 +212,13 @@
 			                    <field name="saleorder_id" />
 			                    <field name="partner_id" />
 			                    <field name="last_updated" />
+			                    <field name="rev_no" />
                 			</group>
                 			<group>
 			                    <field name="product_id" />
 			                    <field name="garment_order_no" />
 			                    <field name="product_type_id" />
-			                    <field name="rev_no" />
+			                    <field name="location_id" />
                 			</group>
 
                 				<notebook colspan="4">
