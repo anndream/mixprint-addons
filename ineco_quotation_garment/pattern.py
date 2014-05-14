@@ -24,6 +24,11 @@ import time
 #import openerp.addons.decimal_precision as dp
 
 class ineco_pattern(osv.osv):
+    
+    def _get_sizes(self, cr, uid, ids, context=None):
+        all_size_ids = self.pool.get('sale.size').search(cr ,uid, [])
+        return all_size_ids
+    
     _name = 'ineco.pattern'
     _inherit = ['mail.thread']
     _description = "Pattern"
@@ -51,6 +56,7 @@ class ineco_pattern(osv.osv):
     _defaults = {
         'state': 'ready',
         'rev_no': 0,
+        'size_ids': lambda self, cr, uid, c: [(6, 0, self.pool.get('sale.size').search(cr, uid, [], context=c, order='seq'))],      
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
