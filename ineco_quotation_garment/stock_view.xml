@@ -114,6 +114,18 @@
             </field>
         </record>        
 
+        <record id="view_stock_picking_quantity_tree" model="ir.ui.view">
+            <field name="name">ineco.stock.picking.quantity.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+            	<field name="state" position="before">
+            		<field name="quantity" sum="Total" />
+            	</field>
+        	</field>
+        </record>
+       
+
         <record id="view_ineco_picking_note_tree" model="ir.ui.view">
             <field name="name">ineco.picking.note.tree</field>
             <field name="model">ineco.picking.note</field>
