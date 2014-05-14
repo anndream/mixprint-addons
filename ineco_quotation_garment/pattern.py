@@ -52,6 +52,7 @@ class ineco_pattern(osv.osv):
     ]
     
     _defaults = {
+        'active': True,
         'state': 'ready',
         'rev_no': 0,
         'size_ids': lambda self, cr, uid, c: [(6, 0, self.pool.get('sale.size').search(cr, uid, [], context=c, order='seq'))],      
