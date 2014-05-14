@@ -5,6 +5,7 @@
         <menuitem name="Pattern"
             id="menu_mrp_pattern_menu"
             parent="base.menu_mrp_root"
+            groups="base.group_garment_pattern"
             sequence="10"/>
 
 		<!-- Pattern Type -->
@@ -219,6 +220,7 @@
 			                    <field name="garment_order_no" />
 			                    <field name="product_type_id" />
 			                    <field name="location_id" />
+			                    <field name="active" />
                 			</group>
 
                 				<notebook colspan="4">

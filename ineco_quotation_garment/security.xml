@@ -6,6 +6,11 @@
 	        <field name="name">Sale Grade</field>
 	        <field name="category_id" ref="base.module_category_hidden"/>
 	    </record>
+
+	    <record id="base.group_garment_pattern" model="res.groups">
+	        <field name="name">Garment Pattern</field>
+	        <field name="category_id" ref="base.module_category_hidden"/>
+	    </record>
 	
 	    <record id="secure_ineco_sale_qty_amount" model="ir.model.access">
 	        <field name="name">Employees</field>

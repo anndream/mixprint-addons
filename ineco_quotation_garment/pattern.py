@@ -43,7 +43,8 @@ class ineco_pattern(osv.osv):
         'state': fields.selection([('ready','Ready'),('used','Used'),('damage','Damage')],'Status', readonly=True),
         'last_updated': fields.datetime('Last Update'),
         'rev_no': fields.integer('Revision No'),
-        'location_id': fields.many2one('ineco.pattern.location','Location', required=True)
+        'location_id': fields.many2one('ineco.pattern.location','Location', required=True),
+        'active': fields.boolean('Active'),
     }
     
     _sql_constraints = [
