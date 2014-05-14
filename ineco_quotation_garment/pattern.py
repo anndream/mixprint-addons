@@ -40,6 +40,8 @@ class ineco_pattern(osv.osv):
         'gender_ids': fields.many2many('sale.gender', 'ineco_pattern_sale_gender_rel', 'child_id', 'parent_id', 'Gender'),
         'size_ids': fields.many2many('sale.size', 'ineco_pattern_sale_size_rel', 'child_id', 'parent_id', 'Size'),
         'state': fields.selection([('ready','Ready'),('used','Used'),('damage','Damage')],'Status', readonly=True),
+        'last_updated': fields.datetime('Last Update'),
+        'rev_no': fields.integer('Revision No'),
     }
     
     _sql_constraints = [
@@ -48,7 +50,24 @@ class ineco_pattern(osv.osv):
     
     _defaults = {
         'state': 'ready',
+        'rev_no': 0,
     }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+
+        default['last_updated'] = False
+        default['line_ids'] = False
+        default['log_ids'] = False
+        data = self.browse(cr, uid, id, context=context)
+        if not default.get('name', False):
+            default.update(name="%s (copy)" % (data.name))
+        res = super(ineco_pattern, self).copy(cr, uid, id, default, context)
+
+        return res
     
     def button_ready(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'ready'})
@@ -60,6 +79,27 @@ class ineco_pattern(osv.osv):
 
     def button_damage(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'damage'})
+        return True
+    
+    def button_generate(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for data in self.browse(cr, uid, ids):
+            cr.execute('delete from ineco_pattern_line where pattern_id = %s' % (data.id))
+            for gender in data.gender_ids:
+                for size in data.size_ids:
+                    for component in data.component_ids:
+                        new_code = data.name[0:5] + component.type_id.code + \
+                            gender.code + size.code + \
+                            data.product_type_id.code
+                        new_record = {
+                            'name': new_code,
+                            'gender_id': gender.id,
+                            'size_id': size.id,
+                            'type_id': component.type_id.id,
+                            'pattern_id': data.id,
+                        }
+                        self.pool.get('ineco.pattern.line').create(cr, uid, new_record)
         return True
     
 class ineco_pattern_type(osv.osv):
@@ -96,7 +136,7 @@ class ineco_pattern_component(osv.osv):
     }
     _defaults = {
         'name': '...',
-        'last_updated': time.strftime("%Y-%m-%d %H:%M:%S"),
+        #'last_updated': time.strftime("%Y-%m-%d %H:%M:%S"),
     }
     def write(self, cr, uid, ids, vals, context=None):
         vals.update({'last_updated': time.strftime("%Y-%m-%d %H:%M:%S")})
@@ -118,7 +158,7 @@ class ineco_pattern_line(osv.osv):
         ('name_gender_size_type_unique', 'unique (name,gender_id,size_id,type_id)', 'Data must be unique !')
     ]   
     _defaults = {
-        'last_updated': time.strftime("%Y-%m-%d %H:%M:%S"),
+        #'last_updated': time.strftime("%Y-%m-%d %H:%M:%S"),
     }
 
     def write(self, cr, uid, ids, vals, context=None):
