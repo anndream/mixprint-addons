@@ -31,7 +31,7 @@ class ineco_pattern(osv.osv):
     _columns = {
         'name': fields.char('Code', size=64, required=True),
         'product_id': fields.many2one('product.product','Product',required=True),
-        'saleorder_id': fields.many2one('sale.order','Sale Order', required=True),
+        'saleorder_id': fields.many2one('sale.order','Sale Order'),
         'garment_order_no': fields.related('saleorder_id', 'garment_order_no', type='char', string='Garment Order No', readonly=True),
         'partner_id': fields.related('saleorder_id', 'partner_id', type='many2one', relation='res.partner', string='Customer', readonly=True),
         'product_type_id': fields.many2one('ineco.pattern.product.type','Product Type',required=True),
@@ -45,6 +45,8 @@ class ineco_pattern(osv.osv):
         'rev_no': fields.integer('Revision No'),
         'location_id': fields.many2one('ineco.pattern.location','Location', required=True),
         'active': fields.boolean('Active'),
+        'image': fields.binary('Image'),
+        'multi_images': fields.text("Multi Images"),
     }
     
     _sql_constraints = [

@@ -207,9 +207,18 @@
 	                    <field name="state" widget="statusbar" statusbar_visible="ready,used,damage" />
                 	</header>
                 	<sheet>
+						<field name="image" widget="image" class="oe_avatar oe_left" />
+						<div class="oe_title">
+							<div class="oe_edit_only">
+								<label for="name" string="Product Name" />
+							</div>
+							<h1>
+								<field name="name" />
+							</h1>
+						</div>
                 		<group>
                 			<group>
-			                    <field name="name" />
+			                    <!-- <field name="name" /> -->
 			                    <field name="saleorder_id" />
 			                    <field name="partner_id" />
 			                    <field name="last_updated" />
@@ -269,8 +278,10 @@
                 							</tree>
                 						</field>
                 					</page>
-                				</notebook>
-                				
+                					<page string="Images">
+                        				<field name="multi_images" widget="image_multi"/>
+                    				</page>
+                				</notebook>              				
                 		</group>
                 	</sheet>
                     <div class="oe_chatter">
@@ -318,7 +329,7 @@
             id="menu_mrp_pattern"
             parent="menu_mrp_pattern_menu"
             action="action_ineco_pattern"
-            sequence="20"/>
+            sequence="0"/>
 
       
      </data>

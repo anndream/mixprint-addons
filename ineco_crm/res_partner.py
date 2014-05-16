@@ -32,7 +32,6 @@ class res_partner(osv.osv):
         'user_id': lambda s, cr, uid, c: uid,
         'refresh_count': 0,
     }
-    
 
     def schedule_refresh(self, cr, uid, context={}):
         #print 'Refresh Partner Start'

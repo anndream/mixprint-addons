@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<!-- LC -->
+    	<record model="ir.ui.view" id="iyara_lc_form">
+      		<field name="name">iyara.lc.form</field>
+      		<field name="model">iyara.lc</field>
+      		<field name="arch" type="xml">
+      			<form string="LC" version="7.0">
+      				<header>
+      				</header>
+      				<sheet>
+      					<group>
+      						<group>
+      							<field name="name" />
+      							<field name="proforma_invoice_no" />
+      							<field name="bank_name" />
+      							<field name="currency_id" />
+      							<field name="total" />
+      							<field name="available" />
+      						</group>
+      						<group>
+      							<field name="date" />
+      							<field name="date_tr" />
+      							<field name="date_due" />
+      							<field name="date_import" />
+      							<field name="gen_name" />
+      						</group>
+      						<group colspan="4">
+      							<field name="line_ids" colspan="4" nolabel="1">
+      								<tree string="Line" editable="top">
+		      							<field name="model_name" />
+		      							<field name="quantity" />
+		      							<field name="project_id" />
+		      							<field name="status" />
+      								</tree>			
+      							</field>
+      						</group>
+      					</group>
+      				</sheet>
+      			</form>
+      		</field>
+      	</record>
+
+    	<record model="ir.ui.view" id="iayra_lc_tree">
+      		<field name="name">iyara.lc.tree</field>
+      		<field name="model">iyara.lc</field>
+      		<field name="arch" type="xml">
+      			<tree string="LC">
+					<field name="name" />
+					<field name="date" />
+					<field name="proforma_invoice_no" />
+					<field name="bank_name" />
+					<field name="currency_id" />
+					<field name="total" />
+					<field name="available" />
+					<field name="gen_name" />
+					<field name="date_tr" />
+					<field name="date_due" />
+					<field name="date_import" />
+      			</tree>
+      		</field>
+      	</record>
+
+    	<record model="ir.ui.view" id="iayra_lc_search">
+      		<field name="name">iyara.lc.search</field>
+      		<field name="model">iyara.lc</field>
+      		<field name="arch" type="xml">
+      			<search string="Type">
+					<field name="name" />
+					<field name="date" />
+					<field name="proforma_invoice_no" />
+					<field name="bank_name" />
+					<field name="total" />
+					<field name="currency_id" />
+					<field name="available" />
+					<field name="gen_name" />
+					<field name="date_tr" />
+					<field name="date_due" />
+					<field name="date_import" />
+      			</search>
+      		</field>
+      	</record>
+      	
+	    <record model="ir.actions.act_window" id="iayra_lc_action">
+	        <field name="name">LC</field>
+	        <field name="res_model">iyara.lc</field>
+	        <field name="view_mode">tree,form</field>
+	    </record>	   
+
+    	<menuitem name="LC" parent="base.menu_sales" id="iayra_lc_menu" 
+    		sequence="110" action="iayra_lc_action"/>
+    
+    </data>
+</openerp>
