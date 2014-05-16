@@ -172,6 +172,8 @@ class stock_picking_out(osv.osv):
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
             if ('stock_journal_id' in vals) and (vals.get('stock_journal_id')):
+                if context.get('default_stock_journal_id',False):
+                    vals.update({'stock_journal_id': context.get('default_stock_journal_id',False)})
                 stock_journal = self.pool.get('stock.journal').browse(cr, user, [vals.get('stock_journal_id')])[0]
                 if stock_journal:
                     seq_obj_name = stock_journal.sequence_id.code
