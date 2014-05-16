@@ -107,6 +107,17 @@ class stock_picking(osv.osv):
             product_qty =  cr.fetchone()[0] or 0.0
             res[stock.id]['quantity'] = product_qty
         return res    
+    
+    def _get_productions(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for stock in self.browse(cr, uid, ids, context=context):
+            #res[stock.id] = {'production_list': False}
+            production_list = ""
+            for production in stock.production_ids:
+                production_list = production_list + production.name + ", "
+            #res[stock.id]['production_list'] = production_list
+            res[stock.id] = production_list
+        return res
 
     def _get_picking(self, cr, uid, ids, context=None):
         result = {}
@@ -129,6 +140,12 @@ class stock_picking(osv.osv):
                 'stock.move': (_get_picking, ['product_qty'], 10),
             },
             multi='sums', help="Summary Product."),
+        'production_list': fields.function(_get_productions,
+                                           string="Production List",
+                                           type="char",
+            store={
+                'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['production_ids'], 10),
+            }, ),
     }
 
     def onchange_note_id(self, cr, uid, ids, note_id=False, context=None):

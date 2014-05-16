@@ -120,10 +120,23 @@
             <field name="inherit_id" ref="stock.vpicktree"/>
             <field name="arch" type="xml">
             	<field name="state" position="before">
+            		<field name="production_list" />
             		<field name="quantity" sum="Total" />
             	</field>
         	</field>
         </record>
+        
+        <record id="view_ineco_garment_internal_filter" model="ir.ui.view">
+            <field name="name">ineco.garment.internal.filter</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+            	<field name="product_id" position="after">
+            		<field name="production_list" />
+            	</field>
+        	</field>
+        </record>
+        
        
 
         <record id="view_ineco_picking_note_tree" model="ir.ui.view">
