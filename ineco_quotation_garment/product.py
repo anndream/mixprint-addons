@@ -38,7 +38,7 @@ class product_product(osv.osv):
         for id in ids:
             #lot_ids = lot_obj.search(cr, uid, [('product_id','=',id),('stock_available', '>', 0)])
             #res[id] = len(lot_ids)
-            cr.execute('select count(*) from stock_report_prodlots where product_id=%s and qty > 0', (id,))
+            cr.execute('select count(*) from stock_report_prodlots where product_id=%s and qty > 0 and prodlot_id is not null', (id,))
             res[id] = cr.fetchone()[0] or 0.0
         return res
     
