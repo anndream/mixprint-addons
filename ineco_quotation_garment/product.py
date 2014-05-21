@@ -38,7 +38,15 @@ class product_product(osv.osv):
         for id in ids:
             #lot_ids = lot_obj.search(cr, uid, [('product_id','=',id),('stock_available', '>', 0)])
             #res[id] = len(lot_ids)
-            cr.execute('select count(*) from stock_report_prodlots where product_id=%s and qty > 0 and prodlot_id is not null', (id,))
+            cr.execute("""
+select sum(total) as total from
+(select 
+  count(*) as total
+from stock_report_prodlots 
+where product_id = %s and location_id in (select id from stock_location where usage = 'internal' and active = true) and prodlot_id is not null
+group by product_id, prodlot_id, location_id
+having (sum(qty) > 0.00)
+) a""", (id,))
             res[id] = cr.fetchone()[0] or 0.0
         return res
     
