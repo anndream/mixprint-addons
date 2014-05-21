@@ -30,6 +30,23 @@ from openerp.tools.translate import _
 
 #import openerp.addons.decimal_precision as dp
 
+class product_product(osv.osv):
+    
+    def _get_lot_count(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        lot_obj = self.pool.get('stock.production.lot')
+        for id in ids:
+            #lot_ids = lot_obj.search(cr, uid, [('product_id','=',id),('stock_available', '>', 0)])
+            #res[id] = len(lot_ids)
+            cr.execute('select count(*) from stock_report_prodlots where product_id=%s and qty > 0', (id,))
+            res[id] = cr.fetchone()[0] or 0.0
+        return res
+    
+    _inherit = 'product.product'
+    _columns = {
+        'lot_count': fields.function(_get_lot_count, string="Lots", type='integer',),
+    }
+
 class ineco_product_category_stock(osv.osv):
     
     def _get_stock_fg(self, cr, uid, ids, name, arg, context=None):

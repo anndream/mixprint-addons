@@ -117,6 +117,9 @@
 	            	<field name="incoming_qty" />
 	            	<field name="outgoing_qty" />
             	</field>
+            	<field name="state" position="before">
+            		<field name="lot_count" />
+            	</field>
             </field>
         </record>
                          
