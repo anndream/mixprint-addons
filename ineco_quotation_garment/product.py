@@ -8,7 +8,7 @@
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
 #    License, or (at your option) any later version.
-#
+# self.browse(cr, uid, ids):
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -31,6 +31,22 @@ from openerp.tools.translate import _
 #import openerp.addons.decimal_precision as dp
 
 class ineco_product_category_stock(osv.osv):
+    
+    def _get_stock_fg(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for data in self.browse(cr, uid, ids):
+            if data.virtual_available:
+                res[data.id] = round(data.qty_available / 22 * 65)
+            else:
+                res[data.id] = 0
+        return res
+
+    def _get_stock_uom(self, cr, uid, ids, name, arg, context=None):
+        res = {} 
+        for id in ids:
+            res[id] = u'ตัว'
+        return res
+    
     _name = 'ineco.product.category.stock'
     _auto = False
 
@@ -40,6 +56,9 @@ class ineco_product_category_stock(osv.osv):
         'product_id': fields.many2one('product.product','Product'),
         'virtual_available': fields.related('product_id', 'virtual_available', type='float', string='Forecast', readonly=True),
         'qty_available': fields.related('product_id', 'qty_available', type='float', string='On Hand', readonly=True),
+        'uom_id': fields.related('product_id','uom_id', type='many2one', relation='product.uom', string="UOM", readonly=True ),
+        'product_count': fields.function(_get_stock_fg, string="Total", type='integer',),
+        'product_count_uom': fields.function(_get_stock_uom, string="Unit", type='char',),
     }
     
     _order = 'category_id desc, category_child_id'
@@ -65,6 +84,23 @@ class ineco_product_category_stock(osv.osv):
         """) 
         
 class ineco_product_category_stock_option(osv.osv):
+    
+    def _get_stock_fg(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for data in self.browse(cr, uid, ids):
+            if data.virtual_available:
+                res[data.id] = round(data.qty_available / 22 * 65)
+            else:
+                res[data.id] = 0
+        return res
+
+    def _get_stock_uom(self, cr, uid, ids, name, arg, context=None):
+        res = {} 
+        for id in ids:
+            res[id] = u'ตัว'
+        return res
+
+    
     _name = 'ineco.product.category.stock.option'
     _auto = False
 
@@ -74,6 +110,9 @@ class ineco_product_category_stock_option(osv.osv):
         'product_id': fields.many2one('product.product','Product'),
         'virtual_available': fields.related('product_id', 'virtual_available', type='float', string='Forecast', readonly=True),
         'qty_available': fields.related('product_id', 'qty_available', type='float', string='On Hand', readonly=True),
+        'uom_id': fields.related('product_id','uom_id', type='many2one', relation='product.uom', string="UOM", readonly=True ),
+        'product_count': fields.function(_get_stock_fg, string="Total", type='integer',),
+        'product_count_uom': fields.function(_get_stock_uom, string="Unit", type='char',),
     }
     
     _order = 'category_id desc, category_child_id'
