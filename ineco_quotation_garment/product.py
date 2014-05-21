@@ -46,6 +46,22 @@ class ineco_product_category_stock(osv.osv):
         for id in ids:
             res[id] = u'ตัว'
         return res
+
+    def _get_stock_rule(self, cr, uid, ids, name, arg, context=None):
+        res = {} 
+        orderpoint = self.pool.get('stock.warehouse.orderpoint')
+        for data in self.browse(cr, uid, ids):
+            res[data.id] = {
+                'product_rule_count': 0,
+                'product_rule_min': 0,
+            }
+            count_ids = orderpoint.search(cr, uid, [('product_id','=',data.product_id.id)])
+            min_stock = 0
+            for rule in orderpoint.browse(cr,uid, count_ids):
+                min_stock += rule.product_min_qty
+            res[data.id]['product_rule_count'] = len(count_ids)
+            res[data.id]['product_rule_min'] = min_stock
+        return res
     
     _name = 'ineco.product.category.stock'
     _auto = False
@@ -59,6 +75,8 @@ class ineco_product_category_stock(osv.osv):
         'uom_id': fields.related('product_id','uom_id', type='many2one', relation='product.uom', string="UOM", readonly=True ),
         'product_count': fields.function(_get_stock_fg, string="Total", type='integer',),
         'product_count_uom': fields.function(_get_stock_uom, string="Unit", type='char',),
+        'product_rule_count': fields.function(_get_stock_rule, string="Unit", type='char', multi="rule"),
+        'product_rule_min': fields.function(_get_stock_rule, string="Unit", type='char', multi="rule"),
     }
     
     _order = 'category_id desc, category_child_id'
@@ -100,6 +118,21 @@ class ineco_product_category_stock_option(osv.osv):
             res[id] = u'ตัว'
         return res
 
+    def _get_stock_rule(self, cr, uid, ids, name, arg, context=None):
+        res = {} 
+        orderpoint = self.pool.get('stock.warehouse.orderpoint')
+        for data in self.browse(cr, uid, ids):
+            res[data.id] = {
+                'product_rule_count': 0,
+                'product_rule_min': 0,
+            }
+            count_ids = orderpoint.search(cr, uid, [('product_id','=',data.product_id.id)])
+            min_stock = 0
+            for rule in orderpoint.browse(cr,uid, count_ids):
+                min_stock += rule.product_min_qty
+            res[data.id]['product_rule_count'] = len(count_ids)
+            res[data.id]['product_rule_min'] = min_stock
+        return res
     
     _name = 'ineco.product.category.stock.option'
     _auto = False
@@ -113,7 +146,9 @@ class ineco_product_category_stock_option(osv.osv):
         'uom_id': fields.related('product_id','uom_id', type='many2one', relation='product.uom', string="UOM", readonly=True ),
         'product_count': fields.function(_get_stock_fg, string="Total", type='integer',),
         'product_count_uom': fields.function(_get_stock_uom, string="Unit", type='char',),
-    }
+        'product_rule_count': fields.function(_get_stock_rule, string="Unit", type='char', multi="rule"),
+        'product_rule_min': fields.function(_get_stock_rule, string="Unit", type='char', multi="rule"),
+   }
     
     _order = 'category_id desc, category_child_id'
         
