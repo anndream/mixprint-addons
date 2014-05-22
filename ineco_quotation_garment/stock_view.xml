@@ -53,6 +53,7 @@
                     <field name="ineco_date_delivery" />
                     <field name="garment_order_no" />
                     <field name="picking_transfer_id" />
+                    <field name="objective_id" />
                     <filter string="Delivery Type" domain="[]" context="{'group_by':'delivery_type_id'}"/>
                 </field>
         	</field>
@@ -71,6 +72,7 @@
                     <field name="batch_no" />
                     <field name="sale_id" attrs="{'readonly':[('origin', '=', False)]}"/>
                     <field name="opportunity_id" domain="[('user_id','=',uid)]" groups="base.group_sale_salesman" />
+                    <field name="objective_id" />
                 </xpath>
                 <xpath expr="//field[@name='date_done']" position="after">
                 	<field name="date_delivery" />
@@ -87,6 +89,7 @@
             <field name="arch" type="xml">
             	<field name="invoice_state" position="before">
             		<field name="delivery_type_id" />         		
+            		<field name="objective_id" invisible="1" />
             	</field>
             	<field name="origin" position="before">
             		<field name="batch_no" />
@@ -136,9 +139,7 @@
             		<field name="production_list" />
             	</field>
         	</field>
-        </record>
-        
-       
+        </record>      
 
         <record id="view_ineco_picking_note_tree" model="ir.ui.view">
             <field name="name">ineco.picking.note.tree</field>
@@ -222,6 +223,65 @@
                 </field>
         	</field>
         </record>
+
+		<!-- Ineco Delivery Objective -->
+        <record id="view_ineco_delivery_objective_tree" model="ir.ui.view">
+            <field name="name">ineco.delivery.objective.tree</field>
+            <field name="model">ineco.delivery.objective</field>
+            <field name="arch" type="xml">
+                <tree string="Objective">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_delivery_objective_form" model="ir.ui.view">
+            <field name="name">ineco.delivery.objective.form</field>
+            <field name="model">ineco.delivery.objective</field>
+            <field name="arch" type="xml">
+                <form string="Objective">
+                    <field name="name" />
+                </form>
+            </field>
+        </record>	
+        
+        <record id="view_ineco_delivery_objective_search" model="ir.ui.view">
+            <field name="name">ineco.delivery.objective.search</field>
+            <field name="model">ineco.delivery.objective</field>
+            <field name="arch" type="xml">
+                <search string="Objective">
+                    <field name="name" />
+                </search>
+            </field>
+        </record>	
+	
+
+        <record id="action_ineco_delivery_objective" model="ir.actions.act_window">
+            <field name="name">Delivery Objective</field>
+            <field name="res_model">ineco.delivery.objective</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_delivery_objective_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a delivery objective. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+        <menuitem 
+            id="menu_ineco_delivery_objective"
+        	action="action_ineco_delivery_objective" 
+        	parent="stock.menu_stock_configuration"
+        	
+        	/> 
+
+
 		        
     </data>
 </openerp>

@@ -35,6 +35,16 @@ import openerp.addons.decimal_precision as dp
 # import logging
 # _logger = logging.getLogger(__name__)
 
+class ineco_delivery_objective(osv.osv):
+    _name = 'ineco.delivery.objective'
+    _description = "Objective to delivery something"
+    _columns = {
+        'name': fields.char('Description', size=128),
+    }
+    _sql_constraints = [
+        ('name_unique', 'unique (name)', 'Description must be unique !')
+    ]
+
 class ineco_delivery_type(osv.osv):
     _name = "ineco.delivery.type"
     _description = "Delivery Type"
@@ -96,6 +106,7 @@ class stock_picking_out(osv.osv):
             #multi='sums', help="Summary Product."
             ),
         'opportunity_id': fields.many2one('crm.lead', 'Opportunity',domain=[('type','=','opportunity')]),
+        'objective_id': fields.many2one('ineco.delivery.objective', 'Objective')
     }
         
     

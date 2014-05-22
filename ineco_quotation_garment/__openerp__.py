@@ -25,6 +25,9 @@
     'category' : 'INECO',
     'description' : """
 New Quotation Menu/View for Garment Business.
+- update view mail.email_compose_message_wizard_form 
+  <field name="partner_ids" .... domain="[('is_user','=',1)]"/>
+
     """,
     'website': 'http://www.ineco.co.th',
     'images' : [],
