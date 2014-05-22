@@ -62,11 +62,12 @@ class stock_picking_out(osv.osv):
     def _get_quantity(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for stock in self.browse(cr, uid, ids, context=context):
-            res[stock.id] = {'quantity': 0.0}
+            res[stock.id] = 0.0
+            #res[stock.id] = {'quantity': 0.0}
             sql = "select sum(product_qty) from stock_move where picking_id = %s"
             cr.execute(sql % stock.id)
             product_qty =  cr.fetchone()[0] or 0.0
-            res[stock.id]['quantity'] = product_qty
+            res[stock.id] = product_qty
         return res    
 
     def _get_picking(self, cr, uid, ids, context=None):
