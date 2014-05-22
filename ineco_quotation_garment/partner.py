@@ -49,5 +49,9 @@ class res_partner(osv.osv):
             ),
         'grade_by_price': fields.selection([('a','A'),('b','B'),('c','C'),('d','D')], 'Grade by Price'
             ),
-                
+        'is_user': fields.boolean('Is User')
+    }
+    
+    _defaults = {
+        'is_user': False
     }
