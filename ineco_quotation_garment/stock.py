@@ -88,11 +88,12 @@ class stock_picking_out(osv.osv):
                                     digits_compute=dp.get_precision('Product Unit of Measure'), 
                                     string='Quantity',
                                     type="float",
-            store={
-                'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 10),
-                'stock.move': (_get_picking, ['product_qty'], 10),
-            },
-            multi='sums', help="Summary Product."),
+            #store={
+            #    'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 10),
+            #    'stock.move': (_get_picking, ['product_qty'], 10),
+            #},
+            #multi='sums', help="Summary Product."
+            ),
     }
         
     
