@@ -122,6 +122,31 @@
             	</field>
             </field>
         </record>
-                         
+
+		<!-- Product Category -->
+        <record id="ineco_product_category_ratio_form" model="ir.ui.view">
+            <field name="name">ineco.product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+            	<field name="type" position="after">
+            		<field name="ratio" />
+            	</field>
+			</field>
+		</record>
+
+        <record id="ineco_product_cateogry_ratio_tree" model="ir.ui.view">
+            <field name="name">ineco.product.category.tree</field>
+            <field name="model">product.category</field>
+            <field name="priority">2</field>
+            <field name="inherit_id" ref="product.product_category_list_view"/>
+            <field name="arch" type="xml">
+
+                    <field name="complete_name" position="after">
+                    	<field name="ratio" />
+                    </field>
+
+            </field>
+        </record>                         
      </data>
 </openerp>

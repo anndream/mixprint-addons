@@ -30,6 +30,17 @@ from openerp.tools.translate import _
 
 #import openerp.addons.decimal_precision as dp
 
+class product_category(osv.osv):
+    
+    _inherit = 'product.category'
+    _description = 'add ratio for garment'
+    _columns = {
+        'ratio': fields.float('Ratio', digits=(16,4))
+    }
+    _defaults = {
+        'ratio': 1.0000
+    }
+
 class product_product(osv.osv):
     
     def _get_lot_count(self, cr, uid, ids, name, arg, context=None):
@@ -61,7 +72,7 @@ class ineco_product_category_stock(osv.osv):
         res = {}
         for data in self.browse(cr, uid, ids):
             if data.virtual_available:
-                res[data.id] = round(data.qty_available / 22 * 65)
+                res[data.id] = round(data.qty_available * data.product_id.categ_id.ratio or 1.0000 )
             else:
                 res[data.id] = 0
         return res
