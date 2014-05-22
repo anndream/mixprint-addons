@@ -95,6 +95,7 @@ class stock_picking_out(osv.osv):
             #},
             #multi='sums', help="Summary Product."
             ),
+        'opportunity_id': fields.many2one('crm.lead', 'Opportunity',domain=[('type','=','opportunity')]),
     }
         
     

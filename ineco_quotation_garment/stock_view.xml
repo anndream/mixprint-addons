@@ -70,6 +70,7 @@
                 <xpath expr="//field[@name='origin']" position="after">
                     <field name="batch_no" />
                     <field name="sale_id" attrs="{'readonly':[('origin', '=', False)]}"/>
+                    <field name="opportunity_id" domain="[('user_id','=',uid)]" groups="base.group_sale_salesman" />
                 </xpath>
                 <xpath expr="//field[@name='date_done']" position="after">
                 	<field name="date_delivery" />

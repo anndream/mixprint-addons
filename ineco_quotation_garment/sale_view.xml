@@ -626,7 +626,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
             <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 
-            	'default_stock_journal_id':2}</field>
+            	'default_stock_journal_id':2,'show_opportunity':1}</field>
             <field name="search_view_id" ref="stock.view_picking_out_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
