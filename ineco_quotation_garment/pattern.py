@@ -189,11 +189,29 @@ class ineco_pattern_log(osv.osv):
     _columns = {
         'name': fields.char('Description',size=64,),
         'type': fields.selection([('in','In'),('out','Out')],'Type',required=True),
-        'user_id': fields.many2one('res.users','User', required=True),
+        'user_id': fields.many2one('hr.employee','User', required=True),
         'pattern_line_id': fields.many2one('ineco.pattern.line','Pattern Line',),
         'last_updated': fields.datetime('Last Updated'),    
         'pattern_id': fields.many2one('ineco.pattern','Pattern'),
     }
     _defaults = {
-        'last_updated': time.strftime("%Y-%m-%d %H:%M:%S"),
+        #'last_updated': time.strftime("%Y-%m-%d %H:%M:%S"),
     }
+    _order = 'last_updated desc'
+
+    def create(self, cr, uid, vals, context=None):
+        pattern_id = vals.get('pattern_id', False)
+        type = vals.get('type', False)
+        if pattern_id and type:
+            pattern = self.pool.get('ineco.pattern').browse(cr, uid, [pattern_id])[0]
+            if type == 'out' and pattern.state != 'damange':
+                pattern.write({'state':'used'})
+            elif type == 'in':
+                pattern.write({'state':'ready'})
+        vals.update({'last_updated': time.strftime("%Y-%m-%d %H:%M:%S")})
+        return super(ineco_pattern_log, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        vals.update({'last_updated': time.strftime("%Y-%m-%d %H:%M:%S")})
+        res = super(ineco_pattern_log, self).write(cr, uid, ids, vals, context=context)
+        return res

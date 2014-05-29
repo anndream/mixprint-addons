@@ -331,6 +331,99 @@
             action="action_ineco_pattern"
             sequence="0"/>
 
+		<!-- Pattern Out -->
+        <record id="view_ineco_pattern_out_tree" model="ir.ui.view">
+            <field name="name">ineco.pattern.out.tree</field>
+            <field name="model">ineco.pattern.log</field>
+            <field name="arch" type="xml">
+                <tree string="Pattern - Out" editable="top">
+                	<field name="type" invisible="1" />
+                	<field name="user_id" />
+                	<field name="pattern_id" domain="[('state','=','ready')]" />
+                	<field name="last_updated" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_ineco_pattern_logout_filter" model="ir.ui.view">
+            <field name="name">ineco.pattern.logout.filter</field>
+            <field name="model">ineco.pattern.log</field>
+            <field name="arch" type="xml">
+                <search string="Pattern">
+                    <field name="pattern_id" />
+                    <field name="user_id" />
+                    <field name="type" />
+                </search>
+            </field>
+        </record>
+                
+        <record id="action_ineco_pattern_out" model="ir.actions.act_window">
+            <field name="name">Pattern - Out</field>
+            <field name="res_model">ineco.pattern.log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','out')]</field>
+            <field name="view_id" ref="view_ineco_pattern_out_tree"/>
+            <field name="search_view_id" ref="view_ineco_pattern_logout_filter"/>
+            <field name="context">{'default_type':'out'}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a pattern - out. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem name="Pattern - Out"
+            id="menu_mrp_pattern_out"
+            parent="menu_mrp_pattern_menu"
+            action="action_ineco_pattern_out"
+            sequence="1"/>
+
+		<!-- Pattern In -->
+        <record id="view_ineco_pattern_in_tree" model="ir.ui.view">
+            <field name="name">ineco.pattern.in.tree</field>
+            <field name="model">ineco.pattern.log</field>
+            <field name="arch" type="xml">
+                <tree string="Pattern - In" editable="top">
+                	<field name="type" invisible="1" />
+                	<field name="user_id" />
+                	<field name="pattern_id" domain="[('state','=','used')]" />
+                	<field name="last_updated" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_ineco_pattern_in" model="ir.actions.act_window">
+            <field name="name">Pattern - In</field>
+            <field name="res_model">ineco.pattern.log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','in')]</field>
+            <field name="view_id" ref="view_ineco_pattern_in_tree"/>
+            <field name="search_view_id" ref="view_ineco_pattern_logout_filter"/>
+            <field name="context">{'default_type':'in'}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a pattern - out. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem name="Pattern - In"
+            id="menu_mrp_pattern_in"
+            parent="menu_mrp_pattern_menu"
+            action="action_ineco_pattern_in"
+            sequence="2"/>
       
      </data>
 </openerp>
