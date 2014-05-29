@@ -229,7 +229,7 @@
 			                    <field name="garment_order_no" />
 			                    <field name="product_type_id" />
 			                    <field name="location_id" />
-			                    <field name="active" />
+			                    <field name="active" groups="base.group_erp_manager" />
                 			</group>
 
                 				<notebook colspan="4">
