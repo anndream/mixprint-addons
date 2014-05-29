@@ -99,8 +99,8 @@ class sale_line_property(osv.osv):
     _columns = {
         'name': fields.text('Description', required=True),
         'seq': fields.integer('Sequence'),
-        'property_id': fields.many2one('sale.property', 'Property',  required=True),
-        'sale_line_id': fields.many2one('sale.order.line', 'Order Line', required=True),
+        'property_id': fields.many2one('sale.property', 'Property',  required=True, ondelete='cascade'),
+        'sale_line_id': fields.many2one('sale.order.line', 'Order Line', ondelete='cascade'),
     }
     _sql_constraints = [
         ('name_property_unique', 'unique (name, property_id, sale_line_id)', 'Description and property must be unique !')
@@ -117,7 +117,7 @@ class sale_line_property_other(osv.osv):
         'gender_id': fields.many2one('sale.gender', 'Gender', required=True ),
         'size_id': fields.many2one('sale.size', 'Size'),
         'quantity': fields.integer('Quantity', required=True),
-        'sale_line_id': fields.many2one('sale.order.line', 'Order Line', required=True),
+        'sale_line_id': fields.many2one('sale.order.line', 'Order Line', ondelete='cascade'),
         'style_id': fields.many2one('sale.style', 'Style'),
         'note': fields.char('Note', size=32, required=True),
     }
@@ -148,12 +148,12 @@ class sale_order_line(osv.osv):
         'garmentorder_date':fields.related('order_id', 'garment_order_date', type='date', 
             store={
                 'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, [], 10),
-                'sale.order': (_get_order_line, [], 10),
+                'sale.order': (_get_order_line, ['garment_order_date'], 10),
             }, string='MO Date'),
         'dateorder':fields.related('order_id', 'date_order', type='date', 
             store={
                 'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, [], 10),
-                'sale.order': (_get_order_line, [], 10),
+                'sale.order': (_get_order_line, ['garment_order_date'], 10),
             }, string='Date Order'),      
     }    
     _defaults = {
