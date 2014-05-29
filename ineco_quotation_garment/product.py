@@ -64,6 +64,10 @@ having (sum(qty) > 0.00)
     _inherit = 'product.product'
     _columns = {
         'lot_count': fields.function(_get_lot_count, string="Lots", type='integer',),
+        'no_return_product': fields.boolean('No Return'),
+    }
+    _defaults = {
+        'no_return_product': False,
     }
 
 class ineco_product_category_stock(osv.osv):
