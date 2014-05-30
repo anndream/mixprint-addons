@@ -21,6 +21,21 @@
                     		</group>
                         </group>
                     </page>
+                    <page string="Stampper" attrs="{'invisible':[('report_type','!=','ineco')]}">
+                    	<group>
+                    		<field name="stamp_ids" nolabel="1">
+                    			<tree string="Stamper" editable="top">
+                    				<field name="seq" />
+                    				<field name="type" />
+                    				<field name="name" />
+                    				<field name="position_x" />
+                    				<field name="position_y" />
+                    				<field name="size_width" />
+                    				<field name="size_height" />
+                    			</tree>
+                    		</field>
+                    	</group>
+                    </page>
                 </xpath>
             </field>
         </record>

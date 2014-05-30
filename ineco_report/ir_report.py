@@ -29,10 +29,10 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import netsvc
+from openerp.osv import osv, fields
+from openerp import netsvc
 from ineco_report import InecoParser
-from report.report_sxw import rml_parse
+from openerp.report.report_sxw import rml_parse
 
 def register_report(name, model, tmpl_path, parser=rml_parse):
     "Register the report into the services"
@@ -46,7 +46,6 @@ def register_report(name, model, tmpl_path, parser=rml_parse):
             parser = service.parser
         del netsvc.Service._services[name]
     InecoParser(name, model, tmpl_path, parser=parser)
-
 
 class ReportXML(osv.osv):
 
@@ -125,10 +124,37 @@ class ReportXML(osv.osv):
         'jasper_password': fields.char('Password', size=20),
         'criteria_field': fields.char('Criteria Field', size=100),
         'parameter_name': fields.char('Jasper Parameter Name', size=100),
+        'stamp_ids': fields.one2many('ir.report.stamp','report_id', 'Stamper'),
     }
     
     _defaults = {
         'report_type': 'ineco',
     }
 
-ReportXML()
+class ir_report_stamp(osv.osv):
+    _name = 'ir.report.stamp'
+    _description = 'PDF Stampper'
+    _columns = {
+        'name': fields.char('Description',size=64),
+        'seq': fields.integer('Sequence'),
+        'type': fields.selection([
+            ('original','Original'),
+            ('original_thai','Original - Thai'),
+            ('copy','Copy'), 
+            ('copy_thai','Copy - Thai')], 'Type'),
+        'position_x': fields.integer('X'),
+        'position_y': fields.integer('Y'),
+        'size_width': fields.integer('Width'),
+        'size_height': fields.integer('Height'),
+        'report_id': fields.many2one('ir.actions.report.xml','Reports'),
+    }
+    _defaults = {
+        'type': 'original',
+        'name': '...',
+        'seq': 1,
+        'position_x': 450,
+        'position_y': 750,
+        'size_width': 140,
+        'size_height': 72,
+    }
+    _order = 'report_id, seq'

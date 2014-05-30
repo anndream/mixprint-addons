@@ -48,6 +48,8 @@ from osv.osv import except_osv
 from osv import fields,osv
 import jasperclient
 import base64
+from pyPdf import PdfFileWriter, PdfFileReader
+from reportlab.pdfgen import canvas
 
 try:
     from cStringIO import StringIO
@@ -89,7 +91,47 @@ class InecoParser(report_sxw):
             buf = StringIO()
             buf.write(a['data'])
             pdf = buf.getvalue()
-            buf.close()            
+            if report_xml.stamp_ids:
+                input_buff = buf.getvalue()
+                buf.close()            
+                output = PdfFileWriter()
+                original = os.path.join(os.getcwd(),'openerp/addons/ineco_report/images/original.png')
+                original_thai = os.path.join(os.getcwd(),'openerp/addons/ineco_report/images/original_thai.png')
+                copy = os.path.join(os.getcwd(),'openerp/addons/ineco_report/images/copy.png')
+                copy_thai = os.path.join(os.getcwd(),'openerp/addons/ineco_report/images/copy_thai.png')
+                for stamp in report_xml.stamp_ids:
+                    input_IO = StringIO()
+                    input_IO.write(a['data'])
+                    input = PdfFileReader(input_IO)
+                    if stamp.type == 'original':
+                        imgPath = original
+                    elif stamp.type == 'original_thai':
+                        imgPath = original_thai
+                    elif stamp.type == 'copy':
+                        imgPath = copy
+                    elif stamp.type == 'copy_thai':
+                        imgPath = copy_thai
+                    else:
+                        imgPath = original
+                    imgTemp = StringIO()
+                    imgDoc = canvas.Canvas(imgTemp)
+                    imgDoc.drawImage(imgPath, 
+                        stamp.position_x or 450, 
+                        stamp.position_y or 700, 
+                        stamp.size_width or 144, 
+                        stamp.size_height or 72, 
+                        [255,255,255,255,255,255]) #Transparent
+                    imgDoc.save()                 
+                    pageNew = input.getPage(0)
+                    overlay = PdfFileReader(StringIO(imgTemp.getvalue())).getPage(0)
+                    pageNew.mergePage(overlay)
+                    output.addPage(pageNew)
+                #outputStream = file('output.pdf','wb')
+                #output.write(outputStream)
+                #outputStream.close()
+                buf = StringIO()
+                output.write(buf)
+                pdf = buf.getvalue()
         else:
             raise osv.except_osv(_('Warning !'), _('Please fill data in URL, Username, Password, Report Path and Criteria.'))
 
