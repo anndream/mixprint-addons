@@ -121,11 +121,13 @@ class InecoParser(report_sxw):
                         stamp.size_width or 144, 
                         stamp.size_height or 72, 
                         [255,255,255,255,255,255]) #Transparent
-                    imgDoc.save()                 
-                    pageNew = input.getPage(0)
-                    overlay = PdfFileReader(StringIO(imgTemp.getvalue())).getPage(0)
-                    pageNew.mergePage(overlay)
-                    output.addPage(pageNew)
+                    imgDoc.save()       
+                    numPages = input.getNumPages()    
+                    for i in range(0, numPages): 
+                        pageNew = input.getPage(i)
+                        overlay = PdfFileReader(StringIO(imgTemp.getvalue())).getPage(0)
+                        pageNew.mergePage(overlay)
+                        output.addPage(pageNew)
                 #outputStream = file('output.pdf','wb')
                 #output.write(outputStream)
                 #outputStream.close()

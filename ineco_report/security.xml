@@ -12,6 +12,16 @@
         <field name="perm_unlink" eval="0"/>
     </record>
 
+    <record id="secure_ineco_report_stamper" model="ir.model.access">
+        <field name="name">Employees</field>
+        <field name="group_id" ref="base.group_user" />
+        <field name="model_id" ref="model_ir_report_stamp" />
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    
 <!--
     <record id="secure_ineco_report_config_admin" model="ir.model.access">
         <field name="name">Employees</field>
