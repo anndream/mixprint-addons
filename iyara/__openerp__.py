@@ -23,7 +23,7 @@
 {
     'name' : 'Iyara',
     'version' : '0.1',
-    'depends' : ["sale","crm","sale_crm","purchase","analytic",
+    'depends' : ["sale","crm","sale_crm","purchase","analytic","hr",
                  "account","account_voucher",'hr_expense','mrp','ineco_thai_account'],
     'author' : 'INECO LTD.,PART.',
     'category': 'sale',
@@ -45,7 +45,8 @@ A. Sale Module:
         'hr_expense_view.xml',
         'crm_lead_view.xml',
         'account_view.xml',
-        
+        'hr_view.xml',
+        'stock_view.xml',
     ],
     'demo': [],
     'installable': True,

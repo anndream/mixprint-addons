@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-Today INECO LTD,. PART. (<http://www.ineco.co.th>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,14 +19,21 @@
 #
 ##############################################################################
 
-import wizard
-import sale
-import purchase
-import analytic
-import hr_expense
-import crm_lead
-import account
-import hr
-import stock
+from openerp import addons
+import logging
+from openerp.osv import fields, osv
+from openerp import tools
+import openerp.addons.decimal_precision as dp
+
+
+class hr_employee(osv.osv):
+    _inherit = "hr.employee"
+    _description = "Iyara Employee"
+    
+    _columns = {                
+                'sales_target': fields.float('Sales target', digits_compute= dp.get_precision('Account'),),                
+                }
+    
+hr_employee()    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
