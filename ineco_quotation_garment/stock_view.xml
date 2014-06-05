@@ -130,6 +130,18 @@
         	</field>
         </record>
         
+        <record id="view_stock_pickingin_quantity_tree" model="ir.ui.view">
+            <field name="name">ineco.stock.pickingin.quantity.tree</field>
+            <field name="model">stock.picking.in</field>
+            <field name="inherit_id" ref="stock.view_picking_in_tree"/>
+            <field name="arch" type="xml">
+            	<field name="state" position="before">
+            		<field name="quantity" sum="Total" />
+            	</field>
+        	</field>
+        </record>
+        
+        
         <record id="view_ineco_garment_internal_filter" model="ir.ui.view">
             <field name="name">ineco.garment.internal.filter</field>
             <field name="model">stock.picking</field>

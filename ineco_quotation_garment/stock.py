@@ -67,6 +67,27 @@ class stock_move(osv.osv):
         'product_weight': fields.float('Weight', digits_compute=dp.get_precision('Product Unit of Measure')),
     }
     
+class stock_picking_in(osv.osv):
+
+    def _get_quantity(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for stock in self.browse(cr, uid, ids, context=context):
+            res[stock.id] = 0.0
+            #res[stock.id] = {'quantity': 0.0}
+            sql = "select sum(product_qty) from stock_move where picking_id = %s"
+            cr.execute(sql % stock.id)
+            product_qty =  cr.fetchone()[0] or 0.0
+            res[stock.id] = product_qty
+        return res    
+    
+    _inherit = 'stock.picking.in'
+    _columns = {
+        'quantity': fields.function(_get_quantity, 
+                                    digits_compute=dp.get_precision('Product Unit of Measure'), 
+                                    string='Quantity',
+                                    type="float",)
+    }
+    
 class stock_picking_out(osv.osv):
     
     def _get_quantity(self, cr, uid, ids, name, arg, context=None):
