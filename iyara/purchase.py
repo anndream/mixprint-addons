@@ -20,7 +20,8 @@
 ##############################################################################
 
 from datetime import datetime
-
+from openerp import netsvc
+from openerp import pooler
 from openerp.osv import fields, osv
 
 class purchase_order(osv.osv):
@@ -32,6 +33,21 @@ class purchase_order(osv.osv):
         'iraya_terms': fields.selection([('ex_china','Ex-Warehouse China'),
                                          ('ex_singapore','Ex-Warehouse Singapore'),
                                          ('tt_advance','T/T in advance.')],'TERMS'),
+        'review':fields.boolean('review', readonly=True, select=True, ),
         }
+    
+    def action_cancel_draft(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return False
+        self.write(cr, uid, ids, {'state':'draft','shipped':0,'review':True,})
+        wf_service = netsvc.LocalService("workflow")
+        for p_id in ids:
+            # Deleting the existing instance of workflow for PO
+            wf_service.trg_delete(uid, 'purchase.order', p_id, cr)
+            wf_service.trg_create(uid, 'purchase.order', p_id, cr)
+        return True    
+    
+    
+    
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

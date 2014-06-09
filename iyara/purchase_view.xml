@@ -11,6 +11,9 @@
                     <field name="iraya_terms"/>
                     <field name="sale_by"/>
                 </field>
+                <field name="shipped" position="after">
+                    <field name="review"/>
+                </field>
             </field>
         </record>
   
