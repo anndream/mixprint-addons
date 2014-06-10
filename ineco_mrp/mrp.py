@@ -28,7 +28,7 @@ class ineco_mrp_box(osv.osv):
     _columns = {
         'name': fields.char('Box Code', size=32,required=True),
         'production_id': fields.many2one('mrp.production','Production',),
-        'workcenter_id': fields.many2one('mrp.workcenter','Workcenter',required=True),
+        'workcenter_id': fields.many2one('mrp.workcenter','Workcenter'),
         'employee_id': fields.many2one('hr.employee','Employee',),
         'last_action_datetime': fields.datetime('Last Action'),
         'active': fields.boolean('Active'),
