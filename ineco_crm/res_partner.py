@@ -184,12 +184,24 @@ class res_partner(osv.osv):
     def _last_date_count(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for partner in self.browse(cr, uid, ids, context=context):
-            last_date_count = 0
-            if partner.last_phonecall:
-                date_now = time.strftime('%Y-%m-%d %H:%M:%S')
-                date_start = datetime.strptime(partner.last_phonecall,'%Y-%m-%d %H:%M:%S')
-                date_finished = datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
-                last_date_count += (date_finished-date_start).days 
+            sql = """
+                select 
+                  extract(days from now() - GREATEST(
+                  coalesce((select max(create_date) from crm_phonecall where partner_id = rp.id), rp.create_date) ,
+                  coalesce((select max(case when write_date is null then create_date else write_date end) from crm_lead where partner_id = rp.id), rp.create_date)))
+                from
+                  res_partner rp
+                where 
+                  rp.id = %s
+              """
+            cr.execute(sql % partner.id)
+            last_date_count = cr.fetchone()[0] or 0.0
+            #last_date_count = 0
+            #if partner.last_phonecall:
+            #    date_now = time.strftime('%Y-%m-%d %H:%M:%S')
+            #    date_start = datetime.strptime(partner.last_phonecall,'%Y-%m-%d %H:%M:%S')
+            #    date_finished = datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
+            #    last_date_count += (date_finished-date_start).days 
             res[partner.id] = last_date_count
             #reset main company again
             if partner.parent_id:
