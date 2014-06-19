@@ -148,13 +148,17 @@ class crm_lead(osv.osv):
         res = {}
         for lead in self.browse(cr, uid, ids, context=context):
             last_date_count = 0
+            sql = """
+               select extract(days from now() - create_date) as age from crm_lead where id = %s
+            """
             if lead.state not in ('done','cancel'):
-                date_now = time.strftime('%Y-%m-%d %H:%M:%S')
-                date_start = datetime.strptime(lead.create_date,'%Y-%m-%d %H:%M:%S')
-                date_start = date_start - timedelta(hours=7)
-                date_finished = datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
-                last_date_count = (date_finished-date_start).days 
-            res[lead.id] = last_date_count
+                #date_now = time.strftime('%Y-%m-%d %H:%M:%S')
+                #date_start = datetime.strptime(lead.create_date,'%Y-%m-%d %H:%M:%S')
+                #date_finished = datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
+                #last_date_count = (date_finished-date_start).days 
+                cr.execute(sql % (lead.id))
+                last_date_count = cr.fetchone()[0] or 0.0
+            res[lead.id] = last_date_count 
         return res
 
     def _my_opportunity(self, cr, uid, ids, field_name, arg, context=None):
