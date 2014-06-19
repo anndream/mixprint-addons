@@ -63,6 +63,7 @@ New Quotation Menu/View for Garment Business.
         'dashboard_view.xml',
         'dashboard_invoice_view.xml',
         'pattern_view.xml',
+        'mrp_view.xml',
         #'purchase_order_view.xml',
     ],
     'installable': True,

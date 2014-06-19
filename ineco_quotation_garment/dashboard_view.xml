@@ -389,7 +389,7 @@
             </field>
         </record>    
 
-		<!-- ALL Top 10 Opportunity Tree -->
+		<!-- ALL Top 50 Opportunity Tree -->
         <record model="ir.ui.view" id="view_ineco_sale_all_opportunity_tree">
             <field name="name">ineco.sale.all.opportunity.tree</field>
             <field name="model">ineco.sale.all.opportunity</field>
@@ -433,6 +433,52 @@
             <field name="help" type="html">
             </field>
         </record>    
+
+		<!-- Lose Opportunity -->
+        <record model="ir.ui.view" id="view_ineco_sale_lose_opportunity_tree">
+            <field name="name">ineco.sale.lose.opportunity.tree</field>
+            <field name="model">ineco.sale.lose.opportunity</field>
+            <field name="arch" type="xml">
+                <tree string="Lose Opportunity" >
+                	<field name="user_id" invisible="1"/>
+                	<field name="partner_id" />
+                	<field name="stage_id" />
+                	<field name="planned_revenue" />
+                	<field name="last_date_count" />
+                	<field name="last_contact_date" />
+                </tree>
+            </field>
+        </record>        
+
+        <record id="view_ineco_sale_lose_opportunity_filter" model="ir.ui.view">
+            <field name="name">ineco.sale.lose.opportunity.filter</field>
+            <field name="model">ineco.sale.lose.opportunity</field>
+            <field name="arch" type="xml">
+                <search string="Search All Opportunity">
+                	<field name="user_id" />
+                	<field name="partner_id" />
+                	<field name="stage_id" />
+                	<group expand="0" string="Group By...">
+                		<filter name="sale_group" string="Sale" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                	</group>                    
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_sale_lose_opportunity" model="ir.actions.act_window">
+            <field name="name">Lose Opportunity</field>
+            <field name="res_model">ineco.sale.lose.opportunity</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ineco_sale_all_opportunity_tree"/>
+            <field name="search_view_id" ref="view_ineco_sale_all_opportunity_filter"/>
+            <field name="context">{'search_default_sale_group':1}</field>
+            <field name="limit">200</field>
+            <field name="help" type="html">
+            </field>
+        </record>    
+
         
         <!-- Cotton's Stock -->
         <record model="ir.ui.view" id="view_ineco_product_category_cotton_tree">
@@ -605,6 +651,7 @@
                     <board style="1">
                         <column>
                        		<action string="Top 50 Opportunity by Sale" name="%(action_ineco_sale_all_opportunity)d"/>
+                       		<action string="Lose Opportunity by Sale" name="%(action_ineco_sale_lose_opportunity)d"/>
  						</column>
                     </board>
                 </form>

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012 - INECO PARTNERSHIP LIMITE (<http://www.ineco.co.th>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,17 +19,21 @@
 #
 ##############################################################################
 
-import dashboard
-import sale
-import stock
-import stock_partial_picking
-import partner
-import problem
-import res_users
-import invoice
-import product
-import dashboard_invoice
-import pattern
-import mrp
+import time
+from datetime import datetime
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import openerp.addons.decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools import float_compare
+from openerp.tools.translate import _
+from openerp import netsvc
+from openerp import tools
+
+class mrp_production(osv.osv):
+    _inherit = 'mrp.production'
+    _description = 'MRP for Garment'
+    _columns = {
+        'date_plan_start': fields.datetime('Date Plan Start'),
+        'date_plan_finish': fields.datetime('Date Plan Finish'),
+    }
