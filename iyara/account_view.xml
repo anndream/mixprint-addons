@@ -135,5 +135,25 @@
         	</field>
         </record>      
 
+        <!-- Account Invoice  -->
+        <record id="iyara_account_invoice_form_view" model="ir.ui.view">
+            <field name="name">iyara.account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="ineco_thai_account.view_ineco_account_invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="bill_due" position="after">
+	               	<field name="billing_1"/>
+	           		<field name="billing_2"/>
+	       			<field name="billing_3"/>
+	            </field>  
+	            <field name="receipt_due" position="after">  		
+	           		<field name="Receipt_1"/>
+	               	<field name="Receipt_2"/>
+	            	<field name="Receipt_3"/>
+				</field>  
+        	</field>
+        </record>           
+        
+        
 	</data>
 </openerp>

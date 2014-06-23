@@ -61,7 +61,14 @@ class account_invoice(osv.osv):
     
     _inherit = "account.invoice"
     _description = "update unlink"
-
+    _columns = {   
+            'billing_1': fields.boolean('Billing 1'),
+            'billing_2': fields.boolean('Billing 2'),
+            'billing_3': fields.boolean('Billing 3'),
+            'Receipt_1': fields.boolean('Receipt 1'),
+            'Receipt_2': fields.boolean('Receipt 2'),
+            'Receipt_3': fields.boolean('Receipt 3'),
+    } 
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -74,6 +81,8 @@ class account_invoice(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('You can not delete an invoice which is not cancelled. You should refund it instead.'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
+
+
 
 account_invoice()
     
