@@ -23,7 +23,7 @@
 {
     'name' : 'Iyara LC',
     'version' : '0.1',
-    'depends' : ["base","account"],
+    'depends' : ["base","account","purchase"],
     'author' : 'INECO LTD.,PART.',
     'category': 'sale',
     'description': """
