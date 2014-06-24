@@ -785,10 +785,10 @@
                     <board style="1">
                         <column>
                        		<action string="Top 50 Opportunity by Sale" name="%(action_ineco_sale_all_opportunity)d"/>
-                       		<action string="Lose Current Opportunity by Sale" name="%(action_ineco_sale_lose_opportunity)d"/>
-                       		<action string="Lose 1 Month Opportunity by Sale" name="%(action_ineco_sale_lose_opportunity_month1)d"/>
-                       		<action string="Lose 3 Months Opportunity by Sale" name="%(action_ineco_sale_lose_opportunity_month3)d"/>
-                       		<action string="Lose 6 Months Opportunity by Sale" name="%(action_ineco_sale_lose_opportunity_month6)d"/>
+                       		<action string="Lost Current Opportunity by Sale" name="%(action_ineco_sale_lose_opportunity)d"/>
+                       		<action string="Lost 1 Month Opportunity by Sale" name="%(action_ineco_sale_lose_opportunity_month1)d"/>
+                       		<action string="Lost 3 Months Opportunity by Sale" name="%(action_ineco_sale_lose_opportunity_month3)d"/>
+                       		<action string="Lost 6 Months Opportunity by Sale" name="%(action_ineco_sale_lose_opportunity_month6)d"/>
  						</column>
                     </board>
                 </form>

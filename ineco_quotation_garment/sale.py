@@ -159,6 +159,23 @@ class sale_order_line(osv.osv):
     _defaults = {
         'sampling_qty': 0,
     }
+
+#     def create(self, cr, uid, vals, context=None):
+#         order_id = vals.get('order_id', False)
+#         product_id = vals.get('product_id', False)
+#         if order_id and product_id:
+#             sql = """
+#                 select count(*) as total from sale_order_line sol
+#                 join product_product pp on sol.product_id = pp.id
+#                 join product_template pt on pp.product_tmpl_id = pt.id
+#                 where order_id = %s and pt.type <> 'service'           
+#             """
+#             cr.execute(sql % order_id)
+#             record_count = cr.fetchone()[0] or 0.0
+#             product_obj = self.pool.get('product.product').browse(cr, uid, product_id)
+#             if record_count >= 1 and product_obj.type in ('consu','product'):
+#                 raise osv.except_osv('Product Sale Exceed!', 'Sale line must be 1 product per Sale Order.') 
+#         return super(sale_order_line, self).create(cr, uid, vals, context)
     
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -304,6 +321,17 @@ class sale_order(osv.osv):
         return date_planned
 
     def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, context=None):
+
+        sql = """
+            select count(*) as total from sale_order_line sol
+            join product_product pp on sol.product_id = pp.id
+            join product_template pt on pp.product_tmpl_id = pt.id
+            where order_id = %s and pt.type <> 'service'           
+        """
+        cr.execute(sql % order.id)
+        record_count = cr.fetchone()[0] or 0.0
+        if record_count > 1 :
+            raise osv.except_osv('Product Sale Exceed!', 'Sale line must be 1 product per Sale Order.') 
         
         move_obj = self.pool.get('stock.move')
         picking_obj = self.pool.get('stock.picking.out')

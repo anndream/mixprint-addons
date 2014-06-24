@@ -187,6 +187,7 @@
                 <tree string="Pattern">
                     <field name="name" />
                     <field name="product_id" />
+                    <field name="product_type_id" />
                     <field name="garment_order_no" />
                     <field name="saleorder_id" invisible="1" />
                     <field name="partner_id" />
@@ -299,10 +300,14 @@
                 <search string="Pattern">
                     <field name="name" />
                     <field name="product_id" />
+                    <field name="product_type_id" />
                     <field name="garment_order_no" />
                     <field name="saleorder_id" />
                     <field name="partner_id" />
                     <field name="state" />
+                  	<group expand="0" string="Group By...">
+                        <filter name="by_product_type" string="Product Type" icon="terp-partner" domain="[]" context="{'group_by':'product_type_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -314,6 +319,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_ineco_pattern_filter"/>
+            <field name="context">{'search_default_by_product_type':1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a problem type. 
