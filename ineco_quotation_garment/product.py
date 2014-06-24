@@ -65,6 +65,7 @@ having (sum(qty) > 0.00)
     _columns = {
         'lot_count': fields.function(_get_lot_count, string="Lots", type='integer',),
         'no_return_product': fields.boolean('No Return'),
+        'product_name_eng': fields.char('English Name', size=128),
     }
     _defaults = {
         'no_return_product': False,
