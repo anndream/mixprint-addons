@@ -726,13 +726,119 @@ class ineco_sale_lose_opportunity(osv.osv):
                where b.user_id = t1.user_id
                  and b.type = 'opportunity'
                  and b.state in ('cancel')
-                 and b.date_lose > now() - interval '3 months'
-               order by planned_revenue desc limit 50)
+          and extract(year from b.date_lose) = extract(year from now())
+          and extract(month from b.date_lose) = extract(month from now())
+               order by planned_revenue desc limit 200)
                and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
                 signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
                and t1.state in ('cancel') 
                and ru.active = true
-               and t1.date_lose > now() - interval '3 months'
-            order by user_id, planned_revenue desc;      
+           and extract(year from t1.date_lose) = extract(year from now())
+           and extract(month from t1.date_lose) = extract(month from now())
+            order by user_id, planned_revenue desc;       
         """)
+        
+class ineco_sale_lose_opportunity_month1(osv.osv):
+    _name = "ineco.sale.lose.opportunity.month1"
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Sale'),
+        'partner_id': fields.many2one('res.partner','Customer'),
+        'stage_id': fields.many2one('crm.case.stage','Stage'),
+        'planned_revenue': fields.integer('Revenue',),        
+        'last_date_count': fields.integer('Age',), 
+        'last_contact_date': fields.integer('Update',), 
+    }
+    _order = 'user_id'
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity_month1')
+        cr.execute("""
+        CREATE OR REPLACE VIEW ineco_sale_lose_opportunity_month1 AS
+            select t1.id, user_id, t1.partner_id, stage_id, planned_revenue, last_date_count, last_contact_date from crm_lead t1
+            left join res_users ru on user_id = ru.id
+            where (user_id, t1.partner_id, planned_revenue) in
+              (select user_id, partner_id, planned_revenue from crm_lead b
+               where b.user_id = t1.user_id
+                 and b.type = 'opportunity'
+                 and b.state in ('cancel')
+                 and b.date_lose between cast(date_trunc('month', current_date) as date) - interval '1 months' and cast(date_trunc('month', current_date) as date) - interval '1 days'
+               order by planned_revenue desc limit 200)
+               and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+                signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
+               and t1.state in ('cancel') 
+               and ru.active = true
+               and t1.date_lose between cast(date_trunc('month', current_date) as date) - interval '1 months' and cast(date_trunc('month', current_date) as date) - interval '1 days'
+            order by user_id, planned_revenue desc;      
+      
+        """)     
+        
+class ineco_sale_lose_opportunity_month3(osv.osv):
+    _name = "ineco.sale.lose.opportunity.month3"
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Sale'),
+        'partner_id': fields.many2one('res.partner','Customer'),
+        'stage_id': fields.many2one('crm.case.stage','Stage'),
+        'planned_revenue': fields.integer('Revenue',),        
+        'last_date_count': fields.integer('Age',), 
+        'last_contact_date': fields.integer('Update',), 
+    }
+    _order = 'user_id'
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity_month3')
+        cr.execute("""
+        CREATE OR REPLACE VIEW ineco_sale_lose_opportunity_month3 AS
+            select t1.id, user_id, t1.partner_id, stage_id, planned_revenue, last_date_count, last_contact_date from crm_lead t1
+            left join res_users ru on user_id = ru.id
+            where (user_id, t1.partner_id, planned_revenue) in
+              (select user_id, partner_id, planned_revenue from crm_lead b
+               where b.user_id = t1.user_id
+                 and b.type = 'opportunity'
+                 and b.state in ('cancel')
+                 and b.date_lose between cast(date_trunc('month', current_date) as date) - interval '3 months' and cast(date_trunc('month', current_date) as date) - interval '1 months'
+               order by planned_revenue desc limit 200)
+               and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+                signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
+               and t1.state in ('cancel') 
+               and ru.active = true
+               and t1.date_lose between cast(date_trunc('month', current_date) as date) - interval '3 months' and cast(date_trunc('month', current_date) as date) - interval '1 months'
+            order by user_id, planned_revenue desc;      
+      
+        """)              
+
+class ineco_sale_lose_opportunity_month6(osv.osv):
+    _name = "ineco.sale.lose.opportunity.month6"
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Sale'),
+        'partner_id': fields.many2one('res.partner','Customer'),
+        'stage_id': fields.many2one('crm.case.stage','Stage'),
+        'planned_revenue': fields.integer('Revenue',),        
+        'last_date_count': fields.integer('Age',), 
+        'last_contact_date': fields.integer('Update',), 
+    }
+    _order = 'user_id'
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity_month6')
+        cr.execute("""
+        CREATE OR REPLACE VIEW ineco_sale_lose_opportunity_month6 AS
+            select t1.id, user_id, t1.partner_id, stage_id, planned_revenue, last_date_count, last_contact_date from crm_lead t1
+            left join res_users ru on user_id = ru.id
+            where (user_id, t1.partner_id, planned_revenue) in
+              (select user_id, partner_id, planned_revenue from crm_lead b
+               where b.user_id = t1.user_id
+                 and b.type = 'opportunity'
+                 and b.state in ('cancel')
+                 and b.date_lose between cast(date_trunc('month', current_date) as date) - interval '6 months' and cast(date_trunc('month', current_date) as date) - interval '3 months'
+               order by planned_revenue desc limit 200)
+               and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+                signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
+               and t1.state in ('cancel') 
+               and ru.active = true
+               and t1.date_lose between cast(date_trunc('month', current_date) as date) - interval '6 months' and cast(date_trunc('month', current_date) as date) - interval '3 months'
+            order by user_id, planned_revenue desc;         
+        """)              
         
