@@ -127,7 +127,8 @@ class stock_picking_out(osv.osv):
             #multi='sums', help="Summary Product."
             ),
         'opportunity_id': fields.many2one('crm.lead', 'Opportunity',domain=[('type','=','opportunity')]),
-        'objective_id': fields.many2one('ineco.delivery.objective', 'Objective')
+        'objective_id': fields.many2one('ineco.delivery.objective', 'Objective'),
+        'cost_ids': fields.one2many('ineco.picking.cost','picking_id'),
     }
         
     
@@ -387,3 +388,52 @@ class stock_journal(osv.osv):
         'transfer_fg': fields.boolean('Is Transfer FG'),
     }
 
+class ineco_cost_type(osv.osv):
+    _name = "ineco.cost.type"
+    _description = "cost Type"
+    _columns = {
+        'name': fields.char('Description', size=128),
+        'cost': fields.integer('Cost'),
+    }
+    _sql_constraints = [
+        ('name_unique', 'unique (name)', 'Description must be unique !')
+    ]
+    
+class ineco_picking_cost(osv.osv):
+
+    def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            price = line.quantity * line.cost
+            res[line.id] = price
+        return res
+
+    def on_change_costtype(self, cr, uid, ids, cost_type_id, context=None):
+        if context==None:
+            context={}
+        result = 0.0
+        cost_type_obj = self.pool.get('ineco.cost.type').browse(cr, uid, cost_type_id)
+        if cost_type_obj:
+            result = cost_type_obj.cost
+        return {'value': {
+            'cost': result,
+            }
+        }
+    
+    _name = 'ineco.picking.cost'
+    _description = "Cost of Delivery"
+    _columns = {
+        'name': fields.char('Description', size=128),
+        'picking_id': fields.many2one('stock.picking.out', 'Delivery Order'),
+        'cost_type_id': fields.many2one('ineco.cost.type','Cost'),
+        'quantity': fields.integer('Quantity', required=True),
+        'cost': fields.float('Cost', required=True),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
+    }
+    
+    _defaults = {
+        'quantity': 1,
+        'cost': 0.0,
+    }

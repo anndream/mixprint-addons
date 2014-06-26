@@ -117,7 +117,7 @@
         	parent="base.menu_base_config"
         	sequence="7"/>  
         	        	        	
-<!--         Delivery Type     -->
+<!--         Delivery Type    -->
         <record id="view_ineco_delivery_type_tree" model="ir.ui.view">
             <field name="name">ineco.delivery.type.tree</field>
             <field name="model">ineco.delivery.type</field>
@@ -166,11 +166,12 @@
             </field>
         </record>
         
-        <menuitem 
+        <!-- <menuitem 
             id="menu_ineco_delivery_type"
         	action="action_ineco_delivery_type" 
         	parent="base.menu_base_config"
-        	sequence="8"/>         	
+        	sequence="8"/>         
+         -->	
 
 		<!-- Style -->
         <record id="view_ineco_style_tree" model="ir.ui.view">
@@ -608,8 +609,7 @@
             <field name="model">stock.picking.out</field>
             <field name="arch" type="xml">
               	<filter string="To Invoice" position="before">
-              	    <field name="partner_id" />
-              	    
+              	    <field name="partner_id" />              	    
               	</filter>
               	<filter string="Status" position="before">
               	    <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -1002,7 +1002,51 @@
             id="menu_ineco_gender"
         	action="action_ineco_gender" 
         	parent="base.menu_base_config"
-        	sequence="7"/>    
+        	sequence="7"/>
+
+        <record id="view_ineco_opportunity_form_view" model="ir.ui.view">
+            <field name="name">ineco.opportunity.form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="arch" type="xml">	
+            	<xpath expr="//notebook/page[@string='Lead']" position="after">
+            		<page string="Costing" >
+            			<field name="cost_ids" nolabel="1">
+            				<tree string="Cost" editable="top">
+            					<field name="cost_type_id" on_change="on_change_costtype(cost_type_id)" />
+            					<field name="quantity" />
+            					<field name="cost" invisible="1" />
+            					<field name="price_subtotal" sum="Total" />
+            				</tree>
+            			</field>
+            		</page>
+            	</xpath>
+
+			</field>
+		</record>
+        	
+   
+        <record id="view_ineco_deliverycost_form_view" model="ir.ui.view">
+            <field name="name">ineco.delivery.cost.form</field>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="stock.view_picking_out_form"/>
+            <field name="arch" type="xml">	
+            	<xpath expr="//notebook/page[@string='Additional Info']" position="after">
+            		<page string="Costing" >
+            			<field name="cost_ids" nolabel="1">
+            				<tree string="Cost" editable="top">
+            					<field name="cost_type_id" on_change="on_change_costtype(cost_type_id)" />
+            					<field name="quantity" />
+            					<field name="cost" />
+            					<field name="price_subtotal" sum="Total" />
+            				</tree>
+            			</field>
+            		</page>
+            	</xpath>
+
+			</field>
+		</record>
+            
         
     </data>
 </openerp>

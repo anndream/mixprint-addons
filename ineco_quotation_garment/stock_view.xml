@@ -293,6 +293,63 @@
         	
         	/> 
 
+		<!--   Cost Type    -->
+        <record id="view_ineco_cost_type_tree" model="ir.ui.view">
+            <field name="name">ineco.cost.type.tree</field>
+            <field name="model">ineco.cost.type</field>
+            <field name="arch" type="xml">
+                <tree string="Cost Type">
+                    <field name="name" />
+                    <field name="cost" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_cost_type_form" model="ir.ui.view">
+            <field name="name">ineco.cost.type.form</field>
+            <field name="model">ineco.cost.type</field>
+            <field name="arch" type="xml">
+                <form string="Cost Type">
+                    <field name="name" />
+                    <field name="cost" />
+                </form>
+            </field>
+        </record>	
+        
+        <record id="view_ineco_cost_type_filter" model="ir.ui.view">
+            <field name="name">ineco.cost.type.select</field>
+            <field name="model">ineco.cost.type</field>
+            <field name="arch" type="xml">
+                <search string="Cost Type">
+                	<field name="name" />
+                	<field name="cost" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_cost_type" model="ir.actions.act_window">
+            <field name="name">Cost Type</field>
+            <field name="res_model">ineco.cost.type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_cost_type_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a delivery type. 
+              </p><p>
+                This is the list of all delivery type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem 
+            id="menu_ineco_cost_type"
+        	action="action_ineco_cost_type" 
+        	parent="base.menu_base_config"
+        	sequence="9"/>         	
 
 		        
     </data>

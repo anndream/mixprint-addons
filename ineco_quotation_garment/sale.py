@@ -26,7 +26,7 @@ import time
 from openerp.osv import fields, osv
 #from tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
-#import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 from openerp import netsvc
 
 
@@ -393,4 +393,50 @@ class sale_order(osv.osv):
         order.write(val)
         return True
 
+class crm_lead(osv.osv):
+    _inherit = 'crm.lead'
+    _description = "Cost of CRM on Opportunity"
+    _columns = {
+        'cost_ids': fields.one2many('ineco.crm.cost','lead_id', 'Costs'),
+    }
+
+class ineco_crm_cost(osv.osv):
+
+    def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            price = line.quantity * line.cost
+            res[line.id] = price
+        return res
+
+    def on_change_costtype(self, cr, uid, ids, cost_type_id, context=None):
+        if context==None:
+            context={}
+        result = 0.0
+        cost_type_obj = self.pool.get('ineco.cost.type').browse(cr, uid, cost_type_id)
+        if cost_type_obj:
+            result = cost_type_obj.cost
+        return {'value': {
+            'cost': result,
+            }
+        }
+
+    _name = 'ineco.crm.cost'
+    _description = "Cost of CRM Line"
+    _columns = {
+        'name': fields.char('Description', size=128),
+        'lead_id': fields.many2one('crm.lead', 'Opportunity'),
+        'cost_type_id': fields.many2one('ineco.cost.type','Cost'),
+        'quantity': fields.integer('Quantity', required=True),
+        'cost': fields.float('Cost', required=True),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
+    }
+    
+    _defaults = {
+        'quantity': 1,
+        'cost': 0.0,
+    }
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
