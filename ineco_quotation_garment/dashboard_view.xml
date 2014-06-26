@@ -401,6 +401,7 @@
                 	<field name="planned_revenue" />
                 	<field name="last_date_count" />
                 	<field name="last_contact_date" />
+                	<field name="cost_opportunity" />
                 </tree>
             </field>
         </record>        
@@ -446,6 +447,7 @@
                 	<field name="planned_revenue" />
                 	<field name="last_date_count" />
                 	<field name="last_contact_date" />
+                	<field name="cost_opportunity" />
                 </tree>
             </field>
         </record>        
@@ -491,6 +493,7 @@
                 	<field name="planned_revenue" />
                 	<field name="last_date_count" />
                 	<field name="last_contact_date" />
+                	<field name="cost_opportunity" />
                 </tree>
             </field>
         </record>        
@@ -536,6 +539,7 @@
                 	<field name="planned_revenue" />
                 	<field name="last_date_count" />
                 	<field name="last_contact_date" />
+                	<field name="cost_opportunity" />
                 </tree>
             </field>
         </record>        
@@ -581,6 +585,7 @@
                 	<field name="planned_revenue" />
                 	<field name="last_date_count" />
                 	<field name="last_contact_date" />
+                	<field name="cost_opportunity" />
                 </tree>
             </field>
         </record>        

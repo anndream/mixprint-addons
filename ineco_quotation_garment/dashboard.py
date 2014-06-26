@@ -614,6 +614,7 @@ class ineco_sale_all_opportunity(osv.osv):
         'planned_revenue': fields.integer('Revenue',),        
         'last_date_count': fields.integer('Age',), 
         'last_contact_date': fields.integer('Update',), 
+        'cost_opportunity': fields.float('Cost'),
     }
     _order = 'user_id'
     
@@ -621,7 +622,21 @@ class ineco_sale_all_opportunity(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_all_opportunity')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_all_opportunity AS
-                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, rp.last_date_count as last_contact_date from crm_lead t1
+                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, 
+                       rp.last_date_count as last_contact_date,
+               coalesce((select
+              sum(sp2.shiping_cost) +
+              (select coalesce( sum(ipc.cost * ipc.quantity), 0.00) from ineco_picking_cost ipc
+               join stock_picking sp3 on sp3.id = ipc.picking_id
+               where sp3.opportunity_id = cl2.id) +
+              (select coalesce(sum(icc.quantity * icc.cost), 0.00) from ineco_crm_cost icc
+               join crm_lead cl on cl.id = icc.lead_id
+               where cl.id = cl2.id) as cost_opportunity
+            from crm_lead cl2
+            left join stock_picking sp2 on sp2.opportunity_id = cl2.id
+            where sp2.state <> 'cancel' and cl2.id = t1.id
+            group by cl2.id),0.00) as cost_opportunity                               
+                from crm_lead t1
             left join res_partner rp on t1.partner_id = rp.id
                 left join res_users ru on t1.user_id = ru.id
                 where (t1.user_id, t1.partner_id, planned_revenue) in
@@ -713,6 +728,7 @@ class ineco_sale_lose_opportunity(osv.osv):
         'planned_revenue': fields.integer('Revenue',),        
         'last_date_count': fields.integer('Age',), 
         'last_contact_date': fields.integer('Update',), 
+        'cost_opportunity': fields.float('Cost'),
     }
     _order = 'user_id'
     
@@ -720,7 +736,21 @@ class ineco_sale_lose_opportunity(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_lose_opportunity AS
-                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, rp.last_date_count as last_contact_date from crm_lead t1
+                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, 
+                       rp.last_date_count as last_contact_date,
+               coalesce((select
+              sum(sp2.shiping_cost) +
+              (select coalesce( sum(ipc.cost * ipc.quantity), 0.00) from ineco_picking_cost ipc
+               join stock_picking sp3 on sp3.id = ipc.picking_id
+               where sp3.opportunity_id = cl2.id) +
+              (select coalesce(sum(icc.quantity * icc.cost), 0.00) from ineco_crm_cost icc
+               join crm_lead cl on cl.id = icc.lead_id
+               where cl.id = cl2.id) as cost_opportunity
+            from crm_lead cl2
+            left join stock_picking sp2 on sp2.opportunity_id = cl2.id
+            where sp2.state <> 'cancel' and cl2.id = t1.id
+            group by cl2.id),0.00) as cost_opportunity                               
+                from crm_lead t1
             left join res_partner rp on t1.partner_id = rp.id
                 left join res_users ru on t1.user_id = ru.id
                 where (t1.user_id, t1.partner_id, planned_revenue) in
@@ -750,6 +780,7 @@ class ineco_sale_lose_opportunity_month1(osv.osv):
         'planned_revenue': fields.integer('Revenue',),        
         'last_date_count': fields.integer('Age',), 
         'last_contact_date': fields.integer('Update',), 
+        'cost_opportunity': fields.float('Cost'),
     }
     _order = 'user_id'
     
@@ -757,7 +788,21 @@ class ineco_sale_lose_opportunity_month1(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity_month1')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_lose_opportunity_month1 AS
-                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, rp.last_date_count as last_contact_date from crm_lead t1
+                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, 
+                       rp.last_date_count as last_contact_date,
+               coalesce((select
+              sum(sp2.shiping_cost) +
+              (select coalesce( sum(ipc.cost * ipc.quantity), 0.00) from ineco_picking_cost ipc
+               join stock_picking sp3 on sp3.id = ipc.picking_id
+               where sp3.opportunity_id = cl2.id) +
+              (select coalesce(sum(icc.quantity * icc.cost), 0.00) from ineco_crm_cost icc
+               join crm_lead cl on cl.id = icc.lead_id
+               where cl.id = cl2.id) as cost_opportunity
+            from crm_lead cl2
+            left join stock_picking sp2 on sp2.opportunity_id = cl2.id
+            where sp2.state <> 'cancel' and cl2.id = t1.id
+            group by cl2.id),0.00) as cost_opportunity                               
+                from crm_lead t1
             left join res_partner rp on t1.partner_id = rp.id
                 left join res_users ru on t1.user_id = ru.id
                 where (t1.user_id, t1.partner_id, planned_revenue) in
@@ -785,6 +830,7 @@ class ineco_sale_lose_opportunity_month3(osv.osv):
         'planned_revenue': fields.integer('Revenue',),        
         'last_date_count': fields.integer('Age',), 
         'last_contact_date': fields.integer('Update',), 
+        'cost_opportunity': fields.float('Cost'),
     }
     _order = 'user_id'
     
@@ -792,7 +838,21 @@ class ineco_sale_lose_opportunity_month3(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity_month3')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_lose_opportunity_month3 AS
-                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, rp.last_date_count as last_contact_date from crm_lead t1
+                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, 
+                       rp.last_date_count as last_contact_date,
+               coalesce((select
+              sum(sp2.shiping_cost) +
+              (select coalesce( sum(ipc.cost * ipc.quantity), 0.00) from ineco_picking_cost ipc
+               join stock_picking sp3 on sp3.id = ipc.picking_id
+               where sp3.opportunity_id = cl2.id) +
+              (select coalesce(sum(icc.quantity * icc.cost), 0.00) from ineco_crm_cost icc
+               join crm_lead cl on cl.id = icc.lead_id
+               where cl.id = cl2.id) as cost_opportunity
+            from crm_lead cl2
+            left join stock_picking sp2 on sp2.opportunity_id = cl2.id
+            where sp2.state <> 'cancel' and cl2.id = t1.id
+            group by cl2.id),0.00) as cost_opportunity                               
+                from crm_lead t1
             left join res_partner rp on rp.id = t1.partner_id
                 left join res_users ru on t1.user_id = ru.id
                 where (t1.user_id, t1.partner_id, planned_revenue) in
@@ -820,6 +880,7 @@ class ineco_sale_lose_opportunity_month6(osv.osv):
         'planned_revenue': fields.integer('Revenue',),        
         'last_date_count': fields.integer('Age',), 
         'last_contact_date': fields.integer('Update',), 
+        'cost_opportunity': fields.float('Cost'),
     }
     _order = 'user_id'
     
@@ -827,8 +888,22 @@ class ineco_sale_lose_opportunity_month6(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity_month6')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_lose_opportunity_month6 AS
-                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, rp.last_date_count as last_contact_date from crm_lead t1
-            left join res_partner rp on rp.id = t1.partner_id
+                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, 
+                       rp.last_date_count as last_contact_date,
+               coalesce((select
+              sum(sp2.shiping_cost) +
+              (select coalesce( sum(ipc.cost * ipc.quantity), 0.00) from ineco_picking_cost ipc
+               join stock_picking sp3 on sp3.id = ipc.picking_id
+               where sp3.opportunity_id = cl2.id) +
+              (select coalesce(sum(icc.quantity * icc.cost), 0.00) from ineco_crm_cost icc
+               join crm_lead cl on cl.id = icc.lead_id
+               where cl.id = cl2.id) as cost_opportunity
+            from crm_lead cl2
+            left join stock_picking sp2 on sp2.opportunity_id = cl2.id
+            where sp2.state <> 'cancel' and cl2.id = t1.id
+            group by cl2.id),0.00) as cost_opportunity                               
+                from crm_lead t1
+                left join res_partner rp on rp.id = t1.partner_id
                 left join res_users ru on t1.user_id = ru.id
                 where (t1.user_id, t1.partner_id, planned_revenue) in
                   (select user_id, partner_id, planned_revenue from crm_lead b
