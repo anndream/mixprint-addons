@@ -394,10 +394,12 @@ class ineco_cost_type(osv.osv):
     _columns = {
         'name': fields.char('Description', size=128),
         'cost': fields.integer('Cost'),
+        'seq': fields.integer('Sequence'),
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')
     ]
+    _order = 'seq'
     
 class ineco_picking_cost(osv.osv):
 

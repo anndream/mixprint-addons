@@ -299,6 +299,7 @@
             <field name="model">ineco.cost.type</field>
             <field name="arch" type="xml">
                 <tree string="Cost Type">
+                	<field name="seq" />
                     <field name="name" />
                     <field name="cost" />
                 </tree>
@@ -312,6 +313,7 @@
                 <form string="Cost Type">
                     <field name="name" />
                     <field name="cost" />
+                    <field name="seq" />
                 </form>
             </field>
         </record>	
