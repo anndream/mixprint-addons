@@ -10,6 +10,7 @@
 
                 <xpath expr="//button[@name='button_cancel']" position="after">
                     <button name="action_done_draft" states="done" groups="base.group_erp_manager" string="Set Done to Draft" type="object" class="oe_highlight"/>
+                    <button name="action_done_draft" states="cancel" groups="base.group_erp_manager" string="Set to Draft" type="object" class="oe_highlight"/>
                 </xpath>
             	
         	</field>
@@ -23,6 +24,7 @@
 
                 <xpath expr="//button[@name='button_cancel']" position="after">
                     <button name="action_done_draft" states="done" groups="base.group_erp_manager" string="Set Done to Draft" type="object" class="oe_highlight"/>
+                    <button name="action_done_draft" states="cancel" groups="base.group_erp_manager" string="Set to Draft" type="object" class="oe_highlight"/>
                 </xpath>
             	
         	</field>
@@ -36,6 +38,7 @@
 
                 <xpath expr="//button[@name='button_cancel']" position="after">
                     <button name="action_done_draft" states="done" groups="base.group_erp_manager" string="Set Done to Draft" type="object" class="oe_highlight"/>
+                    <button name="action_done_draft" states="cancel" groups="base.group_erp_manager" string="Set to Draft" type="object" class="oe_highlight"/>
                 </xpath>
             	
         	</field>
