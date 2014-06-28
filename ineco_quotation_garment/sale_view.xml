@@ -1037,7 +1037,7 @@
             				<tree string="Cost" editable="top">
             					<field name="cost_type_id" on_change="on_change_costtype(cost_type_id)" />
             					<field name="quantity" />
-            					<field name="cost" />
+            					<field name="cost" groups="account.group_account_user"/>
             					<field name="price_subtotal" sum="Total" />
             				</tree>
             			</field>
