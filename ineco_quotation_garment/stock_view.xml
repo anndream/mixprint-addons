@@ -48,13 +48,13 @@
             <field name="inherit_id" ref="stock.view_picking_out_search"/>
             <field name="arch" type="xml">
                 <field name="stock_journal_id" position="after">
-                    <field name="delivery_type_id" />
+                    <!-- <field name="delivery_type_id" /> -->
                     <field name="date_delivery" />
                     <field name="ineco_date_delivery" />
                     <field name="garment_order_no" />
                     <field name="picking_transfer_id" />
                     <field name="objective_id" />
-                    <filter string="Delivery Type" domain="[]" context="{'group_by':'delivery_type_id'}"/>
+<!--                     <filter string="Delivery Type" domain="[]" context="{'group_by':'delivery_type_id'}"/> -->
                 </field>
         	</field>
        	</record>
@@ -64,10 +64,10 @@
             <field name="model">stock.picking.out</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='stock_journal_id']" position="after">
+                <!-- <xpath expr="//field[@name='stock_journal_id']" position="after">
                     <field name="delivery_type_id" />
                     <field name="shiping_cost" />
-                </xpath>
+                </xpath> -->
                 <xpath expr="//field[@name='origin']" position="after">
                     <field name="batch_no" />
                     <field name="sale_id" attrs="{'readonly':[('origin', '=', False)]}"/>
@@ -88,7 +88,7 @@
             <field name="inherit_id" ref="stock.view_picking_out_tree"/>
             <field name="arch" type="xml">
             	<field name="invoice_state" position="before">
-            		<field name="delivery_type_id" />         		
+<!--             		<field name="delivery_type_id" />         		 -->
             		<field name="objective_id" invisible="1" />
             	</field>
             	<field name="origin" position="before">
