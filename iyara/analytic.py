@@ -65,7 +65,8 @@ class account_analytic_account(osv.osv):
         'date_four_payment': fields.related('invoice_four_payment', 'date_invoice', type='date', string='4 Payment Date'),        
         'iyara_description': fields.text('Description'),
         'end_project': fields.boolean('End Project'),
-
+        'partner_use_id': fields.many2one('res.partner', 'Customer Use'),
+    
     }
     _defaults = {
         'end_project': False,
@@ -86,5 +87,7 @@ class account_analytic_account(osv.osv):
         return res
             
 account_analytic_account()
+
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

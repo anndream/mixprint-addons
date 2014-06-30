@@ -47,6 +47,7 @@ A. Sale Module:
         'account_view.xml',
         'hr_view.xml',
         'stock_view.xml',
+        'partner_view.xml',
     ],
     'demo': [],
     'installable': True,

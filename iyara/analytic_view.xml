@@ -10,6 +10,9 @@
 	      	    <field name="code" position='after' >
 	     			<field name="end_project" /> 	        
 	      	    </field>
+	      	    <field name="partner_id" position='after' >
+	     			<field name="partner_use_id"/>	        
+	      	    </field>	      	    
             	<xpath expr='//page[@string="Contract Information"]' position='after'>   	     
 	      	        <page string="Project Status">
 		      	        <group string="Sale Information">	
