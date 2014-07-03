@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import dashboard
 import sale
+import dashboard
 import stock
 import stock_partial_picking
 import partner
