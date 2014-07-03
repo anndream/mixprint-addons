@@ -20,17 +20,17 @@
 ##############################################################################
 
 import sale
-import dashboard
+import res_users
 import stock
 import stock_partial_picking
 import partner
 import problem
-import res_users
 import invoice
 import product
 import dashboard_invoice
 import pattern
 import mrp
 import crm
+import dashboard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
