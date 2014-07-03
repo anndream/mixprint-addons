@@ -736,7 +736,7 @@ class ineco_sale_lose_opportunity(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_lose_opportunity AS
-                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, 
+                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, extract(days from date_lose - t1.create_date) as last_date_count, 
                        rp.last_date_count as last_contact_date,
                coalesce((select
               sum(sp2.shiping_cost) +
@@ -788,7 +788,7 @@ class ineco_sale_lose_opportunity_month1(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity_month1')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_lose_opportunity_month1 AS
-                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, 
+                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, extract(days from date_lose - t1.create_date) as last_date_count, 
                        rp.last_date_count as last_contact_date,
                coalesce((select
               sum(sp2.shiping_cost) +
@@ -838,7 +838,7 @@ class ineco_sale_lose_opportunity_month3(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity_month3')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_lose_opportunity_month3 AS
-                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, 
+                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, extract(days from date_lose - t1.create_date) as last_date_count, 
                        rp.last_date_count as last_contact_date,
                coalesce((select
               sum(sp2.shiping_cost) +
@@ -888,7 +888,7 @@ class ineco_sale_lose_opportunity_month6(osv.osv):
         tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity_month6')
         cr.execute("""
             CREATE OR REPLACE VIEW ineco_sale_lose_opportunity_month6 AS
-                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, t1.last_date_count, 
+                select t1.id, t1.user_id, t1.partner_id, stage_id, planned_revenue, extract(days from date_lose - t1.create_date) as last_date_count, 
                        rp.last_date_count as last_contact_date,
                coalesce((select
               sum(sp2.shiping_cost) +
