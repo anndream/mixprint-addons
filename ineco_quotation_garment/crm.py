@@ -31,6 +31,9 @@ class crm_lead(osv.osv):
 
     _inherit = 'crm.lead'
     _description = "Lock when opps lost"
+    _columns = {
+        'opportunity_cost_ids': fields.one2many('ineco.opportunity.cost','opportunity_id','Costs'),
+    }
 
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):

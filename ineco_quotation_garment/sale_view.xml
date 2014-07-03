@@ -1010,7 +1010,7 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">	
             	<xpath expr="//notebook/page[@string='Lead']" position="after">
-            		<page string="Costing" >
+            		<page string="Opportunity Costing" >
             			<field name="cost_ids" nolabel="1">
             				<tree string="Cost" editable="top">
             					<field name="cost_type_id" on_change="on_change_costtype(cost_type_id)" />
@@ -1019,6 +1019,17 @@
             					<field name="price_subtotal" sum="Total" />
             				</tree>
             			</field>
+            		</page>
+            		<page string="All Costing">
+	                	<field name="opportunity_cost_ids" nolabel="1" colspan="4" >
+	                		<tree string="Costs">
+	                			<field name="type" />
+	                			<field name="cost_type_id" />
+	                			<field name="quantity" />
+	                			<field name="cost" />
+	                			<field name="amount" sum="Total" />
+	                		</tree>
+	                	</field>
             		</page>
             	</xpath>
 

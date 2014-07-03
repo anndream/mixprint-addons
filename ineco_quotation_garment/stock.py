@@ -27,6 +27,7 @@ import time
 # from itertools import groupby
 
 from openerp.osv import fields, osv
+from openerp import tools
 #from tools.translate import _
 from openerp import netsvc
 #import tools
@@ -439,3 +440,51 @@ class ineco_picking_cost(osv.osv):
         'quantity': 1,
         'cost': 0.0,
     }
+
+class ineco_sale_lose_opportunity_costtemp(osv.osv):
+    _name = 'ineco.sale.lose.opportunity.costtemp'
+    _auto = False
+    _columns = {
+    }
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_lose_opportunity_costtemp')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_sale_lose_opportunity_costtemp AS
+            select *
+            from 
+            (select cl.id as opportunity_id, 'opportunity' as type, ict.id as cost_type_id, icc.cost, icc.quantity, icc.quantity * icc.cost as amount from crm_lead cl
+            join ineco_crm_cost icc on icc.lead_id = cl.id
+            join ineco_cost_type ict on ict.id = icc.cost_type_id
+            union 
+            select cl.id as opportunity_id, 'shipping' as type, ict.id as cost_type_id, ipc.cost, ipc.quantity, ipc.quantity * ipc.cost as amount from stock_picking sp
+            join crm_lead cl on sp.opportunity_id = cl.id
+            join ineco_picking_cost ipc on sp.id = ipc.picking_id
+            join ineco_cost_type ict on ict.id = ipc.cost_type_id) a
+        """)
+
+class ineco_opportunity_cost(osv.osv):
+    _name = 'ineco.opportunity.cost'
+    _auto = False
+    _columns = {
+        'opportunity_id': fields.many2one('crm.lead','Opportunity'),
+        'type': fields.selection([('shipping','Shipping'),('opportunity','Opportunity')], 'Type'),
+        'cost_type_id': fields.many2one('ineco.cost.type','Cost Type'),
+        'cost': fields.integer('Cost'),
+        'quantity': fields.integer('Quantity'),
+        'amount': fields.integer('Amount'),
+    }
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_opportunity_cost')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_opportunity_cost AS
+            select id, (a1[id]).*
+                from (
+                    select a1, generate_series(1, array_upper(a1,1)) as id
+                        from (
+                            select array (
+                                select ineco_sale_lose_opportunity_costtemp from ineco_sale_lose_opportunity_costtemp
+                            ) as a1
+                    ) b1
+                ) c1
+        """)    

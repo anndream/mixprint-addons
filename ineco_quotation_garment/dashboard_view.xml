@@ -452,6 +452,32 @@
             </field>
         </record>        
 
+        <record model="ir.ui.view" id="view_ineco_sale_lose_opportunity_form">
+            <field name="name">ineco.sale.lose.opportunity.form</field>
+            <field name="model">ineco.sale.lose.opportunity</field>
+            <field name="arch" type="xml">
+                <form string="Lose Opportunity" >
+                	<field name="user_id" invisible="1"/>
+                	<field name="partner_id" />
+                	<field name="stage_id" />
+                	<field name="planned_revenue" />
+                	<field name="last_date_count" />
+                	<field name="last_contact_date" />
+                	<field name="cost_opportunity" />
+             		<newline />
+                	<field name="opportunity_cost_ids" nolabel="1" colspan="4" >
+                		<tree string="Costs">
+                			<field name="type" />
+                			<field name="cost_type_id" />
+                			<field name="quantity" />
+                			<field name="cost" />
+                			<field name="amount" sum="Total" />
+                		</tree>
+                	</field>
+                </form>
+            </field>
+        </record>        
+
         <record id="view_ineco_sale_lose_opportunity_filter" model="ir.ui.view">
             <field name="name">ineco.sale.lose.opportunity.filter</field>
             <field name="model">ineco.sale.lose.opportunity</field>
@@ -495,6 +521,32 @@
                 	<field name="last_contact_date" />
                 	<field name="cost_opportunity" />
                 </tree>
+            </field>
+        </record>        
+
+        <record model="ir.ui.view" id="view_ineco_sale_lose_opportunity_month1_form">
+            <field name="name">ineco.sale.lose.opportunity.month1.form</field>
+            <field name="model">ineco.sale.lose.opportunity.month1</field>
+            <field name="arch" type="xml">
+                <form string="Lose Opportunity" >
+                	<field name="user_id" invisible="1"/>
+                	<field name="partner_id" />
+                	<field name="stage_id" />
+                	<field name="planned_revenue" />
+                	<field name="last_date_count" />
+                	<field name="last_contact_date" />
+                	<field name="cost_opportunity" />
+             		<newline />
+                	<field name="opportunity_cost_ids" nolabel="1" colspan="4" >
+                		<tree string="Costs">
+                			<field name="type" />
+                			<field name="cost_type_id" />
+                			<field name="quantity" />
+                			<field name="cost" />
+                			<field name="amount" sum="Total" />
+                		</tree>
+                	</field>
+                </form>
             </field>
         </record>        
 
@@ -544,6 +596,32 @@
             </field>
         </record>        
 
+        <record model="ir.ui.view" id="view_ineco_sale_lose_opportunity_month3_form">
+            <field name="name">ineco.sale.lose.opportunity.month3.form</field>
+            <field name="model">ineco.sale.lose.opportunity.month3</field>
+            <field name="arch" type="xml">
+                <form string="Lose Opportunity" >
+                	<field name="user_id" invisible="1"/>
+                	<field name="partner_id" />
+                	<field name="stage_id" />
+                	<field name="planned_revenue" />
+                	<field name="last_date_count" />
+                	<field name="last_contact_date" />
+                	<field name="cost_opportunity" />
+             		<newline />
+                	<field name="opportunity_cost_ids" nolabel="1" colspan="4" >
+                		<tree string="Costs">
+                			<field name="type" />
+                			<field name="cost_type_id" />
+                			<field name="quantity" />
+                			<field name="cost" />
+                			<field name="amount" sum="Total" />
+                		</tree>
+                	</field>
+                </form>
+            </field>
+        </record>        
+
         <record id="view_ineco_sale_lose_opportunity_month3_filter" model="ir.ui.view">
             <field name="name">ineco.sale.lose.opportunity.month3.filter</field>
             <field name="model">ineco.sale.lose.opportunity.month3</field>
@@ -587,6 +665,32 @@
                 	<field name="last_contact_date" />
                 	<field name="cost_opportunity" />
                 </tree>
+            </field>
+        </record>        
+
+        <record model="ir.ui.view" id="view_ineco_sale_lose_opportunity_month6_form">
+            <field name="name">ineco.sale.lose.opportunity.month6.form</field>
+            <field name="model">ineco.sale.lose.opportunity.month6</field>
+            <field name="arch" type="xml">
+                <form string="Lose Opportunity" >
+                	<field name="user_id" invisible="1"/>
+                	<field name="partner_id" />
+                	<field name="stage_id" />
+                	<field name="planned_revenue" />
+                	<field name="last_date_count" />
+                	<field name="last_contact_date" />
+                	<field name="cost_opportunity" />
+             		<newline />
+                	<field name="opportunity_cost_ids" nolabel="1" colspan="4" >
+                		<tree string="Costs">
+                			<field name="type" />
+                			<field name="cost_type_id" />
+                			<field name="quantity" />
+                			<field name="cost" />
+                			<field name="amount" sum="Total" />
+                		</tree>
+                	</field>
+                </form>
             </field>
         </record>        
 

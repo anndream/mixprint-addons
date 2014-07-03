@@ -716,7 +716,7 @@ class ineco_sale_fix(osv.osv):
                     ) b
                 ) c
         )""")
-        
+
         
 class ineco_sale_lose_opportunity(osv.osv):
     _name = "ineco.sale.lose.opportunity"
@@ -729,6 +729,7 @@ class ineco_sale_lose_opportunity(osv.osv):
         'last_date_count': fields.integer('Age',), 
         'last_contact_date': fields.integer('Update',), 
         'cost_opportunity': fields.float('Cost'),
+        'opportunity_cost_ids': fields.one2many('ineco.opportunity.cost','opportunity_id','Costs'),
     }
     _order = 'user_id'
     
@@ -781,6 +782,7 @@ class ineco_sale_lose_opportunity_month1(osv.osv):
         'last_date_count': fields.integer('Age',), 
         'last_contact_date': fields.integer('Update',), 
         'cost_opportunity': fields.float('Cost'),
+        'opportunity_cost_ids': fields.one2many('ineco.opportunity.cost','opportunity_id','Costs'),
     }
     _order = 'user_id'
     
@@ -831,6 +833,7 @@ class ineco_sale_lose_opportunity_month3(osv.osv):
         'last_date_count': fields.integer('Age',), 
         'last_contact_date': fields.integer('Update',), 
         'cost_opportunity': fields.float('Cost'),
+        'opportunity_cost_ids': fields.one2many('ineco.opportunity.cost','opportunity_id','Costs'),
     }
     _order = 'user_id'
     
@@ -881,6 +884,7 @@ class ineco_sale_lose_opportunity_month6(osv.osv):
         'last_date_count': fields.integer('Age',), 
         'last_contact_date': fields.integer('Update',), 
         'cost_opportunity': fields.float('Cost'),
+        'opportunity_cost_ids': fields.one2many('ineco.opportunity.cost','opportunity_id','Costs'),
     }
     _order = 'user_id'
     
