@@ -259,6 +259,16 @@ class stock_move(osv.osv):
                     }
         context['raise-exception'] = True
         return res    
+
+    def _check_product_lot(self, cr, uid, ids, context=None):
+        """ Checks whether move is done or not and production lot is assigned to that move.
+        @return: True or False
+        """
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.prodlot_id and move.state == 'done' and (move.prodlot_id.product_id.id != move.product_id.id):
+                raise osv.except_osv('Error', 'You try to assign a lot %s which is not from the same product - %s.' % (move.prodlot_id.name, move.product_id.name))
+                #return False
+        return True
     
     _inherit = 'stock.move'
     _columns = {
@@ -296,7 +306,13 @@ class stock_move(osv.osv):
     _defaults = {
         'date_stock_card': False,
     }
-    
+
+    _constraints = [
+        (_check_product_lot,
+            'You try to assign a lot which is not from the same product.',
+            ['prodlot_id'])
+    ]
+        
     def create(self, cr, user, vals, context=None):
         if ('picking_id' in vals) and ('location_id' in vals) and ('location_dest_id' in vals):
             picking_obj = self.pool.get('stock.picking').browse(cr, user, vals['picking_id'])
@@ -320,7 +336,17 @@ class stock_move(osv.osv):
         #POP-01
         i = 1
         for data in self.browse(cr, uid, ids):
-            newtime = datetime.datetime.now() + datetime.timedelta(0,i)
+            if data.picking_id:
+                #Picking
+                newtime = datetime.datetime.strptime(data.picking_id.date, '%Y-%m-%d %H:%M:%S')  + datetime.timedelta(0,i)
+            else:
+                #Stock Inventory
+                sql = "select distinct inventory_id from stock_inventory_move_rel where move_id = %s" % (data.id)
+                cr.execute(sql)
+                inventory_id = cr.fetchone()[0] or False
+                inv_obj = self.pool.get('stock.inventory').browse(cr, uid, [inventory_id])[0]
+                newtime = datetime.datetime.strptime(inv_obj.date, '%Y-%m-%d %H:%M:%S')  + datetime.timedelta(0,i)
+            #newtime = datetime.datetime.now() + datetime.timedelta(0,i)
             i = i + 1
             data.write({'date_stock_card': newtime.strftime('%Y-%m-%d %H:%M:%S')})
         return result
