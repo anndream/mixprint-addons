@@ -1056,5 +1056,88 @@
         	action="action_mixprint_warehouse_dashboard" 
         	parent="menu_mixprint_warehouse_dashboard"
         	sequence="2"/>  
+        	
+		<!-- Delivery Cost Dashboard -->
+        <record id="view_ineco_delivery_cost_dashboard_tree" model="ir.ui.view">
+            <field name="name">ineco.delivery.cost.dashboard.tree</field>
+            <field name="model">ineco.delivery.cost.dashboard</field>
+            <field name="arch" type="xml">
+                <tree string="Delivery Cost">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="year" invisible="1"/>
+                    <field name="month" invisible="1"/>
+                    <field name="day" invisible="1"/>
+                    <field name="origin" />
+                    <field name="partner_id" />
+                    <field name="stock_journal_id" />
+                    <field name="batch_no" />
+                    <field name="product_qty" sum="Product Qty" />
+                    <field name="state" invisible="1"/>
+                    <field name="cost_type_id" />
+                    <field name="cost_qty" sum="Qty" />
+                    <field name="cost" />
+                    <field name="amount" sum="Amount"/>
+                </tree>
+            </field>
+        </record>		        	
+
+        <record id="view_ineco_delivery_cost_dashboard_filter" model="ir.ui.view">
+            <field name="name">ineco.delivery.cost.dashboard.filter</field>
+            <field name="model">ineco.delivery.cost.dashboard</field>
+            <field name="arch" type="xml">
+                <search string="Search Delivery Cost Dashboard">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="year" />
+                    <field name="month" />
+                    <field name="day" />
+                    <field name="origin" />
+                    <field name="partner_id" />
+                    <field name="stock_journal_id" />
+                    <field name="batch_no" />
+                    <field name="cost_type_id" />
+
+                    <group expand="0" string="Group By...">
+                        <filter string="Customer" name="group_customer_id" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Source" name="group_origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Document Date" name="group_doc_date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Stock Journal" name="group_stock_journal_id" icon="terp-partner" domain="[]" context="{'group_by':'stock_journal_id'}"/>
+                        <filter string="Cost Type" name="group_cost_type_id" icon="terp-partner" domain="[]" context="{'group_by':'cost_type_id'}"/>
+                        <filter string="Year" name="group_year" icon="terp-go-month" domain="[]" context="{'group_by':'year'}"/>
+                        <filter string="Month" name="group_month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}"/>
+                        <filter string="Day" name="group_day" icon="terp-go-month" domain="[]" context="{'group_by':'day'}"/>
+                    </group>
+
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_delivery_cost_dashboard" model="ir.actions.act_window">
+            <field name="name">Delivery Cost</field>
+            <field name="res_model">ineco.delivery.cost.dashboard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_delivery_cost_dashboard_filter"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale summary. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+        <menuitem 
+            id="menu_ineco_delivery_cost_dashboard"
+        	action="action_ineco_delivery_cost_dashboard" 
+        	parent="menu_mixprint_warehouse_dashboard"
+        	sequence="3"/>  
+
+        	
      </data>
 </openerp>

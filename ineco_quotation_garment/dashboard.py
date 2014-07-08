@@ -922,5 +922,52 @@ class ineco_sale_lose_opportunity_month6(osv.osv):
                    and ru.active = true
                    and t1.date_lose between cast(date_trunc('month', current_date) as date) - interval '6 months' and cast(date_trunc('month', current_date) as date) - interval '3 months'
                 order by user_id, planned_revenue desc;         
-        """)              
+        """)        
+        
+class ineco_delivery_cost_dashboard(osv.osv):
+    _name = 'ineco.delivery.cost.dashboard'
+    _auto = False
+    _columns = {
+        'name': fields.char('Document Name', size=32, readonly=True),
+        'date': fields.datetime('Document Date', readonly=True),
+        'year': fields.integer('Year', readonly=True),
+        'month': fields.integer('Month', readonly=True),
+        'day': fields.integer('Day', readonly=True),
+        'origin': fields.char('Origin', readonly=True),
+        'partner_id': fields.many2one('res.partner','Customer',readonly=True),
+        'stock_journal_id': fields.many2one('stock.journal','Journal',readonly=True),
+        'batch_no': fields.integer('Batch No',readonly=True),
+        'product_qty': fields.integer('Product Qty',readonly=True),
+        'state': fields.char('State', size=32,readonly=True),
+        'cost_type_id': fields.many2one('ineco.cost.type','Cost Type',readonly=True),
+        'cost_qty': fields.integer('Quantity',readonly=True),
+        'cost': fields.float('Cost',readonly=True),
+        'amount': fields.float('Amount',readonly=True),
+    }      
+
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_delivery_cost_dashboard')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_delivery_cost_dashboard AS
+                select 
+                  sp.id + ict.id as id,
+                  sp.name, 
+                  sp.date, 
+                  extract(year from sp.date) as year, 
+                  extract(month from sp.date) as month, 
+                  extract(day from sp.date) as day, 
+                  sp.origin, sp.partner_id, sp.stock_journal_id, sp.batch_no, 
+                  sp.ineco_date_delivery as date_delivery, 
+                  round(sp.quantity) as product_qty, 
+                  sp.state,
+                  ict.id as cost_type_id,
+                  coalesce(ipc.quantity,0) as cost_qty,
+                  coalesce(ipc.cost,0.00) as cost,
+                  coalesce(ipc.quantity * ipc.cost,0.00) as amount
+                from stock_picking sp
+                join ineco_picking_cost ipc on ipc.picking_id = sp.id
+                join ineco_cost_type ict on ict.id = ipc.cost_type_id
+                where sp.type = 'out'
+                order by sp.date
+        """)
         
