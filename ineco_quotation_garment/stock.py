@@ -67,6 +67,34 @@ class stock_move(osv.osv):
         'note': fields.char('Note', size=32,),
         'product_weight': fields.float('Weight', digits_compute=dp.get_precision('Product Unit of Measure')),
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        for id in ids:
+            sql = "delete from ineco_picking_cost where move_id = %s"
+            cr.execute(sql % id)
+        return super(stock_move, self).unlink(cr, uid, ids, context=context)
+    
+    def create(self, cr, user, vals, context=None):
+        new_id = super(stock_move, self).create(cr, user, vals, context)
+        product_id = vals.get('product_id',False)
+        if product_id:
+            product_obj = self.pool.get('product.product').browse(cr, user, [product_id])[0]
+            move_obj = self.browse(cr, user, [new_id])[0]
+            if product_obj.categ_id.cost_type_ids and move_obj.picking_id and move_obj.picking_id.stock_journal_id and move_obj.picking_id.stock_journal_id.auto_costing :
+                line_obj = self.pool.get('ineco.picking.cost')
+                for cost in product_obj.categ_id.cost_type_ids:
+                    found_ids = line_obj.search(cr, user, [('move_id','=',new_id),('cost_type_id','=',cost.cost_type_id.id)])
+                    if not found_ids:
+                        new_data = {
+                            'name': '...',
+                            'move_id': new_id,
+                            'cost_type_id': cost.cost_type_id.id,
+                            'cost': cost.cost,
+                            'quantity': cost.quantity or vals.get('product_qty', 0.0 ) or 1.0,
+                            'picking_id': vals.get('picking_id',False),
+                        }
+                        line_obj.create(cr, user, new_data)
+        return new_id
     
 class stock_picking_in(osv.osv):
 
@@ -387,6 +415,7 @@ class stock_journal(osv.osv):
     _inherit = 'stock.journal'
     _columns = {
         'transfer_fg': fields.boolean('Is Transfer FG'),
+        'auto_costing': fields.boolean('Auto Costing'),
     }
 
 class ineco_cost_type(osv.osv):
@@ -434,6 +463,7 @@ class ineco_picking_cost(osv.osv):
         'quantity': fields.integer('Quantity', required=True),
         'cost': fields.float('Cost', required=True),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
+        'move_id': fields.many2one('stock.move','Move'),
     }
     
     _defaults = {

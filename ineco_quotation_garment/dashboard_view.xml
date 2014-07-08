@@ -1072,10 +1072,10 @@
                     <field name="partner_id" />
                     <field name="stock_journal_id" />
                     <field name="batch_no" />
-                    <field name="product_qty" sum="Product Qty" />
+                    <field name="product_qty" />
                     <field name="state" invisible="1"/>
                     <field name="cost_type_id" />
-                    <field name="cost_qty" sum="Qty" />
+                    <field name="cost_qty" />
                     <field name="cost" />
                     <field name="amount" sum="Amount"/>
                 </tree>
@@ -1120,7 +1120,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_ineco_delivery_cost_dashboard_filter"/>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_group_doc_date':1,'search_default_group_cost_type_id':1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a sale summary. 

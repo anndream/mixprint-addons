@@ -144,6 +144,18 @@
             <field name="arch" type="xml">
             	<field name="type" position="after">
             		<field name="ratio" />
+            		<notebook colspan="4">
+            			<page string="Default Cost">
+            				<field name="cost_type_ids" nolable="1" >
+            					<tree string="Default Cost" editable="top">
+            						<field name="cost_type_id" on_change="on_change_costtype(cost_type_id)" />
+            						<field name="quantity" />
+            						<field name="cost" />
+            					</tree>
+            				</field>
+            			</page>
+            		</notebook>
+            		<newline />
             	</field>
 			</field>
 		</record>

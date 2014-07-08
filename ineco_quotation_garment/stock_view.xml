@@ -221,6 +221,7 @@
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
                 	<field name="transfer_fg" />
+                	<field name="auto_costing" />
 				</field>
 			</field>
 		</record>
@@ -232,6 +233,7 @@
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
                     <field name="transfer_fg"  />
+                    <field name="auto_costing" />
                 </field>
         	</field>
         </record>

@@ -35,11 +35,41 @@ class product_category(osv.osv):
     _inherit = 'product.category'
     _description = 'add ratio for garment'
     _columns = {
-        'ratio': fields.float('Ratio', digits=(16,4))
+        'ratio': fields.float('Ratio', digits=(16,4)),
+        'cost_type_ids': fields.one2many('ineco.category.costtype','product_category_id','Costs'),
     }
     _defaults = {
         'ratio': 1.0000
     }
+
+class ineco_category_costtype(osv.osv):
+
+    def on_change_costtype(self, cr, uid, ids, cost_type_id, context=None):
+        if context==None:
+            context={}
+        result = 0.0
+        cost_type_obj = self.pool.get('ineco.cost.type').browse(cr, uid, cost_type_id)
+        if cost_type_obj:
+            result = cost_type_obj.cost
+        return {'value': {
+            'cost': result,
+            }
+        }
+    
+    _name = 'ineco.category.costtype'
+    _description = 'Category Description CostType'
+    _columns = {
+        'name': fields.char('Description',size=32,),
+        'cost_type_id': fields.many2one('ineco.cost.type','Cost Type'),
+        'quantity': fields.integer('Quantity'),
+        'cost': fields.integer('Cost'),
+        'product_category_id': fields.many2one('product.category','Product Category'),
+    }
+    _defaults = {
+        'quantity': 1.0, 
+        'cost': 1.0,
+    }
+
 
 class product_product(osv.osv):
     
