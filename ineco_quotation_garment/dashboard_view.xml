@@ -1149,7 +1149,7 @@
             <field name="model">ineco.sale.amount.dashboard</field>
             <field name="arch" type="xml">
                 <tree string="Sale Amount and Work">
-                    <field name="user_id" invisible="1"/>
+                    <field name="nickname" invisible="1"/>
                     <field name="year" />
                     <field name="jan_sale_amount" sum="Total" string="Jan SO"/>
                     <field name="jan_garment_amount" sum="Total" string="Jan MO"/>
@@ -1187,7 +1187,7 @@
                 	<field name="user_id" />
                 	<field name="year" />
                 	<group expand="0" string="Group By...">
-                		<filter name="group_user" string="Sale" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                		<filter name="group_user" string="Sale" icon="terp-personal" domain="[]" context="{'group_by':'nickname'}"/>
                 	</group>                    
                	</search>
             </field>

@@ -1089,7 +1089,8 @@ class ineco_sale_amount_dashboard_temp(osv.osv):
               coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
                where extract(year from garment_order_date) = calendar.year and
                  extract(month from garment_order_date) = 12
-                 and user_id = ru.id),0.00) as dec_garment_amount       
+                 and user_id = ru.id),0.00) as dec_garment_amount,
+              ru.nickname 
             
             from res_users ru
             cross join 
@@ -1113,7 +1114,7 @@ class ineco_sale_amount_dashboard(osv.osv):
     _auto = False
     _columns = {
         'user_id': fields.many2one('res.users','Sale',readonly=True),
-        'year': fields.integer('Year',readonly=True),
+        'year': fields.char('Year', size=4, readonly=True),
         'jan_sale_amount': fields.float('January',readonly=True),
         'jan_garment_amount': fields.float('January',readonly=True),
         'feb_sale_amount': fields.float('Febuary',readonly=True),
@@ -1138,6 +1139,7 @@ class ineco_sale_amount_dashboard(osv.osv):
         'nov_garment_amount': fields.float('November',readonly=True),
         'dec_sale_amount': fields.float('December',readonly=True),
         'dec_garment_amount': fields.float('December',readonly=True),
+        'nickname': fields.char('Nickname',readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'ineco_sale_amount_dashboard')
