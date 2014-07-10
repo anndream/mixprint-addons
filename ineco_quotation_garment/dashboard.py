@@ -983,7 +983,7 @@ class ineco_sale_amount_dashboard_temp(osv.osv):
               --rp.name, 
               calendar.year,
               --Januaray
-              coalesce((select round(round(sum(amount_untaxed)/100000,2)/100000,2) from sale_order
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
                where extract(year from date_sale_close) = calendar.year and
                  extract(month from date_sale_close) = 1
                  and user_id = ru.id),0.00) as jan_sale_amount,
