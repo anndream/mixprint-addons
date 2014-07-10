@@ -1138,6 +1138,12 @@
         	parent="menu_mixprint_warehouse_dashboard"
         	sequence="3"/>  
 
+		<menuitem action="action_ineco_delivery_cost_dashboard" 
+		    id="menu_ineco_account_delivery_cost_dashboard" 
+		    parent="account.menu_finance_receivables"
+		    sequence="2"/>
+
+
         <record id="view_ineco_saleamount_dashboard_tree" model="ir.ui.view">
             <field name="name">ineco.sale.amount.dashboard.tree</field>
             <field name="model">ineco.sale.amount.dashboard</field>
