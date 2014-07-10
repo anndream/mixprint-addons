@@ -1138,6 +1138,104 @@
         	parent="menu_mixprint_warehouse_dashboard"
         	sequence="3"/>  
 
+        <record id="view_ineco_saleamount_dashboard_tree" model="ir.ui.view">
+            <field name="name">ineco.sale.amount.dashboard.tree</field>
+            <field name="model">ineco.sale.amount.dashboard</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Amount and Work">
+                    <field name="user_id" invisible="1"/>
+                    <field name="year" />
+                    <field name="jan_sale_amount" sum="Total" string="Jan SO"/>
+                    <field name="jan_garment_amount" sum="Total" string="Jan MO"/>
+                    <field name="feb_sale_amount" sum="Total" string="Feb SO"/>
+                    <field name="feb_garment_amount" sum="Total" string="Feb MO"/>
+                    <field name="mar_sale_amount" sum="Total" string="Mar SO"/>
+                    <field name="mar_garment_amount" sum="Total" string="Mar MO"/>
+                    <field name="apr_sale_amount" sum="Total" string="Apr SO"/>
+                    <field name="apr_garment_amount" sum="Total" string="Apr MO"/>
+                    <field name="may_sale_amount" sum="Total" string="May SO"/>
+                    <field name="may_garment_amount" sum="Total" string="May MO"/>
+                    <field name="jun_sale_amount" sum="Total" string="Jun SO"/>
+                    <field name="jun_garment_amount" sum="Total" string="Jun MO"/>
+                    <field name="jul_sale_amount" sum="Total" string="Jul SO"/>
+                    <field name="jul_garment_amount" sum="Total" string="Jul MO"/>
+                    <field name="aug_sale_amount" sum="Total" string="Aug SO"/>
+                    <field name="aug_garment_amount" sum="Total" string="Aug MO"/>
+                    <field name="sep_sale_amount" sum="Total" string="Sep SO"/>
+                    <field name="sep_garment_amount" sum="Total" string="Sep MO"/>
+                    <field name="oct_sale_amount" sum="Total" string="Oct SO"/>
+                    <field name="oct_garment_amount" sum="Total" string="Oct MO"/>
+                    <field name="nov_sale_amount" sum="Total" string="Nov SO"/>
+                    <field name="nov_garment_amount" sum="Total" string="Nov MO"/>
+                    <field name="dec_sale_amount" sum="Total" string="Dec SO"/>
+                    <field name="dec_garment_amount" sum="Total" string="Dec MO"/>
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_saleamount_dashboard_search" model="ir.ui.view">
+            <field name="name">ineco.sale.amount.dashboard.filter</field>
+            <field name="model">ineco.sale.amount.dashboard</field>
+            <field name="arch" type="xml">
+                <search string="Search All Opportunity">
+                	<field name="user_id" />
+                	<field name="year" />
+                	<group expand="0" string="Group By...">
+                		<filter name="group_user" string="Sale" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                	</group>                    
+               	</search>
+            </field>
+        </record>
+
+        <record id="action_ineco_saleamount_dashboard" model="ir.actions.act_window">
+            <field name="name">Sale Amount</field>
+            <field name="res_model">ineco.sale.amount.dashboard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="view_ineco_saleamount_dashboard_search"/>
+            <field name="context">{'search_default_group_user':1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale summary. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+      <!-- Dashboard Sale Amount -->
+      <record model="ir.ui.view" id="board_mixprint_saleamount_dashboard_form">
+            <field name="name">Mixprint Sale Amount Dashboard</field>
+            <field name="model">board.board</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard" version="7.0">
+                    <board style="1">
+                        <column>
+                       		<action string="Sale Amount (100,000 Baht)" name="%(action_ineco_saleamount_dashboard)d"/>
+ 						</column>
+                    </board>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_mixprint_saleamount_dashboard">
+            <field name="name">Sale Amount</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="usage">menu</field>
+            <field name="view_id" ref="board_mixprint_saleamount_dashboard_form"/>
+        </record>
+        
+        <menuitem 
+            id="menu_mixprint_saleamount_dashboard"
+        	action="action_mixprint_saleamount_dashboard" 
+        	parent="menu_mixprint_dashboard"
+        	sequence="4"/> 
+
         	
      </data>
 </openerp>

@@ -971,3 +971,185 @@ class ineco_delivery_cost_dashboard(osv.osv):
                 order by sp.date
         """)
         
+class ineco_sale_amount_dashboard_temp(osv.osv):
+    _name = 'ineco.sale.amount.dashboard.temp'
+    _auto = False
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_amount_dashboard_temp')
+        cr.execute(""" CREATE VIEW ineco_sale_amount_dashboard_temp AS 
+            select 
+              ru.id as user_id, 
+              --rp.name, 
+              calendar.year,
+              --Januaray
+              coalesce((select round(round(sum(amount_untaxed)/100000,2)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 1
+                 and user_id = ru.id),0.00) as jan_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 1
+                 and user_id = ru.id),0.00) as jan_garment_amount,
+              --Febuaray
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 2
+                 and user_id = ru.id),0.00) as feb_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 2
+                 and user_id = ru.id),0.00) as feb_garment_amount,       
+              --March
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 3
+                 and user_id = ru.id),0.00) as mar_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 3
+                 and user_id = ru.id),0.00) as mar_garment_amount,       
+              --April
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 4
+                 and user_id = ru.id),0.00) as apr_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 4
+                 and user_id = ru.id),0.00) as apr_garment_amount,       
+              --May
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 5
+                 and user_id = ru.id),0.00) as may_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 5
+                 and user_id = ru.id),0.00) as may_garment_amount,       
+              --June
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 6
+                 and user_id = ru.id),0.00) as jun_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 6
+                 and user_id = ru.id),0.00) as jun_garment_amount,       
+              --July
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 7
+                 and user_id = ru.id),0.00) as jul_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 7
+                 and user_id = ru.id),0.00) as jul_garment_amount,       
+              --August
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 8
+                 and user_id = ru.id),0.00) as aug_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 8
+                 and user_id = ru.id),0.00) as aug_garment_amount,      
+              --September
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 9
+                 and user_id = ru.id),0.00) as sep_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 9
+                 and user_id = ru.id),0.00) as sep_garment_amount ,      
+              --Octorber
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 10
+                 and user_id = ru.id),0.00) as oct_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 10
+                 and user_id = ru.id),0.00) as oct_garment_amount,       
+              --November
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 11
+                 and user_id = ru.id),0.00) as nov_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 11
+                 and user_id = ru.id),0.00) as nov_garment_amount,       
+              --December
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from date_sale_close) = calendar.year and
+                 extract(month from date_sale_close) = 12
+                 and user_id = ru.id),0.00) as dec_sale_amount,
+              coalesce((select round(sum(amount_untaxed)/100000,2) from sale_order
+               where extract(year from garment_order_date) = calendar.year and
+                 extract(month from garment_order_date) = 12
+                 and user_id = ru.id),0.00) as dec_garment_amount       
+            
+            from res_users ru
+            cross join 
+            (SELECT 
+              extract(year from generate_series(_from, _to, '1 year') ) AS year
+            FROM 
+              (select min(date_order) as _from, max(date_order+ interval '1 month') as _to 
+               from sale_order where state not in ('draft','cancel') 
+                 and extract(year from date_order) not in (1912,1956,2556)) a) calendar
+            join res_partner rp on rp.id = ru.partner_id
+            where
+              ru.active = true
+              and ru.signature like '%ขาย%'
+              and calendar.year > extract(year from now()) - 3
+            order by
+              user_id, year
+        """)
+        
+class ineco_sale_amount_dashboard(osv.osv):
+    _name = 'ineco.sale.amount.dashboard'
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users','Sale',readonly=True),
+        'year': fields.integer('Year',readonly=True),
+        'jan_sale_amount': fields.float('January',readonly=True),
+        'jan_garment_amount': fields.float('January',readonly=True),
+        'feb_sale_amount': fields.float('Febuary',readonly=True),
+        'feb_garment_amount': fields.float('Febuary',readonly=True),
+        'mar_sale_amount': fields.float('March',readonly=True),
+        'mar_garment_amount': fields.float('March',readonly=True),
+        'apr_sale_amount': fields.float('April',readonly=True),
+        'apr_garment_amount': fields.float('April',readonly=True),
+        'may_sale_amount': fields.float('May',readonly=True),
+        'may_garment_amount': fields.float('May',readonly=True),
+        'jun_sale_amount': fields.float('June',readonly=True),
+        'jun_garment_amount': fields.float('June',readonly=True),
+        'jul_sale_amount': fields.float('July',readonly=True),
+        'jul_garment_amount': fields.float('July',readonly=True),
+        'aug_sale_amount': fields.float('August',readonly=True),
+        'aug_garment_amount': fields.float('August',readonly=True),
+        'sep_sale_amount': fields.float('September',readonly=True),
+        'sep_garment_amount': fields.float('September',readonly=True),
+        'oct_sale_amount': fields.float('Octorber',readonly=True),
+        'oct_garment_amount': fields.float('Octorber',readonly=True),
+        'nov_sale_amount': fields.float('November',readonly=True),
+        'nov_garment_amount': fields.float('November',readonly=True),
+        'dec_sale_amount': fields.float('December',readonly=True),
+        'dec_garment_amount': fields.float('December',readonly=True),
+    }
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_amount_dashboard')
+        cr.execute(""" CREATE VIEW ineco_sale_amount_dashboard AS 
+                select id, (a[id]).*
+                from (
+                    select a, generate_series(1, array_upper(a,1)) as id
+                        from (
+                            select array (
+                                select ineco_sale_amount_dashboard_temp from ineco_sale_amount_dashboard_temp
+                            ) as a
+                    ) b
+                ) c
+        """)
+         
