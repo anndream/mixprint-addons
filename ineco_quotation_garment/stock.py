@@ -108,13 +108,28 @@ class stock_picking_in(osv.osv):
             product_qty =  cr.fetchone()[0] or 0.0
             res[stock.id] = product_qty
         return res    
+
+    def _get_record(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for stock in self.browse(cr, uid, ids, context=context):
+            res[stock.id] = 0.0
+            #res[stock.id] = {'quantity': 0.0}
+            sql = "select count(product_qty) from stock_move where picking_id = %s"
+            cr.execute(sql % stock.id)
+            product_qty =  cr.fetchone()[0] or 0.0
+            res[stock.id] = product_qty
+        return res    
     
     _inherit = 'stock.picking.in'
     _columns = {
         'quantity': fields.function(_get_quantity, 
                                     digits_compute=dp.get_precision('Product Unit of Measure'), 
                                     string='Quantity',
-                                    type="float",)
+                                    type="float",),
+        'record_count': fields.function(_get_record, 
+                                    digits_compute=dp.get_precision('Product Unit of Measure'), 
+                                    string='#',
+                                    type="integer",)
     }
     
 class stock_picking_out(osv.osv):
@@ -135,6 +150,17 @@ class stock_picking_out(osv.osv):
         for line in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
             result[line.picking_id.id] = True
         return result.keys()
+
+    def _get_record(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for stock in self.browse(cr, uid, ids, context=context):
+            res[stock.id] = 0.0
+            #res[stock.id] = {'quantity': 0.0}
+            sql = "select count(product_qty) from stock_move where picking_id = %s"
+            cr.execute(sql % stock.id)
+            product_qty =  cr.fetchone()[0] or 0.0
+            res[stock.id] = product_qty
+        return res    
         
     _inherit = "stock.picking.out"
     _columns = {
@@ -158,6 +184,10 @@ class stock_picking_out(osv.osv):
         'opportunity_id': fields.many2one('crm.lead', 'Opportunity',domain=[('type','=','opportunity')]),
         'objective_id': fields.many2one('ineco.delivery.objective', 'Objective'),
         'cost_ids': fields.one2many('ineco.picking.cost','picking_id'),
+        'record_count': fields.function(_get_record, 
+                                    digits_compute=dp.get_precision('Product Unit of Measure'), 
+                                    string='#',
+                                    type="integer",)
     }
         
     
@@ -189,6 +219,17 @@ class stock_picking(osv.osv):
         for line in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
             result[line.picking_id.id] = True
         return result.keys()
+
+    def _get_record(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for stock in self.browse(cr, uid, ids, context=context):
+            res[stock.id] = 0.0
+            #res[stock.id] = {'quantity': 0.0}
+            sql = "select count(product_qty) from stock_move where picking_id = %s"
+            cr.execute(sql % stock.id)
+            product_qty =  cr.fetchone()[0] or 0.0
+            res[stock.id] = product_qty
+        return res    
     
     _inherit = "stock.picking"
     _columns = {
@@ -211,6 +252,10 @@ class stock_picking(osv.osv):
             store={
                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['production_ids'], 10),
             }, ),
+        'record_count': fields.function(_get_record, 
+                                    digits_compute=dp.get_precision('Product Unit of Measure'), 
+                                    string='#',
+                                    type="integer",)
     }
 
     def onchange_note_id(self, cr, uid, ids, note_id=False, context=None):
