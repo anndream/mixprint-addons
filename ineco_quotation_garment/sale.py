@@ -52,6 +52,7 @@ class sale_gender(osv.osv):
     _columns = {
         'name': fields.char('Description',size=64,required=True),
         'code': fields.char('Code', size=10),
+        'name2': fields.char('Other Description',size=64,required=True),
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')
@@ -261,22 +262,44 @@ class sale_order(osv.osv):
                 bom_ids = bom_obj.search(cr, uid, [('product_id','=',line.product_id.id)])
                 if bom_ids:
                     bom_id = bom_ids[0]
-                produce_id = production_obj.create(cr, uid, {
-                    'origin': sale_obj.name,
-                    'product_id': line.product_id.id,
-                    'product_qty': line.product_uom_qty,
-                    'product_uom': line.product_uom.id,
-                    'product_uos_qty': False,
-                    'product_uos': False,
-                    'location_src_id': stock_location_obj.lot_stock_id.id,
-                    'location_dest_id': stock_location_obj.lot_stock_id.id,
-                    'bom_id': bom_id,
-                    'date_planned': time.strftime('%Y-%m-%d'),
-                    'move_prod_id': False,
-                    'company_id': company.id,
-                    'name': garment_order_no+('#%s' % seq),
-                })        
-                seq += 1
+#                 produce_id = production_obj.create(cr, uid, {
+#                     'origin': sale_obj.name,
+#                     'product_id': line.product_id.id,
+#                     'product_qty': line.product_uom_qty,
+#                     'product_uom': line.product_uom.id,
+#                     'product_uos_qty': False,
+#                     'product_uos': False,
+#                     'location_src_id': stock_location_obj.lot_stock_id.id,
+#                     'location_dest_id': stock_location_obj.lot_stock_id.id,
+#                     'bom_id': bom_id,
+#                     'date_planned': time.strftime('%Y-%m-%d'),
+#                     'move_prod_id': False,
+#                     'company_id': company.id,
+#                     'name': garment_order_no+('#%s' % seq),
+#                 })        
+                if line.order_line_property_other_ids:
+                    for other in line.order_line_property_other_ids:
+                        production_obj.create(cr, uid, {
+                            'origin': line.order_id.name,
+                            'product_id': line.product_id.id,
+                            'product_qty': other.quantity,
+                            'product_uom': line.product_uom.id,
+                            'product_uos_qty': other.quantity,
+                            'product_uos': line.product_uom.id,
+                            'location_src_id': stock_location_obj.lot_stock_id.id,
+                            'location_dest_id': stock_location_obj.lot_stock_id.id,
+                            'bom_id': bom_id,
+                            'date_planned': line.order_id.date_delivery, #time.strftime('%Y-%m-%d'),
+                            'move_prod_id': False,
+                            'company_id': line.order_id.company_id.id,
+                            'name': garment_order_no+('#%s' % seq),
+                            'color_id': other.color_id and other.color_id.id or False,
+                            'gender_id': other.gender_id and other.gender_id.id or False,
+                            'size_id': other.size_id and other.size_id.id or False,
+                            'note': other.note or False,
+                            'sale_order_id': line.order_id.id,
+                        })  
+                        seq += 1      
         return True
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
@@ -336,6 +359,8 @@ class sale_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         picking_obj = self.pool.get('stock.picking.out')
         procurement_obj = self.pool.get('procurement.order')
+        production_obj = self.pool.get('mrp.production')
+        bom_obj = self.pool.get('mrp.bom')
         proc_ids = []
 
         for line in order_lines:
@@ -354,10 +379,17 @@ class sale_order(osv.osv):
 
             if line.product_id:
                 if line.product_id.type in ('product', 'consu'):
+                    stock_location_obj = self.pool.get('stock.warehouse').browse(cr, uid, [1])[0]
+                    bom_id = False
+                    bom_ids = bom_obj.search(cr, uid, [('product_id','=',line.product_id.id)])
+                    if bom_ids:
+                        bom_id = bom_ids[0]
                     if not picking_id:
                         picking_id = picking_obj.create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
                     if line.order_line_property_other_ids:
+                        seq = 0
                         for other in line.order_line_property_other_ids:
+                            seq += 1
                             move_id = move_obj.create(cr, uid, self._prepare_order_line_move_qty(cr, 
                                 uid, order, line, picking_id, date_planned, other.quantity, 
                                 other.color_id and other.color_id.id or False,

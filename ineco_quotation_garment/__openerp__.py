@@ -33,7 +33,7 @@ New Quotation Menu/View for Garment Business.
     'images' : [],
     'depends' : ['base','sale','crm','ineco_crm','product',
                  'stock','sale_stock','account','hr','ineco_stock','purchase',
-                 'account_cancel','mrp','multi_image'],
+                 'account_cancel','mrp','mrp_operations','multi_image'],
     'data': [
     ],
     'js': [
@@ -64,6 +64,9 @@ New Quotation Menu/View for Garment Business.
         'dashboard_invoice_view.xml',
         'pattern_view.xml',
         'mrp_view.xml',
+        'wizard/wizard_update_production_start_view.xml',
+        'wizard/wizard_start_workorder_view.xml',
+        'wizard/wizard_done_workorder_view.xml',
         #'purchase_order_view.xml',
     ],
     'installable': True,

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012 - INECO PARTNERSHIP LIMITE (<http://www.ineco.co.th>).
+#    Copyright (C) 2014-Today INECO., Part., Ltd. (<http://www.ineco.co.th>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,19 +19,6 @@
 #
 ##############################################################################
 
-import sale
-import res_users
-import stock
-import stock_partial_picking
-import partner
-import problem
-import invoice
-import product
-import dashboard_invoice
-import pattern
-import mrp
-import crm
-import dashboard
-import wizard
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import wizard_update_production_start
+import wizard_start_workorder
+import wizard_done_workorder

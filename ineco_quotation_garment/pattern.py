@@ -115,6 +115,7 @@ class ineco_pattern_type(osv.osv):
     _columns = {
         'name': fields.char('Description',size=64,required=True),
         'code': fields.char('Code', size=10, required=True),
+        'name2': fields.char('Other Description',size=64,required=True),
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')

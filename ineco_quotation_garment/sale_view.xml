@@ -954,6 +954,7 @@
                 <tree string="Gender">
                     <field name="name" />
                     <field name="code" />
+                    <field name="name2" />
                 </tree>
             </field>
         </record>		
@@ -965,6 +966,7 @@
                 <form string="Gender">
                     <field name="name" />
                     <field name="code" />
+                    <field name="name2" />
                 </form>
             </field>
         </record>	
@@ -976,6 +978,7 @@
                 <search string="Search Gender">
                 	<field name="name" />
                 	<field name="code" />
+                	<field name="name2" />
                	</search>
             </field>
         </record>
