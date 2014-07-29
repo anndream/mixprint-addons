@@ -13,6 +13,7 @@
                 	<field name="sale_order_id" readonly="1" />
                 </field>                               
                 <field name="date_planned" position="before">
+                	<field name="pattern_id" required="1" />
                 	<field name="gender_id" readonly="1"/>
                 	<field name="color_id" readonly="1" />
                 	<field name="size_id" readonly="1"/>

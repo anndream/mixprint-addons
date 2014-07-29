@@ -41,6 +41,7 @@ class mrp_production(osv.osv):
         'size_id': fields.many2one('sale.size', 'Size'),        
         'note': fields.char('Note', size=32,),
         'sale_order_id': fields.many2one('sale.order','Sale Order'),
+        'pattern_id': fields.many2one('ineco.pattern','Pattern'),
     }
 
     def action_compute(self, cr, uid, ids, properties=None, context=None):

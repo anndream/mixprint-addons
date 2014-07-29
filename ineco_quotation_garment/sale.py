@@ -202,6 +202,69 @@ class sale_order(osv.osv):
         'to_correct': False,
     }
 
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
+        for id in ids:
+            sale_obj = self.browse(cr, uid, id)
+            if sale_obj.garment_order_no:
+                self.create_mo(cr, uid, ids, context)
+        return True
+            
+    def create_mo(self, cr, uid, ids, context=None):
+        for id in ids:
+            sale_obj = self.browse(cr, uid, [id])[0]
+            production_obj = self.pool.get('mrp.production')
+            garment_order_no = sale_obj.garment_order_no 
+            company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
+            production_obj = self.pool.get('mrp.production')
+            wf_service = netsvc.LocalService("workflow")
+            bom_obj = self.pool.get('mrp.bom')
+            stock_location_obj = self.pool.get('stock.warehouse').browse(cr, uid, [1])[0]
+            seq = 1
+            for line in sale_obj.order_line:
+                bom_id = False
+                bom_ids = bom_obj.search(cr, uid, [('product_id','=',line.product_id.id)])
+                if bom_ids:
+                    bom_id = bom_ids[0]      
+                if line.order_line_property_other_ids:
+                    for other in line.order_line_property_other_ids:
+                        production_obj.create(cr, uid, {
+                            'origin': line.order_id.name,
+                            'product_id': line.product_id.id,
+                            'product_qty': other.quantity,
+                            'product_uom': line.product_uom.id,
+                            'product_uos_qty': other.quantity,
+                            'product_uos': line.product_uom.id,
+                            'location_src_id': stock_location_obj.lot_stock_id.id,
+                            'location_dest_id': stock_location_obj.lot_stock_id.id,
+                            'bom_id': bom_id,
+                            'date_planned': line.order_id.date_delivery, #time.strftime('%Y-%m-%d'),
+                            'move_prod_id': False,
+                            'company_id': line.order_id.company_id.id,
+                            'name': garment_order_no+('#%s' % seq),
+                            'color_id': other.color_id and other.color_id.id or False,
+                            'gender_id': other.gender_id and other.gender_id.id or False,
+                            'size_id': other.size_id and other.size_id.id or False,
+                            'note': other.note or False,
+                            'sale_order_id': line.order_id.id,
+                        })  
+                        seq += 1      
+        return True
+
+    def action_cancel(self, cr, uid, ids, context=None):
+        super(sale_order, self).action_cancel(cr, uid, ids, context=context)
+        wf_service = netsvc.LocalService("workflow")
+        if context is None:
+            context = {}
+        sale_obj = self.browse(cr, uid, ids)[0]
+        production_obj = self.pool.get('mrp.production')
+        production_ids = production_obj.search(cr, uid, [('origin','=',sale_obj.name)])
+        for prod_id in production_ids:
+            prod_name = production_obj.browse(cr, uid, prod_id).name
+            production_obj.write(cr, uid, prod_id, {'name': prod_name+'#CN'+time.strftime('%Y-%m-%d %H:%M:%S') })
+            wf_service.trg_validate(uid, 'mrp.production', prod_id, 'button_cancel', cr) 
+        return True
+
     def copy(self, cr, uid, ids, default=None, context=None):
         if context is None:
             context = {}
@@ -231,13 +294,15 @@ class sale_order(osv.osv):
 
     def action_gen_garment_no(self, cr, uid, ids, context=None):
         sale_obj = self.browse(cr, uid, ids)[0]
-        #Check MRP when exist
         production_obj = self.pool.get('mrp.production')
         production_ids = production_obj.search(cr, uid, [('origin','=',sale_obj.name)])
         garment_order_no = False
+        for line in sale_obj.order_line:
+            if not line.order_line_property_other_ids:
+                raise osv.except_osv('Color-Gender-Size is empty!', 'Please fill in Color/Gender/Size.')             
         if production_ids:
             garment_order = production_obj.browse(cr, uid, production_ids)[0]
-            garment_order_no = garment_order.origin.split('#')[0]
+            garment_order_no = garment_order.name.split('#')[0]
             self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
         else:
             if sale_obj.shop_id and sale_obj.shop_id.production_sequence_id:
@@ -245,61 +310,7 @@ class sale_order(osv.osv):
             else:
                 garment_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.garment.order')
             self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
-            #Make MO
-            company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
-            production_obj = self.pool.get('mrp.production')
-            #move_obj = self.pool.get('stock.move')
-            wf_service = netsvc.LocalService("workflow")
-            bom_obj = self.pool.get('mrp.bom')
-            #procurement_obj = self.pool.get('procurement.order')
-            #res_id = procurement.move_id.id
-            #newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.produce_delay or 0.0)
-            #newdate = newdate - relativedelta(days=company.manufacturing_lead)
-            stock_location_obj = self.pool.get('stock.warehouse').browse(cr, uid, [1])[0]
-            seq = 1
-            for line in sale_obj.order_line:
-                bom_id = False
-                bom_ids = bom_obj.search(cr, uid, [('product_id','=',line.product_id.id)])
-                if bom_ids:
-                    bom_id = bom_ids[0]
-#                 produce_id = production_obj.create(cr, uid, {
-#                     'origin': sale_obj.name,
-#                     'product_id': line.product_id.id,
-#                     'product_qty': line.product_uom_qty,
-#                     'product_uom': line.product_uom.id,
-#                     'product_uos_qty': False,
-#                     'product_uos': False,
-#                     'location_src_id': stock_location_obj.lot_stock_id.id,
-#                     'location_dest_id': stock_location_obj.lot_stock_id.id,
-#                     'bom_id': bom_id,
-#                     'date_planned': time.strftime('%Y-%m-%d'),
-#                     'move_prod_id': False,
-#                     'company_id': company.id,
-#                     'name': garment_order_no+('#%s' % seq),
-#                 })        
-                if line.order_line_property_other_ids:
-                    for other in line.order_line_property_other_ids:
-                        production_obj.create(cr, uid, {
-                            'origin': line.order_id.name,
-                            'product_id': line.product_id.id,
-                            'product_qty': other.quantity,
-                            'product_uom': line.product_uom.id,
-                            'product_uos_qty': other.quantity,
-                            'product_uos': line.product_uom.id,
-                            'location_src_id': stock_location_obj.lot_stock_id.id,
-                            'location_dest_id': stock_location_obj.lot_stock_id.id,
-                            'bom_id': bom_id,
-                            'date_planned': line.order_id.date_delivery, #time.strftime('%Y-%m-%d'),
-                            'move_prod_id': False,
-                            'company_id': line.order_id.company_id.id,
-                            'name': garment_order_no+('#%s' % seq),
-                            'color_id': other.color_id and other.color_id.id or False,
-                            'gender_id': other.gender_id and other.gender_id.id or False,
-                            'size_id': other.size_id and other.size_id.id or False,
-                            'note': other.note or False,
-                            'sale_order_id': line.order_id.id,
-                        })  
-                        seq += 1      
+            self.create_mo(cr, uid, ids, context)
         return True
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
