@@ -62,7 +62,8 @@ class sale_color(osv.osv):
     _name = 'sale.color'
     _description = 'Color of Product Sale'
     _columns = {
-        'name': fields.char('Description',size=64,required=True)
+        'name': fields.char('Description',size=64,required=True),
+        'name2': fields.char('Description2',size=64,),
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')

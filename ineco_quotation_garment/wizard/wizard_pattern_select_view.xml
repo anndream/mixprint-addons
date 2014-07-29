@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+        <record id="view_ineco_production_selectpattern_form" model="ir.ui.view">
+            <field name="name">ineco.production.selectpattern.form</field>
+            <field name="model">ineco.production.selectpattern</field>
+            <field name="arch" type="xml">
+                <form string="Update selectpattern" version="7.0">
+                	<group>
+                		<group><field name="pattern_id" /></group>
+                		<group></group>
+                	</group>
+                    <p class="oe_grey">
+                        Please select Pattern
+                    </p>
+                    <footer>
+                        <button string="Update" name="update_data" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_ineco_production_selectpattern" model="ir.actions.act_window">
+            <field name="name">Update Pattern</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ineco.production.selectpattern</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+        <record model="ir.values" id="ineco_production_selectpattern_value">
+            <field name="name">Update Pattern</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_ineco_production_selectpattern'))" />
+            <field name="key">action</field>
+            <field name="model">mrp.production</field>
+        </record>   
+        
+    </data>
+</openerp>

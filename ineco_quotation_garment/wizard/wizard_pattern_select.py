@@ -19,7 +19,29 @@
 #
 ##############################################################################
 
-import wizard_update_production_start
-import wizard_start_workorder
-import wizard_done_workorder
-import wizard_pattern_select
+#import datetime
+
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+class ineco_production_selectpattern(osv.osv_memory):
+    
+    _name = 'ineco.production.selectpattern'
+    _description = 'Wizard Select Pattern'
+    _columns = {
+        'pattern_id': fields.many2one('ineco.pattern','Pattern'),
+    }
+    
+    def update_data(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        active_ids = context.get('active_ids',[])
+        if active_ids:
+            data = self.read(cr, uid, ids, context=context)[0]
+            value = {
+                'pattern_id': data['pattern_id'][0],
+            }
+            self.pool.get('mrp.production').write(cr, uid, active_ids, value)
+        return {'type': 'ir.actions.act_window_close'}
+    
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

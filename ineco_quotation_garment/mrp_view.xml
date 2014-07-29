@@ -19,6 +19,9 @@
                 	<field name="size_id" readonly="1"/>
                 	<field name="note" readonly="1"/>
                 </field>
+                <field name="origin" position="after">
+                	<field name="comment" />
+                </field>
                 
             </field>
         </record>   

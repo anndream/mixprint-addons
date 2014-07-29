@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <tree string="Colors">
                     <field name="name" />
+                    <field name="name2" />
                 </tree>
             </field>
         </record>		
@@ -19,6 +20,7 @@
             <field name="arch" type="xml">
                 <form string="Colors">
                     <field name="name" />
+                    <field name="name2" />
                 </form>
             </field>
         </record>	
@@ -29,6 +31,7 @@
             <field name="arch" type="xml">
                 <search string="Search Color">
                 	<field name="name" />
+                	<field name="name2" />
                	</search>
             </field>
         </record>
