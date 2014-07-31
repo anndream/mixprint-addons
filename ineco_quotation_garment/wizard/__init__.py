@@ -23,3 +23,4 @@ import wizard_update_production_start
 import wizard_start_workorder
 import wizard_done_workorder
 import wizard_pattern_select
+import wizard_update_otherinfo

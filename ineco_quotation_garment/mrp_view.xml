@@ -21,6 +21,9 @@
                 </field>
                 <field name="origin" position="after">
                 	<field name="comment" />
+                	<field name="bill_no" />
+                	<field name="bill_type" />
+                	<field name="worker" />
                 </field>
                 
             </field>
