@@ -24,6 +24,7 @@
                 	<field name="bill_no" />
                 	<field name="bill_type" />
                 	<field name="worker" />
+                	<field name="bill_weight" />
                 </field>
                 
             </field>

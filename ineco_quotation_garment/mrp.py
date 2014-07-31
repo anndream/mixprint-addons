@@ -46,6 +46,7 @@ class mrp_production(osv.osv):
         'bill_no': fields.char('Bill No', size=10),
         'bill_type': fields.char('Material Type', size=64),
         'worker': fields.char('Worker',size=64),
+        'bill_weight': fields.float('Bill Weight'),
     }
 
     def action_compute(self, cr, uid, ids, properties=None, context=None):
