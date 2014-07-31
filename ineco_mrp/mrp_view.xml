@@ -12,11 +12,11 @@
 					position="after">
 					<page string="Activity">
 						<field name="activity_ids">
-							<tree string="Activity">
-								<field name="box_id" />
+							<tree string="Activity" editable="top">
 								<field name="date_action" />
 								<field name="employee_id" />
 								<field name="quantity" />
+								<field name="box_id" />
 							</tree>
 						</field>
 					</page>

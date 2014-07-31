@@ -74,6 +74,11 @@ class ineco_mrp_box_activity(osv.osv):
         'workorder_id': fields.many2one('mrp.production.workcenter.line','Work Order',),
     }
     
+    def create(self, cr, uid, vals, context=None):
+        if 'date_action' not in vals:
+            vals['date_action'] = fields.datetime.context_timestamp(cr, uid, context)
+        return super(ineco_mrp_box_activity, self).create(cr, uid, vals, context=context)
+    
 class mrp_production_workcenter_line(osv.osv):
     _inherit = 'mrp.production.workcenter.line'
     _columns = {
