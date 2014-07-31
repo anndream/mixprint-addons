@@ -203,12 +203,29 @@ class sale_order(osv.osv):
         'to_correct': False,
     }
 
+    def action_regen_mo(self, cr, uid, ids, context=None):
+        self.cancel_mo(cr, uid, ids, context=context)
+        self.create_mo(cr, uid, ids, context=context)
+        return True
+
     def action_button_confirm(self, cr, uid, ids, context=None):
         super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
         for id in ids:
             sale_obj = self.browse(cr, uid, id)
             if sale_obj.garment_order_no:
                 self.create_mo(cr, uid, ids, context)
+        return True
+    
+    def cancel_mo(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        for id in ids:
+            sale_obj = self.browse(cr, uid, ids)[0]
+            production_obj = self.pool.get('mrp.production')
+            production_ids = production_obj.search(cr, uid, [('origin','=',sale_obj.name)])
+            for prod_id in production_ids:
+                prod_name = production_obj.browse(cr, uid, prod_id).name
+                production_obj.write(cr, uid, prod_id, {'name': prod_name+'#CN'+time.strftime('%Y-%m-%d %H:%M:%S') })
+                wf_service.trg_validate(uid, 'mrp.production', prod_id, 'button_cancel', cr) 
         return True
             
     def create_mo(self, cr, uid, ids, context=None):
