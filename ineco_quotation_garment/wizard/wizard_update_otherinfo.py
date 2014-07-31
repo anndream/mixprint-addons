@@ -32,6 +32,7 @@ class ineco_production_otherinfo(osv.osv_memory):
         'bill_no': fields.char('Bill No', size=10),
         'bill_type': fields.char('Material Type', size=64),
         'worker': fields.char('Worker',size=64),
+        'bill_weight': fields.float('Weight'),
     }
     
     def update_data(self, cr, uid, ids, context=None):
@@ -44,6 +45,7 @@ class ineco_production_otherinfo(osv.osv_memory):
                 'bill_no': data['bill_no'],
                 'bill_type': data['bill_type'],
                 'worker': data['worker'],
+                'bill_weight': data['bill_weight'],
             }
             self.pool.get('mrp.production').write(cr, uid, active_ids, value)
             

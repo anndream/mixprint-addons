@@ -12,9 +12,11 @@
                 		<group>
                 			<field name="bill_no" />
                 			<field name="bill_type" />
-                			<field name="worker" />
                 		</group>
-                		<group></group>
+                		<group>
+                			<field name="worker" />
+                			<field name="bill_weight" />
+                		</group>
                 	</group>
                     <p class="oe_grey">
                         Please inform other information

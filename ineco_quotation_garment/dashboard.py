@@ -136,13 +136,13 @@ class ineco_sale_summary3(osv.osv):
                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
                         and date_part('year',now()) = date_part('year',so.garment_order_date)
                         and so.state <> 'cancel'
-                        and left(so.name,2) = 'SO'
+                        and left(so.garment_order_no,2) = 'MO'
                   ) as mo1,
                   (select coalesce(sum(amount_untaxed),0) from sale_order so 
                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
                         and date_part('year',now()) = date_part('year',so.garment_order_date)
                         and so.state <> 'cancel'
-                        and left(so.name,2) = 'SO'
+                        and left(so.garment_order_no,2) = 'MO'
                   ) as mo2,
                   (select count(*)::numeric from crm_lead cl  
                    where user_id = ru.id and stage_id = 8  and type = 'opportunity' and date_closed is not null
@@ -269,7 +269,7 @@ class ineco_sale_summary5_query(osv.osv):
                    where user_id = ru.id and date_part('month',now()) = date_part('month',so.garment_order_date)
                         and date_part('year',now()) = date_part('year',so.garment_order_date)
                         and so.state <> 'cancel'
-                        and left(so.name,2) = 'SO'
+                        and left(so.garment_order_no,2) = 'MO'
                   ) as mo2,
                   (
                     select coalesce(count(*),0) from res_partner 
