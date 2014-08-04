@@ -196,11 +196,13 @@ class sale_order(osv.osv):
         'sample_revision_no': fields.char('Sampling Revision No', size=32,),
         'sample_revision_date': fields.date('Sampling Revision Date',),
         'to_correct': fields.boolean('To Corrected'),
+        'relate_garment_order_no': fields.char('Relate MO', size=32),
     }
     _defaults = {
         'cancel_sample_order': False,
         'cancel_garment_order': False,
         'to_correct': False,
+        'relate_garment_order_no': False,
     }
 
     def action_regen_mo(self, cr, uid, ids, context=None):
