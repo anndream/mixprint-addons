@@ -19,8 +19,12 @@
 #
 ##############################################################################
 
-import mrp
-import res_users
+from openerp.osv import fields, osv
+from datetime import datetime, timedelta
+from openerp import netsvc
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class res_users(osv.osv):
+    _inherit = 'res.users'
+    _columns = {
+        'workcenter_ids': fields.many2many('mrp.workcenter', 'res_users_workcenter_rel','user_id','workcenter_id','Workcenter'),
+    }

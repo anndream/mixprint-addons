@@ -32,6 +32,7 @@
     'update_xml': [
         'security.xml',
         'mrp_view.xml',
+        'res_users_view.xml',
     ],
     'demo': [],
     'installable': True,
