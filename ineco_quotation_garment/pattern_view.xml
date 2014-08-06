@@ -296,6 +296,40 @@
             </field>
         </record>	
 
+        <record model='ir.ui.view' id='view_ineco_pattern_kanban'>
+            <field name="name">ineco.pattern.brandkanban</field>
+            <field name="model">ineco.pattern</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name" />
+                    <field name="image" />
+                    <field name="product_id" />
+                    <field name="product_type_id" />
+                    <templates>
+                        <t t-name="kanban-box">
+                        	<div class="oe_module_vignette">
+                                <a type="open" href="#" class="oe_kanban_action oe_kanban_action_a">
+                                    <img t-att-src="kanban_image('ineco.pattern', 'image_small', record.id.value)"/>
+                                </a>
+                                <div class="oe_kanban_details">
+                                    <ul>
+                                        <li>
+                                            <t t-if="record.name.raw_value"><field name="name"/></t>
+                                        </li>
+                                        <li>
+                                            <t t-if="record.product_type_id.raw_value"><field name="product_type_id"/></t>
+                                        </li>
+                                        
+                                    </ul>
+                                    
+                               </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_ineco_pattern_filter" model="ir.ui.view">
             <field name="name">ineco.pattern.filter</field>
             <field name="model">ineco.pattern</field>
@@ -320,7 +354,7 @@
             <field name="res_model">ineco.pattern</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_ineco_pattern_filter"/>
             <field name="context">{'search_default_by_product_type':1}</field>
             <field name="help" type="html">
