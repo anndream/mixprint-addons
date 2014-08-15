@@ -30,7 +30,26 @@ from openerp.osv import fields, osv
 #from openerp import netsvc
 from openerp import tools
 
+class ineco_mrp_pattern_component(osv.osv):
+    _name = 'ineco.mrp.pattern.component'
+    _description = "Pattern Component"
+    _columns = {
+        'name': fields.char('Description', size=64,),
+        'seq': fields.integer('Sequence'),
+        'type_id': fields.many2one('ineco.pattern.type','Type',required=True),
+        'process1': fields.boolean('Process 1'),
+        'process2': fields.boolean('Process 2'),
+        'production_id': fields.many2one('mrp.production','Production'),
+    }
+    _defaults = {
+        'name': '...',
+        'process1': False,
+        'process2': False,
+        #'last_updated': time.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+
 class mrp_production(osv.osv):
+    
     _inherit = 'mrp.production'
     _description = 'MRP for Garment'
     _columns = {
@@ -47,7 +66,23 @@ class mrp_production(osv.osv):
         'bill_type': fields.char('Material Type', size=64),
         'worker': fields.char('Worker',size=64),
         'bill_weight': fields.float('Bill Weight'),
+        'pattern_component_ids': fields.one2many('ineco.mrp.pattern.component','production_id','Components'),
     }
+
+    def button_component(self, cr, uid, ids, context=None):
+        for id in ids:
+            production = self.browse(cr, uid, id)
+            if production and production.pattern_id:
+                sql = "delete from ineco_mrp_pattern_component where production_id = %s" % production.id
+                cr.execute(sql)
+                for component in production.pattern_id.component_ids:
+                    new_data = {
+                        'seq': component.seq,
+                        'type_id': component.type_id.id,
+                        'production_id': production.id,
+                    }
+                    self.pool.get('ineco.mrp.pattern.component').create(cr, uid, new_data)
+        return True
 
     def action_compute(self, cr, uid, ids, properties=None, context=None):
         """ Computes bills of material of a product.

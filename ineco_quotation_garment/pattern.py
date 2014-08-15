@@ -182,6 +182,8 @@ class ineco_pattern_component(osv.osv):
         'name': '...',
         #'last_updated': time.strftime("%Y-%m-%d %H:%M:%S"),
     }
+    _order = 'seq'
+    
     def write(self, cr, uid, ids, vals, context=None):
         vals.update({'last_updated': time.strftime("%Y-%m-%d %H:%M:%S")})
         res = super(ineco_pattern_component, self).write(cr, uid, ids, vals, context=context)

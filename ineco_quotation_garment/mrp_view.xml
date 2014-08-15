@@ -13,7 +13,6 @@
                 	<field name="sale_order_id" readonly="1" />
                 </field>                               
                 <field name="date_planned" position="before">
-                	<field name="pattern_id" required="1" />
                 	<field name="gender_id" readonly="1"/>
                 	<field name="color_id" readonly="1" />
                 	<field name="size_id" readonly="1"/>
@@ -26,7 +25,26 @@
                 	<field name="worker" />
                 	<field name="bill_weight" />
                 </field>
-                
+                <xpath expr="/form/sheet/notebook/page[@string='Extra Information']" position="after" >
+                	<page string="Pattern">
+             			<group>
+             				<group>
+		                		<field name="pattern_id" required="1" />
+		                	</group>
+		                	<group>
+		                		<button name="button_component" string="Get Component" type="object" />
+		                	</group>
+             			</group>
+             			<field name="pattern_component_ids" nolable="1" colspan="4">
+             				<tree string="Component" editable="top">
+             					<field name="seq" />
+             					<field name="type_id" />
+             					<field name="process1" string="Needle" />
+             					<field name="process2" string="Screen" />
+             				</tree>
+             			</field>
+                	</page>
+                </xpath>
             </field>
         </record>   
         
