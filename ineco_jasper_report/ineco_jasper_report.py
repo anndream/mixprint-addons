@@ -178,7 +178,7 @@ class ineco_jasper_report(osv.osv):
     def browse_report(self, cr, uid, ids, *args):
         if not ids:
             return False
-        pattern = "http://%s:%s/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=%s&j_username=%s&j_password=%s&userLocale=en"
+        pattern = "http://%s:%s/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=%s&j_username=%s&j_password=%s&userLocale=en&current_user_id=%s"
         report =  self.browse(cr, uid, ids)[0]
         user = self.pool.get('res.users').browse(cr, uid, [uid])[0]
         final_url = pattern % (
@@ -186,7 +186,8 @@ class ineco_jasper_report(osv.osv):
                         report.server_id.port,
                         report.uristring,
                         report.server_id.username,
-                        report.server_id.password )
+                        report.server_id.password,
+                        uid )
         url_link = {
             'type': 'ir.actions.act_url',
             'url':final_url,
