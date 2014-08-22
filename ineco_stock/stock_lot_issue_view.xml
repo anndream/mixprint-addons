@@ -11,6 +11,7 @@
             	<field name="origin" position="after">
             		<field name="purchase_id" />            		
             	</field>
+            	
             	         
 				<xpath expr="/form/sheet/notebook/page[@string='Products']" position="after">
                         <page string="Serial Number" >
@@ -32,7 +33,9 @@
                             </group>
                         </page>      
                         <page string="Manufacturing Order">
-                        	<field name="production_ids" widget="many2many_tags" />
+                        	<field name="is_warning_production" invisible="1" />
+                        	<field name="production_ids" widget="many2many_tags" 
+                        		attrs="{'required':[('is_warning_production', '!=', False)]}"  />
                         </page>          
                 </xpath> 
                 

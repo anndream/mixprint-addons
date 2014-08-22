@@ -85,6 +85,10 @@ class stock_journal(osv.osv):
         'shipping_type': fields.selection([('in','Getting Goods'),('internal','Internal'),('out','Sending Goods')],'Shipping Type'),
         'location_id': fields.many2one('stock.location','Default Location'),
         'location_dest_id': fields.many2one('stock.location','Default Destination Location'),
+        'is_warning_production': fields.boolean('Warning Production'),
+    }
+    _defaults = {
+        'is_warning_production': False,
     }
 
 class stock_picking_in(osv.osv):
@@ -117,7 +121,23 @@ class stock_picking_in(osv.osv):
 class stock_picking(osv.osv):
     
     _inherit = 'stock.picking'
-    
+    _columns = {
+        'is_warning_production': fields.boolean('is_warning_production'),
+    }
+
+    def on_change_journal(self, cr, uid, ids, stock_journal_id, context=None):
+        values = {}
+        if stock_journal_id:
+            data = self.pool.get('stock.journal').browse(cr, uid, stock_journal_id, context=context)
+            values = {
+                'is_warning_production' : data.is_warning_production or False,
+            }
+        else:
+            values = {
+                'is_warning_production': False
+            }
+        return {'value' : values}
+             
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
             if ('stock_journal_id' in vals) and (vals.get('stock_journal_id')):

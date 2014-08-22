@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <field name="stock_journal_id" position="replace" >
-                    <field name="stock_journal_id" domain="['|',('shipping_type','=',type),('shipping_type','=',False)]" />
+                    <field name="stock_journal_id" on_change="on_change_journal(stock_journal_id)" domain="['|',('shipping_type','=',type),('shipping_type','=',False)]" />
                 </field>    
             </field>
         </record>
@@ -30,7 +30,7 @@
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
                 <field name="stock_journal_id" position="replace" >
-                    <field name="stock_journal_id" domain="['|',('shipping_type','=',type),('shipping_type','=',False)]" />
+                    <field name="stock_journal_id" on_change="on_change_journal(stock_journal_id)" domain="['|',('shipping_type','=',type),('shipping_type','=',False)]" />
                 </field>    
             </field>
        </record>     
@@ -45,6 +45,7 @@
                     <field name="shipping_type" />
                     <field name="location_id" />
                     <field name="location_dest_id" />
+                    <field name="is_warning_production" />
                 </field>
         	</field>
         </record>
@@ -59,6 +60,7 @@
                     <field name="shipping_type" />
                     <field name="location_id" />
                     <field name="location_dest_id" />
+                    <field name="is_warning_production" />
                 </field>
         	</field>
         </record>
