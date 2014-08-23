@@ -94,6 +94,19 @@ class stock_journal(osv.osv):
 class stock_picking_in(osv.osv):
     
     _inherit = 'stock.picking.in'
+
+    def on_change_journal(self, cr, uid, ids, stock_journal_id, context=None):
+        values = {}
+        if stock_journal_id:
+            data = self.pool.get('stock.journal').browse(cr, uid, stock_journal_id, context=context)
+            values = {
+                'is_warning_production' : data.is_warning_production or False,
+            }
+        else:
+            values = {
+                'is_warning_production': False
+            }
+        return {'value' : values}
     
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
@@ -165,6 +178,19 @@ class stock_picking(osv.osv):
 class stock_picking_out(osv.osv):
     
     _inherit = 'stock.picking.out'
+
+    def on_change_journal(self, cr, uid, ids, stock_journal_id, context=None):
+        values = {}
+        if stock_journal_id:
+            data = self.pool.get('stock.journal').browse(cr, uid, stock_journal_id, context=context)
+            values = {
+                'is_warning_production' : data.is_warning_production or False,
+            }
+        else:
+            values = {
+                'is_warning_production': False
+            }
+        return {'value' : values}
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
