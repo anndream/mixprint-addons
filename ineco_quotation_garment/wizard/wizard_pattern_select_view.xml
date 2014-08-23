@@ -12,7 +12,7 @@
                 		<group>
                 			<field name="pattern_id" on_change="on_change_pattern(pattern_id)" />
                 		</group>
-                		<newline />
+                		<!-- <newline />
                 		<field name="pattern_ids" nolabel="1" colspan="4">
                 				<tree string="Pattern" editable="top">
                 					<field name="pattern_type_id" />
@@ -20,6 +20,7 @@
                 					<field name="process2" />
                 				</tree>
                 		</field>
+                		-->
                 	</group>
                     <footer>
                         <button string="Update" name="update_data" type="object" class="oe_highlight"/>

@@ -119,6 +119,31 @@ class stock_picking_in(osv.osv):
             product_qty =  cr.fetchone()[0] or 0.0
             res[stock.id] = product_qty
         return res    
+
+    def _get_overlimit(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for stock in self.browse(cr, uid, ids, context=context):
+            res[stock.id] = False
+            #res[stock.id] = {'quantity': 0.0}
+            sql = """
+                select 
+                 coalesce(sum(sjp.quantity),0)::integer as total_limit,
+                 coalesce(sum(sm.product_qty),0)::integer as total_demand
+                from stock_picking sp
+                join stock_move sm on sp.id = sm.picking_id
+                join product_product pp on pp.id = sm.product_id
+                join product_template pt on pp.product_tmpl_id = pt.id
+                join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id
+                where 
+                   sp.id = %s
+            """
+            cr.execute(sql % stock.id)
+            output = cr.dictfetchall()
+            for r in output:
+                limit =  r['total_limit'] 
+                demand = r['total_demand'] 
+            res[stock.id] = demand > limit 
+        return res    
     
     _inherit = 'stock.picking.in'
     _columns = {
@@ -129,7 +154,8 @@ class stock_picking_in(osv.osv):
         'record_count': fields.function(_get_record, 
                                     digits_compute=dp.get_precision('Product Unit of Measure'), 
                                     string='#',
-                                    type="integer",)
+                                    type="integer",),
+        'is_overlimit': fields.function(_get_overlimit, string='Over Limit', type="boolean",)
     }
     
 class stock_picking_out(osv.osv):
@@ -161,6 +187,31 @@ class stock_picking_out(osv.osv):
             product_qty =  cr.fetchone()[0] or 0.0
             res[stock.id] = product_qty
         return res    
+
+    def _get_overlimit(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for stock in self.browse(cr, uid, ids, context=context):
+            res[stock.id] = False
+            #res[stock.id] = {'quantity': 0.0}
+            sql = """
+                select 
+                 coalesce(sum(sjp.quantity),0)::integer as total_limit,
+                 coalesce(sum(sm.product_qty),0)::integer as total_demand
+                from stock_picking sp
+                join stock_move sm on sp.id = sm.picking_id
+                join product_product pp on pp.id = sm.product_id
+                join product_template pt on pp.product_tmpl_id = pt.id
+                join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id
+                where 
+                   sp.id = %s
+            """
+            cr.execute(sql % stock.id)
+            output = cr.dictfetchall()
+            for r in output:
+                limit =  r['total_limit'] 
+                demand = r['total_demand'] 
+            res[stock.id] = demand > limit 
+        return res    
         
     _inherit = "stock.picking.out"
     _columns = {
@@ -187,7 +238,8 @@ class stock_picking_out(osv.osv):
         'record_count': fields.function(_get_record, 
                                     digits_compute=dp.get_precision('Product Unit of Measure'), 
                                     string='#',
-                                    type="integer",)
+                                    type="integer",),
+        'is_overlimit': fields.function(_get_overlimit, string='Over Limit', type="boolean",)
     }
         
     
@@ -230,6 +282,31 @@ class stock_picking(osv.osv):
             product_qty =  cr.fetchone()[0] or 0.0
             res[stock.id] = product_qty
         return res    
+
+    def _get_overlimit(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for stock in self.browse(cr, uid, ids, context=context):
+            res[stock.id] = False
+            #res[stock.id] = {'quantity': 0.0}
+            sql = """
+                select 
+                 coalesce(sum(sjp.quantity),0)::integer as total_limit,
+                 coalesce(sum(sm.product_qty),0)::integer as total_demand
+                from stock_picking sp
+                join stock_move sm on sp.id = sm.picking_id
+                join product_product pp on pp.id = sm.product_id
+                join product_template pt on pp.product_tmpl_id = pt.id
+                join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id
+                where 
+                   sp.id = %s
+            """
+            cr.execute(sql % stock.id)
+            output = cr.dictfetchall()
+            for r in output:
+                limit =  r['total_limit'] 
+                demand = r['total_demand'] 
+            res[stock.id] = demand > limit 
+        return res    
     
     _inherit = "stock.picking"
     _columns = {
@@ -255,7 +332,8 @@ class stock_picking(osv.osv):
         'record_count': fields.function(_get_record, 
                                     digits_compute=dp.get_precision('Product Unit of Measure'), 
                                     string='#',
-                                    type="integer",)
+                                    type="integer",),
+        'is_overlimit': fields.function(_get_overlimit, string='Over Limit', type="boolean",)
     }
 
     def onchange_note_id(self, cr, uid, ids, note_id=False, context=None):
@@ -286,6 +364,26 @@ class stock_picking(osv.osv):
         location_stock_id = 12
         data = self.browse(cr, uid, ids)[0]
         data_out = self.pool.get('stock.picking.out').browse(cr, uid, ids)[0]
+        if data.is_overlimit:
+            raise osv.except_osv('Over Product Limit Error!', 'Some product over limitation.')
+        sql = """
+            select 
+             coalesce(sum(sjp.quantity),0)::integer as total_limit
+            from stock_picking sp
+            join stock_move sm on sp.id = sm.picking_id
+            join product_product pp on pp.id = sm.product_id
+            join product_template pt on pp.product_tmpl_id = pt.id
+            join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id
+            where 
+               sp.id = %s
+        """ % data.id
+        cr.execute(sql)
+        check_qty = cr.fetchone()[0] or 0.0
+        group_ids = self.pool.get('res.users').read(cr, uid, uid)['groups_id']
+        group_warehous_manager_id = 28
+        if group_warehous_manager_id not in group_ids and check_qty > 0:
+            raise osv.except_osv('Permission denied!', 'Some product required Warehouse Manager Group to complete this document.')
+        
         if data_out.picking_transfer_id:
             picking_obj.action_done_draft(cr, uid, [data_out.picking_transfer_id.id])
             wf_service.trg_validate(uid, 'stock.picking', data_out.picking_transfer_id.id, 'button_cancel', cr)
@@ -456,11 +554,25 @@ class ineco_picking_note(osv.osv):
         'seq': 0,
     }
     
+class stock_jouranl_product(osv.osv):
+    _name = 'stock.journal.product'
+    _columns = {
+        'name': fields.char('...', size=32),
+        'stock_journal_id': fields.many2one('stock.journal','Stock Journal'),
+        'product_categ_id': fields.many2one('product.category','Product Category',required=True),
+        'quantity': fields.integer('Quantity Limit', required=True),
+    }
+    _defaults = {
+        'quantity': 1,
+    }
+    _order = 'stock_journal_id, product_id'
+    
 class stock_journal(osv.osv):
     _inherit = 'stock.journal'
     _columns = {
         'transfer_fg': fields.boolean('Is Transfer FG'),
         'auto_costing': fields.boolean('Auto Costing'),
+        'product_ids': fields.one2many('stock.journal.product','stock_journal_id','Product Limit'),
     }
 
 class ineco_cost_type(osv.osv):

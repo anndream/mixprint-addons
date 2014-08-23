@@ -73,6 +73,7 @@
                     <field name="sale_id" attrs="{'readonly':[('origin', '=', False)]}"/>
                     <field name="opportunity_id" domain="[('user_id','=',uid)]" groups="base.group_sale_salesman" />
                     <field name="objective_id" />
+                    <field name="is_overlimit" />
                 </xpath>
                 <xpath expr="//field[@name='date_done']" position="after">
                 	<field name="date_delivery" />
@@ -81,6 +82,22 @@
                 </xpath>
             </field>
         </record>
+
+<!-- 
+        <record id="view_ineco_delivery2_form" model="ir.ui.view">
+            <field name="name">ineco.delivery2.form</field>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="stock.view_picking_out_form"/>
+            <field name="arch" type="xml">
+               	<xpath expr="//button[@name='draft_validate']" position="replace">
+                    <button name="draft_validate" states="draft" attrs="{'invisible':True}" string="Confirm &amp; Deliver" type="object" class="oe_highlight"/>
+				</xpath>      
+                <xpath expr="//button[@name='action_process']" position="replace">
+                    <button name="action_process" states="assigned" attrs="{'invisible': 1}" string="Deliver" type="object" class="oe_highlight"/>
+                </xpath>
+			</field>
+		</record>   
+-->        
 
         <record id="view_delivery_type_tree" model="ir.ui.view">
             <field name="name">delivery.type.out.tree</field>
@@ -237,6 +254,17 @@
                 <field name="user_id" position="after">
                     <field name="transfer_fg"  />
                     <field name="auto_costing" />
+                    <newline />
+                    <notebook colspan="4">
+                    	<page string="Product Limit">
+                    		<field name="product_ids" nolabel="1">
+                    			<tree string="Product" editable="top">
+                    				<field name="product_categ_id" />
+                    				<field name="quantity" />
+                    			</tree>
+                    		</field>
+                    	</page>
+                    </notebook>
                 </field>
         	</field>
         </record>
