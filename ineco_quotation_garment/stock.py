@@ -565,7 +565,7 @@ class stock_jouranl_product(osv.osv):
     _defaults = {
         'quantity': 1,
     }
-    _order = 'stock_journal_id, product_id'
+    _order = 'stock_journal_id'
     
 class stock_journal(osv.osv):
     _inherit = 'stock.journal'
