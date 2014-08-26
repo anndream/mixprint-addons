@@ -201,11 +201,11 @@ class stock_picking_out(osv.osv):
                 join stock_move sm on sp.id = sm.picking_id
                 join product_product pp on pp.id = sm.product_id
                 join product_template pt on pp.product_tmpl_id = pt.id
-                join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id
+                join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id and sjp.stock_journal_id = %s
                 where 
                    sp.id = %s
             """
-            cr.execute(sql % stock.id)
+            cr.execute(sql % (stock.stock_journal_id.id, stock.id))
             output = cr.dictfetchall()
             for r in output:
                 limit =  r['total_limit'] 
@@ -296,11 +296,11 @@ class stock_picking(osv.osv):
                 join stock_move sm on sp.id = sm.picking_id
                 join product_product pp on pp.id = sm.product_id
                 join product_template pt on pp.product_tmpl_id = pt.id
-                join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id
+                join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id and sjp.stock_journal_id = %s
                 where 
                    sp.id = %s
             """
-            cr.execute(sql % stock.id)
+            cr.execute(sql % (stock.stock_journal_id.id,stock.id))
             output = cr.dictfetchall()
             for r in output:
                 limit =  r['total_limit'] 
@@ -373,10 +373,10 @@ class stock_picking(osv.osv):
             join stock_move sm on sp.id = sm.picking_id
             join product_product pp on pp.id = sm.product_id
             join product_template pt on pp.product_tmpl_id = pt.id
-            join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id
+            join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id and sjp.stock_journal_id = %s 
             where 
                sp.id = %s
-        """ % data.id
+        """ % (data.stock_journal_id.id, data.id)
         cr.execute(sql)
         check_qty = cr.fetchone()[0] or 0.0
         group_ids = self.pool.get('res.users').read(cr, uid, uid)['groups_id']
