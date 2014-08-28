@@ -68,6 +68,8 @@
         	</field>
         </record>
 
+
+
 		<!-- Routing Workcenter -->
         <record id="ineco_routing_workcenter_tree_view" model="ir.ui.view">
             <field name="name">ineco.routing.workcenter.tree</field>
@@ -91,6 +93,17 @@
             </field>
         </record>
 
-	    
+	    <record model="ir.ui.view" id="mixprint_workcenter_tree_view">
+	        <field name="name">mixprint.workcenter.line.tree</field>
+	        <field name="model">mrp.production.workcenter.line</field>
+	        <field name="inherit_id" ref="mrp_operations.mrp_production_workcenter_tree_view_inherit"/>
+	        <field name="arch" type="xml">
+				<field name="production_id" position="after">
+					<field name="size_id" />
+					<field name="note" />
+				</field>
+			</field>
+		</record>
+			    
     </data>
 </openerp>
