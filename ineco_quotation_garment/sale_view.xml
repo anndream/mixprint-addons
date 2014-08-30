@@ -417,7 +417,7 @@
 		                                                    <field name="note" />
 		                                                    <field name="gender_id" />
 		                                                    <field name="size_id" />
-		                                                    <field name="quantity" />
+		                                                    <field name="quantity" sum="Total"/>
 		                                                </tree>
 		                                            </field>
 		                                        </page>
