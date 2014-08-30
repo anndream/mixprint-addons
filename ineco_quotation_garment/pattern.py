@@ -60,7 +60,7 @@ class ineco_pattern(osv.osv):
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
             store = {
-                'ineco.pattern': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'ineco.pattern': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             },
             help="Medium-sized logo of the brand. It is automatically "\
                  "resized as a 128x128px image, with aspect ratio preserved. "\
@@ -68,7 +68,7 @@ class ineco_pattern(osv.osv):
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized photo", type="binary", multi="_get_image",
             store = {
-                'ineco.pattern': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'ineco.pattern': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             },
             help="Small-sized photo of the brand. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
