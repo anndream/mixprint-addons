@@ -192,25 +192,26 @@ class stock_picking_out(osv.osv):
         res = {}
         for stock in self.browse(cr, uid, ids, context=context):
             res[stock.id] = False
-            #res[stock.id] = {'quantity': 0.0}
-            sql = """
-                select 
-                 coalesce(sum(sjp.quantity),0)::integer as total_limit,
-                 coalesce(sum(sm.product_qty),0)::integer as total_demand
-                from stock_picking sp
-                join stock_move sm on sp.id = sm.picking_id
-                join product_product pp on pp.id = sm.product_id
-                join product_template pt on pp.product_tmpl_id = pt.id
-                join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id and sjp.stock_journal_id = %s
-                where 
-                   sp.id = %s
-            """
-            cr.execute(sql % (stock.stock_journal_id.id, stock.id))
-            output = cr.dictfetchall()
-            for r in output:
-                limit =  r['total_limit'] 
-                demand = r['total_demand'] 
-            res[stock.id] = demand > limit 
+            if stock.stock_journal_id:
+                #res[stock.id] = {'quantity': 0.0}
+                sql = """
+                    select 
+                     coalesce(sum(sjp.quantity),0)::integer as total_limit,
+                     coalesce(sum(sm.product_qty),0)::integer as total_demand
+                    from stock_picking sp
+                    join stock_move sm on sp.id = sm.picking_id
+                    join product_product pp on pp.id = sm.product_id
+                    join product_template pt on pp.product_tmpl_id = pt.id
+                    join stock_journal_product sjp on sjp.product_categ_id = pt.categ_id and sjp.stock_journal_id = %s
+                    where 
+                       sp.id = %s
+                """
+                cr.execute(sql % (stock.stock_journal_id.id, stock.id))
+                output = cr.dictfetchall()
+                for r in output:
+                    limit =  r['total_limit'] 
+                    demand = r['total_demand'] 
+                res[stock.id] = demand > limit 
         return res    
         
     _inherit = "stock.picking.out"

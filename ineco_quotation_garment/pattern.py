@@ -201,7 +201,7 @@ class ineco_pattern_line(osv.osv):
         'pattern_id': fields.many2one('ineco.pattern','Pattern'),
     }
     _sql_constraints = [
-        ('name_gender_size_type_unique', 'unique (name,gender_id,size_id,type_id)', 'Data must be unique !')
+        ('name_gender_size_type_pattern_unique', 'unique (name,gender_id,size_id,type_id,pattern_id)', 'Data must be unique !')
     ]   
     _defaults = {
         #'last_updated': time.strftime("%Y-%m-%d %H:%M:%S"),
