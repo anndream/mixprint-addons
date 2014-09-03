@@ -194,6 +194,10 @@
                     <field name="garment_order_no" />
                     <field name="saleorder_id" invisible="1" />
                     <field name="partner_id" />
+                    <field name="employee_id" />
+                    <field name="date_expected" />
+                    <field name="date_finish_planned" />
+                    <field name="date_finish" invisible="1" />
                     <field name="state" />
                 </tree>
             </field>
@@ -205,7 +209,7 @@
             <field name="arch" type="xml">
                 <form string="Pattern" version="7.0">
                 	<header>
-                		<button name="button_ready" string="Ready" states="used,damage" type="object" class="oe_highlight" />
+                		<button name="button_ready" string="Ready" states="draft,used,damage" type="object" class="oe_highlight" />
                 		<button name="button_used" string="Used" states="ready" type="object" class="oe_highlight"/>
                 		<button name="button_damage" string="Damage" states="used,ready" type="object" class="oe_highlight"/>
 	                    <field name="state" widget="statusbar" statusbar_visible="ready,used,damage" />
@@ -225,14 +229,16 @@
 			                    <!-- <field name="name" /> -->
 			                    <field name="saleorder_id" />
 			                    <field name="partner_id" />
+			                    <field name="employee_id" required="1" />
 			                    <field name="last_updated" />
 			                    <field name="rev_no" />
                 			</group>
                 			<group>
 			                    <field name="product_id" />
 			                    <field name="garment_order_no" />
-			                    <field name="product_type_id" />
-			                    <field name="location_id" />
+			                    <field name="sampling_order_no" />
+			                    <field name="product_type_id" required="1" />
+			                    <field name="location_id" required="1" />
 			                    <field name="active" groups="base.group_erp_manager" />
                 			</group>
 
@@ -284,6 +290,19 @@
                 					</page>
                 					<page string="Images">
                         				<field name="multi_images" widget="image_multi"/>
+                    				</page>
+                    				<page string="Date">
+                    					<group>
+                    						<group>
+                    							<field name="date_start" readonly="1" />
+                    							<field name="date_start_planned" />
+                    							<field name="date_expected" readonly="1"/>
+                    						</group>
+                    						<group>
+                    							<field name="date_finish" readonly="1"/>
+                    							<field name="date_finish_planned" />
+                    						</group>
+                    					</group>
                     				</page>
                 				</notebook>              				
                 		</group>
@@ -342,8 +361,10 @@
                     <field name="saleorder_id" />
                     <field name="partner_id" />
                     <field name="state" />
+                    <filter name="todo" icon="terp-dolar_ok!" string="To Do" domain="[('date_finish_planned','=',False)]" />          
                   	<group expand="0" string="Group By...">
                         <filter name="by_product_type" string="Product Type" icon="terp-partner" domain="[]" context="{'group_by':'product_type_id'}"/>
+                        <filter name="by_date_expected" string="Date Expected" icon="terp-partner" domain="[]" context="{'group_by':'date_expected'}"/>
                     </group>
                 </search>
             </field>
@@ -354,9 +375,9 @@
             <field name="res_model">ineco.pattern</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="search_view_id" ref="view_ineco_pattern_filter"/>
-            <field name="context">{'search_default_by_product_type':1}</field>
+            <field name="context">{'search_default_todo':1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a problem type. 

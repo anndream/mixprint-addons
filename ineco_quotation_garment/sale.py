@@ -229,8 +229,29 @@ class sale_order(osv.osv):
                 production_obj.write(cr, uid, prod_id, {'name': prod_name+'#CN'+time.strftime('%Y-%m-%d %H:%M:%S') })
                 wf_service.trg_validate(uid, 'mrp.production', prod_id, 'button_cancel', cr) 
         return True
+    
+    def create_pattern(self, cr, uid, ids, context=None):
+        pattern = self.pool.get('ineco.pattern')
+        for id in ids:
+            sale_obj = self.browse(cr, uid, [id])[0]
+            data_ids = pattern.search(cr, uid, [('saleorder_id','=',sale_obj.id)])
+            if not data_ids:
+                new_pattern_data = {
+                    'name': sale_obj.garment_order_no or sale_obj.sample_order_no ,
+                    'product_id': 3802, #Product ID as Pattern
+                    'saleorder_id': sale_obj.id,
+                    'date_start': time.strftime('%Y-%m-%d'),
+                    'date_expected': sale_obj.sample_deliver_date or time.strftime('%Y-%m-%d'),
+                }
+                new_pattern_id = pattern.create(cr, uid, new_pattern_data)
+            else:
+                pattern.write(cr, uid, data_ids, {'date_finish': False, 
+                                                  'date_finish_planned': False,
+                                                  'date_expected': sale_obj.date_delivery})
+        return True
             
     def create_mo(self, cr, uid, ids, context=None):
+        self.create_pattern(cr, uid, ids, context)
         for id in ids:
             sale_obj = self.browse(cr, uid, [id])[0]
             production_obj = self.pool.get('mrp.production')
@@ -305,11 +326,15 @@ class sale_order(osv.osv):
             default['sample_revision_date'] = False
             default['date_delivery'] = False
             default['date_order'] = time.strftime('%Y-%m-%d')
-        return super(sale_order, self).copy(cr, uid, ids, default, context=context)
+        new_id = super(sale_order, self).copy(cr, uid, ids, default, context=context)
+        sql = "update ineco_pattern set saleorder_id = %s where saleorder_id = %s" % (new_id, ids)
+        cr.execute(sql)
+        return new_id
     
     def action_gen_sampling_no(self, cr, uid, ids, context=None):
         sample_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.sampling.order')
         self.write(cr, uid, ids, {'sample_order_no': sample_order_no, 'sample_order_date': time.strftime('%Y-%m-%d'), 'sample_revision_date': time.strftime('%Y-%m-%d')})
+        self.create_pattern(cr, uid, ids, context)
         return True
 
     def action_gen_garment_no(self, cr, uid, ids, context=None):

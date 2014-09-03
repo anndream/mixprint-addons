@@ -43,17 +43,18 @@ class ineco_pattern(osv.osv):
         'product_id': fields.many2one('product.product','Product',required=True),
         'saleorder_id': fields.many2one('sale.order','Sale Order'),
         'garment_order_no': fields.related('saleorder_id', 'garment_order_no', type='char', string='Garment Order No', readonly=True),
+        'sampling_order_no': fields.related('saleorder_id', 'sample_order_no', type='char', string='Sampling Order No', readonly=True),
         'partner_id': fields.related('saleorder_id', 'partner_id', type='many2one', relation='res.partner', string='Customer', readonly=True),
-        'product_type_id': fields.many2one('ineco.pattern.product.type','Product Type',required=True),
+        'product_type_id': fields.many2one('ineco.pattern.product.type','Product Type',),
         'line_ids': fields.one2many('ineco.pattern.line','pattern_id','Lines'),
         'log_ids': fields.one2many('ineco.pattern.log','pattern_id','Logs'),
         'component_ids': fields.one2many('ineco.pattern.component','pattern_id','Components'),
         'gender_ids': fields.many2many('sale.gender', 'ineco_pattern_sale_gender_rel', 'child_id', 'parent_id', 'Gender'),
         'size_ids': fields.many2many('sale.size', 'ineco_pattern_sale_size_rel', 'child_id', 'parent_id', 'Size'),
-        'state': fields.selection([('ready','Ready'),('used','Used'),('damage','Damage')],'Status', readonly=True),
+        'state': fields.selection([('draft','Draft'),('ready','Ready'),('used','Used'),('damage','Damage')],'Status', readonly=True),
         'last_updated': fields.datetime('Last Update'),
         'rev_no': fields.integer('Revision No'),
-        'location_id': fields.many2one('ineco.pattern.location','Location', required=True),
+        'location_id': fields.many2one('ineco.pattern.location','Location',),
         'active': fields.boolean('Active'),
         'image': fields.binary('Image'),
         'multi_images': fields.text("Multi Images"),
@@ -73,6 +74,13 @@ class ineco_pattern(osv.osv):
             help="Small-sized photo of the brand. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
+        #new requirement
+        'employee_id': fields.many2one('hr.employee', 'Employee'),
+        'date_start': fields.date('Date Start'),
+        'date_start_planned': fields.date('Planned Start'),
+        'date_finish_planned': fields.date('Planned Finish'),
+        'date_finish': fields.date('Date Finish'),
+        'date_expected': fields.date('Date Expected'),
     }
     
     _sql_constraints = [
@@ -81,7 +89,7 @@ class ineco_pattern(osv.osv):
     
     _defaults = {
         'active': True,
-        'state': 'ready',
+        'state': 'draft',
         'rev_no': 0,
         'size_ids': lambda self, cr, uid, c: [(6, 0, self.pool.get('sale.size').search(cr, uid, [], context=c, order='seq'))],      
     }
@@ -103,7 +111,7 @@ class ineco_pattern(osv.osv):
         return res
     
     def button_ready(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'ready'})
+        self.write(cr, uid, ids, {'state':'ready', 'date_finish': time.strftime('%Y-%m-%d')})
         return True
 
     def button_used(self, cr, uid, ids, context=None):
