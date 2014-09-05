@@ -138,17 +138,6 @@ class account_voucher(osv.osv):
                                                                                          1, date, context )
                 res['value']['date_due'] = date_due[-1][0]
                           
-        return res
-    
-class account_journal(osv.osv):
-    _inherit = 'account.journal'
-    _columns = {
-        'customer': fields.boolean('Customer Payment'),
-        'supplier': fields.boolean('Supplier Payment'),
-    }
-    _defaults = {
-        'customer': False,
-        'supplier': False,
-    }
+        return res    
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

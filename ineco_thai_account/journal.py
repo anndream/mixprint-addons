@@ -23,9 +23,17 @@ from openerp.osv import osv, fields
 
 class account_journal(osv.osv):
     _inherit = 'account.journal'
+    
     _columns = {
-        'print_sale_tax': fields.boolean('Print Tax Report')
+        'print_sale_tax': fields.boolean('Print Tax Report'),
+        'customer': fields.boolean('Customer Payment'),
+        'supplier': fields.boolean('Supplier Payment'),
+        'active': fields.boolean('Active'),
     }
+    
     _defaults = {
         'print_sale_tax': True,
+        'customer': False,
+        'supplier': False,
+        'active': True,
     }
