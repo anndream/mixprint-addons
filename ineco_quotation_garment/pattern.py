@@ -76,11 +76,14 @@ class ineco_pattern(osv.osv):
                  "Use this field anywhere a small image is required."),
         #new requirement
         'employee_id': fields.many2one('hr.employee', 'Employee'),
-        'date_start': fields.date('Date Start'),
-        'date_start_planned': fields.date('Planned Start'),
-        'date_finish_planned': fields.date('Planned Finish'),
-        'date_finish': fields.date('Date Finish'),
-        'date_expected': fields.date('Date Expected'),
+        'date_start': fields.datetime('Date Start'),
+        'date_start_planned': fields.datetime('Planned Start'),
+        'date_finish_planned': fields.datetime('Planned Finish'),
+        'date_finish': fields.datetime('Date Finish'),
+        'date_expected': fields.datetime('Date Expected'),
+        'date_mark_start': fields.datetime('Date Mark Start'),
+        'date_mark_finish': fields.datetime('Date Mark Finish'),
+        'marker': fields.char('Marker', size=32),
     }
     
     _sql_constraints = [

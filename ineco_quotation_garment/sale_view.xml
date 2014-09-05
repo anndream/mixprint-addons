@@ -415,7 +415,7 @@
 		                                                <tree string="Other Information" editable="bottom">
 		                                                    <field name="color_id" />
 		                                                    <field name="note" />
-		                                                    <field name="gender_id" />
+		                                                    <field name="gender_id" required="1" />
 		                                                    <field name="size_id" />
 		                                                    <field name="quantity" sum="Total"/>
 		                                                </tree>
@@ -491,7 +491,7 @@
                         </page>
                         <page string="Reference">
                         	<group>
-                        		<group>
+                        		<group string="Sample">
 		                    		<field name="sample_order_no" />      
 		                    		<field name="sample_order_date" attrs="{'readonly': [('sample_order_date','!=',False)]}" />      
                         			<field name="sample_revision_no" />
@@ -504,7 +504,7 @@
 		                            	icon="gtk-justify-fill"
 		                            	attrs="{'invisible': [('sample_order_no','!=',False)]}" />                                            		
                         		</group>
-                        		<group>
+                        		<group string="Garment">
 		                            <field name="date_sale_close" />                                          		
 				              		<field name="garment_order_no" readonly="1" attrs="{'invisible': [('state','=','draft')]}" />
 				              		<field name="garment_order_date" attrs="{'invisible': [('state','=','draft')]}" />
@@ -515,6 +515,10 @@
 		                            	icon="gtk-justify-fill"
 		                            	attrs="{'invisible': ['|',('garment_order_no','!=',False),('state','=','draft')]}" />
 		                            <field name="relate_garment_order_no" />   
+                        		</group>
+                        		<group string="Pattern">
+                        			<field name="date_mark_finish" />
+                        			<field name="date_pattern_finish" />
                         		</group>
                         	</group>                    	
                         </page>

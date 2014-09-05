@@ -116,7 +116,7 @@ class sale_line_property_other(osv.osv):
         'name': fields.text('Description', required=True),
         'seq': fields.integer('Sequence'),
         'color_id': fields.many2one('sale.color', 'Color' ),
-        'gender_id': fields.many2one('sale.gender', 'Gender', required=True ),
+        'gender_id': fields.many2one('sale.gender', 'Gender'),
         'size_id': fields.many2one('sale.size', 'Size'),
         'quantity': fields.integer('Quantity', required=True),
         'sale_line_id': fields.many2one('sale.order.line', 'Order Line', ondelete='cascade'),
@@ -180,6 +180,21 @@ class sale_order_line(osv.osv):
 #         return super(sale_order_line, self).create(cr, uid, vals, context)
     
 class sale_order(osv.osv):
+    
+    def _get_pattern(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'date_pattern_finish': False,
+                'date_mark_finish': False,
+            }
+            pattern_ids = self.pool.get('ineco.pattern').search(cr, uid, [('saleorder_id','=',obj.id)])
+            if pattern_ids:
+                pattern = self.pool.get('ineco.pattern').browse(cr, uid, pattern_ids)[0]
+                result[obj.id]['date_pattern_finish'] = pattern.date_finish_planned or False
+                result[obj.id]['date_mark_finish'] = pattern.date_mark_finish or False
+        return result
+    
     _inherit = 'sale.order'
     _description = 'Add Delivery Date'
     _columns = {
@@ -197,6 +212,10 @@ class sale_order(osv.osv):
         'sample_revision_date': fields.date('Sampling Revision Date',),
         'to_correct': fields.boolean('To Corrected'),
         'relate_garment_order_no': fields.char('Relate MO', size=32),
+        'date_pattern_finish': fields.function(_get_pattern,  string="Pattern Finish", 
+                                               type="datetime", multi="_get_pattern"),
+        'date_mark_finish': fields.function(_get_pattern,  string="Mark Finish", 
+                                               type="datetime", multi="_get_pattern"),
     }
     _defaults = {
         'cancel_sample_order': False,

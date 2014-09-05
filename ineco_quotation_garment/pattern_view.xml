@@ -293,14 +293,19 @@
                     				</page>
                     				<page string="Date">
                     					<group>
-                    						<group>
-                    							<field name="date_start" readonly="1" />
+                    						<group string="Pattern">
                     							<field name="date_start_planned" />
-                    							<field name="date_expected" readonly="1"/>
-                    						</group>
-                    						<group>
-                    							<field name="date_finish" readonly="1"/>
                     							<field name="date_finish_planned" />
+                    						</group>
+                    						<group string="Mark">
+                    							<field name="date_mark_start" />
+                    							<field name="date_mark_finish" />
+                    							<field name="marker" />
+                    						</group>
+                    						<group string="Planned">
+                    							<field name="date_start" readonly="1" />
+                    							<field name="date_finish" readonly="1"/>
+                    							<field name="date_expected" readonly="1"/>
                     						</group>
                     					</group>
                     				</page>
