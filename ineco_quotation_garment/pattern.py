@@ -39,13 +39,13 @@ class ineco_pattern(osv.osv):
 
     def _get_late(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
-        today = time.strftime('%Y-%m-%d')
+        today = time.strftime('%Y-%m-%d %H:%M:%S')
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = {
                 'late': False
             }
-            if obj.date_start_planned:
-                start_date = datetime.strptime(obj.date_start_planned, '%Y-%m-%d %H:%M:%S') + - relativedelta(days=3)
+            if obj.date_start:
+                start_date = datetime.strptime(obj.date_start, '%Y-%m-%d %H:%M:%S') + - relativedelta(days=3)
                 if today < start_date:
                     result[obj.id]['late'] = True
                 else:
