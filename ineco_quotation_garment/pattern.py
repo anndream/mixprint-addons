@@ -51,7 +51,7 @@ class ineco_pattern(osv.osv):
                 else:
                     result[obj.id]['late'] = False
             else:
-                result[obj.id]['late'] = True            
+                result[obj.id]['late'] = False            
         return result
         
     _name = 'ineco.pattern'
