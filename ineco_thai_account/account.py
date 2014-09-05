@@ -140,4 +140,15 @@ class account_voucher(osv.osv):
                           
         return res
     
+class account_journal(osv.osv):
+    _inherit = 'account.journal'
+    _columns = {
+        'customer': fields.boolean('Customer Payment'),
+        'supplier': fields.boolean('Supplier Payment'),
+    }
+    _defaults = {
+        'customer': False,
+        'supplier': False,
+    }
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
