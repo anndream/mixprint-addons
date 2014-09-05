@@ -46,7 +46,7 @@ class ineco_pattern(osv.osv):
             }
             if obj.date_start:
                 start_date = datetime.strptime(obj.date_start, '%Y-%m-%d %H:%M:%S') + relativedelta(days=3)
-                if today < start_date:
+                if today > start_date:
                     result[obj.id]['late'] = True
                 else:
                     result[obj.id]['late'] = False
