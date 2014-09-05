@@ -187,7 +187,7 @@
             <field name="name">ineco.pattern.tree</field>
             <field name="model">ineco.pattern</field>
             <field name="arch" type="xml">
-                <tree string="Pattern">
+                <tree string="Pattern" colors="black:late == False;red:late == True ">
                     <field name="name" />
                     <field name="product_id" />
                     <field name="product_type_id" />
@@ -198,6 +198,7 @@
                     <field name="date_expected" />
                     <field name="date_finish_planned" />
                     <field name="date_finish" invisible="1" />
+                    <field name="late" invisible="1"/>
                     <field name="state" />
                 </tree>
             </field>

@@ -21,6 +21,8 @@
 
 from openerp.osv import osv, fields
 import time
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from openerp import tools
 #import openerp.addons.decimal_precision as dp
 
@@ -34,6 +36,24 @@ class ineco_pattern(osv.osv):
 
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+
+    def _get_late(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        today = time.strftime('%Y-%m-%d')
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'late': False
+            }
+            if obj.date_start:
+                start_date = datetime.strptime(obj.date_start, '%Y-%m-%d') + - relativedelta(days=3)
+                if today < start_date:
+                    result[obj.id]['late'] = True
+                else:
+                    result[obj.id]['late'] = False
+            else:
+                result[obj.id]['late'] = True
+            
+        return result
         
     _name = 'ineco.pattern'
     _inherit = ['mail.thread']
@@ -84,6 +104,7 @@ class ineco_pattern(osv.osv):
         'date_mark_start': fields.datetime('Date Mark Start'),
         'date_mark_finish': fields.datetime('Date Mark Finish'),
         'marker': fields.char('Marker', size=32),
+        'late': fields.function(_get_late, string="Late", type="boolean", multi="_late"),
     }
     
     _sql_constraints = [
