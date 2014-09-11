@@ -259,14 +259,14 @@ class sale_order(osv.osv):
                     'name': sale_obj.garment_order_no or sale_obj.sample_order_no ,
                     'product_id': 3802, #Product ID as Pattern
                     'saleorder_id': sale_obj.id,
-                    'date_start': time.strftime('%Y-%m-%d'),
-                    'date_expected': sale_obj.sample_deliver_date or time.strftime('%Y-%m-%d'),
+                    'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
+                    'date_expected': time.strftime('%Y-%m-%d  %H:%M:%S'), #sale_obj.sample_deliver_date or time.strftime('%Y-%m-%d'),
                 }
                 new_pattern_id = pattern.create(cr, uid, new_pattern_data)
             else:
                 pattern.write(cr, uid, data_ids, {'date_finish': False, 
                                                   'date_finish_planned': False,
-                                                  'date_expected': sale_obj.date_delivery})
+                                                  'date_expected': time.strftime('%Y-%m-%d %H:%M:%S')}) #sale_obj.date_delivery})
         return True
             
     def create_mo(self, cr, uid, ids, context=None):
