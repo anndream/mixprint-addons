@@ -575,6 +575,13 @@ class stock_journal(osv.osv):
         'auto_costing': fields.boolean('Auto Costing'),
         'product_ids': fields.one2many('stock.journal.product','stock_journal_id','Product Limit'),
     }
+    
+class ineco_cost_group(osv.osv):
+    _name = 'ineco.cost.group'
+    _description = "Cost Group"
+    _columns = {
+        'name': fields.char('Group Name', size=128, required=True),
+    }
 
 class ineco_cost_type(osv.osv):
     _name = "ineco.cost.type"
@@ -583,6 +590,7 @@ class ineco_cost_type(osv.osv):
         'name': fields.char('Description', size=128),
         'cost': fields.integer('Cost'),
         'seq': fields.integer('Sequence'),
+        'cost_group_id': fields.many2one('ineco.cost.group','Group')
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')

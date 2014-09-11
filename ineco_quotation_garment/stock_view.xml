@@ -334,7 +334,8 @@
                 <tree string="Cost Type">
                 	<field name="seq" />
                     <field name="name" />
-                    <field name="cost" />
+                    <field name="cost_group_id" />
+                    <field name="cost" />               
                 </tree>
             </field>
         </record>		
@@ -345,6 +346,7 @@
             <field name="arch" type="xml">
                 <form string="Cost Type">
                     <field name="name" />
+                    <field name="cost_group_id" />
                     <field name="cost" />
                     <field name="seq" />
                 </form>
@@ -357,6 +359,7 @@
             <field name="arch" type="xml">
                 <search string="Cost Type">
                 	<field name="name" />
+                	<field name="cost_group_id" />
                 	<field name="cost" />
                	</search>
             </field>
@@ -386,6 +389,60 @@
         	parent="base.menu_base_config"
         	sequence="9"/>         	
 
+		<!--   Cost Group    -->
+        <record id="view_ineco_cost_group_tree" model="ir.ui.view">
+            <field name="name">ineco.cost.group.tree</field>
+            <field name="model">ineco.cost.group</field>
+            <field name="arch" type="xml">
+                <tree string="Cost Group">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_cost_group_form" model="ir.ui.view">
+            <field name="name">ineco.cost.group.form</field>
+            <field name="model">ineco.cost.group</field>
+            <field name="arch" type="xml">
+                <form string="Cost Group">
+                    <field name="name" />
+                </form>
+            </field>
+        </record>		
+
+        <record id="view_ineco_cost_group_search" model="ir.ui.view">
+            <field name="name">ineco.cost.group.search</field>
+            <field name="model">ineco.cost.group</field>
+            <field name="arch" type="xml">
+                <search string="Cost Group">
+                    <field name="name" />
+                </search>
+            </field>
+        </record>		
+
+        <record id="action_ineco_cost_group" model="ir.actions.act_window">
+            <field name="name">Cost Group</field>
+            <field name="res_model">ineco.cost.group</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_cost_group_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a delivery type. 
+              </p><p>
+                This is the list of all cost group that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem 
+            id="menu_ineco_cost_group"
+        	action="action_ineco_cost_group" 
+        	parent="base.menu_base_config"
+        	sequence="10"/>         	
 		        
     </data>
 </openerp>
