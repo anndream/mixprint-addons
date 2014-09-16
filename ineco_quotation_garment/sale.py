@@ -256,6 +256,7 @@ class sale_order(osv.osv):
                                                type="datetime", multi="_get_pattern"),
         'sampling_employee2_finish': fields.function(_get_pattern,  string="Finish", 
                                                type="datetime", multi="_get_pattern"),
+        'pattern_ids': fields.one2many('ineco.pattern','saleorder_id','Patterns'),
     }
     _defaults = {
         'cancel_sample_order': False,

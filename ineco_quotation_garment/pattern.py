@@ -72,7 +72,9 @@ class ineco_pattern(osv.osv):
                     limit 1
                 """ % obj.saleorder_id.id
                 cr.execute(sql)             
-                result[obj.id]['product_name'] = cr.fetchone()[0] or ''
+                data = cr.fetchone()
+                if data and data[0]:
+                    result[obj.id]['product_name'] = data[0] or ''
         return result
         
     _name = 'ineco.pattern'
