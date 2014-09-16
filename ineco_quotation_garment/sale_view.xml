@@ -517,8 +517,25 @@
 		                            <field name="relate_garment_order_no" />   
                         		</group>
                         		<group string="Pattern">
+                        			<field name="employee_id" />
+                        			<field name="marker" />
                         			<field name="date_mark_finish" />
                         			<field name="date_pattern_finish" />
+                        		</group>
+                        		<group string="Sampling Marker">
+                        			<field name="sampling_marker" />
+                        			<field name="sampling_marker_start" />
+                        			<field name="sampling_marker_finish" />
+                        		</group>
+                        		<group string="Sampling Cut">
+									<field name="sampling_employee1" />
+                        			<field name="sampling_employee1_start" />
+                        			<field name="sampling_employee1_finish" />
+                        		</group>
+                        		<group string="Sampling Sew">
+									<field name="sampling_employee2" />
+                        			<field name="sampling_employee2_start" />
+                        			<field name="sampling_employee2_finish" />
                         		</group>
                         	</group>                    	
                         </page>

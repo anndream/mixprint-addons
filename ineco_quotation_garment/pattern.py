@@ -53,6 +53,27 @@ class ineco_pattern(osv.osv):
             else:
                 result[obj.id]['late'] = False            
         return result
+
+    def _get_product(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'product_name': False
+            }
+            if obj.saleorder_id:
+                sql = """
+                    select 
+                      pt.name
+                    from sale_order so
+                    join sale_order_line sol on so.id = sol.order_id
+                    join product_product pp on sol.product_id = pp.id
+                    join product_template pt on pp.product_tmpl_id = pt.id 
+                    where so.id = %s and pt.type not in ('service')
+                    limit 1
+                """ % obj.saleorder_id.id
+                cr.execute(sql)             
+                result[obj.id]['product_name'] = cr.fetchone()[0] or ''
+        return result
         
     _name = 'ineco.pattern'
     _inherit = ['mail.thread']
@@ -93,17 +114,33 @@ class ineco_pattern(osv.osv):
             help="Small-sized photo of the brand. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        #new requirement
+        #new requirement (sampling date suit)
+        'date_expected': fields.datetime('Date Expected'),
         'employee_id': fields.many2one('hr.employee', 'Employee'),
+        'sampling_date_start': fields.datetime('Date Start'),
+        'sampling_date_start_planned': fields.datetime('Planned Start'),
+        'sampling_date_finish_planned': fields.datetime('Planned Finish'),
+        'sampling_date_finish': fields.datetime('Date Finish'),
+        'sampling_date_mark_start': fields.datetime('Date Start'),
+        'sampling_date_mark_finish': fields.datetime('Date Finish'),
+        'sampling_marker': fields.char('Marker', size=32),
+        'sampling_date_process1_start': fields.datetime('Date Start'),
+        'sampling_date_process1_finish': fields.datetime('Date Finish'),
+        'sampling_process1_employee': fields.char('Employee', size=32),
+        'sampling_date_process2_start': fields.datetime('Date Start'),
+        'sampling_date_process2_finish': fields.datetime('Date Finish'),
+        'sampling_process2_employee': fields.char('Employee', size=32),
+        #new mo date suit
         'date_start': fields.datetime('Date Start'),
         'date_start_planned': fields.datetime('Planned Start'),
         'date_finish_planned': fields.datetime('Planned Finish'),
         'date_finish': fields.datetime('Date Finish'),
-        'date_expected': fields.datetime('Date Expected'),
         'date_mark_start': fields.datetime('Date Mark Start'),
         'date_mark_finish': fields.datetime('Date Mark Finish'),
         'marker': fields.char('Marker', size=32),
         'late': fields.function(_get_late, string="Late", type="boolean", multi="_late"),
+        'user_id': fields.related('saleorder_id', 'user_id', type='many2one', relation="res.users", string='Sale', readonly=True),
+        'product_name': fields.function(_get_product, string="Product", type="char", multi="_product"),
     }
     
     _sql_constraints = [

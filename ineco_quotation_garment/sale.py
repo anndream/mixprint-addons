@@ -187,12 +187,34 @@ class sale_order(osv.osv):
             result[obj.id] = {
                 'date_pattern_finish': False,
                 'date_mark_finish': False,
+                'pattern_employee': False,
+                'sampling_marker': False,
+                'sampling_marker_start': False,
+                'sampling_marker_finish': False,
+                'marker': False,
+                'sampling_employee1': False,
+                'sampling_employee1_start': False,
+                'sampling_employee1_finish': False,
+                'sampling_employee2': False,
+                'sampling_employee2_start': False,
+                'sampling_employee2_finish': False,
             }
             pattern_ids = self.pool.get('ineco.pattern').search(cr, uid, [('saleorder_id','=',obj.id)])
             if pattern_ids:
                 pattern = self.pool.get('ineco.pattern').browse(cr, uid, pattern_ids)[0]
                 result[obj.id]['date_pattern_finish'] = pattern.date_finish_planned or False
                 result[obj.id]['date_mark_finish'] = pattern.date_mark_finish or False
+                result[obj.id]['employee_id'] = pattern.employee_id and pattern.employee_id.id or False
+                result[obj.id]['marker'] = pattern.marker or False
+                result[obj.id]['sampling_marker'] = pattern.sampling_marker or False
+                result[obj.id]['sampling_marker_start'] = pattern.sampling_marker or False
+                result[obj.id]['sampling_marker_finish'] = pattern.sampling_marker or False
+                result[obj.id]['sampling_emplyee1'] = pattern.date_mark_start or False
+                result[obj.id]['sampling_employee1_start'] = pattern.sampling_date_process1_start or False
+                result[obj.id]['sampling_employee2_finish'] = pattern.sampling_date_process1_finish or False
+                result[obj.id]['sampling_employee2'] = pattern.date_mark_finish or False
+                result[obj.id]['sampling_employee2_start'] = pattern.sampling_date_process2_start or False
+                result[obj.id]['sampling_employee2_finish'] = pattern.sampling_date_process2_finish or False
         return result
     
     _inherit = 'sale.order'
@@ -215,6 +237,24 @@ class sale_order(osv.osv):
         'date_pattern_finish': fields.function(_get_pattern,  string="Pattern Finish", 
                                                type="datetime", multi="_get_pattern"),
         'date_mark_finish': fields.function(_get_pattern,  string="Mark Finish", 
+                                               type="datetime", multi="_get_pattern"),
+        'employee_id': fields.function(_get_pattern,  string="Employee", 
+                                               type="many2one", relation="hr.employee", multi="_get_pattern"),
+        'marker': fields.function(_get_pattern,  string="Marker", type="char", multi="_get_pattern"),
+        'sampling_marker': fields.function(_get_pattern,  string="Sampling Marker", type="char", multi="_get_pattern"),
+        'sampling_marker_start': fields.function(_get_pattern,  string="Start", 
+                                               type="datetime", multi="_get_pattern"),
+        'sampling_marker_finish': fields.function(_get_pattern,  string="Finish", 
+                                               type="datetime", multi="_get_pattern"),
+        'sampling_employee1': fields.function(_get_pattern,  string="Cut Employee", type="char", multi="_get_pattern"),
+        'sampling_employee1_start': fields.function(_get_pattern,  string="Start", 
+                                               type="datetime", multi="_get_pattern"),
+        'sampling_employee1_finish': fields.function(_get_pattern,  string="Finish", 
+                                               type="datetime", multi="_get_pattern"),
+        'sampling_employee2': fields.function(_get_pattern,  string="Sew Employee", type="char", multi="_get_pattern"),
+        'sampling_employee2_start': fields.function(_get_pattern,  string="Start", 
+                                               type="datetime", multi="_get_pattern"),
+        'sampling_employee2_finish': fields.function(_get_pattern,  string="Finish", 
                                                type="datetime", multi="_get_pattern"),
     }
     _defaults = {

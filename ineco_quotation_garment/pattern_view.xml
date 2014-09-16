@@ -192,6 +192,8 @@
                     <field name="product_id" />
                     <field name="product_type_id" />
                     <field name="garment_order_no" />
+                    <field name="user_id" />
+                    <field name="product_name" />
                     <field name="saleorder_id" invisible="1" />
                     <field name="partner_id" />
                     <field name="employee_id" />
@@ -240,6 +242,7 @@
 			                    <field name="sampling_order_no" />
 			                    <field name="product_type_id" required="1" />
 			                    <field name="location_id" required="1" />
+			                    <field name="user_id" />
 			                    <field name="active" groups="base.group_erp_manager" />
                 			</group>
 
@@ -292,7 +295,34 @@
                 					<page string="Images">
                         				<field name="multi_images" widget="image_multi"/>
                     				</page>
-                    				<page string="Date">
+                    				<page string="Sampling Date">
+                    					<group>
+                    						<group string="Pattern">
+                    							<field name="sampling_date_start_planned" />
+                    							<field name="sampling_date_finish_planned" />
+                    						</group>
+                    						<group string="Mark">
+                    							<field name="sampling_date_mark_start" />
+                    							<field name="sampling_date_mark_finish" />
+                    							<field name="sampling_marker" />
+                    						</group>
+                    						<group string="Cut">
+                    							<field name="sampling_date_process1_start" />
+                    							<field name="sampling_date_process1_finish" />
+                    							<field name="sampling_process1_employee" />
+                    						</group>
+                    						<group string="Sew">
+                    							<field name="sampling_date_process2_start" />
+                    							<field name="sampling_date_process2_finish" />
+                    							<field name="sampling_process2_employee" />
+                    						</group>
+                    						<group string="Planned">
+                    							<field name="sampling_date_start" readonly="1" />
+                    							<field name="sampling_date_finish" readonly="1"/>
+                    						</group>
+                    					</group>
+                    				</page>
+                    				<page string="Garment Date">
                     					<group>
                     						<group string="Pattern">
                     							<field name="date_start_planned" />
