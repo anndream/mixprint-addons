@@ -497,11 +497,9 @@
                         			<field name="sampling_date_start" string="Start" />
                         			<field name="sampling_date_mark_start" string="Mark" />
                         			<field name="sampling_date_process1_start" string="Cut" />
-                        			<field name="sampling_date_process2_start" string="Sew" />
-                        			
+                        			<field name="sampling_date_process2_start" string="Sew" />                  			
                         			<field name="date_mark_finish" string="Mark2" />
                         			<field name="date_finish" string="Finish" />
-                        			
                         			<field name="state" />
                         		</tree>
                         	</field>

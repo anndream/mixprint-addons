@@ -76,6 +76,31 @@ class ineco_pattern(osv.osv):
                 if data and data[0]:
                     result[obj.id]['product_name'] = data[0] or ''
         return result
+
+    def _get_original_mo(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'garment_order_no_org': False
+            }
+            if obj.saleorder_id:
+                sql = """
+                    select
+                      garment_order_no
+                    from sale_order
+                    where name = (
+                    select
+                      origin
+                    from 
+                      sale_order so
+                    where
+                      so.id = %s)
+                  """ % obj.saleorder_id.id
+                cr.execute(sql)             
+                data = cr.fetchone()
+                if data and data[0]:
+                    result[obj.id]['garment_order_no_org'] = data[0] or ''
+        return result
         
     _name = 'ineco.pattern'
     _inherit = ['mail.thread']
@@ -143,6 +168,7 @@ class ineco_pattern(osv.osv):
         'late': fields.function(_get_late, string="Late", type="boolean", multi="_late"),
         'user_id': fields.related('saleorder_id', 'user_id', type='many2one', relation="res.users", string='Sale', readonly=True),
         'product_name': fields.function(_get_product, string="Product", type="char", multi="_product"),
+        'garment_order_no_org': fields.function(_get_original_mo, string="Master MO", type="char", multi="_mo"),
     }
     
     _sql_constraints = [

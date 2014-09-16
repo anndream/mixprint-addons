@@ -239,6 +239,7 @@
                 			<group>
 			                    <field name="product_id" />
 			                    <field name="garment_order_no" />
+			                    <field name="garment_order_no_org" />
 			                    <field name="sampling_order_no" />
 			                    <field name="product_type_id" required="1" />
 			                    <field name="location_id" required="1" />
@@ -257,7 +258,9 @@
                 								<field name="size_ids" widget="many2many_tags" class="oe_inline" />
                 							</group>
                 							<group colspan="4">
-                								<field name="component_ids" >
+												<button name="%(action_ineco_production_copypattern)d" string="Copy Pattern" type="action" icon="gtk-find"/>
+												<newline />
+                								<field name="component_ids" nolabel="1" >
                 									<tree string="Components" editable="top">
                 										<field name="seq" />
                 										<field name="type_id" />

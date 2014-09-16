@@ -48,6 +48,7 @@ New Quotation Menu/View for Garment Business.
     'test': [
     ],
     'update_xml':[
+        'wizard/wizard_pattern_copy_view.xml',
         'sale_view.xml',
         'stock_view.xml',
         'account_view.xml',

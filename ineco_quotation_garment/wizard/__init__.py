@@ -24,3 +24,4 @@ import wizard_start_workorder
 import wizard_done_workorder
 import wizard_pattern_select
 import wizard_update_otherinfo
+import wizard_pattern_copy
