@@ -317,6 +317,7 @@ class sale_order(osv.osv):
             else:
                 pattern.write(cr, uid, data_ids, {'date_finish': False, 
                                                   'date_finish_planned': False,
+                                                  'is_cancel': False,
                                                   'date_expected': time.strftime('%Y-%m-%d %H:%M:%S')}) #sale_obj.date_delivery})
         return True
             
