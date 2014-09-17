@@ -382,6 +382,7 @@ class sale_order(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
+        default['pattern_ids'] = []
         if 'change_shop' in context:
             default['sale_revision'] = False
             default['sample_order_no'] = False
