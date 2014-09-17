@@ -224,7 +224,7 @@ class ineco_pattern(osv.osv):
         return True
     
     def button_ready(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'ready', 'date_finish': time.strftime('%Y-%m-%d')})
+        self.write(cr, uid, ids, {'state':'ready', 'date_finish': time.strftime('%Y-%m-%d'),'date_finish_planned':time.strftime('%Y-%m-%d')})
         return True
 
     def button_used(self, cr, uid, ids, context=None):

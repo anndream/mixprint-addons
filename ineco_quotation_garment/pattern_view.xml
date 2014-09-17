@@ -407,7 +407,7 @@
                     <field name="saleorder_id" />
                     <field name="partner_id" />
                     <field name="state" />
-                    <filter name="todo" icon="terp-dolar_ok!" string="To Do" domain="[('date_finish_planned','=',False),('is_cancel','=',False)]" />  
+                    <filter name="todo" icon="terp-dolar_ok!" string="To Do" domain="[('state','=','draft'),('date_finish_planned','=',False),('is_cancel','=',False)]" />  
                     <filter name="cancel" icon="terp-dolar_ok!" string="Cancel" domain="[('is_cancel','=',True)]" />         
                   	<group expand="0" string="Group By...">
                         <filter name="by_product_type" string="Product Type" icon="terp-partner" domain="[]" context="{'group_by':'product_type_id'}"/>
