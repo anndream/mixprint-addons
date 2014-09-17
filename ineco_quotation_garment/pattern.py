@@ -44,7 +44,13 @@ class ineco_pattern(osv.osv):
             result[obj.id] = {
                 'late': False
             }
-            if obj.date_start and not obj.date_finish_planned :
+            if obj.sampling_date_start and not obj.sampling_date_finish_planned :
+                start_date = datetime.strptime(obj.sampling_date_start, '%Y-%m-%d %H:%M:%S') + relativedelta(days=3)
+                if today > start_date:
+                    result[obj.id]['late'] = True
+                else:
+                    result[obj.id]['late'] = False                
+            elif obj.date_start and not obj.date_finish_planned :
                 start_date = datetime.strptime(obj.date_start, '%Y-%m-%d %H:%M:%S') + relativedelta(days=3)
                 if today > start_date:
                     result[obj.id]['late'] = True
@@ -169,6 +175,7 @@ class ineco_pattern(osv.osv):
         'user_id': fields.related('saleorder_id', 'user_id', type='many2one', relation="res.users", string='Sale', readonly=True),
         'product_name': fields.function(_get_product, string="Product", type="char", multi="_product"),
         'garment_order_no_org': fields.function(_get_original_mo, string="Master MO", type="char", multi="_mo"),
+        'is_cancel': fields.boolean('Is Cancel'),
     }
     
     _sql_constraints = [
@@ -179,7 +186,8 @@ class ineco_pattern(osv.osv):
         'active': True,
         'state': 'draft',
         'rev_no': 0,
-        'size_ids': lambda self, cr, uid, c: [(6, 0, self.pool.get('sale.size').search(cr, uid, [], context=c, order='seq'))],      
+        'size_ids': lambda self, cr, uid, c: [(6, 0, self.pool.get('sale.size').search(cr, uid, [], context=c, order='seq'))],    
+        'is_cancel': False,  
     }
 
     def copy(self, cr, uid, id, default=None, context=None):

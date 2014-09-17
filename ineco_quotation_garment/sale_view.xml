@@ -517,7 +517,13 @@
 		                            	string="Get Sampling No"
 		                            	type="object" 
 		                            	icon="gtk-justify-fill"
-		                            	attrs="{'invisible': [('sample_order_no','!=',False)]}" />                                            		
+		                            	attrs="{'invisible': [('sample_order_no','!=',False)]}" />         
+		                            <button name="action_button_cancelsp"
+		                            	string="Cancel Sampling"
+		                            	type="object"
+		                            	icon="gtk-justify-fill"     
+		                            	groups="base.group_erp_manager"
+		                            	attrs="{'invisible': ['|',('sample_order_no','=',False),('cancel_sample_order','=',True)]}" />                                 		
                         		</group>
                         		<group string="Garment">
 		                            <field name="date_sale_close" />                                          		

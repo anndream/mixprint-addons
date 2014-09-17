@@ -277,6 +277,16 @@ class sale_order(osv.osv):
                 self.create_mo(cr, uid, ids, context)
         super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
         return True
+
+    def action_button_cancelsp(self, cr, uid, ids, context=None):
+        for id in ids:
+            sale_obj = self.browse(cr, uid, id)
+            if sale_obj.sample_order_no:
+                pattern_ids = self.pool.get('ineco.pattern').search(cr,uid, [('saleorder_id','=',sale_obj.id)])
+                for pattern in self.pool.get('ineco.pattern').browse(cr, uid, pattern_ids):
+                    pattern.write({'name': pattern.name+'#CN', 'is_cancel': True})
+                sale_obj.write({'cancel_sample_order': True})
+        return True
     
     def cancel_mo(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
