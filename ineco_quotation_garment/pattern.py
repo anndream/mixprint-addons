@@ -176,6 +176,7 @@ class ineco_pattern(osv.osv):
         'product_name': fields.function(_get_product, string="Product", type="char", multi="_product"),
         'garment_order_no_org': fields.function(_get_original_mo, string="Master MO", type="char", multi="_mo"),
         'is_cancel': fields.boolean('Is Cancel'),
+        'pattern_id': fields.many2one('ineco.pattern','Source Pattern'),
     }
     
     _sql_constraints = [
@@ -205,6 +206,22 @@ class ineco_pattern(osv.osv):
         res = super(ineco_pattern, self).copy(cr, uid, id, default, context)
 
         return res
+
+    def button_pattern_copy(self, cr, uid, ids, context=None):
+        for id in ids:
+            data = self.browse(cr, uid, id, context=context)
+            if data:
+                pattern_id = data.pattern_id.id
+                pattern_component_src_ids = self.pool.get('ineco.pattern.component').search(cr, uid, [('pattern_id','=',pattern_id)])
+                component_obj = self.pool.get('ineco.pattern.component')
+                for component in self.pool.get('ineco.pattern.component').browse(cr, uid, pattern_component_src_ids):
+                    component_obj.create(cr, uid, {
+                        'name': component.name,
+                        'seq': component.seq,
+                        'type_id': component.type_id.id,
+                        'pattern_id': id,
+                    })
+        return True
     
     def button_ready(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'ready', 'date_finish': time.strftime('%Y-%m-%d')})

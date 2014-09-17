@@ -259,9 +259,15 @@
                 								<field name="size_ids" widget="many2many_tags" class="oe_inline" />
                 							</group>
                 							<group colspan="4">
-												<button name="%(action_ineco_production_copypattern)d" string="Copy Pattern" type="action" icon="gtk-find"/>
+												<!-- <button name="%(action_ineco_production_copypattern)d" string="Copy Pattern" type="action" icon="gtk-find"/> -->
+												<group>
+													<field name="pattern_id" />
+												</group>
+												<group>
+													<button name="button_pattern_copy" string="Copy Pattern" type="object" icon="gtk-find"/>
+												</group>
 												<newline />
-                								<field name="component_ids" nolabel="1" >
+                								<field name="component_ids" nolabel="1" colspan="4" >
                 									<tree string="Components" editable="top">
                 										<field name="seq" />
                 										<field name="type_id" />

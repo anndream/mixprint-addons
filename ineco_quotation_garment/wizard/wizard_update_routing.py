@@ -19,10 +19,30 @@
 #
 ##############################################################################
 
-import wizard_update_production_start
-import wizard_start_workorder
-import wizard_done_workorder
-import wizard_pattern_select
-import wizard_update_otherinfo
-import wizard_pattern_copy
-import wizard_update_routing
+#import datetime
+
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+class ineco_production_routing(osv.osv_memory):
+    
+    _name = 'ineco.production.routing'
+    _description = 'Wizard inform routing'
+    _columns = {
+        'routing_id': fields.many2one('mrp.routing', 'Routing', required=True),
+    }
+    
+    def update_data(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        active_ids = context.get('active_ids',[])
+        if active_ids:
+            data = self.read(cr, uid, ids, context=context)[0]
+            value = {
+                'routing_id': data['routing_id'][0],
+            }
+            self.pool.get('mrp.production').write(cr, uid, active_ids, value)
+            
+        return {'type': 'ir.actions.act_window_close'}
+    
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
