@@ -44,8 +44,14 @@ class ineco_pattern(osv.osv):
             result[obj.id] = {
                 'late': False
             }
-            if obj.sampling_date_start and not obj.sampling_date_finish :
-                start_date = datetime.strptime(obj.sampling_date_start, '%Y-%m-%d %H:%M:%S') + relativedelta(days=3)
+            if obj.date_start and not obj.sampling_date_start and not obj.garment_order_no:
+                start_date = datetime.strptime(obj.date_start, '%Y-%m-%d %H:%M:%S') + relativedelta(days=3)
+                if today > start_date:
+                    result[obj.id]['late'] = True
+                else:
+                    result[obj.id]['late'] = False
+            elif obj.sampling_date_start and not obj.sampling_date_finish :
+                start_date = datetime.strptime(obj.date_start, '%Y-%m-%d %H:%M:%S') + relativedelta(days=3)
                 if today > start_date:
                     result[obj.id]['late'] = True
                 else:
