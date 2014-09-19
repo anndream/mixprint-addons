@@ -74,6 +74,10 @@
                 <field name="cycle_total" position="replace">
                 	<field name="cycle_total" invisible="1" />
                 </field>
+                <field name="origin" position="replace">
+                	<field name="origin" invisible="1" />
+                	<field name="user_id" />
+                </field>
         	</field>
         </record>
 

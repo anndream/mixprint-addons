@@ -86,6 +86,7 @@ class mrp_production(osv.osv):
         'pattern_component_ids': fields.one2many('ineco.mrp.pattern.component','production_id','Components'),
         'is_print': fields.boolean('Print MO'),
         'late': fields.function(_get_late, string="Late", type="boolean", multi="_late"),
+        'user_id': fields.related('sale_order_id', 'user_id', type='many2one', relation="res.users", string='Sale', readonly=True),
     }
     _defaults = {
         'is_print': False,
