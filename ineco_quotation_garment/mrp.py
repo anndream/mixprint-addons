@@ -20,14 +20,15 @@
 ##############################################################################
 
 #import time
-#from datetime import datetime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 #import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
 #from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 #from openerp.tools import float_compare
 #from openerp.tools.translate import _
-#from openerp import netsvc
+from openerp import netsvc
 from openerp import tools
 
 class ineco_mrp_pattern_component(osv.osv):
@@ -49,6 +50,22 @@ class ineco_mrp_pattern_component(osv.osv):
     }
 
 class mrp_production(osv.osv):
+
+    def _get_late(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        today = datetime.now()
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'late': True
+            }
+            if obj.date_plan_start and not obj.date_plan_finish :
+                start_date = datetime.strptime(obj.date_plan_start, '%Y-%m-%d %H:%M:%S') + relativedelta(days=3)
+                if today > start_date:
+                    result[obj.id]['late'] = True
+                else:
+                    result[obj.id]['late'] = False
+         
+        return result
     
     _inherit = 'mrp.production'
     _description = 'MRP for Garment'
@@ -67,7 +84,28 @@ class mrp_production(osv.osv):
         'worker': fields.char('Worker',size=64),
         'bill_weight': fields.float('Bill Weight'),
         'pattern_component_ids': fields.one2many('ineco.mrp.pattern.component','production_id','Components'),
+        'is_print': fields.boolean('Print MO'),
+        'late': fields.function(_get_late, string="Late", type="boolean", multi="_late"),
     }
+    _defaults = {
+        'is_print': False,
+    }
+
+    def button_done_draft(self, cr, uid, ids, *args):
+        if not len(ids):
+            return False
+        wf_service = netsvc.LocalService("workflow")
+        for doc_id in ids:
+            cr.execute("select id from wkf where osv = '"+'mrp.production'+"'")
+            wkf_ids = map(lambda x: x[0], cr.fetchall())
+            wkf_id = wkf_ids[0]
+            cr.execute("select id from wkf_activity where wkf_id = %s and name = 'draft'" % (wkf_id))
+            act_ids = map(lambda x: x[0], cr.fetchall())
+            act_id = act_ids[0]
+            cr.execute('update wkf_instance set state=%s where res_id=%s and res_type=%s', ('active', doc_id, 'mrp.production'))
+            cr.execute("update wkf_workitem set state = 'active', act_id = %s where inst_id = (select id from wkf_instance where wkf_id = %s and res_id = %s)", (str(act_id), str(wkf_id), doc_id))    
+            self.write(cr, uid, doc_id, {'state':'draft'})
+        return True    
 
     def button_component(self, cr, uid, ids, context=None):
         for id in ids:

@@ -7,7 +7,14 @@
             <field name="model">mrp.production</field>
             <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
             <field name="arch" type="xml">
+
+                <xpath expr="//button[@name='button_confirm']" position="after">
+                    <button name="button_done_draft" states="ready" groups="base.group_erp_manager" string="Set Ready to Draft" type="object" class="oe_highlight"/>
+                    <button name="button_done_draft" states="cancel" groups="base.group_erp_manager" string="Set to Draft" type="object" class="oe_highlight"/>
+                </xpath>
+            	
                 <field name="priority" position="after">
+                	<field name="is_print" />
                 	<field name="date_plan_start" />
                 	<field name="date_plan_finish" />
                 	<field name="sale_order_id" readonly="1" />
@@ -58,6 +65,8 @@
                 	<field name="color_id" readonly="1" />
                 	<field name="size_id" readonly="1"/>
                 	<field name="note" readonly="1"/>
+                	<field name="is_print" invisible="1"/>
+                	<field name="late" invisible="1" />
                 </field>        
                 <field name="hour_total" position="replace">
                 	<field name="hour_total" invisible="1" />
@@ -68,8 +77,21 @@
         	</field>
         </record>
 
+        <record id="view_ineco_mrp_production_search" model="ir.ui.view">
+            <field name="name">ineco.mrp.production.select</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
+            <field name="arch" type="xml">
+            	<field name="product_id" position="after">
+            		<filter string="To Do" name="todo" icon="terp-accessories-archiver" domain="[('state','=','draft'),('is_print','=',False)]" context="{}"/>
+            	</field>
+			</field>
+		</record>
 
-
+        <record id="mrp.mrp_production_action" model="ir.actions.act_window">
+            <field name="context">{'search_default_todo': 1}</field>
+        </record>
+        
 		<!-- Routing Workcenter -->
         <record id="ineco_routing_workcenter_tree_view" model="ir.ui.view">
             <field name="name">ineco.routing.workcenter.tree</field>

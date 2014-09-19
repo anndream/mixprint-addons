@@ -118,7 +118,7 @@ class ineco_pattern(osv.osv):
     _inherit = ['mail.thread']
     _description = "Pattern"
     _columns = {
-        'name': fields.char('Code', size=64, required=True),
+        'name': fields.char('Code', size=64, required=True, track_visibility='onchange'),
         'product_id': fields.many2one('product.product','Product',required=True),
         'saleorder_id': fields.many2one('sale.order','Sale Order'),
         'garment_order_no': fields.related('saleorder_id', 'garment_order_no', type='char', string='Garment Order No', readonly=True),
@@ -130,7 +130,8 @@ class ineco_pattern(osv.osv):
         'component_ids': fields.one2many('ineco.pattern.component','pattern_id','Components'),
         'gender_ids': fields.many2many('sale.gender', 'ineco_pattern_sale_gender_rel', 'child_id', 'parent_id', 'Gender'),
         'size_ids': fields.many2many('sale.size', 'ineco_pattern_sale_size_rel', 'child_id', 'parent_id', 'Size'),
-        'state': fields.selection([('draft','Draft'),('ready','Ready'),('used','Used'),('damage','Damage')],'Status', readonly=True),
+        'state': fields.selection([('draft','Draft'),('ready','Ready'),('used','Used'),('damage','Damage')],'Status', readonly=True,
+                                   track_visibility='onchange'),
         'last_updated': fields.datetime('Last Update'),
         'rev_no': fields.integer('Revision No'),
         'location_id': fields.many2one('ineco.pattern.location','Location',),

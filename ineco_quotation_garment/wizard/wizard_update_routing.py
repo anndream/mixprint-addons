@@ -29,7 +29,7 @@ class ineco_production_routing(osv.osv_memory):
     _name = 'ineco.production.routing'
     _description = 'Wizard inform routing'
     _columns = {
-        'routing_id': fields.many2one('mrp.routing', 'Routing', required=True),
+        'routing_id': fields.many2one('mrp.routing', 'Routing'),
     }
     
     def update_data(self, cr, uid, ids, context=None):
