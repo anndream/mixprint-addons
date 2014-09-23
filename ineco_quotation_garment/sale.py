@@ -209,7 +209,7 @@ class sale_order(osv.osv):
                 result[obj.id]['sampling_marker'] = pattern.sampling_marker or False
                 result[obj.id]['sampling_marker_start'] = pattern.sampling_marker or False
                 result[obj.id]['sampling_marker_finish'] = pattern.sampling_marker or False
-                result[obj.id]['sampling_emplyee1'] = pattern.date_mark_start or False
+                result[obj.id]['sampling_employee1'] = pattern.date_mark_start or False
                 result[obj.id]['sampling_employee1_start'] = pattern.sampling_date_process1_start or False
                 result[obj.id]['sampling_employee2_finish'] = pattern.sampling_date_process1_finish or False
                 result[obj.id]['sampling_employee2'] = pattern.date_mark_finish or False
