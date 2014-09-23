@@ -597,13 +597,16 @@ class account_voucher(osv.osv):
     
     def first_move_line_get(self, cr, uid, voucher_id, move_id, company_currency, current_currency, context=None):
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        account_id = voucher_brw.account_id.id
         debit = credit = 0.0
         if voucher_brw.type in ('purchase', 'payment'):
             credit = voucher_brw.paid_amount_in_company_currency
             credit -= self._get_wht_total(cr, uid, voucher_id, context) or 0.0
+            account_id = voucher_brw.journal_id.default_credit_account_id.id
         elif voucher_brw.type in ('sale', 'receipt'):
             debit = voucher_brw.paid_amount_in_company_currency
             debit -= self._get_wht_total(cr, uid, voucher_id, context) or 0.0
+            account_id = voucher_brw.journal_id.default_debit_account_id.id
         if debit < 0: credit = -debit; debit = 0.0
         if credit < 0: debit = -credit; credit = 0.0
         sign = debit - credit < 0 and -1 or 1
@@ -611,7 +614,8 @@ class account_voucher(osv.osv):
                 'name': voucher_brw.name or voucher_brw.account_id.name or '/',
                 'debit': debit,
                 'credit': credit,
-                'account_id': voucher_brw.account_id.id,
+                #'account_id': voucher_brw.account_id.id,
+                'account_id': account_id,
                 'move_id': move_id,
                 'journal_id': voucher_brw.journal_id.id,
                 'period_id': voucher_brw.period_id.id,
