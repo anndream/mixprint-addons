@@ -207,12 +207,12 @@ class sale_order(osv.osv):
                 result[obj.id]['employee_id'] = pattern.employee_id and pattern.employee_id.id or False
                 result[obj.id]['marker'] = pattern.marker or False
                 result[obj.id]['sampling_marker'] = pattern.sampling_marker or False
-                result[obj.id]['sampling_marker_start'] = pattern.sampling_marker or False
-                result[obj.id]['sampling_marker_finish'] = pattern.sampling_marker or False
-                result[obj.id]['sampling_employee1'] = pattern.date_mark_start or False
+                result[obj.id]['sampling_marker_start'] = pattern.sampling_date_mark_start or False
+                result[obj.id]['sampling_marker_finish'] = pattern.sampling_date_mark_finish or False
+                result[obj.id]['sampling_employee1'] = pattern.sampling_process1_employee or False
                 result[obj.id]['sampling_employee1_start'] = pattern.sampling_date_process1_start or False
-                result[obj.id]['sampling_employee2_finish'] = pattern.sampling_date_process1_finish or False
-                result[obj.id]['sampling_employee2'] = pattern.date_mark_finish or False
+                result[obj.id]['sampling_employee1_finish'] = pattern.sampling_date_process1_finish or False
+                result[obj.id]['sampling_employee2'] = pattern.sampling_process2_employee or False
                 result[obj.id]['sampling_employee2_start'] = pattern.sampling_date_process2_start or False
                 result[obj.id]['sampling_employee2_finish'] = pattern.sampling_date_process2_finish or False
         return result
