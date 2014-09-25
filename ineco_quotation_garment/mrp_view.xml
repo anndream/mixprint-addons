@@ -15,6 +15,7 @@
             	
                 <field name="priority" position="after">
                 	<field name="is_print" />
+                	<field name="is_planning" />
                 	<field name="date_plan_start" />
                 	<field name="date_plan_finish" />
                 	<field name="sale_order_id" readonly="1" />
@@ -66,6 +67,7 @@
                 	<field name="size_id" readonly="1"/>
                 	<field name="note" readonly="1"/>
                 	<field name="is_print" invisible="1"/>
+                	<field name="is_planning" invisible="1" />
                 	<field name="late" invisible="1" />
                 </field>        
                 <field name="hour_total" position="replace">
@@ -88,6 +90,7 @@
             <field name="arch" type="xml">
             	<field name="product_id" position="after">
             		<filter string="To Do" name="todo" icon="terp-accessories-archiver" domain="[('state','=','draft'),('is_print','=',False)]" context="{}"/>
+            		<filter string="To Planning" name="toplan" icon="terp-accessories-archiver" domain="[('is_planning','=',False)]" context="{}"/>
             	</field>
 			</field>
 		</record>

@@ -87,9 +87,11 @@ class mrp_production(osv.osv):
         'is_print': fields.boolean('Print MO'),
         'late': fields.function(_get_late, string="Late", type="boolean", multi="_late"),
         'user_id': fields.related('sale_order_id', 'user_id', type='many2one', relation="res.users", string='Sale', readonly=True),
+        'is_planning': fields.boolean('Print Planning'),
     }
     _defaults = {
         'is_print': False,
+        'is_planning': False,
     }
 
     def button_done_draft(self, cr, uid, ids, *args):

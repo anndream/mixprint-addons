@@ -72,6 +72,7 @@ New Quotation Menu/View for Garment Business.
         'wizard/wizard_update_otherinfo_view.xml',
         'wizard/wizard_update_routing_view.xml',
         'wizard/wizard_update_printmo_view.xml',
+        'wizard/wizard_update_printplan_view.xml',
         'purchase_view.xml',
     ],
     'installable': True,
