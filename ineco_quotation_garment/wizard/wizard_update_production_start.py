@@ -44,6 +44,30 @@ class ineco_production_updateplan(osv.osv_memory):
                 'date_plan_finish': data['date_to'],
             }
             self.pool.get('mrp.production').write(cr, uid, active_ids, value)
+            for id in active_ids:
+                sql = """
+                    select id from mrp_production_workcenter_line
+                        where production_id in (
+                            select id from mrp_production
+                            where sale_order_id = (
+                                select distinct sale_order_id from mrp_production
+                                where id = %s)
+                        ) 
+                        and workcenter_id = (
+                            select workcenter_id from mrp_routing_workcenter 
+                            where routing_id = (select routing_id from mrp_production
+                                where id = %s)
+                            order by sequence limit 1)
+                """ % (id, id)
+                cr.execute(sql)
+                value = {
+                         'date_start': data['date_from'],
+                         'date_finished': data['date_to'],
+                         'state': 'done',
+                }
+                workorder_ids = map(lambda x: x[0], cr.fetchall())
+                if workorder_ids:
+                    self.pool.get('mrp.production.workcenter.line').write(cr, uid, workorder_ids, value)
         return {'type': 'ir.actions.act_window_close'}
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
