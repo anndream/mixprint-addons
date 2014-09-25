@@ -113,6 +113,29 @@ class ineco_pattern(osv.osv):
                 if data and data[0]:
                     result[obj.id]['garment_order_no_org'] = data[0] or ''
         return result
+
+    def _get_quantity(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'order_qty': False
+            }
+            if obj.saleorder_id:
+                sql = """
+                    select 
+                      coalesce(sum(sol.product_uom_qty), 0) as quantity
+                    from
+                      sale_order_line sol
+                      join product_product pp on sol.product_id = pp.id
+                      join product_template pt on pt.id = pp.product_tmpl_id
+                    where order_id = %s
+                      and pt.type <> 'service'                    
+                  """ % obj.saleorder_id.id
+                cr.execute(sql)             
+                data = cr.fetchone()
+                if data and data[0]:
+                    result[obj.id]['order_qty'] = data[0] or 0.0
+        return result
         
     _name = 'ineco.pattern'
     _inherit = ['mail.thread']
@@ -184,6 +207,7 @@ class ineco_pattern(osv.osv):
         'garment_order_no_org': fields.function(_get_original_mo, string="Master MO", type="char", multi="_mo"),
         'is_cancel': fields.boolean('Is Cancel'),
         'pattern_id': fields.many2one('ineco.pattern','Source Pattern'),
+        'order_qty': fields.function(_get_quantity, string="Quantity", type="integer", multi="_quantity"),
     }
     
     _sql_constraints = [
