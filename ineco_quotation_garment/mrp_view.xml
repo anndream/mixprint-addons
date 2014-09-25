@@ -127,10 +127,21 @@
 	        <field name="model">mrp.production.workcenter.line</field>
 	        <field name="inherit_id" ref="mrp_operations.mrp_production_workcenter_tree_view_inherit"/>
 	        <field name="arch" type="xml">
-				<field name="production_id" position="after">
+				<field name="name" position="replace">
+					<field name="name" invisible="1" />
+				</field>
+				<field name="cycle" position="replace">
+					<field name="cycle" invisible="1" />
+				</field>
+				<field name="hour" position="replace">
+					<field name="hour" invisible="1" />
+				</field>
+				<field name="product" position="after">
 					<field name="size_id" />
 					<field name="note" />
+					<field name="worker" />
 				</field>
+				
 			</field>
 		</record>
 			    

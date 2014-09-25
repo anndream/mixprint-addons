@@ -191,6 +191,7 @@ class mrp_production_workcenter_line(osv.osv):
 #        'cycle_count': fields.float('Cycle Counts', digits=(16,2)),
         'size_id': fields.related('production_id', 'size_id', type='many2one', relation='sale.size', string='Size', readonly=True),
         'note': fields.related('production_id', 'note', type='char', string='Note', size=100, readonly=True),
+        'worker': fields.related('production_id', 'worker', type='char', string='Worker', readonly=True),
     }
     _default = {
 #        'cycle_count': 0.0,
