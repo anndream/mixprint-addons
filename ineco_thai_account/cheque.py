@@ -24,10 +24,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 import time
-from osv import fields, osv
-import decimal_precision as dp
-
-
+from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
 
 class ineco_cheque(osv.osv):
 
@@ -50,7 +48,8 @@ class ineco_cheque(osv.osv):
     
     _columns = {
         'name': fields.char('Cheque No.', size=32, required=True),
-        'cheque_date': fields.date('Date',required=True), 
+        'cheque_date': fields.date('Date Cheque',required=True), 
+        'cheque_date_reconcile': fields.date('Date Reconcile'), 
         'bank': fields.many2one('res.bank', 'Bank',required=True),        
         'partner_id': fields.many2one('res.partner', 'Pay', required=True, ondelete='cascade', select=True),
         'amount': fields.float('Amount', digits_compute= dp.get_precision('Account'), required=True),
@@ -93,7 +92,7 @@ class ineco_cheque(osv.osv):
         return True
 
     def action_done(self, cr, uid, ids, context=None):
-        
+        period_obj = self.pool.get('account.period')
         if context is None:
             context = {}
         move_pool = self.pool.get('account.move')        
@@ -102,13 +101,15 @@ class ineco_cheque(osv.osv):
         if  voucher_ids != []:            
             voucher_obj = self.pool.get('account.voucher').browse(cr,uid,voucher_ids,context=context)
             for line in voucher_obj:
-                for cheque in self.browse(cr, uid, ids, context=context): 
+                for cheque in self.browse(cr, uid, ids, context=context):
+                    period_ids = period_obj.find(cr, uid, cheque.cheque_date_reconcile, context=context)
+                    period_id = period_ids and period_ids[0] or False
                     move_line = [1,2]
                     if cheque.type == 'in':
                         gl_name = self.pool.get('ir.sequence').get(cr, uid, 'ineco.cheque.in')
                         move_cheque = {
                             'name': gl_name,
-                            'period_id':line.period_id.id,
+                            'period_id': period_id or line.period_id.id,
                             'ref':  cheque.name,
                             'journal_id': line.journal_id.id,
                             'narration':cheque.note,
@@ -124,8 +125,10 @@ class ineco_cheque(osv.osv):
                                         'account_id': cheque.account_receipt_id.id,
                                         'move_id': move_id,
                                         'journal_id': line.journal_id.id,
-                                        'period_id': line.period_id.id,
+                                        'period_id': period_id or line.period_id.id,
                                         'partner_id': line.partner_id.id,
+                                        'date': cheque.cheque_date,
+                                        'date_maturity': cheque.cheque_date_reconcile
                                     }
                                 move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
                             else:
@@ -136,15 +139,17 @@ class ineco_cheque(osv.osv):
                                         'account_id': line.account_id.id,
                                         'move_id': move_id,
                                         'journal_id': line.journal_id.id,
-                                        'period_id': line.period_id.id,
+                                        'period_id': period_id or line.period_id.id,
                                         'partner_id': line.partner_id.id,
+                                        'date': cheque.cheque_date,
+                                        'date_maturity': cheque.cheque_date_reconcile
                                     }
                                 move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
                     else:
                         gl_name = self.pool.get('ir.sequence').get(cr, uid, 'ineco.cheque.out')
                         move_cheque = {
                             'name': gl_name,
-                            'period_id':line.period_id.id,
+                            'period_id': period_id or line.period_id.id,
                             'ref':  cheque.name,
                             'journal_id': line.journal_id.id,
                             'narration':cheque.note,
@@ -160,8 +165,10 @@ class ineco_cheque(osv.osv):
                                         'account_id': cheque.account_pay_id.id,
                                         'move_id': move_id,
                                         'journal_id': line.journal_id.id,
-                                        'period_id': line.period_id.id,
+                                        'period_id': period_id or line.period_id.id,
                                         'partner_id': line.partner_id.id,
+                                        'date': cheque.cheque_date,
+                                        'date_maturity': cheque.cheque_date_reconcile
                                     }
                                 move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
                             else:
@@ -172,8 +179,10 @@ class ineco_cheque(osv.osv):
                                         'account_id': line.account_id.id,
                                         'move_id': move_id,
                                         'journal_id': line.journal_id.id,
-                                        'period_id': line.period_id.id,
+                                        'period_id': period_id or line.period_id.id,
                                         'partner_id': line.partner_id.id,
+                                        'date': cheque.cheque_date,
+                                        'date_maturity': cheque.cheque_date_reconcile
                                     }
                                 move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
                         

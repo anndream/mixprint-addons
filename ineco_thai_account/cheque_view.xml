@@ -26,7 +26,8 @@
 	                        <field name="amount"     attrs="{'readonly': [('state','not in',('draft'))]}"/>                                                    
                         </group>
                         <group>
-	                        <field name="cheque_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>                            
+	                        <field name="cheque_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>   
+	                        <field name="cheque_date_reconcile" attrs="{'readonly': [('state','not in',('assigned'))],'required': [('state','in',('assigned'))]}"/>                     
                         </group>                     
                     </group>
                     <group>
@@ -83,6 +84,7 @@
                 <tree string="Banks">
                     <field name="name"/>
                     <field name="cheque_date"/>
+                    <field name="cheque_date_reconcile" />
                     <field name="bank" />                    
                     <field name="partner_id"/>
                     <field name="amount"/>     
@@ -103,6 +105,7 @@
                     <filter icon="terp-camera_test"  string="Done" 		domain="[('state','=','done')]"   		name="cheque_done"/>                    
                     <field name="name"/>
                     <field name="cheque_date"/>
+                    <field name="cheque_date_reconcile" />
                     <field name="bank" />                    
                     <field name="partner_id"/>
                     <field name="amount"/>  
