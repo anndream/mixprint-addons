@@ -433,6 +433,7 @@
             <field name="inherit_id" ref="account.invoice_tree" />
             <field name="arch" type="xml">
             	<field name="date_due" position="after">
+            		<field name="receipt_due" />
             		<field name="bill_due" />
             	</field>
             	<field name="amount_untaxed" position="replace">
@@ -440,6 +441,9 @@
             	</field>
             	<field name="period_id" position="after">
             		<field name="period_tax_id" invisible="1" />
+            	</field>
+            	<field name="state" position="after">
+            		<field name="internal_number" />
             	</field>
             </field>
        	</record>
