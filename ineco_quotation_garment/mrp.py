@@ -66,6 +66,14 @@ class mrp_production(osv.osv):
                     result[obj.id]['late'] = False
          
         return result
+
+    def _get_datefinish(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'date_plan_finish2': obj.date_plan_finish or False
+            }
+        return result
     
     _inherit = 'mrp.production'
     _description = 'MRP for Garment'
@@ -88,6 +96,10 @@ class mrp_production(osv.osv):
         'late': fields.function(_get_late, string="Late", type="boolean", multi="_late"),
         'user_id': fields.related('sale_order_id', 'user_id', type='many2one', relation="res.users", string='Sale', readonly=True),
         'is_planning': fields.boolean('Print Planning'),
+        'date_plan_finish2': fields.function(_get_datefinish, string="Cut Finish", type="date", multi="_finish",
+            store = {
+                'mrp.production': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            },),
     }
     _defaults = {
         'is_print': False,
