@@ -55,7 +55,7 @@ class ineco_pattern(osv.osv):
                 if today > start_date:
                     result[obj.id]['late'] = True
                 else:
-                    result[obj.id]['late'] = False                
+                    result[obj.id]['late'] = False 
             elif obj.garment_order_no and obj.date_start and not obj.date_finish_planned :
                 start_date = datetime.strptime(obj.date_start, '%Y-%m-%d %H:%M:%S') + relativedelta(days=3)
                 if today > start_date:
@@ -201,7 +201,10 @@ class ineco_pattern(osv.osv):
         'date_mark_start': fields.datetime('Date Mark Start'),
         'date_mark_finish': fields.datetime('Date Mark Finish'),
         'marker': fields.char('Marker', size=32),
-        'late': fields.function(_get_late, string="Late", type="boolean", multi="_late"),
+        'late': fields.function(_get_late, string="Late", type="boolean", multi="_late",
+            store = {
+                'ineco.pattern': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            },),
         'user_id': fields.related('saleorder_id', 'user_id', type='many2one', relation="res.users", string='Sale', readonly=True),
         'product_name': fields.function(_get_product, string="Product", type="char", multi="_product"),
         'garment_order_no_org': fields.function(_get_original_mo, string="Master MO", type="char", multi="_mo"),
@@ -221,6 +224,8 @@ class ineco_pattern(osv.osv):
         'size_ids': lambda self, cr, uid, c: [(6, 0, self.pool.get('sale.size').search(cr, uid, [], context=c, order='seq'))],    
         'is_cancel': False,  
     }
+    
+    _order = 'date_expected'
 
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:

@@ -201,6 +201,7 @@
                     <field name="date_expected" />
                     <field name="date_finish_planned" />
                     <field name="date_finish" invisible="1" />
+                    <field name="sampling_date_process1_finish" invisible="1" />
                     <field name="late" invisible="1"/>
                     <field name="state" />
                 </tree>
@@ -415,6 +416,8 @@
                         <filter name="by_product_type" string="Product Type" icon="terp-partner" domain="[]" context="{'group_by':'product_type_id'}"/>
                         <filter name="by_date_expected" string="Date Expected" icon="terp-partner" domain="[]" context="{'group_by':'date_expected'}"/>
                         <filter name="by_employee" string="Employee" icon="terp-partner" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter name="by_late" string="Late" icon="terp-partner" domain="[]" context="{'group_by':'late'}"/>
+                        <filter name="by_cut_finish" string="Cut Finish" icon="terp-partner" domain="[]" context="{'group_by':'sampling_date_process1_finish'}"/>
                     </group>
                 </search>
             </field>
