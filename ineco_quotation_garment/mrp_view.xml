@@ -94,6 +94,9 @@
             		<filter string="To Do" name="todo" icon="terp-accessories-archiver" domain="[('state','=','draft'),('is_print','=',False)]" context="{}"/>
             		<filter string="To Planning" name="toplan" icon="terp-accessories-archiver" domain="[('is_planning','=',False)]" context="{}"/>
             	</field>
+            	<filter string="Date" position="after">
+            		<filter string="Source Document" icon="terp-go-month" domain="[]" context="{'group_by':'origin'}"/>
+            	</filter>
 			</field>
 		</record>
 
