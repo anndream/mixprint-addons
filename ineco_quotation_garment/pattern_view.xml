@@ -199,9 +199,9 @@
                     <field name="partner_id" />
                     <field name="employee_id" />
                     <field name="date_expected" />
+                    <field name="sampling_date_process1_finish" string="Cut Finish" />
                     <field name="date_finish_planned" />
                     <field name="date_finish" invisible="1" />
-                    <field name="sampling_date_process1_finish" invisible="1" />
                     <field name="late" invisible="1"/>
                     <field name="state" />
                 </tree>
@@ -410,6 +410,7 @@
                     <field name="partner_id" />
                     <field name="employee_id" />
                     <field name="state" />
+                    <field name="sampling_date_process1_finish" string="Cut Finish" />
                     <filter name="todo" icon="terp-dolar_ok!" string="To Do" domain="[('state','=','draft'),('date_finish_planned','=',False),('is_cancel','=',False)]" />  
                     <filter name="cancel" icon="terp-dolar_ok!" string="Cancel" domain="[('is_cancel','=',True)]" />         
                   	<group expand="0" string="Group By...">

@@ -185,6 +185,15 @@ class mrp_routing_workcenter(osv.osv):
     }
     
 class mrp_production_workcenter_line(osv.osv):
+
+    def _get_datefinish(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'date_finished2': obj.date_finished or False
+            }
+        return result
+    
     _inherit = 'mrp.production.workcenter.line'
     _columns = {
         'multiple_component': fields.boolean('Multiple Pattern Component'),
@@ -192,6 +201,10 @@ class mrp_production_workcenter_line(osv.osv):
         'size_id': fields.related('production_id', 'size_id', type='many2one', relation='sale.size', string='Size', readonly=True),
         'note': fields.related('production_id', 'note', type='char', string='Note', size=100, readonly=True),
         'worker': fields.related('production_id', 'worker', type='char', string='Worker', readonly=True),
+        'date_finished2': fields.function(_get_datefinish, string="Date Finish", type="date", multi="_finish",
+            store = {
+                'mrp.production.workcenter.line': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            },),
     }
     _default = {
 #        'cycle_count': 0.0,

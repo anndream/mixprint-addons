@@ -141,9 +141,26 @@
 					<field name="note" />
 					<field name="worker" />
 				</field>
-				
+				<field name="date_planned" position="after">
+					<field name="date_finished2" invisible="1" />
+				</field>
 			</field>
 		</record>
-			    
+
+	    <record id="view_ineco_mrp_production_workcenter_filter" model="ir.ui.view">
+	        <field name="name">ineco.mrpproduction.workcenter.line.select</field>
+	        <field name="model">mrp.production.workcenter.line</field>
+	        <field name="inherit_id" ref="mrp_operations.view_mrp_production_workcenter_form_view_filter"/>
+	        <field name="arch" type="xml">
+	        	<field name="state" position="after">
+	        		<field name="date_finished2" />
+	        	</field>
+	        	<filter string="Date" position="after">
+	        		<filter string="Date Finish" icon="terp-go-month" domain="[]" context="{'group_by':'date_finished2'}"/>
+	        	</filter>
+			</field>
+		</record>
+	
+				    
     </data>
 </openerp>
