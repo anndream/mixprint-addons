@@ -320,7 +320,8 @@ class sale_order(osv.osv):
                                                   'date_finish_planned': False,
                                                   'is_cancel': False,
                                                   'state': 'draft',
-                                                  'date_expected': time.strftime('%Y-%m-%d %H:%M:%S')}) #sale_obj.date_delivery})
+                                                  'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
+                                                  'date_expected': sale_obj.date_delivery}) #sale_obj.date_delivery})
         return True
             
     def create_mo(self, cr, uid, ids, context=None):
