@@ -96,6 +96,7 @@
             	</field>
             	<filter string="Date" position="after">
             		<filter string="Source Document" icon="terp-go-month" domain="[]" context="{'group_by':'origin'}"/>
+            		<filter string="Cut Finish" icon="terp-go-month" domain="[]" context="{'group_by':'date_plan_finish2'}"/>
             	</filter>
 			</field>
 		</record>
