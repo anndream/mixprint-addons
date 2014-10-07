@@ -198,7 +198,8 @@
                     <field name="saleorder_id" invisible="1" />
                     <field name="partner_id" />
                     <field name="employee_id" />
-                    <field name="date_expected" />
+                    <field name="date_start" />
+                    <field name="date_expected" invisible="1" />
                     <field name="sampling_date_process1_finish" string="Cut Finish" />
                     <field name="date_finish_planned" />
                     <field name="date_finish" invisible="1" />

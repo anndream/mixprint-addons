@@ -225,7 +225,7 @@ class ineco_pattern(osv.osv):
         'is_cancel': False,  
     }
     
-    _order = 'date_expected'
+    _order = 'date_start'
 
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
