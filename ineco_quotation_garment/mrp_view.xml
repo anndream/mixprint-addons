@@ -66,6 +66,7 @@
                 	<field name="color_id" readonly="1" />
                 	<field name="size_id" readonly="1"/>
                 	<field name="note" readonly="1"/>
+                	<field name="worker" />
                 	<field name="date_plan_finish2" string="Cut Finish" />
                 	<field name="is_print" invisible="1"/>
                 	<field name="is_planning" invisible="1" />
@@ -90,12 +91,14 @@
             <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
             <field name="arch" type="xml">
             	<field name="product_id" position="after">
+            		<field name="worker" />
             		<field name="date_plan_finish2" string="Cut Finish" />
             		<filter string="To Do" name="todo" icon="terp-accessories-archiver" domain="[('state','=','draft'),('is_print','=',False)]" context="{}"/>
             		<filter string="To Planning" name="toplan" icon="terp-accessories-archiver" domain="[('is_planning','=',False)]" context="{}"/>
             	</field>
             	<filter string="Date" position="after">
             		<filter string="Source Document" icon="terp-go-month" domain="[]" context="{'group_by':'origin'}"/>
+            		<filter string="Worker" icon="terp-go-month" domain="[]" context="{'group_by':'worker'}"/>
             		<filter string="Cut Finish" icon="terp-go-month" domain="[]" context="{'group_by':'date_plan_finish2'}"/>
             	</filter>
 			</field>
