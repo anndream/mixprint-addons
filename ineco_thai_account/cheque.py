@@ -102,7 +102,12 @@ class ineco_cheque(osv.osv):
             voucher_obj = self.pool.get('account.voucher').browse(cr,uid,voucher_ids,context=context)
             for line in voucher_obj:
                 for cheque in self.browse(cr, uid, ids, context=context):
-                    period_ids = period_obj.find(cr, uid, cheque.cheque_date_reconcile, context=context)
+                    date_reconcile = False
+                    if not cheque.cheque_date_reconcile:
+                        date_reconcile = time.strftime('%Y-%m-%d')
+                    else:
+                        date_reconcile = cheque.cheque_date_reconcile
+                    period_ids = period_obj.find(cr, uid, date_reconcile, context=context)
                     period_id = period_ids and period_ids[0] or False
                     move_line = [1,2]
                     if cheque.type == 'in':
@@ -128,7 +133,7 @@ class ineco_cheque(osv.osv):
                                         'period_id': period_id or line.period_id.id,
                                         'partner_id': line.partner_id.id,
                                         'date': cheque.cheque_date,
-                                        'date_maturity': cheque.cheque_date_reconcile
+                                        'date_maturity': date_reconcile
                                     }
                                 move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
                             else:
@@ -142,7 +147,7 @@ class ineco_cheque(osv.osv):
                                         'period_id': period_id or line.period_id.id,
                                         'partner_id': line.partner_id.id,
                                         'date': cheque.cheque_date,
-                                        'date_maturity': cheque.cheque_date_reconcile
+                                        'date_maturity': date_reconcile
                                     }
                                 move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
                     else:
@@ -168,7 +173,7 @@ class ineco_cheque(osv.osv):
                                         'period_id': period_id or line.period_id.id,
                                         'partner_id': line.partner_id.id,
                                         'date': cheque.cheque_date,
-                                        'date_maturity': cheque.cheque_date_reconcile
+                                        'date_maturity': date_reconcile
                                     }
                                 move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
                             else:
@@ -182,11 +187,11 @@ class ineco_cheque(osv.osv):
                                         'period_id': period_id or line.period_id.id,
                                         'partner_id': line.partner_id.id,
                                         'date': cheque.cheque_date,
-                                        'date_maturity': cheque.cheque_date_reconcile
+                                        'date_maturity': date_reconcile
                                     }
                                 move_line_id  = move_line_pool.create(cr,uid,move_line_detail,context=context) 
                         
-            self.write(cr, uid, ids, {'state':'done','date_done': time.strftime('%Y-%m-%d %H:%M:%S'),'move_id':move_id})
+            self.write(cr, uid, ids, {'state':'done','date_done': time.strftime('%Y-%m-%d %H:%M:%S'),'move_id':move_id,'cheque_date_reconcile': date_reconcile})
         else:
             raise osv.except_osv(('Warning!'),("Checking Voucher"))
         return True

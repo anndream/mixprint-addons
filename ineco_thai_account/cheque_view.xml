@@ -27,7 +27,7 @@
                         </group>
                         <group>
 	                        <field name="cheque_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>   
-	                        <field name="cheque_date_reconcile" attrs="{'readonly': [('state','not in',('assigned'))],'required': [('state','in',('assigned'))]}"/>                     
+	                        <field name="cheque_date_reconcile" attrs="{'readonly': [('state','not in',('assigned'))]}"/>                     
                         </group>                     
                     </group>
                     <group>
