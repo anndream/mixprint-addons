@@ -34,5 +34,6 @@ import journal
 import account
 import account_move_line
 import cash_flow
+import product
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
