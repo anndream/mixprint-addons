@@ -58,7 +58,8 @@ class product_uom(osv.osv):
                 if record['uom_type'] == 'reference':
                     name = name 
                 elif record['uom_type'] == 'bigger':
-                    name =  ('%.0f' % (1/record['factor'])) + ' ' +uom_categ[1] +' / '+name
+                    #name =  ('%.0f' % (1/record['factor'])) + ' ' +uom_categ[1] +' / '+name
+                    name = name +' ('+('%.0f' % (1/record['factor'])) + ' ' +uom_categ[1]+')'
                 else:
                     name =  ('%.0f' % (record['factor'])) + ' ' +name+' / '+uom_categ[1] 
             res.append((record['id'], name))
@@ -114,7 +115,49 @@ class product_category(osv.osv):
     }
     
 class product_product(osv.osv):
+
+#    def _ineco_product_available(self, cr, uid, ids, field_names=None, arg=False, context=None):
+#        if not field_names:
+#            field_names = []
+#        if context is None:
+#            context = {}
+#        res = {}
+#        for id in ids:
+#            res[id] = {}.fromkeys(field_names, 0.0)
+#        for f in field_names:
+#            c = context.copy()
+#            if f == 'ineco_qty_available':
+#                c.update({ 'states': ('done',), 'what': ('in', 'out') })
+#            if f == 'ineco_virtual_available':
+#                c.update({ 'states': ('confirmed','waiting','assigned','done'), 'what': ('in', 'out') })
+#            if f == 'ineco_incoming_qty':
+#                c.update({ 'states': ('confirmed','waiting','assigned'), 'what': ('in',) })
+#            if f == 'ineco_outgoing_qty':
+#                c.update({ 'states': ('confirmed','waiting','assigned'), 'what': ('out',) })
+#            stock = self.get_product_available(cr, uid, ids, context=c)
+#            for id in ids:
+#                res[id][f] = stock.get(id, 0.0)
+#        return res
+
+#    def _get_product(self, cr, uid, ids, context=None):
+#        result = {}
+#        for line in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
+#            result[line.product_id.id] = True
+#        return result.keys()
+    
     _inherit = 'product.product'
     _columns = {
-        'internal_barcode': fields.char('Internal Barcode', size=64)
+        'internal_barcode': fields.char('Internal Barcode', size=64),
+#        'ineco_qty_available': fields.function(_ineco_product_available, multi='qty_available2',
+#            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
+#            store={
+#                'stock.move': (_get_product, None, 10),
+#            },
+#            string='On Hand',),
+#        'ineco_virtual_available': fields.function(_ineco_product_available, multi='qty_available2',
+#            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
+#            store={
+#                'stock.move': (_get_product, None, 10),
+#            },
+#            string='Forecasted',),        
     }    
