@@ -211,6 +211,7 @@ class ineco_pattern(osv.osv):
         'is_cancel': fields.boolean('Is Cancel'),
         'pattern_id': fields.many2one('ineco.pattern','Source Pattern'),
         'order_qty': fields.function(_get_quantity, string="Quantity", type="integer", multi="_quantity"),
+        'schedule_update': fields.datetime('Schedule Update'),
     }
     
     _sql_constraints = [
@@ -226,6 +227,13 @@ class ineco_pattern(osv.osv):
     }
     
     _order = 'date_start'
+
+    def schedule_refresh(self, cr, uid, context={}):
+        #print 'Refresh Partner Start'
+        pattern_obj = self.pool.get('ineco.pattern')
+        pattern_ids = pattern_obj.search(cr, uid, [('state','=','draft'),('date_finish_planned','=',False),('is_cancel','=',False)])
+        if pattern_ids:
+            pattern_obj.write(cr, uid, pattern_ids, {'schedule_update': time.strftime("%Y-%m-%d %H:%M:%S")})
 
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
