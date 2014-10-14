@@ -277,6 +277,8 @@
                 										<field name="last_updated" />
                 									</tree>
                 								</field>
+                								<newline />
+                								<field name="note" colspan="4" />
                 							</group>
                 						</group>
                 					</page>

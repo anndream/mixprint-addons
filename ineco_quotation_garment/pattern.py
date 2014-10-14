@@ -212,6 +212,7 @@ class ineco_pattern(osv.osv):
         'pattern_id': fields.many2one('ineco.pattern','Source Pattern'),
         'order_qty': fields.function(_get_quantity, string="Quantity", type="integer", multi="_quantity"),
         'schedule_update': fields.datetime('Schedule Update'),
+        'note': fields.text('Note'),
     }
     
     _sql_constraints = [
