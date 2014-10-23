@@ -302,6 +302,7 @@
                     <field name="sample_order_no" />
                     <field name="partner_id"/>
                     <field name="user_id"/>
+                    <field name="manager_user_id" />
                     <field name="amount_total" sum="Total Tax Included"/>
                     <field name="sale_revision" />
                     <field name="state"/>
@@ -526,6 +527,7 @@
 		                            	attrs="{'invisible': ['|',('sample_order_no','=',False),('cancel_sample_order','=',True)]}" />                                 		
                         		</group>
                         		<group string="Garment">
+                        			<field name="manager_user_id" />
 		                            <field name="date_sale_close" />                                          		
 				              		<field name="garment_order_no" readonly="1" attrs="{'invisible': [('state','=','draft')]}" />
 				              		<field name="garment_order_date" attrs="{'invisible': [('state','=','draft')]}" />
@@ -535,7 +537,7 @@
 		                            	type="object" 
 		                            	icon="gtk-justify-fill"
 		                            	attrs="{'invisible': ['|',('garment_order_no','!=',False),('state','=','draft')]}" />
-		                            <field name="relate_garment_order_no" />   
+		                            <field name="relate_garment_order_no" />   		                            
                         		</group>
                         		<group string="Pattern">
                         			<field name="employee_id" />
@@ -590,12 +592,14 @@
                     <field name="user_id" />
                     <field name="project_id"/>
                     <field name="garment_order_no" />
+                    <field name="manager_user_id" />
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Approval" icon="terp-personal" domain="[]" context="{'group_by':'manager_user_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
-                        <filter string="Close Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_sale_close'}"/>
+                        <filter string="Close Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_sale_close'}"/>                      
                     </group>
                </search>
             </field>
