@@ -425,12 +425,16 @@ class sale_order(osv.osv):
             garment_order_no = garment_order.name.split('#')[0]
             self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
         else:
-            if sale_obj.shop_id and sale_obj.shop_id.production_sequence_id:
-                garment_order_no = self.pool.get('ir.sequence').get_id(cr, uid, sequence_code_or_id=sale_obj.shop_id.production_sequence_id.id )
-            else:
-                garment_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.garment.order')
-            self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
-            self.create_mo(cr, uid, ids, context)
+            try:
+                if sale_obj.shop_id and sale_obj.shop_id.production_sequence_id:
+                    garment_order_no = self.pool.get('ir.sequence').get_id(cr, uid, sequence_code_or_id=sale_obj.shop_id.production_sequence_id.id )
+                else:
+                    garment_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.garment.order')
+                self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
+                self.create_mo(cr, uid, ids, context)
+            except:
+                cr.rollback()
+                raise osv.except_osv('MO ERROR!', 'Generate MO ERROR.')
         return True
 
     def _prepare_order_picking(self, cr, uid, order, context=None):

@@ -65,6 +65,35 @@ class ineco_pattern(osv.osv):
             else:
                 result[obj.id]['late'] = False            
         return result
+    
+    def _get_attachment(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'attachment_count': False
+            }
+            sql = """
+                    select count(*) from ir_attachment 
+                    where res_model = 'ineco.pattern' and res_id = %s
+                """ % obj.id
+            cr.execute(sql)             
+            data = cr.fetchone()
+            if data and data[0]:
+                result[obj.id]['attachment_count'] = data[0] or 0.0
+        return result
+
+    def _get_attachment_search(self, cr, uid, obj, name, args, context=None):
+        """ Searches Ids of products
+        @return: Ids of locations
+        """
+        pattern = self.pool.get('ineco.pattern').search(cr, uid, [])
+        sql = """select res_id, count(*) from ir_attachment 
+                 where res_model = 'ineco.pattern' and res_id IN %s 
+                 group by res_id """ % str(tuple(pattern),)
+        cr.execute(sql)
+        res = cr.fetchall()
+        ids = [('id', 'not in', map(lambda x: x[0], res))]
+        return ids
 
     def _get_product(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -213,6 +242,8 @@ class ineco_pattern(osv.osv):
         'order_qty': fields.function(_get_quantity, string="Quantity", type="integer", multi="_quantity"),
         'schedule_update': fields.datetime('Schedule Update'),
         'note': fields.text('Note'),
+        'remark2': fields.char('Remark 2', size=32),
+        'attachment_count': fields.function(_get_attachment, fnct_search=_get_attachment_search, string="Attachment", type='integer', multi="_attachment"),
     }
     
     _sql_constraints = [
@@ -225,6 +256,8 @@ class ineco_pattern(osv.osv):
         'rev_no': 0,
         'size_ids': lambda self, cr, uid, c: [(6, 0, self.pool.get('sale.size').search(cr, uid, [], context=c, order='seq'))],    
         'is_cancel': False,  
+        'remark2': False,
+        'note': False,
     }
     
     _order = 'date_start'
