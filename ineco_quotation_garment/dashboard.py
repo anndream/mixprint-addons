@@ -954,7 +954,7 @@ class ineco_delivery_cost_dashboard(osv.osv):
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'ineco_delivery_cost_dashboard')
         cr.execute("""
-            CREATE OR REPLACE VIEW ineco_delivery_cost_dashboard AS
+            CREATE VIEW ineco_delivery_cost_dashboard AS
                 select 
                   sp.id + ict.id as id,
                   sp.name, 

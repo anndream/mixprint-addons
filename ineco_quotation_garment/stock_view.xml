@@ -80,6 +80,9 @@
                 	<field name="picking_transfer_id" readonly="1" />
                     <!-- <field name="ineco_date_delivery" /> -->
                 </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <button name="button_stop_production" string="Stop Production" type="object" />
+				</xpath> 
             </field>
         </record>
 

@@ -243,6 +243,17 @@ class stock_picking_out(osv.osv):
         'is_overlimit': fields.function(_get_overlimit, string='Over Limit', type="boolean",)
     }
         
+    def button_stop_production(self, cr, uid, ids, context=None):
+        for picking in self.browse(cr, uid, ids):
+            if picking.sale_id:
+                sql = """
+                    update mrp_production
+                    set name = name || '#STOP'
+                    where sale_order_id = %s 
+                """ % picking.sale_id.id 
+                sql = sql + """ and name not like '%STOP%'"""
+                cr.execute(sql)
+        return True
     
 class stock_picking(osv.osv):
 
