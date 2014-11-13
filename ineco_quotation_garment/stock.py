@@ -254,6 +254,13 @@ class stock_picking_out(osv.osv):
                 sql = sql + """ and name not like '%STOP%'"""
                 cr.execute(sql)
         return True
+
+    def button_get_queue(self, cr, uid, ids, context=None):
+        obj_seq = self.pool.get('ir.sequence')
+        for picking in self.browse(cr, uid, ids):
+            next_number = obj_seq.next_by_code(cr, uid, 'ineco.shipping', context=context)
+            picking.write({'account_internal_no': next_number})
+        return True
     
 class stock_picking(osv.osv):
 

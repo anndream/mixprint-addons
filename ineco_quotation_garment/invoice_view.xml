@@ -100,6 +100,21 @@
                 </field>
             </field>
         </record>       
-                    
+      
+        <record model="ir.ui.view" id="view_ineco_account_payment_form2">
+	      	<field name="name">ineco.account.payment.form2</field>
+	      	<field name="model">account.voucher</field>
+	      	<field name="inherit_id" ref="ineco_thai_account.view_ineco_account_payment_form"/>
+	      	<field name="arch" type="xml">
+	      		<field name="bill_number" position="replace">
+	      			<div>
+	      				<label for="bill_number" string="Bill/Receipt No" />
+	      				<field name="bill_number" />
+	      				<button name="button_get_billnumber" type="object" string="Get Number" />
+	      			</div>
+	      		</field>
+			</field>
+		</record>
+		              
     </data>
 </openerp>

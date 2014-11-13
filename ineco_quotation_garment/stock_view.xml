@@ -446,6 +446,17 @@
         	action="action_ineco_cost_group" 
         	parent="base.menu_base_config"
         	sequence="10"/>         	
+
+        <record model="ir.ui.view" id="view_ineco_account_pickingout_form2">
+	      	<field name="name">ineco.account.pickingout.form2</field>
+	      	<field name="model">stock.picking.out</field>
+	      	<field name="inherit_id" ref="ineco_thai_account.view_ineco_account_pickingout_form"/>
+	      	<field name="arch" type="xml">
+	      		<field name="account_internal_no" position="after">
+	      			<button name="button_get_queue" type="object" string="Get Number" />
+	      		</field>     		
+	        </field>
+	   	</record>
 		        
     </data>
 </openerp>

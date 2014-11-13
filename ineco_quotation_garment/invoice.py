@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-import time
-from lxml import etree
-import openerp.addons.decimal_precision as dp
+#import time
+#from lxml import etree
+#import openerp.addons.decimal_precision as dp
 
-from openerp import netsvc
-from openerp import pooler
+#from openerp import netsvc
+#from openerp import pooler
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 
@@ -72,13 +72,24 @@ class account_invoice(osv.osv):
         
     _inherit = 'account.invoice'
     _columns = {
-        'name': fields.char('Description', size=64, select=True,),
+        'name': fields.char('Description', size=64, select=True, track_visibility='onchange'),
         'garment_order_no': fields.function(_get_mo, type='char', size=32, string='Germent Order No',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, [], 10),
                 'account.invoice.line': (_get_order, [], 10),
             },
         ),
-        'garment_order_other': fields.char('Other MO',size=64)
+        'garment_order_other': fields.char('Other MO',size=64, track_visibility='onchange')
     }
+
+class account_voucher(osv.osv):
     
+    _inherit = 'account.voucher'
+
+    def button_get_billnumber(self, cr, uid, ids, context=None):
+        obj_seq = self.pool.get('ir.sequence')
+        for picking in self.browse(cr, uid, ids):
+            next_number = obj_seq.next_by_code(cr, uid, 'ineco.billing', context=context)
+            picking.write({'bill_number': next_number})
+        return True
+
