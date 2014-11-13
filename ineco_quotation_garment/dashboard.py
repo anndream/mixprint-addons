@@ -232,7 +232,51 @@ class ineco_sale_summary4(osv.osv):
                         from (
                             select array (
                                 select ineco_sale_summary3 from ineco_sale_summary3
+                                where user_id not in (7)
+                            ) as a
+                    ) b
+                ) c
+            )""")
 
+class ineco_sale_summary4smart(osv.osv):
+    _name = 'ineco.sale.summary4smart'
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Sale'),
+        'so1': fields.integer('SO',),
+        'so2': fields.integer('SO',),
+        'mo1': fields.integer('MO',),
+        'mo2': fields.integer('MO',),
+        'lose1': fields.integer('Opp Lost',),
+        'lose2': fields.integer('Opp Lost',),
+        'percent101': fields.integer('10%',),
+        'percent102': fields.integer('10%',),
+        'percent501': fields.integer('50%',),
+        'percent502': fields.integer('50%',),
+        'percent901': fields.integer('90%',),
+        'percent902': fields.integer('90%',),
+        'nickname': fields.char('Nick Name', size=32),
+        'percent301': fields.integer('30%',),
+        'percent302': fields.integer('30%',),
+        'total_opportunity': fields.integer('Total Opp',),
+    }     
+    
+    def init(self, cr):
+
+        """
+            CRM Lead Report
+            @param cr: the current row, from the database cursor
+        """
+        tools.drop_view_if_exists(cr, 'ineco_sale_summary4smart')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_sale_summary4smart AS (
+                select id, (a[id]).*
+                from (
+                    select a, generate_series(1, array_upper(a,1)) as id
+                        from (
+                            select array (
+                                select ineco_sale_summary3 from ineco_sale_summary3
+                                where user_id in (7)
                             ) as a
                     ) b
                 ) c
@@ -389,7 +433,51 @@ class ineco_sale_summary5(osv.osv):
                         from (
                             select array (
                                 select ineco_sale_summary5_query from ineco_sale_summary5_query
+                                where user_id not in (7)
+                            ) as a
+                    ) b
+                ) c
+            )""")        
+        
+class ineco_sale_summary5smart(osv.osv):
+    _name = 'ineco.sale.summary5smart'
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Sale'),
+        'nickname': fields.char('Nick Name', size=32),
+        'so2': fields.integer('SO',),
+        'mo2': fields.integer('MO',),
+        'total_customer': fields.integer('Total',),
+        'total_customer_company': fields.integer('Company',),
+        'total_customer_new': fields.integer('New',),
+        'logcall_inbound': fields.integer('In',),
+        'logcall_outbound': fields.integer('Out',),
+        'logcall_visit': fields.integer('Visit',),
+        'total_quotation': fields.integer('QO',),
+        'total_quotation_saleorder': fields.integer('SO',),
+        'total_picking_pc': fields.integer('PC',),
+        'total_picking_ds': fields.integer('DS',),
+        'total_picking_rp': fields.integer('PR',),
+        'total_picking_mp': fields.integer('PM',),
+        'total_picking_fr': fields.integer('PF',),
+    }     
+    
+    def init(self, cr):
 
+        """
+            CRM Lead Report
+            @param cr: the current row, from the database cursor
+        """
+        tools.drop_view_if_exists(cr, 'ineco_sale_summary5smart')
+        cr.execute("""
+            CREATE OR REPLACE VIEW ineco_sale_summary5smart AS (
+                select id, (a[id]).*
+                from (
+                    select a, generate_series(1, array_upper(a,1)) as id
+                        from (
+                            select array (
+                                select ineco_sale_summary5_query from ineco_sale_summary5_query
+                                where user_id in (7)
                             ) as a
                     ) b
                 ) c

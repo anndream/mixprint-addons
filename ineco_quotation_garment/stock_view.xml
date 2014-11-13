@@ -453,7 +453,7 @@
 	      	<field name="inherit_id" ref="ineco_thai_account.view_ineco_account_pickingout_form"/>
 	      	<field name="arch" type="xml">
 	      		<field name="account_internal_no" position="after">
-	      			<button name="button_get_queue" type="object" string="Get Number" />
+	      			<button name="button_get_queue" type="object" string="Get Number" attrs="{'invisible': [('account_internal_no','!=',False)]}"/>
 	      		</field>     		
 	        </field>
 	   	</record>

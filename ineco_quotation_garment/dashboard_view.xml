@@ -63,7 +63,7 @@
             </field>
         </record>
 
-		<!-- Sale Summary Dashboard 4 -->
+		<!-- Sale Summary Dashboard 4 Opportunity Stages not in smart -->
         <record id="view_ineco_sale_summary4_tree" model="ir.ui.view">
             <field name="name">ineco.sale.summary4.tree</field>
             <field name="model">ineco.sale.summary4</field>
@@ -130,8 +130,64 @@
         	action="action_ineco_sale_summary4" 
         	parent="menu_mixprint_dashboard"
         	sequence="1"/> --> 
+
+		<!-- Sale Summary Dashboard 4 Opportunity Stages Only smart -->
+        <record id="view_ineco_sale_summary4smart_tree" model="ir.ui.view">
+            <field name="name">ineco.sale.summary4smart.tree</field>
+            <field name="model">ineco.sale.summary4smart</field>
+            <field name="arch" type="xml">
+                <tree string="Problem Type">
+                    <field name="nickname" />
+                    <field name="so1" sum="Total"/>
+                    <field name="so2" sum="Total" string=""/>
+                    <field name="mo1" sum="Total"/>
+                    <field name="mo2" sum="Total" string=""/>
+                    <field name="percent901" sum="Total"/>
+                    <field name="percent902" sum="Total" string=""/>
+                    <field name="percent501" sum="Total"/>
+                    <field name="percent502" sum="Total" string=""/>
+                    <field name="percent301" sum="Total"/>
+                    <field name="percent302" sum="Total" string=""/>
+                    <field name="percent101" sum="Total"/>
+                    <field name="percent102" sum="Total" string=""/>
+                    <field name="lose1" sum="Total"/>
+                    <field name="lose2" sum="Total" string=""/>
+                </tree>
+            </field>
+        </record>		
+        
+        <record id="view_ineco_sale_summary4smart_filter" model="ir.ui.view">
+            <field name="name">ineco.sale.summary4smart.select</field>
+            <field name="model">ineco.sale.summary4smart</field>
+            <field name="arch" type="xml">
+                <search string="Search Sale Summary">
+                	<field name="user_id" />
+                	<field name="nickname" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_sale_summary4smart" model="ir.actions.act_window">
+            <field name="name">Smart Sale Summary</field>
+            <field name="res_model">ineco.sale.summary4smart</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_sale_summary4smart_filter"/>
+            <field name="view_id" ref="view_ineco_sale_summary4smart_tree" />
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale summary. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
         	
-		<!-- Sale Summary Dashboard 5 -->
+		<!-- Sale Summary Dashboard 5 Sale Log not in Smart -->
         <record id="view_ineco_sale_summary5_tree" model="ir.ui.view">
             <field name="name">ineco.sale.summary5.tree</field>
             <field name="model">ineco.sale.summary5</field>
@@ -176,6 +232,62 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_ineco_sale_summary5_filter"/>
             <field name="view_id" ref="view_ineco_sale_summary5_tree" />
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale summary. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+		<!-- Sale Summary Dashboard 5 Sale Log Smart -->
+        <record id="view_ineco_sale_summary5smart_tree" model="ir.ui.view">
+            <field name="name">ineco.sale.summary5smart.tree</field>
+            <field name="model">ineco.sale.summary5smart</field>
+            <field name="arch" type="xml">
+                <tree string="Problem Type">
+                    <field name="nickname" />
+                    <field name="so2" sum="Total" string="SO"/>
+                    <field name="mo2" sum="Total" string="MO"/>
+                    <field name="total_customer" sum="Total"/>
+                    <field name="total_customer_company" sum="Total" string="Comp"/>
+                    <field name="total_customer_new" sum="Total"/>
+                    <field name="logcall_inbound" sum="Total" string="In"/>
+                    <field name="logcall_outbound" sum="Total" string="Out"/>
+                    <field name="logcall_visit" sum="Total" string="Vis"/>
+                    <field name="total_quotation" sum="Total" string="QO"/>
+                    <field name="total_quotation_saleorder" sum="Total" string="SO"/>
+                    <field name="total_picking_pc" sum="Total" string="PC"/>
+                    <field name="total_picking_ds" sum="Total" string="DS"/>
+                    <field name="total_picking_rp" sum="Total" string="PR"/>
+                    <field name="total_picking_mp" sum="Total" string="PM"/>
+                    <field name="total_picking_fr" sum="Total" string="PF"/>
+                </tree>
+            </field>
+        </record>		
+        
+        <record id="view_ineco_sale_summary5smart_filter" model="ir.ui.view">
+            <field name="name">ineco.sale.summary5smart.select</field>
+            <field name="model">ineco.sale.summary5smart</field>
+            <field name="arch" type="xml">
+                <search string="Search Sale Summary">
+                	<field name="user_id" />
+                	<field name="nickname" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_sale_summary5smart" model="ir.actions.act_window">
+            <field name="name">Smart Sale Log</field>
+            <field name="res_model">ineco.sale.summary5smart</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_sale_summary5smart_filter"/>
+            <field name="view_id" ref="view_ineco_sale_summary5smart_tree" />
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a sale summary. 
@@ -861,6 +973,8 @@
                         	<action string="My Sale Logs" name="%(action_ineco_sale_mylog)d"/>                      	
                         	<action string="Opportunity Stages" name="%(action_ineco_sale_summary4)d"/>
                         	<action string="Sale Log" name="%(action_ineco_sale_summary5)d"/>
+                        	<action string="Smart Opportunity Stages" name="%(action_ineco_sale_summary4smart)d"/>
+                        	<action string="Smart Sale Log" name="%(action_ineco_sale_summary5smart)d"/>
                         	<action string="Stock" name="%(action_ineco_product_category_stock)d" />
                         	<action string="Stock Option" name="%(action_ineco_product_category_stock_option)d" />
                         </column>    
