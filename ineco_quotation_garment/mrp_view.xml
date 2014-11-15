@@ -18,6 +18,8 @@
                 	<field name="is_planning" />
                 	<field name="date_plan_start" />
                 	<field name="date_plan_finish" />
+                	<field name="date_process1_start" readonly="1" />
+                	<field name="date_process1_finish" readonly="1" />
                 	<field name="sale_order_id" readonly="1" />
                 </field>                               
                 <field name="date_planned" position="before">

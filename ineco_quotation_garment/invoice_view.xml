@@ -99,7 +99,7 @@
                 	<field name="garment_order_other" />
                 </field>
                 <filter name="unpaid" position="after">
-                	<filter name="depnomo" icon="terp-go-today" string="Deposit no Garment Order" domain="[('garment_order_no','=',False),('journal_id','in',[10,2])]" />					
+                	<filter name="depnomo" icon="terp-go-today" string="Deposit no Garment Order" domain="[('garment_order_no','=',False),('journal_id','in',[10,2]),('state','=','open')]" />					
                 </filter>
             </field>
         </record>       

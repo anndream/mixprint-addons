@@ -58,6 +58,15 @@ class account_invoice(osv.osv):
         for line in self.pool.get('account.invoice.line').browse(cr, uid, ids, context=context):
             result[line.invoice_id.id] = True
         return result.keys()
+
+    def _get_saleorder(self, cr, uid, ids, context=None):
+        result = {}
+        obj_invoice = self.pool.get('account.invoice')
+        for line in self.pool.get('sale.order').browse(cr, uid, ids, context=context):
+            ids_invoice = obj_invoice.search(cr, uid, [('origin','=',line.name)])
+            for invoice_id in ids_invoice:
+                result[invoice_id] = True
+        return result.keys()
     
     def _find_partner(self, inv):
         '''
@@ -77,6 +86,7 @@ class account_invoice(osv.osv):
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, [], 10),
                 'account.invoice.line': (_get_order, [], 10),
+                'sale.order': (_get_saleorder, [], 10),
             },
         ),
         'garment_order_other': fields.char('Other MO',size=64, track_visibility='onchange')

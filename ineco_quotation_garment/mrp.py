@@ -100,6 +100,8 @@ class mrp_production(osv.osv):
             store = {
                 'mrp.production': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             },),
+        'date_process1_start': fields.datetime('Date Collar Start'),
+        'date_process1_finish': fields.datetime('Date Collar Finish'),
     }
     _defaults = {
         'is_print': False,

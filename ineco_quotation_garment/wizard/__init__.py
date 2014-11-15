@@ -28,3 +28,4 @@ import wizard_pattern_copy
 import wizard_update_routing
 import wizard_update_printmo
 import wizard_update_printplan
+import wizard_make_collar
