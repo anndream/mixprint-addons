@@ -457,6 +457,107 @@
 	      		</field>     		
 	        </field>
 	   	</record>
+
+		<!--   Packing    -->
+        <record id="view_ineco_stock_packing_tree" model="ir.ui.view">
+            <field name="name">ineco.stock.packing.tree</field>
+            <field name="model">ineco.stock.packing</field>
+            <field name="arch" type="xml">
+                <tree string="Packing">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="sequence" />
+                    <field name="customer_id" />
+                    <field name="sale_order_id" />
+                    <field name="garment_order_no" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_stock_packing_form" model="ir.ui.view">
+            <field name="name">ineco.stock.packing.form</field>
+            <field name="model">ineco.stock.packing</field>
+            <field name="arch" type="xml">
+                <form string="Packing" version="7.0">
+                	<header>
+                	</header>
+                	<sheet>
+                		<group>
+                			<group>
+			                    <field name="name" />
+			                    <field name="sale_order_id" />
+			                    <field name="customer_id" />
+			                    <field name="weight" />
+			                    <div>
+				                    <button name="button_load" type="object" string="Load" />
+				                    <button name="button_reset" type="object" string="Reset 0" />
+			                    </div>
+                			</group>
+                			<group>
+			                    <field name="date" />
+			                    <field name="garment_order_no" />
+			                    <field name="sequence" />
+			                    <field name="total" />
+                			</group>
+                			<field name="line_ids" colspan="4" nolabel="1">
+                				<tree string="Item" editable="top">
+                					<field name="packing_id" invisible="1" />
+                					<field name="stock_move_id" invisible="1" />
+                					<field name="product_id" readonly="1" />
+                					<field name="color_id" readonly="1" />
+                					<field name="gender_id" readonly="1" />
+                					<field name="size_id" readonly="1" />
+                					<field name="note" readonly="1" />
+                					<field name="product_qty" readonly="1" />
+                					<field name="quantity" /> 
+                				</tree>
+                			</field>
+                		</group>
+                	</sheet>
+                </form>
+            </field>
+        </record>		
+
+        <record id="view_ineco_stock_packing_search" model="ir.ui.view">
+            <field name="name">ineco.stock.packing.search</field>
+            <field name="model">ineco.stock.packing</field>
+            <field name="arch" type="xml">
+                <search string="Packing">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="sequence" />
+                    <field name="total" />
+                    <field name="customer_id" />
+                    <field name="sale_order_id" />
+                    <field name="garment_order_no" />
+                </search>
+            </field>
+        </record>		
+
+        <record id="action_ineco_stock_packing" model="ir.actions.act_window">
+            <field name="name">Packing Box</field>
+            <field name="res_model">ineco.stock.packing</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_stock_packing_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a Packing. 
+              </p><p>
+                This is the list of all cost group that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+       <menuitem 
+            id="menu_ineco_stock_packing"
+        	action="action_ineco_stock_packing" 
+        	parent="stock.menu_traceability"
+        	sequence="30"/>         	
+
 		        
     </data>
 </openerp>

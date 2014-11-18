@@ -44,5 +44,19 @@
             <field name="company_id" eval="False"/>
         </record>
 
+		<!-- Packing Box -->
+        <record id="seq_ineco_packingbox_type" model="ir.sequence.type">
+            <field name="name">Packing Box</field>
+            <field name="code">ineco.packing.box</field>
+        </record>
+
+        <record id="seq_ineco_packingbox" model="ir.sequence">
+            <field name="name">Packing Box</field>
+            <field name="code">ineco.packing.box</field>
+            <field name="prefix">%(y)s-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
    </data>
 </openerp>

@@ -702,3 +702,76 @@ class ineco_opportunity_cost(osv.osv):
                     ) b1
                 ) c1
         """)    
+        
+class ineco_stock_packing(osv.osv):
+    _name = 'ineco.stock.packing'
+    _description = "Stock Packing"
+    _columns = {
+        'name': fields.char('Packing No', size=32, required=True),
+        'sale_order_id': fields.many2one('sale.order','Sale Order'),
+        'garment_order_no': fields.related('sale_order_id','garment_order_no', type="char", string="Garment No", readonly=True),
+        'customer_id': fields.related('sale_order_id','partner_id',type="many2one", relation="res.partner", string="Customer", readonly=True),
+        'sequence': fields.integer('Sequence'),
+        'total': fields.integer('Total'),
+        'date': fields.date('Date'),
+        'line_ids': fields.one2many('ineco.stock.packing.line','packing_id','Packing Items'),
+        'weight': fields.float('Weight',digits=(12,2)),
+    }
+    _defaults = {
+        'name': '/',
+        'sequence': 1.0,
+        'date': time.strftime('%Y-%m-%d'),
+        'total': 1.0,
+    }
+    
+    def button_load(self, cr, uid, ids, context=None):
+        obj_picking = self.pool.get('stock.picking')
+        obj_packing_line = self.pool.get('ineco.stock.packing.line')
+        for data in self.browse(cr, uid, ids):
+            picking_ids = obj_picking.search(cr, uid, [('sale_id','=', data.sale_order_id.id),('state','not in',['done','cancel'])])
+            for picking in self.pool.get('stock.picking').browse(cr, uid, picking_ids):
+                for move in picking.move_lines:
+                    new_data = {
+                        'stock_move_id': move.id,
+                        'packing_id': data.id,
+                    }
+                    obj_packing_line.create(cr, uid, new_data)
+        return True
+
+    def button_reset(self, cr, uid, ids, context=None):
+        obj_packing_line = self.pool.get('ineco.stock.packing.line')
+        for data in self.browse(cr, uid, ids):
+            line_ids = obj_packing_line.search(cr, uid, [('packing_id','=',data.id),('quantity','=',False)])
+            obj_packing_line.unlink(cr, uid, line_ids)
+        return True
+    
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('name','/')=='/':
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'ineco.packing.box') or '/'
+        return super(ineco_stock_packing, self).create(cr, uid, vals, context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        default = default.copy()
+        default['line_ids'] = []
+        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'ineco.packing.box')
+        return super(ineco_stock_packing, self).copy(cr, uid, id, default, context=context)
+    
+class ineco_stock_packing_line(osv.osv):
+    _name = 'ineco.stock.packing.line'
+    _description = "Stock Packing Line"
+    _columns = {
+        'name': fields.char('Description', size=32),
+        'packing_id': fields.many2one('ineco.stock.packing','Packing'),
+        'stock_move_id': fields.many2one('stock.move','Stock Move'),
+        'product_id': fields.related('stock_move_id','product_id',type="many2one", relation="product.product", string="Product", readonly=True),
+        'color_id': fields.related('stock_move_id', 'color_id', type="many2one", relation='sale.color', string='Color',readonly=True),
+        'gender_id': fields.related('stock_move_id', 'gender_id', type="many2one", relation='sale.gender', string='Gender',readonly=True),
+        'size_id': fields.related('stock_move_id', 'size_id', type="many2one", relation='sale.size', string='Size',readonly=True),
+        'note': fields.related('stock_move_id','note', type="char", string="Note", readonly=True),
+        'product_qty': fields.related('stock_move_id', 'product_qty', type="float",  string='Origin Qty',readonly=True),
+        'quantity': fields.integer('Quantity'),
+    }
