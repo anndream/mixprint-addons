@@ -716,13 +716,30 @@ class ineco_stock_packing(osv.osv):
         'date': fields.date('Date'),
         'line_ids': fields.one2many('ineco.stock.packing.line','packing_id','Packing Items'),
         'weight': fields.float('Weight',digits=(12,2)),
+        'state': fields.selection([('draft','Draft'),('done','Done'),('cancel','Cancel')],'State',readonly=True)
     }
     _defaults = {
         'name': '/',
         'sequence': 1.0,
         'date': time.strftime('%Y-%m-%d'),
         'total': 1.0,
+        'state': 'draft',
     }
+
+    def button_cancel(self, cr, uid, ids, context=None):
+        for data in self.browse(cr, uid, ids):
+            for line in data.line_ids:
+                if line.state == 'done':
+                    raise osv.except_osv('Error!', 'Some line (%s) has done state.' % (line.product_id.name))
+            data.write({'state':'cancel'})
+        return True
+    
+    def button_done(self, cr, uid, ids, context=None):
+        for data in self.browse(cr, uid, ids):
+            for line in data.line_ids:
+                line.button_done()
+            data.write({'state':'done'})
+        return True
     
     def button_load(self, cr, uid, ids, context=None):
         obj_picking = self.pool.get('stock.picking')
@@ -775,4 +792,36 @@ class ineco_stock_packing_line(osv.osv):
         'note': fields.related('stock_move_id','note', type="char", string="Note", readonly=True),
         'product_qty': fields.related('stock_move_id', 'product_qty', type="float",  string='Origin Qty',readonly=True),
         'quantity': fields.integer('Quantity'),
+        'state': fields.selection([('draft','Draft'),('done','Done')],'State',readonly=True)
     }
+    _defaults = {
+        'state': 'draft',
+    }
+    
+    def button_done(self, cr, uid, ids, context=None):
+        move_obj = self.pool.get('stock.move')
+        prodlot_obj = self.pool.get('stock.production.lot')
+        for data in self.browse(cr, uid, ids):
+            if data.stock_move_id and data.stock_move_id.product_qty >= data.quantity:
+                seq = data.packing_id.sequence or 1.0
+                prodlot_ids = prodlot_obj.search(cr, uid, [('name','=',seq),('product_id','=',data.product_id.id)])
+                prodlot_id = False
+                if not prodlot_ids:
+                    prodlot_id = prodlot_obj.create(cr, uid, {'name':seq,'product_id':data.product_id.id})
+                else:
+                    prodlot_id = prodlot_ids[0]
+                default_val = {
+                    'product_qty': data.quantity,
+                    'product_uos_qty': data.quantity,
+                    'state': 'assigned',
+                    'prodlot_id': prodlot_id,
+                }
+                if data.stock_move_id.product_qty == data.quantity:
+                    if data.state != 'done':
+                        move_obj.write(cr, uid, [data.stock_move_id.id],{'prodlot_id':prodlot_id,'state':'assigned'})
+                else:
+                    if data.state != 'done':
+                        new_move_id = move_obj.copy(cr, uid, data.stock_move_id.id, default_val, context=context)
+                        move_obj.write(cr, uid, [data.stock_move_id.id],{'product_qty':data.stock_move_id.product_qty - data.quantity,'state':'assigned'})
+                data.write({'state':'done'})
+        return True

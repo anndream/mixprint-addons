@@ -480,26 +480,29 @@
             <field name="arch" type="xml">
                 <form string="Packing" version="7.0">
                 	<header>
+                        <button name="button_done" type="object" states="draft" string="Done" />
+                        <button name="button_cancel" type="object" states="draft" string="Cancel" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done,cancel" />                		
                 	</header>
                 	<sheet>
                 		<group>
                 			<group>
 			                    <field name="name" readonly="1"/>
-			                    <field name="sale_order_id" />
+			                    <field name="sale_order_id" attrs="{'readonly':[('state', 'in', ['done','cancel'])]}"/>
 			                    <field name="customer_id" />
 			                    <field name="weight" />
 			                    <div>
-				                    <button name="button_load" type="object" string="Load" />
-				                    <button name="button_reset" type="object" string="Reset 0" />
+				                    <button name="button_load" type="object" string="Load"  attrs="{'invisible':[('state', 'in', ['done','cancel'])]}"/>
+				                    <button name="button_reset" type="object" string="Reset 0"  attrs="{'invisible':[('state', 'in', ['done','cancel'])]}"/>
 			                    </div>
                 			</group>
                 			<group>
 			                    <field name="date" />
 			                    <field name="garment_order_no" />
-			                    <field name="sequence" />
+			                    <field name="sequence" attrs="{'readonly':[('state', 'in', ['done','cancel'])]}"/>/>
 			                    <field name="total" />
                 			</group>
-                			<field name="line_ids" colspan="4" nolabel="1">
+                			<field name="line_ids" colspan="4" nolabel="1"  attrs="{'readonly':[('state', 'in', ['done','cancel'])]}">
                 				<tree string="Item" editable="top">
                 					<field name="packing_id" invisible="1" />
                 					<field name="stock_move_id" invisible="1" />
