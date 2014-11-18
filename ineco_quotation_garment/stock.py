@@ -742,7 +742,8 @@ class ineco_stock_packing(osv.osv):
         obj_packing_line = self.pool.get('ineco.stock.packing.line')
         for data in self.browse(cr, uid, ids):
             line_ids = obj_packing_line.search(cr, uid, [('packing_id','=',data.id),('quantity','=',False)])
-            obj_packing_line.unlink(cr, uid, line_ids)
+            if line_ids:
+                obj_packing_line.unlink(cr, uid, line_ids)
         return True
     
     def create(self, cr, uid, vals, context=None):

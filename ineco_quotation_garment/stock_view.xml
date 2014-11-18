@@ -484,7 +484,7 @@
                 	<sheet>
                 		<group>
                 			<group>
-			                    <field name="name" />
+			                    <field name="name" readonly="1"/>
 			                    <field name="sale_order_id" />
 			                    <field name="customer_id" />
 			                    <field name="weight" />
