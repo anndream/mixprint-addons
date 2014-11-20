@@ -608,7 +608,9 @@ class ineco_cost_type(osv.osv):
         'name': fields.char('Description', size=128),
         'cost': fields.integer('Cost'),
         'seq': fields.integer('Sequence'),
-        'cost_group_id': fields.many2one('ineco.cost.group','Group')
+        'cost_group_id': fields.many2one('ineco.cost.group','Group'),
+        'account_journal_id': fields.many2one('account.journal','Journal'),
+        'product_id': fields.many2one('product.product','Default Product'),
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')
@@ -643,17 +645,112 @@ class ineco_picking_cost(osv.osv):
     _columns = {
         'name': fields.char('Description', size=128),
         'picking_id': fields.many2one('stock.picking.out', 'Delivery Order'),
-        'cost_type_id': fields.many2one('ineco.cost.type','Cost'),
+        'cost_type_id': fields.many2one('ineco.cost.type','Cost Type'),
         'quantity': fields.integer('Quantity', required=True),
         'cost': fields.float('Cost', required=True),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
         'move_id': fields.many2one('stock.move','Move'),
+        'date': fields.date('Date'),
+        'doc_number': fields.char('Document No', size=32),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice')
     }
     
     _defaults = {
         'quantity': 1,
         'cost': 0.0,
+        'date': time.strftime('%Y-%m-%d'),
     }
+    
+    def _prepare_invoice(self, cr, uid, cost, partner, inv_type, journal_id, context=None):
+        """ Builds the dict containing the values for the invoice
+            @param picking: picking object
+            @param partner: object of the partner to invoice
+            @param inv_type: type of the invoice ('out_invoice', 'in_invoice', ...)
+            @param journal_id: ID of the accounting journal
+            @return: dict that will be used to create the invoice object
+        """
+        if isinstance(partner, int):
+            partner = self.pool.get('res.partner').browse(cr, uid, partner, context=context)
+        if inv_type in ('out_invoice', 'out_refund'):
+            account_id = partner.property_account_receivable.id
+            payment_term = partner.property_payment_term.id or False
+        else:
+            account_id = partner.property_account_payable.id
+            payment_term = partner.property_supplier_payment_term.id or False
+        invoice_vals = {
+            'name': '/',
+            'origin': cost.doc_number or False,
+            'type': inv_type,
+            'account_id': account_id,
+            'partner_id': partner.id,
+            'comment': False,
+            'payment_term': payment_term,
+            'fiscal_position': partner.property_account_position.id,
+            'date_invoice': cost.date,
+            'company_id': cost.picking_id.company_id.id,
+            'user_id': uid,
+        }
+        if journal_id:
+            invoice_vals['journal_id'] = journal_id
+        return invoice_vals
+
+    def _prepare_invoice_line(self, cr, uid, cost, invoice_id, product_id,
+        invoice_vals, context=None):
+        """ Builds the dict containing the values for the invoice line
+            @param group: True or False
+            @param picking: picking object
+            @param: move_line: move_line object
+            @param: invoice_id: ID of the related invoice
+            @param: invoice_vals: dict used to created the invoice
+            @return: dict that will be used to create the invoice line
+        """
+        name = cost.cost_type_id.name
+        origin = cost.doc_number or False
+        account_id = product_id.property_account_income.id
+        if invoice_vals['fiscal_position']:
+            fp_obj = self.pool.get('account.fiscal.position')
+            fiscal_position = fp_obj.browse(cr, uid, invoice_vals['fiscal_position'], context=context)
+            account_id = fp_obj.map_account(cr, uid, fiscal_position, account_id)
+        # set UoS if it's a sale and the picking doesn't have one
+        uos_id = product_id.uom_id.id or False
+        return {
+            'name': name,
+            'origin': origin,
+            'invoice_id': invoice_id,
+            'uos_id': uos_id,
+            'product_id': product_id.id,
+            'account_id': account_id,
+            'price_unit': cost.cost,
+            'discount': 0.0,
+            'quantity': cost.quantity,
+            'invoice_line_tax_id': False,
+            'account_analytic_id': False,
+        }
+    
+    def button_create_invoice(self, cr, uid, ids, context=None):
+        invoice_obj = self.pool.get('account.invoice')
+        invoice_line_obj = self.pool.get('account.invoice.line')
+        wf_service = netsvc.LocalService('workflow')
+        for data in self.browse(cr, uid, ids):
+            if data.cost_type_id and data.cost_type_id.account_journal_id and data.cost_type_id.product_id:
+                partner_id = False
+                if data.picking_id.sale_id.partner_invoice_id.parent_id:
+                    partner_id = data.picking_id.sale_id.partner_invoice_id.parent_id
+                else:
+                    partner_id = data.picking_id.sale_id.partner_invoice_id
+                invoice_vals = self._prepare_invoice(cr, uid, data, 
+                                                     partner_id,
+                                                     'out_invoice' ,
+                                                     data.cost_type_id.account_journal_id.id,
+                                                     context)
+                invoice_id = invoice_obj.create(cr, uid, invoice_vals)
+                invoice_line_vals = self._prepare_invoice_line(cr, uid, data, invoice_id, data.cost_type_id.product_id, invoice_vals, context)
+                invoice_line_obj.create(cr, uid, invoice_line_vals)
+                data.write({'invoice_id': invoice_id})
+                wf_service.trg_validate(uid, 'account.invoice', invoice_id, 'invoice_open', cr)
+            else:
+                raise osv.except_osv('Error!', 'Not Account Journal or Product in Cost Type' % (data.cost_type_id.name))
+        return True
 
 class ineco_sale_lose_opportunity_costtemp(osv.osv):
     _name = 'ineco.sale.lose.opportunity.costtemp'

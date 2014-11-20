@@ -1107,9 +1107,14 @@
             			<field name="cost_ids" nolabel="1">
             				<tree string="Cost" editable="top">
             					<field name="cost_type_id" on_change="on_change_costtype(cost_type_id)" />
+            					<field name="date" required="1" />
+            					<field name="doc_number" />
             					<field name="quantity" />
             					<field name="cost" groups="account.group_account_user"/>
             					<field name="price_subtotal" sum="Total" />
+            					<field name="invoice_id" invisible="1" />
+            					<button name="button_create_invoice" type="object"  icon="terp-document-new"
+            						attrs="{'invisible': [('invoice_id', '!=', False)]}" />
             				</tree>
             			</field>
             		</page>
@@ -1117,7 +1122,70 @@
 
 			</field>
 		</record>
+
+		<!-- Sale Line Property -->
+        <record id="view_sale_line_property_tree" model="ir.ui.view">
+            <field name="name">sale.line.property.tree</field>
+            <field name="model">sale.line.property</field>
+            <field name="arch" type="xml">
+                <tree string="Line Property">
+                    <field name="name" />
+                    <field name="property_id" />
+                    <field name="order_id" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_sale_line_property_form" model="ir.ui.view">
+            <field name="name">sale.line.property.form</field>
+            <field name="model">sale.line.property</field>
+            <field name="arch" type="xml">
+                <form string="Line Property">
+                    <field name="name" />
+                    <field name="property_id" readonly="1" />
+                    <field name="order_id" readonly="1" />
+                </form>
+            </field>
+        </record>		
+
+        <record id="view_sale_line_property_search" model="ir.ui.view">
+            <field name="name">sale.line.property.search</field>
+            <field name="model">sale.line.property</field>
+            <field name="arch" type="xml">
+                <search string="Line Property">
+                    <field name="name" />
+                    <field name="property_id" />
+                    <field name="order_id" />
+                </search>
+            </field>
+        </record>		
+
+        <record id="action_sale_line_property" model="ir.actions.act_window">
+            <field name="name">Property Lines</field>
+            <field name="res_model">sale.line.property</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain"></field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_sale_line_property_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale line property. 
+              </p><p>
+                This is the list of all delivery orders that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
             
+        <menuitem 
+            id="menu_sale_line_property"
+        	action="action_sale_line_property" 
+        	parent="base.menu_sales"
+        	sequence="7"/>
+        	
         
     </data>
 </openerp>

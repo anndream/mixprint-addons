@@ -103,6 +103,7 @@ class sale_line_property(osv.osv):
         'seq': fields.integer('Sequence'),
         'property_id': fields.many2one('sale.property', 'Property',  required=True, ondelete='cascade'),
         'sale_line_id': fields.many2one('sale.order.line', 'Order Line', ondelete='cascade'),
+        'order_id':fields.related('sale_line_id', 'order_id', string="Order", type='many2one', relation="sale.order", store=True, readonly=True), 
     }
     _sql_constraints = [
         ('name_property_unique', 'unique (name, property_id, sale_line_id)', 'Description and property must be unique !')
