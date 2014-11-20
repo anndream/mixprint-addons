@@ -678,8 +678,8 @@ class ineco_picking_cost(osv.osv):
             account_id = partner.property_account_payable.id
             payment_term = partner.property_supplier_payment_term.id or False
         invoice_vals = {
-            'name': '/',
-            'origin': cost.doc_number or False,
+            'name': cost.doc_number or False,
+            'origin': cost.picking_id.origin or False,
             'type': inv_type,
             'account_id': account_id,
             'partner_id': partner.id,
