@@ -1184,6 +1184,7 @@
             id="menu_sale_line_property"
         	action="action_sale_line_property" 
         	parent="base.menu_sales"
+        	groups="base.group_sale_manager"
         	sequence="7"/>
         	
         
