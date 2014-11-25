@@ -102,6 +102,7 @@ class mrp_production(osv.osv):
             },),
         'date_process1_start': fields.datetime('Date Collar Start'),
         'date_process1_finish': fields.datetime('Date Collar Finish'),
+        'partner_id': fields.related('sale_order_id','partner_id',type="many2one",relation="res.partner",string="Customer"),
     }
     _defaults = {
         'is_print': False,
