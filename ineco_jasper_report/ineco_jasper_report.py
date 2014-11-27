@@ -135,13 +135,16 @@ npxHqLH2SWP9D8t1jwIDAQAB
                 wsType="folder", 
                 operationName="list")
             res = JC.service.list(req)
+            res = res.encode('utf-8')
+            #for rd in ET.fromstring(res).findall('resourceDescriptor'):
             for rd in ET.fromstring(res).findall('resourceDescriptor'):
                 if rd.get('wsType') == 'reportUnit':
                     thislabel = rd.findall('label')[0]
+                    description = rd.findall('description')[0]
                     data = {
                         'name': rd.get('name'),
                         'uristring': rd.get('uriString'),
-                        'label': thislabel.text,
+                        'label': description.text or thislabel.text,
                         'server_id': line.id,
                     }
                     if not report_obj.search(cr, uid, [('name','=',rd.get('name'))]):
@@ -206,6 +209,7 @@ class ineco_jasper_report(osv.osv):
                 wsType="reportUnit", 
                 operationName="list")
             res = JC.service.list(req)
+            res = res.encode('utf-8')
             for rd in ET.fromstring(res).findall('resourceDescriptor'):
                 if rd.get('wsType') == 'inputControl':
                     thislabel = rd.findall('label')[0]
