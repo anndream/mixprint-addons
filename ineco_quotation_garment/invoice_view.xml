@@ -10,7 +10,17 @@
                 <field name="fiscal_position" position="after">
                 	<field name="garment_order_no" />
                 	<field name="garment_order_other" />
-                </field>                               
+                </field>             
+                
+                <xpath expr="//page[@string='Other Info']" position="after">
+                	<page string="Address">
+                		<group>
+                			<field name="saleorder_id" readonly="1" />
+                			<field name="partner_shipping_id" context="{'default_type':'delivery'}" attrs="{'readonly': [('state','!=','draft')]}" />
+                		</group>
+                		
+                	</page>
+                </xpath>                  
                 
             </field>
         </record>
