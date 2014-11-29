@@ -274,8 +274,8 @@ class sale_order(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}       
+        res = super(sale_order, self).write(cr, uid, ids, vals, context=context)
         if vals.get('date_sale_close', False):
-            res = super(sale_order, self).write(cr, uid, ids, vals, context=context)
             sale_obj = self.pool.get('sale.order').browse(cr, uid, ids)[0]
             if sale_obj.lead_id:
                 sale_obj.lead_id.write({'date_closed': sale_obj.date_sale_close,
