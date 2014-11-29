@@ -109,9 +109,9 @@ class sale_line_property(osv.osv):
                 'sale.line.property': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             }, readonly=True), 
     }
-    _sql_constraints = [
-        ('name_property_unique', 'unique (name, property_id, sale_line_id)', 'Description and property must be unique !')
-    ]
+    #_sql_constraints = [
+    #    ('name_property_unique', 'unique (name, property_id, sale_line_id)', 'Description and property must be unique !')
+    #]
     _order = 'name, seq'
     
 class sale_line_property_other(osv.osv):
@@ -271,6 +271,17 @@ class sale_order(osv.osv):
         'relate_garment_order_no': False,
     }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}       
+        if vals.get('date_sale_close', False):
+            res = super(sale_order, self).write(cr, uid, ids, vals, context=context)
+            sale_obj = self.pool.get('sale.order').browse(cr, uid, ids)[0]
+            if sale_obj.lead_id:
+                sale_obj.lead_id.write({'date_closed': sale_obj.date_sale_close,
+                                        'date_deadline': sale_obj.date_sale_close })
+        return res
+
     def action_regen_mo(self, cr, uid, ids, context=None):
         self.cancel_mo(cr, uid, ids, context=context)
         self.create_mo(cr, uid, ids, context=context)
@@ -281,6 +292,19 @@ class sale_order(osv.osv):
             sale_obj = self.browse(cr, uid, id)
             if sale_obj.garment_order_no:
                 self.create_mo(cr, uid, ids, context)
+            if sale_obj.lead_id:
+                if sale_obj.lead_id.state == 'cancel':
+                    sql = """
+                        update crm_lead
+                        set probability = 100, state = 'done', stage_id = 6
+                        where id = %s
+                    """ % (sale_obj.lead_id.id)
+                    cr.execute(sql)
+                else:
+                    sale_obj.lead_id.case_mark_won()
+                if sale_obj.date_sale_close:
+                    sale_obj.lead_id.write({'date_closed': sale_obj.date_sale_close,
+                                            'date_deadline': sale_obj.date_sale_close})
         super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
         return True
 
@@ -378,6 +402,9 @@ class sale_order(osv.osv):
         if context is None:
             context = {}
         sale_obj = self.browse(cr, uid, ids)[0]
+        if sale_obj.lead_id:
+            sale_obj.lead_id.case_mark_lost()
+
         production_obj = self.pool.get('mrp.production')
         production_ids = production_obj.search(cr, uid, [('origin','=',sale_obj.name)])
         for prod_id in production_ids:

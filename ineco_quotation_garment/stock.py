@@ -818,7 +818,7 @@ class ineco_stock_packing(osv.osv):
     _defaults = {
         'name': '/',
         'sequence': 1.0,
-        'date': time.strftime('%Y-%m-%d'),
+        #'date': time.strftime('%Y-%m-%d'),
         'total': 1.0,
         'state': 'draft',
     }

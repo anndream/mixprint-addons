@@ -1142,7 +1142,7 @@
             <field name="arch" type="xml">
                 <form string="Line Property">
                     <field name="name" />
-                    <field name="property_id" readonly="1" />
+                    <field name="property_id" />
                     <field name="order_id" readonly="1" />
                 </form>
             </field>
