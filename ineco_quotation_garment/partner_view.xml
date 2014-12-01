@@ -13,6 +13,7 @@
                 <field name="website" position="after">
                 	<field name="review" />
                 	<field name="is_user" groups="base.group_erp_manager" />
+                	<field name="total_employee" />
                 </field>
                 <field name="email" position="after">
                 	<field name="grade_by_volumne" groups="base.group_sale_grade"/>

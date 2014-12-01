@@ -49,9 +49,11 @@ class res_partner(osv.osv):
             ),
         'grade_by_price': fields.selection([('a','A'),('b','B'),('c','C'),('d','D')], 'Grade by Price'
             ),
-        'is_user': fields.boolean('Is User')
+        'is_user': fields.boolean('Is User'),
+        'total_employee': fields.integer('Employee Totals'),
     }
     
     _defaults = {
-        'is_user': False
+        'is_user': False,
+        'total_employee': 0.0,
     }
