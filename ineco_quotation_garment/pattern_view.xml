@@ -269,6 +269,8 @@
 													<field name="pattern_id" />
 												</group>
 												<group>
+													<button name="button_master_pattern" string="Find Master Pattern" 
+														type="object" icon="gtk-find" attrs="{'invisible': [('garment_order_no_org', '=', False)]}"  />
 													<button name="button_pattern_copy" string="Copy Pattern" type="object" icon="gtk-find"/>
 												</group>
 												<newline />

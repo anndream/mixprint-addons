@@ -284,7 +284,21 @@ class ineco_pattern(osv.osv):
         res = super(ineco_pattern, self).copy(cr, uid, id, default, context)
 
         return res
-
+    
+    def button_master_pattern(self, cr, uid, ids, context=None):
+        pattern_obj = self.pool.get('ineco.pattern')
+        pattern_id = False
+        for id in ids:
+            data = self.browse(cr, uid, id)
+            if data.garment_order_no_org:
+                pattern_ids = pattern_obj.search(cr, uid, [('garment_order_no','=',data.garment_order_no_org)])
+                #print data.garment_order_no_org, pattern_ids
+                if pattern_ids:
+                    if pattern_ids[0] != id:
+                        pattern_id = pattern_ids[0]
+                        data.write({'pattern_id': pattern_id})
+        return True
+        
     def button_pattern_copy(self, cr, uid, ids, context=None):
         for id in ids:
             data = self.browse(cr, uid, id, context=context)
