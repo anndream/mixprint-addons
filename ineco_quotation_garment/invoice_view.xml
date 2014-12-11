@@ -111,6 +111,9 @@
                 <filter name="unpaid" position="after">
                 	<filter name="depnomo" icon="terp-go-today" string="Deposit no Garment Order" domain="[('garment_order_no','=',False),('journal_id','in',[10,2]),('state','=','open')]" />					
                 </filter>
+                <filter string="Status" position="after">
+                	<filter name="search_garment_order_no" icon="terp-go-today" string="Garment Order" domain="[]" context="{'group_by':'garment_order_no'}" />					
+                </filter>
             </field>
         </record>       
       

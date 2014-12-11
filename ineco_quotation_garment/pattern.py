@@ -172,7 +172,7 @@ class ineco_pattern(osv.osv):
     _columns = {
         'name': fields.char('Code', size=64, required=True, track_visibility='onchange'),
         'product_id': fields.many2one('product.product','Product',required=True),
-        'saleorder_id': fields.many2one('sale.order','Sale Order'),
+        'saleorder_id': fields.many2one('sale.order','Sale Order', track_visibility='onchange'),
         'garment_order_no': fields.related('saleorder_id', 'garment_order_no', type='char', string='Garment Order No', readonly=True),
         'sampling_order_no': fields.related('saleorder_id', 'sample_order_no', type='char', string='Sampling Order No', readonly=True),
         'partner_id': fields.related('saleorder_id', 'partner_id', type='many2one', relation='res.partner', string='Customer', readonly=True),
@@ -208,7 +208,7 @@ class ineco_pattern(osv.osv):
                  "Use this field anywhere a small image is required."),
         #new requirement (sampling date suit)
         'date_expected': fields.datetime('Date Expected'),
-        'employee_id': fields.many2one('hr.employee', 'Employee'),
+        'employee_id': fields.many2one('hr.employee', 'Employee', track_visibility='onchange'),
         'sampling_date_start': fields.datetime('Date Start'),
         'sampling_date_start_planned': fields.datetime('Planned Start'),
         'sampling_date_finish_planned': fields.datetime('Planned Finish'),
