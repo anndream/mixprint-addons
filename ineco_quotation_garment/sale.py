@@ -185,6 +185,25 @@ class sale_order_line(osv.osv):
 #         return super(sale_order_line, self).create(cr, uid, vals, context)
     
 class sale_order(osv.osv):
+
+    def _get_original_mo(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'garment_order_no_org': False
+            }
+            sql = """
+                    select
+                      garment_order_no
+                    from sale_order
+                    where 
+                      name = '%s'
+            """ % obj.origin
+            cr.execute(sql)             
+            data = cr.fetchone()
+            if data and data[0]:
+                result[obj.id]['garment_order_no_org'] = data[0] or ''
+        return result
     
     def _get_pattern(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -263,6 +282,7 @@ class sale_order(osv.osv):
                                                type="datetime", multi="_get_pattern"),
         'pattern_ids': fields.one2many('ineco.pattern','saleorder_id','Patterns'),
         'manager_user_id': fields.many2one('hr.employee','Approval',),
+        'garment_order_no_org': fields.function(_get_original_mo, string="Master MO", type="char", multi="_mo"),
     }
     _defaults = {
         'cancel_sample_order': False,
