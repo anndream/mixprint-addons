@@ -87,9 +87,13 @@ class ineco_pattern(osv.osv):
         @return: Ids of locations
         """
         pattern = self.pool.get('ineco.pattern').search(cr, uid, [])
-        sql = """select res_id, count(*) from ir_attachment 
+        sql = """select res_id, 1 from ir_attachment 
                  where res_model = 'ineco.pattern' and res_id IN %s 
-                 group by res_id """ % str(tuple(pattern),)
+                 group by res_id 
+                 union
+                 select id, 1 from ineco_pattern
+                 where pattern_id is not null 
+                 """ % str(tuple(pattern),)
         cr.execute(sql)
         res = cr.fetchall()
         ids = [('id', 'not in', map(lambda x: x[0], res))]
@@ -99,12 +103,14 @@ class ineco_pattern(osv.osv):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = {
-                'product_name': False
+                'product_name': False,
+                'sale_product_id': False,
             }
             if obj.saleorder_id:
                 sql = """
                     select 
-                      pt.name
+                      pt.name,
+                      pp.id
                     from sale_order so
                     join sale_order_line sol on so.id = sol.order_id
                     join product_product pp on sol.product_id = pp.id
@@ -116,6 +122,7 @@ class ineco_pattern(osv.osv):
                 data = cr.fetchone()
                 if data and data[0]:
                     result[obj.id]['product_name'] = data[0] or ''
+                    result[obj.id]['sale_product_id'] = data[1] or False
         return result
 
     def _get_original_mo(self, cr, uid, ids, name, args, context=None):
@@ -236,6 +243,10 @@ class ineco_pattern(osv.osv):
             },),
         'user_id': fields.related('saleorder_id', 'user_id', type='many2one', relation="res.users", string='Sale', readonly=True),
         'product_name': fields.function(_get_product, string="Product", type="char", multi="_product"),
+        'sale_product_id': fields.function(_get_product, string="Product", type="many2one", relation="product.product", multi="_product",
+            store = {
+                'ineco.pattern': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            }),
         'garment_order_no_org': fields.function(_get_original_mo, string="Master MO", type="char", multi="_mo"),
         'is_cancel': fields.boolean('Is Cancel'),
         'pattern_id': fields.many2one('ineco.pattern','Source Pattern'),
