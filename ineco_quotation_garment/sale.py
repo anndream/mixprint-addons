@@ -356,7 +356,7 @@ class sale_order(osv.osv):
             sale_obj = self.browse(cr, uid, [id])[0]
             data_ids = pattern.search(cr, uid, [('saleorder_id','=',sale_obj.id)])
             if not data_ids:
-                other_ids = pattern.search(cr, uid, [('name','=',sale_obj.garment_order_no or sale_obj.sample_order_no)])
+                other_ids = pattern.search(cr, uid, [('name','=',sale_obj.sample_order_no or sale_obj.garment_order_no)])
                 if not other_ids:
                     new_pattern_data = {
                         'name': sale_obj.garment_order_no or sale_obj.sample_order_no ,
@@ -368,6 +368,7 @@ class sale_order(osv.osv):
                     new_pattern_id = pattern.create(cr, uid, new_pattern_data)
             else:
                 pattern.write(cr, uid, data_ids, {'date_finish': False, 
+                                                  'name': sale_obj.garment_order_no or sale_obj.sample_order_no,
                                                   'date_start_planned': False,
                                                   'date_finish_planned': False,
                                                   'is_cancel': False,
