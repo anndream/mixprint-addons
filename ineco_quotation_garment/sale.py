@@ -355,8 +355,8 @@ class sale_order(osv.osv):
         for id in ids:
             sale_obj = self.browse(cr, uid, [id])[0]
             data_ids = pattern.search(cr, uid, [('saleorder_id','=',sale_obj.id)])
+            other_ids = pattern.search(cr, uid, [('name','=',sale_obj.sample_order_no or sale_obj.garment_order_no)])
             if not data_ids:
-                other_ids = pattern.search(cr, uid, [('name','=',sale_obj.sample_order_no or sale_obj.garment_order_no)])
                 if not other_ids:
                     new_pattern_data = {
                         'name': sale_obj.garment_order_no or sale_obj.sample_order_no ,
@@ -367,14 +367,23 @@ class sale_order(osv.osv):
                     }
                     new_pattern_id = pattern.create(cr, uid, new_pattern_data)
             else:
-                pattern.write(cr, uid, data_ids, {'date_finish': False, 
-                                                  'name': sale_obj.garment_order_no or sale_obj.sample_order_no,
-                                                  'date_start_planned': False,
-                                                  'date_finish_planned': False,
-                                                  'is_cancel': False,
-                                                  'state': 'draft',
-                                                  'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
-                                                  'date_expected': sale_obj.date_delivery}) #sale_obj.date_delivery})
+                if other_ids:
+                    pattern.write(cr, uid, data_ids, {'date_finish': False, 
+                                                      'name': sale_obj.garment_order_no or sale_obj.sample_order_no,
+                                                      'date_start_planned': False,
+                                                      'date_finish_planned': False,
+                                                      'is_cancel': False,
+                                                      'state': 'draft',
+                                                      'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
+                                                      'date_expected': sale_obj.date_delivery}) #sale_obj.date_delivery})
+                else:
+                    pattern.write(cr, uid, data_ids, {'date_finish': False, 
+                                                      'date_start_planned': False,
+                                                      'date_finish_planned': False,
+                                                      'is_cancel': False,
+                                                      'state': 'draft',
+                                                      'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
+                                                      'date_expected': sale_obj.date_delivery}) #sale_obj.date_delivery})
         return True
             
     def create_mo(self, cr, uid, ids, context=None):
