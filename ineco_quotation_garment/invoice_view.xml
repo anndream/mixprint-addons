@@ -10,7 +10,11 @@
                 <field name="fiscal_position" position="after">
                 	<field name="garment_order_no" />
                 	<field name="garment_order_other" />
-                </field>             
+                </field>   
+                
+                <field name="internal_number" position="after">
+                	<field name="other_invoice_no" />
+                </field>          
                 
                 <xpath expr="//page[@string='Other Info']" position="after">
                 	<page string="Address">

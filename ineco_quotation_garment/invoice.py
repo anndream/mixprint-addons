@@ -98,7 +98,8 @@ class account_invoice(osv.osv):
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             },
         ),
-        'partner_shipping_id': fields.related('saleorder_id','partner_shipping_id',string='Delivery Address', type="many2one", relation="res.partner",)
+        'partner_shipping_id': fields.related('saleorder_id','partner_shipping_id',string='Delivery Address', type="many2one", relation="res.partner",),
+        'other_invoice_no': fields.char('Other Invoice No', size=64)
     }
 
 class account_voucher(osv.osv):

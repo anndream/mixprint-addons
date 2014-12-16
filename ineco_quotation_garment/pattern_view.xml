@@ -420,7 +420,7 @@
                     <field name="sampling_date_process1_finish" string="Cut Finish" />
                     <filter name="todo" icon="terp-dolar_ok!" string="To Do" domain="[('state','=','draft'),
                     	('date_finish_planned','=',False),('is_cancel','=',False),
-                    	('sale_product_id','not in', [647,648,615,2190,603,604,2296,2239,2297,2425,2286,2287,2461,2283,2282,2285,2291,2289,2288])]" />  
+                    	('sale_product_id','not in', [647,648,615,2190,603,604,2425,2286,2287,2461,2283,2282,2285,2291,2289,2288])]" />  
                     <filter name="cancel" icon="terp-dolar_ok!" string="Cancel" domain="[('is_cancel','=',True)]" />         
                     <filter icon="terp-check" name="attachment_count" string="No Attachment" domain="[('attachment_count', '=', False)]"/>
                   	<group expand="0" string="Group By...">
