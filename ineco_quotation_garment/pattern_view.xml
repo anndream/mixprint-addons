@@ -359,6 +359,23 @@
                     						</group>
                     					</group>
                     				</page>
+                    				<page string="Productions">
+                    					<button name="button_component" type="object" string="Calculate" />
+                    					<field name="production_ids" >
+                    						<tree string="Production" editable="top">
+                    							<field name="name" readonly="1" />
+                    							<field name="gender_id" readonly="1"/>
+                    							<field name="color_id" readonly="1"/>
+                    							<field name="size_id" readonly="1"/>
+                    							<field name="note" readonly="1"/>
+												<field name="product_qty" string="Quantity" readonly="1" />
+												<field name="ticket_ids" />
+                    							<field name="machine_id" />
+                    							<field name="worker" />
+												<field name="state" readonly="1" invisible="1"/>
+                    						</tree>
+                    					</field>
+                    				</page>
                 				</notebook>              				
                 		</group>
                 	</sheet>

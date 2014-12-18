@@ -172,6 +172,18 @@ class ineco_pattern(osv.osv):
                 if data and data[0]:
                     result[obj.id]['order_qty'] = data[0] or 0.0
         return result
+
+    def _get_production_lines(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for pattern in self.browse(cr, uid, ids, context=context):
+            res[pattern.id] = []
+            if not pattern.saleorder_id:
+                continue
+            sale_order_id = pattern.saleorder_id.id
+            result_ids = self.pool.get('mrp.production').search(cr, uid, [('sale_order_id','=',sale_order_id)])
+            if result_ids:
+                res[pattern.id] = sorted(result_ids)
+        return res
         
     _name = 'ineco.pattern'
     _inherit = ['mail.thread']
@@ -255,6 +267,7 @@ class ineco_pattern(osv.osv):
         'note': fields.text('Note'),
         'remark2': fields.char('Remark 2', size=32),
         'attachment_count': fields.function(_get_attachment, fnct_search=_get_attachment_search, string="Attachment", type='integer', multi="_attachment"),
+        'production_ids': fields.function(_get_production_lines, type='many2many', relation='mrp.production', string='Productions'),                
     }
     
     _sql_constraints = [
@@ -272,6 +285,14 @@ class ineco_pattern(osv.osv):
     }
     
     _order = 'date_start'
+
+    def button_component(self, cr, uid, ids, context=None):
+        for id in ids:
+            pattern = self.browse(cr, uid, id)
+            for production in pattern.production_ids:
+                production.write({'pattern_id':pattern.id})
+                production.button_component()
+        return True
 
     def schedule_refresh(self, cr, uid, context={}):
         #print 'Refresh Partner Start'

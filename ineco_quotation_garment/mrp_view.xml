@@ -32,6 +32,7 @@
                 	<field name="comment" />
                 	<field name="bill_no" />
                 	<field name="bill_type" />
+                	<field name="machine_id" required="1" />
                 	<field name="worker" />
                 	<field name="bill_weight" />
                 </field>
@@ -40,6 +41,7 @@
              			<group>
              				<group>
 		                		<field name="pattern_id" required="1" />
+		                		<field name="ticket_size" />
 		                	</group>
 		                	<group>
 		                		<button name="button_component" string="Get Component" type="object" />
@@ -53,6 +55,14 @@
              					<field name="process2" string="Screen" />
              				</tree>
              			</field>
+                	</page>
+                	<page string="Tickets">
+                		<field name="ticket_ids" readonly="1">
+                			<tree string="Ticket">
+                				<field name="name" />
+                				<field name="quantity" />
+                			</tree>
+                		</field>
                 	</page>
                 </xpath>
             </field>
@@ -173,6 +183,67 @@
 	        	</filter>
 			</field>
 		</record>
+		
+		<!-- INECO MACHINE -->
+
+		<record model="ir.ui.view" id="ineco_mrp_machine_form">
+			<field name="name">ineco.mrp.machine.form</field>
+			<field name="model">ineco.mrp.machine</field>
+			<field name="arch" type="xml">
+				<form string="Machine" version="7.0">
+					<header></header>
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="active" />
+							</group>
+							<group>
+								<field name="code" />
+								<field name="workcenter_id" />
+							</group>
+						</group>
+					</sheet>
+					<footer></footer>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="ineco_mrp_machine_tree">
+			<field name="name">ineco.mrp.machine.tree</field>
+			<field name="model">ineco.mrp.machine</field>
+			<field name="arch" type="xml">
+				<tree string="Machine" editable="top">
+					<field name="name" />
+					<field name="code" />
+					<field name="workcenter_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="ineco_mrp_machine_search">
+			<field name="name">ineco.mrp.machine.search</field>
+			<field name="model">ineco.mrp.machine</field>
+			<field name="arch" type="xml">
+				<search string="Machine">
+					<field name="name" />
+					<field name="code" />
+					<field name="workcenter_id" />
+				</search>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="ineco_mrp_machine_action">
+			<field name="name">Machine</field>
+			<field name="res_model">ineco.mrp.machine</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem name="Machine" 
+			parent="mrp.menu_mrp_configuration"
+			id="menu_ineco_mrp_machine" 
+			sequence="60" 
+			action="ineco_mrp_machine_action" />
 	
 				    
     </data>

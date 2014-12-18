@@ -103,10 +103,14 @@ class mrp_production(osv.osv):
         'date_process1_start': fields.datetime('Date Collar Start'),
         'date_process1_finish': fields.datetime('Date Collar Finish'),
         'partner_id': fields.related('sale_order_id','partner_id',type="many2one",relation="res.partner",string="Customer"),
+        'ticket_ids': fields.one2many('ineco.mrp.production.ticket','production_id','Tickets'),
+        'ticket_size': fields.integer('Ticket Size'),
+        'machine_id': fields.many2one('ineco.mrp.machine', 'Machine'),
     }
     _defaults = {
         'is_print': False,
         'is_planning': False,
+        'ticket_size': 100,
     }
 
     def button_done_draft(self, cr, uid, ids, *args):
@@ -131,6 +135,8 @@ class mrp_production(osv.osv):
             if production and production.pattern_id:
                 sql = "delete from ineco_mrp_pattern_component where production_id = %s" % production.id
                 cr.execute(sql)
+                sql = "delete from ineco_mrp_production_ticket where production_id = %s" % production.id
+                cr.execute(sql)
                 for component in production.pattern_id.component_ids:
                     new_data = {
                         'seq': component.seq,
@@ -138,6 +144,24 @@ class mrp_production(osv.osv):
                         'production_id': production.id,
                     }
                     self.pool.get('ineco.mrp.pattern.component').create(cr, uid, new_data)
+                full_ticket = 0
+                ticket_obj = self.pool.get('ineco.mrp.production.ticket')
+                while full_ticket <  production.product_qty // production.ticket_size:
+                    ticket_new = {
+                        'name': production.name + ('-T%s' % (full_ticket+1)),
+                        'production_id': production.id,
+                        'quantity': production.ticket_size,
+                    }
+                    ticket_obj.create(cr, uid, ticket_new)
+                    full_ticket += 1
+                if production.product_qty % production.ticket_size > 0:
+                    ticket_new = {
+                        'name': production.name + ('-T%s' % (full_ticket+1)),
+                        'quantity': production.product_qty,
+                        'production_id': production.id,
+                    }
+                    ticket_obj.create(cr, uid, ticket_new)
+                
         return True
 
     def action_compute(self, cr, uid, ids, properties=None, context=None):
@@ -293,5 +317,37 @@ class mrp_bom(osv.osv):
                 result = result + res[0]
                 result2 = result2 + res[1]
         return result, result2
+    
+    
+class ineco_mrp_production_ticket(osv.osv):
+    _name = 'ineco.mrp.production.ticket'
+    _description = 'Production Tickets'
+    _columns = {
+        'name': fields.char('Code', size=64),
+        'quantity': fields.integer('Quantity'),
+        'production_id': fields.many2one('mrp.production','Production'),
+    }
+    
+class ineco_mrp_machine(osv.osv):
+    _name = 'ineco.mrp.machine'
+    _description = 'Machine'
+    _columns = {
+        'name': fields.char('Name', size=128, required=True),
+        'code': fields.char('Code', size=32),
+        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
+        'active': fields.boolean('Active'),
+    }
+    
+    _defaults = {
+        'active': True,
+    }
+    
+    _sql_constraints = [
+        ('name_unique',
+         'unique (name)',
+         'Machine name must be unique.')
+    ]
+    
+    
     
     
