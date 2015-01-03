@@ -150,6 +150,7 @@ class mrp_production(osv.osv):
                     ticket_new = {
                         'name': production.name + ('-T%s' % (full_ticket+1)),
                         'production_id': production.id,
+                        'pattern_id': production.pattern_id.id,
                         'quantity': production.ticket_size,
                     }
                     ticket_obj.create(cr, uid, ticket_new)
@@ -158,6 +159,7 @@ class mrp_production(osv.osv):
                     ticket_new = {
                         'name': production.name + ('-T%s' % (full_ticket+1)),
                         'quantity': production.product_qty,
+                        'pattern_id': production.pattern_id.id,
                         'production_id': production.id,
                     }
                     ticket_obj.create(cr, uid, ticket_new)
@@ -326,6 +328,8 @@ class ineco_mrp_production_ticket(osv.osv):
         'name': fields.char('Code', size=64),
         'quantity': fields.integer('Quantity'),
         'production_id': fields.many2one('mrp.production','Production'),
+        'pattern_id': fields.many2one('ineco.pattern','Pattern'),
+        'machine_id': fields.many2one('ineco.mrp.machine','Machine'),
     }
     
 class ineco_mrp_machine(osv.osv):

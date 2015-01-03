@@ -184,6 +184,20 @@ class ineco_pattern(osv.osv):
             if result_ids:
                 res[pattern.id] = sorted(result_ids)
         return res
+
+    def _get_ticket_lines(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for pattern in self.browse(cr, uid, ids, context=context):
+            res[pattern.id] = []
+            if not pattern.saleorder_id:
+                continue
+            sale_order_id = pattern.saleorder_id.id
+            production_ids = self.pool.get('mrp.production').search(cr, uid, [('sale_order_id','=',sale_order_id)])
+            if production_ids:
+                result_ids = self.pool.get('ineco.mrp.production.ticket').search(cr, uid, [('production_id','in',production_ids)])
+                if result_ids:
+                    res[pattern.id] = sorted(result_ids)
+        return res
         
     _name = 'ineco.pattern'
     _inherit = ['mail.thread']
@@ -268,6 +282,7 @@ class ineco_pattern(osv.osv):
         'remark2': fields.char('Remark 2', size=32),
         'attachment_count': fields.function(_get_attachment, fnct_search=_get_attachment_search, string="Attachment", type='integer', multi="_attachment"),
         'production_ids': fields.function(_get_production_lines, type='many2many', relation='mrp.production', string='Productions'),                
+        'ticket_ids': fields.one2many('ineco.mrp.production.ticket','pattern_id','Tickets'),                
     }
     
     _sql_constraints = [

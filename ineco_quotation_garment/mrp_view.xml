@@ -37,7 +37,7 @@
                 	<field name="comment" />
                 	<field name="bill_no" />
                 	<field name="bill_type" />
-                	<field name="machine_id" required="1" />
+                	<field name="machine_id" invisible="1"/>
                 	<field name="worker" />
                 	<field name="bill_weight" />
                 </field>
@@ -64,6 +64,7 @@
                 	<page string="Tickets">
                 		<field name="ticket_ids" readonly="1">
                 			<tree string="Ticket">
+                				<field name="machine_id" />
                 				<field name="name" />
                 				<field name="quantity" />
                 			</tree>
