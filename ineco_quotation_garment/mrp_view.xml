@@ -380,14 +380,16 @@
 			<field name="arch" type="xml">
 				<tree string="Task" editable="top">
 					<field name="employee_id" />
-					<field name="date" />
 					<field name="machine_id" />
 					<field name="period_id" />
-					<field name="production_id" />
+					<field name="ticket_barcode" on_change="onchange_ticket_barcode(ticket_barcode)" />
 					<field name="process_id" />
-					<field name="pattern_type_id" />
 					<field name="good" />
 					<field name="no_good" />
+					<field name="ticket_id" invisible="1"  />
+					<field name="date" />
+					<field name="production_id" />
+					<field name="pattern_type_id" />
 				</tree>
 			</field>
 		</record>

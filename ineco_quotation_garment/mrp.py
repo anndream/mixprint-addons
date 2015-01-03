@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-#import time
+import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -331,6 +331,20 @@ class ineco_mrp_production_ticket(osv.osv):
         'pattern_id': fields.many2one('ineco.pattern','Pattern'),
         'machine_id': fields.many2one('ineco.mrp.machine','Machine'),
     }
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            encode = name.split(':')
+            if len(encode) == 3:
+                ids = self.search(cr, user, [('id','=',encode[0])] + args, limit=limit, context=context)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
     
 class ineco_mrp_machine(osv.osv):
     _name = 'ineco.mrp.machine'
@@ -445,13 +459,45 @@ class ineco_mrp_task(osv.osv):
     _columns = {
         'name': fields.char('Description',size=64,),
         'employee_id': fields.many2one('hr.employee','Employee',required=True),
-        'date': fields.date('Task Date',required=True),
-        'period_id': fields.many2one('ineco.mrp.period','Period',required=True),
-        'machine_id': fields.many2one('ineco.mrp.machine','Machine',required=True),
-        'production_id': fields.many2one('mrp.production','Production',required=True),
+        'date': fields.date('Task Date', required=True),
+        'period_id': fields.many2one('ineco.mrp.period','Period', required=True),
+        'machine_id': fields.many2one('ineco.mrp.machine','Machine', required=True),
+        'ticket_barcode': fields.char('Ticket',size=64,require=True),
         'process_id': fields.many2one('ineco.mrp.process','Process',required=True),
+        'ticket_id': fields.many2one('ineco.mrp.production.ticket','Ticket', ),
+        'production_id': fields.many2one('mrp.production','Production'),
         'pattern_type_id': fields.many2one('ineco.pattern.type','Pattern Type',),
         'good': fields.integer('Good'),
         'no_good': fields.integer('No Good'),
     }
+    _defaults = {
+        'date': time.strftime('%Y-%m-%d'),
+    }
+
+    def create(self, cr, uid, data, context=None):
+        data['date'] = time.strftime('%Y-%m-%d')
+        result = super(ineco_mrp_task, self).create(cr, uid, data, context=context)
+        #self.post_write(cr, uid, [result], context=context)
+        return result
+
+    def onchange_ticket_id(self, cr, uid, ids, ticket_id=False, context=None):
+        res = {}
+        if ticket_id:
+            ticket = self.pool.get('ineco.mrp.production.ticket').browse(cr, uid, ticket_id)
+            
+            res['value'] = {'production_id': ticket.production_id.id,
+                            'pattern_type_id': False}
+        return res
+
+    def onchange_ticket_barcode(self, cr, uid, ids, ticket=False, context=None):
+        res = {}
+        if ticket:
+            encode = ticket.split(':')
+            if len(encode) == 3:
+                ticket = self.pool.get('ineco.mrp.production.ticket').browse(cr, uid, int(encode[0]))
+                pattern_type = self.pool.get('ineco.pattern.type').browse(cr, uid, int(encode[2]))
+                res['value'] = {'production_id': ticket.production_id.id,
+                                'ticket_id': ticket.id,
+                                'pattern_type_id': pattern_type.id}
+        return res
     
