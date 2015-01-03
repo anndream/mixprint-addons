@@ -347,6 +347,19 @@ class ineco_mrp_machine(osv.osv):
          'unique (name)',
          'Machine name must be unique.')
     ]
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('code','=',name)] + args, limit=limit, context=context)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
+
     
 class ineco_mrp_process_group(osv.osv):
     _name = 'ineco.mrp.process.group'
@@ -364,6 +377,7 @@ class ineco_mrp_process(osv.osv):
     _name = 'ineco.mrp.process'
     _description = "MRP Process"
     _columns = {
+        'code': fields.char('Barcode', size=32, required=True),
         'name': fields.char('Process Name', size=64, required=True),
         'process_group_id': fields.many2one('ineco.mrp.process.group','Group',),
         'cost': fields.float('Costing', digits=(12,2),required=True)
@@ -376,6 +390,19 @@ class ineco_mrp_process(osv.osv):
          'unique (name)',
          'Process Name must be unique.')
     ]
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('code','=',name)] + args, limit=limit, context=context)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
+    
     
 class ineco_mrp_period(osv.osv):
     _name = 'ineco.mrp.period'
@@ -386,6 +413,7 @@ class ineco_mrp_period(osv.osv):
         'time_start': fields.datetime('Start Time', required=True),
         'time_stop': fields.datetime('Stop Time', required=True),
         #'hours': fields.float('Hours', required=True),
+        'code': fields.char('Barcode',size=32,required=True),
         'active': fields.boolean('Active'),
     }
     _defaults = {
@@ -393,6 +421,18 @@ class ineco_mrp_period(osv.osv):
         #'hours': 1.0,
         'seq': 1,
     }
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('code','=',name)] + args, limit=limit, context=context)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
     
 class ineco_mrp_task(osv.osv):
     _name = 'ineco.mrp.task'

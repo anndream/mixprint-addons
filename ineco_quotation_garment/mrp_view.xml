@@ -291,6 +291,7 @@
 			<field name="model">ineco.mrp.process</field>
 			<field name="arch" type="xml">
 				<tree string="Process Group" editable="top">
+					<field name="code" />
 					<field name="name" />
 					<field name="process_group_id" />
 					<field name="cost" />
@@ -303,6 +304,7 @@
 			<field name="model">ineco.mrp.process</field>
 			<field name="arch" type="xml">
 				<search string="Process Group">
+					<field name="code" />
 					<field name="name" />
 					<field name="process_group_id" />
 					<field name="cost" />
@@ -333,6 +335,7 @@
 			<field name="arch" type="xml">
 				<tree string="Period" editable="top">
 					<field name="seq" />
+					<field name="code" />
 					<field name="name" />
 					<field name="time_start" widget="float_time"/>
 					<field name="time_stop" widget="float_time"/>
@@ -347,6 +350,7 @@
 			<field name="arch" type="xml">
 				<search string="Period">
 					<field name="seq" />
+					<field name="code" />
 					<field name="name" />
 					<field name="time_start" />
 					<field name="time_stop" />

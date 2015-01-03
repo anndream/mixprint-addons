@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012 - INECO PARTNERSHIP LIMITE (<http://www.ineco.co.th>).
+#    Copyright (C) 2004-2010 INECO Ltd.,Part. (<http://www.ineco.co.th>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,21 +19,24 @@
 #
 ##############################################################################
 
-import sale
-import res_users
-import stock
-import stock_partial_picking
-import partner
-import problem
-import invoice
-import product
-import dashboard_invoice
-import pattern
-import mrp
-import crm
-import dashboard
-import wizard
-import purchase
-import employee
+from openerp import addons
+import logging
+from openerp.osv import fields, osv
+from openerp import tools
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class hr_employee(osv.osv):
+    
+    _inherit = 'hr.employee'
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('otherid','=',name)] + args, limit=limit, context=context)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
+    
