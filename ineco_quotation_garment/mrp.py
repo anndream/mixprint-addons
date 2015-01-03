@@ -348,6 +348,65 @@ class ineco_mrp_machine(osv.osv):
          'Machine name must be unique.')
     ]
     
+class ineco_mrp_process_group(osv.osv):
+    _name = 'ineco.mrp.process.group'
+    _description = "Process Group"
+    _columns = {
+        'name': fields.char('Process Group Name', size=64, required=True),
+    }
+    _sql_constraints = [
+        ('name_unique',
+         'unique (name)',
+         'Process Group Name must be unique.')
+    ]
     
+class ineco_mrp_process(osv.osv):
+    _name = 'ineco.mrp.process'
+    _description = "MRP Process"
+    _columns = {
+        'name': fields.char('Process Name', size=64, required=True),
+        'process_group_id': fields.many2one('ineco.mrp.process.group','Group',),
+        'cost': fields.float('Costing', digits=(12,2),required=True)
+    }
+    _defaults = {
+        'cost': 1.0,
+    }
+    _sql_constraints = [
+        ('name_unique',
+         'unique (name)',
+         'Process Name must be unique.')
+    ]
     
+class ineco_mrp_period(osv.osv):
+    _name = 'ineco.mrp.period'
+    _descrition = "MRP Period"
+    _columns = {
+        'name': fields.char('Period Name', size=32, required=True),
+        'seq': fields.integer('Sequence', required=True),
+        'time_start': fields.datetime('Start Time', required=True),
+        'time_stop': fields.datetime('Stop Time', required=True),
+        #'hours': fields.float('Hours', required=True),
+        'active': fields.boolean('Active'),
+    }
+    _defaults = {
+        'active': True,
+        #'hours': 1.0,
+        'seq': 1,
+    }
+    
+class ineco_mrp_task(osv.osv):
+    _name = 'ineco.mrp.task'
+    _description = "MRP Task"
+    _columns = {
+        'name': fields.char('Description',size=64,),
+        'employee_id': fields.many2one('hr.employee','Employee',required=True),
+        'date': fields.date('Task Date',required=True),
+        'period_id': fields.many2one('ineco.mrp.period','Period',required=True),
+        'machine_id': fields.many2one('ineco.mrp.machine','Machine',required=True),
+        'production_id': fields.many2one('mrp.production','Production',required=True),
+        'process_id': fields.many2one('ineco.mrp.process','Process',required=True),
+        'pattern_type_id': fields.many2one('ineco.pattern.type','Pattern Type',),
+        'good': fields.integer('Good'),
+        'no_good': fields.integer('No Good'),
+    }
     

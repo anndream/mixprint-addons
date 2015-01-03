@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+    
+        <menuitem name="Task"
+            id="menu_mrp_task_menu"
+            parent="base.menu_mrp_root"
+            sequence="30"/>    
 
         <record id="view_mixprint_mrp_production_form" model="ir.ui.view">
             <field name="name">mixprint.mrp.production.form</field>
@@ -240,10 +245,177 @@
 		</record>
 
 		<menuitem name="Machine" 
-			parent="mrp.menu_mrp_configuration"
+			parent="menu_mrp_task_menu"
 			id="menu_ineco_mrp_machine" 
 			sequence="60" 
 			action="ineco_mrp_machine_action" />
+
+		<!-- INECO PROCESS GROUP -->
+
+		<record model="ir.ui.view" id="ineco_mrp_process_group_tree">
+			<field name="name">ineco.mrp.process.group.tree</field>
+			<field name="model">ineco.mrp.process.group</field>
+			<field name="arch" type="xml">
+				<tree string="Process Group" editable="top">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="ineco_mrp_process_group_search">
+			<field name="name">ineco.mrp.process.group.search</field>
+			<field name="model">ineco.mrp.process.group</field>
+			<field name="arch" type="xml">
+				<search string="Process Group">
+					<field name="name" />
+				</search>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="ineco_mrp_process_group_action">
+			<field name="name">Process Group</field>
+			<field name="res_model">ineco.mrp.process.group</field>
+			<field name="view_mode">tree</field>
+		</record>
+
+		<menuitem name="Process Group" 
+			parent="menu_mrp_task_menu"
+			id="menu_ineco_mrp_process_group" 
+			sequence="70" 
+			action="ineco_mrp_process_group_action" />
+
+		<!-- INECO PROCESS -->
+
+		<record model="ir.ui.view" id="ineco_mrp_process_tree">
+			<field name="name">ineco.mrp.process.tree</field>
+			<field name="model">ineco.mrp.process</field>
+			<field name="arch" type="xml">
+				<tree string="Process Group" editable="top">
+					<field name="name" />
+					<field name="process_group_id" />
+					<field name="cost" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="ineco_mrp_process_search">
+			<field name="name">ineco.mrp.process.search</field>
+			<field name="model">ineco.mrp.process</field>
+			<field name="arch" type="xml">
+				<search string="Process Group">
+					<field name="name" />
+					<field name="process_group_id" />
+					<field name="cost" />
+                  	<group expand="0" string="Group By...">
+                        <filter name="by_process_group_id" string="Process Group" icon="terp-partner" domain="[]" context="{'group_by':'process_group_id'}"/>
+                    </group>
+				</search>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="ineco_mrp_process_action">
+			<field name="name">Process</field>
+			<field name="res_model">ineco.mrp.process</field>
+			<field name="view_mode">tree</field>
+		</record>
+
+		<menuitem name="Process" 
+			parent="menu_mrp_task_menu"
+			id="menu_ineco_mrp_process" 
+			sequence="80" 
+			action="ineco_mrp_process_action" />
+
+		<!-- INECO PERIOD -->
+
+		<record model="ir.ui.view" id="ineco_mrp_period_tree">
+			<field name="name">ineco.mrp.period.tree</field>
+			<field name="model">ineco.mrp.period</field>
+			<field name="arch" type="xml">
+				<tree string="Period" editable="top">
+					<field name="seq" />
+					<field name="name" />
+					<field name="time_start" widget="float_time"/>
+					<field name="time_stop" widget="float_time"/>
+					<field name="active" invisible="1" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="ineco_mrp_period_search">
+			<field name="name">ineco.mrp.period.search</field>
+			<field name="model">ineco.mrp.period</field>
+			<field name="arch" type="xml">
+				<search string="Period">
+					<field name="seq" />
+					<field name="name" />
+					<field name="time_start" />
+					<field name="time_stop" />
+					<field name="active" />
+				</search>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="ineco_mrp_period_action">
+			<field name="name">Period</field>
+			<field name="res_model">ineco.mrp.period</field>
+			<field name="view_mode">tree</field>
+		</record>
+
+		<menuitem name="Period" 
+			parent="menu_mrp_task_menu"
+			id="menu_ineco_mrp_period" 
+			sequence="90" 
+			action="ineco_mrp_period_action" />
+
+		<!-- INECO TASK -->
+
+		<record model="ir.ui.view" id="ineco_mrp_task_tree">
+			<field name="name">ineco.mrp.task.tree</field>
+			<field name="model">ineco.mrp.task</field>
+			<field name="arch" type="xml">
+				<tree string="Task" editable="top">
+					<field name="employee_id" />
+					<field name="date" />
+					<field name="machine_id" />
+					<field name="period_id" />
+					<field name="production_id" />
+					<field name="process_id" />
+					<field name="pattern_type_id" />
+					<field name="good" />
+					<field name="no_good" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="ineco_mrp_task_search">
+			<field name="name">ineco.mrp.task.search</field>
+			<field name="model">ineco.mrp.task</field>
+			<field name="arch" type="xml">
+				<search string="Task">
+					<field name="employee_id" />
+					<field name="date" />
+					<field name="machine_id" />
+					<field name="period_id" />
+					<field name="production_id" />
+					<field name="process_id" />
+					<field name="pattern_type_id" />
+					<field name="good" />
+					<field name="no_good" />
+				</search>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="ineco_mrp_task_action">
+			<field name="name">Task</field>
+			<field name="res_model">ineco.mrp.task</field>
+			<field name="view_mode">tree</field>
+		</record>
+
+		<menuitem name="Task" 
+			parent="menu_mrp_task_menu"
+			id="menu_ineco_mrp_task" 
+			sequence="100" 
+			action="ineco_mrp_task_action" />
 	
 				    
     </data>
