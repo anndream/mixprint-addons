@@ -410,8 +410,8 @@ class ineco_mrp_period(osv.osv):
     _columns = {
         'name': fields.char('Period Name', size=32, required=True),
         'seq': fields.integer('Sequence', required=True),
-        'time_start': fields.datetime('Start Time', required=True),
-        'time_stop': fields.datetime('Stop Time', required=True),
+        'time_start': fields.float('Start Time', required=True),
+        'time_stop': fields.float('Stop Time', required=True),
         #'hours': fields.float('Hours', required=True),
         'code': fields.char('Barcode',size=32,required=True),
         'active': fields.boolean('Active'),
@@ -421,6 +421,7 @@ class ineco_mrp_period(osv.osv):
         #'hours': 1.0,
         'seq': 1,
     }
+    _order = 'seq'
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
