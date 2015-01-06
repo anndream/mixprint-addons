@@ -1261,7 +1261,7 @@ select
   ru.nickname,
   --rp.name,
   sum(january) as january,
-  sum(febuary) as february,
+  sum(febuary) as febuary,
   sum(march) as march,
   sum(april) as april,
   sum(may) as may,
