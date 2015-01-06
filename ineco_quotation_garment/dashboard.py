@@ -1277,7 +1277,7 @@ from
 select
   user_id,
   case when extract(month from garment_order_date) = 1 then sum(product_uom_qty) else 0 end as january,
-  case when extract(month from garment_order_date) = 2 then sum(product_uom_qty) else 0 end as february,
+  case when extract(month from garment_order_date) = 2 then sum(product_uom_qty) else 0 end as febuary,
   case when extract(month from garment_order_date) = 3 then sum(product_uom_qty) else 0 end as march,
   case when extract(month from garment_order_date) = 4 then sum(product_uom_qty) else 0 end as april,
   case when extract(month from garment_order_date) = 5 then sum(product_uom_qty) else 0 end as may,
