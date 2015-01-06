@@ -148,7 +148,9 @@ class mrp_production(osv.osv):
                 ticket_obj = self.pool.get('ineco.mrp.production.ticket')
                 while full_ticket <  production.product_qty // production.ticket_size:
                     ticket_new = {
-                        'name': production.name + ('-T%s' % (full_ticket+1)),
+                        'name': production.name + (production.gender_id and production.gender_id.name)+'#'+ \
+                            (production.color_id and production.color_id.name)+'#'+ \
+                            (production.size_id and production.size_id.name)+ ('-T%s' % (full_ticket+1)),
                         'production_id': production.id,
                         'pattern_id': production.pattern_id.id,
                         'quantity': production.ticket_size,
@@ -157,7 +159,9 @@ class mrp_production(osv.osv):
                     full_ticket += 1
                 if production.product_qty % production.ticket_size > 0:
                     ticket_new = {
-                        'name': production.name + ('-T%s' % (full_ticket+1)),
+                        'name': production.name + (production.gender_id and production.gender_id.name)+'#'+ \
+                            (production.color_id and production.color_id.name)+'#'+ \
+                            (production.size_id and production.size_id.name)+ ('-T%s' % (full_ticket+1)),
                         'quantity': production.product_qty,
                         'pattern_id': production.pattern_id.id,
                         'production_id': production.id,

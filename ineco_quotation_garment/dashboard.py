@@ -1248,4 +1248,98 @@ class ineco_sale_amount_dashboard(osv.osv):
                     ) b
                 ) c
         """)
-         
+
+class ineco_sale_qty_dashboard_temp(osv.osv):
+    _name = 'ineco.sale.qty.dashboard.temp'
+    _auto = False
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_qty_dashboard_temp')
+        cr.execute(""" CREATE VIEW ineco_sale_qty_dashboard_temp AS 
+select
+  raw_data.user_id,
+  ru.nickname,
+  --rp.name,
+  sum(january) as january,
+  sum(february) as february,
+  sum(march) as march,
+  sum(april) as april,
+  sum(may) as may,
+  sum(june) as june,
+  sum(july) as july,
+  sum(august) as august,
+  sum(september) as september,
+  sum(octorber) as octorber,
+  sum(november) as november,
+  sum(december) as december
+from
+(
+select
+  user_id,
+  case when extract(month from garment_order_date) = 1 then sum(product_uom_qty) else 0 end as january,
+  case when extract(month from garment_order_date) = 2 then sum(product_uom_qty) else 0 end as february,
+  case when extract(month from garment_order_date) = 3 then sum(product_uom_qty) else 0 end as march,
+  case when extract(month from garment_order_date) = 4 then sum(product_uom_qty) else 0 end as april,
+  case when extract(month from garment_order_date) = 5 then sum(product_uom_qty) else 0 end as may,
+  case when extract(month from garment_order_date) = 6 then sum(product_uom_qty) else 0 end as june,
+  case when extract(month from garment_order_date) = 7 then sum(product_uom_qty) else 0 end as july,
+  case when extract(month from garment_order_date) = 8 then sum(product_uom_qty) else 0 end as august,
+  case when extract(month from garment_order_date) = 9 then sum(product_uom_qty) else 0 end as september,
+  case when extract(month from garment_order_date) = 10 then sum(product_uom_qty) else 0 end as octorber,
+  case when extract(month from garment_order_date) = 11 then sum(product_uom_qty) else 0 end as november,
+  case when extract(month from garment_order_date) = 12 then sum(product_uom_qty) else 0 end as december
+from sale_order so
+join sale_order_line sol on sol.order_id = so.id
+join product_product pp on pp.id = sol.product_id
+join product_template pt on pt.id = pp.product_tmpl_id
+where so.state not in ('draft','cancel','cancle')
+  and extract(year from garment_order_date) = extract(year from now())
+  and pt.categ_id = 19 --POLO
+  and so.shop_id = 1   --Only Sale Order
+group by
+  user_id, garment_order_date
+order by 
+  user_id) raw_data
+left join res_users ru on raw_data.user_id = ru.id
+left join res_partner rp on ru.partner_id = rp.id
+group by
+  raw_data.user_id,
+  ru.nickname,
+  rp.name
+order by
+  ru.nickname
+        """)
+        
+class ineco_sale_qty_dashboard(osv.osv):
+    _name = 'ineco.sale.qty.dashboard'
+    _auto = False
+    _columns = {
+        'user_id': fields.many2one('res.users','Sale',readonly=True),
+        'nickname': fields.char('Nickname',readonly=True),
+        'january': fields.float('January',readonly=True),
+        'febuary': fields.float('Febuary',readonly=True),
+        'march': fields.float('March',readonly=True),
+        'april': fields.float('April',readonly=True),
+        'may': fields.float('May',readonly=True),
+        'june': fields.float('June',readonly=True),
+        'july': fields.float('July',readonly=True),
+        'august': fields.float('August',readonly=True),
+        'september': fields.float('September',readonly=True),
+        'octorber': fields.float('Octorber',readonly=True),
+        'november': fields.float('November',readonly=True),
+        'december': fields.float('December',readonly=True),
+    }
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_qty_dashboard')
+        cr.execute(""" CREATE VIEW ineco_sale_qty_dashboard AS 
+                select id, (a[id]).*
+                from (
+                    select a, generate_series(1, array_upper(a,1)) as id
+                        from (
+                            select array (
+                                select ineco_sale_qty_dashboard_temp from ineco_sale_qty_dashboard_temp
+                            ) as a
+                    ) b
+                ) c
+        """)

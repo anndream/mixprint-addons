@@ -959,6 +959,46 @@
               </p>
             </field>
         </record>
+
+		<!-- Sale Qty -->
+        <record model="ir.ui.view" id="view_ineco_sale_qty_dashboard_tree">
+            <field name="name">ineco.sale.qty.dashboard.tree</field>
+            <field name="model">ineco.sale.qty.dashboard</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Summary Qty" >
+                	<field name="user_id" invisible="1"/>
+                	<field name="nickname" />
+                	<field name="january" />
+                	<field name="febuary" />
+                	<field name="march" />
+                	<field name="april" />
+                	<field name="may" />
+                	<field name="june" />
+                	<field name="july" />
+                	<field name="august" />
+                	<field name="september" />
+                	<field name="octorber" />
+                	<field name="november" />
+                	<field name="december" />
+                </tree>
+            </field>
+        </record>        
+        
+        <record id="action_ineco_sale_qty_dashboard" model="ir.actions.act_window">
+            <field name="name">Sale Quantity Summary</field>
+            <field name="res_model">ineco.sale.qty.dashboard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ineco_sale_qty_dashboard_tree"/>     
+            <field name="domain">[]</field>    
+           <!--  <field name="context">{'default_tc':42}</field> -->
+           <!--  <field name="context">{'default_mixtect':41}</field> -->
+            <!-- <field name="limit">20</field> -->
+            <field name="help" type="html">
+            </field>
+        </record>    
+
                     
       <!-- Dashboard Columns -->
       <record model="ir.ui.view" id="board_mixprint_dashboard_form">
@@ -975,6 +1015,7 @@
                         	<action string="Sale Log" name="%(action_ineco_sale_summary5)d"/>
                         	<action string="Smart Opportunity Stages" name="%(action_ineco_sale_summary4smart)d"/>
                         	<action string="Smart Sale Log" name="%(action_ineco_sale_summary5smart)d"/>
+                        	<action string="Sale Quantity" name="%(action_ineco_sale_qty_dashboard)d"/>
                         	<action string="Stock" name="%(action_ineco_product_category_stock)d" />
                         	<action string="Stock Option" name="%(action_ineco_product_category_stock_option)d" />
                         </column>    

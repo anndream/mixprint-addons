@@ -101,6 +101,29 @@
 	        <field name="perm_create" eval="0"/>
 	        <field name="perm_unlink" eval="0"/>
 	    </record>
+
+	    <record id="secure_ineco_sale_qty_dashboard" model="ir.model.access">
+	        <field name="name">Employees</field>
+	        <field name="group_id" ref="base.group_user" />
+	        <field name="model_id" ref="model_ineco_sale_qty_dashboard" />
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_write" eval="0"/>
+	        <field name="perm_create" eval="0"/>
+	        <field name="perm_unlink" eval="0"/>
+	    </record>
+
+	    <record id="secure_ineco_mrp_production_ticket" model="ir.model.access">
+	        <field name="name">Employees</field>
+	        <field name="group_id" ref="base.group_user" />
+	        <field name="model_id" ref="model_ineco_mrp_production_ticket" />
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_write" eval="0"/>
+	        <field name="perm_create" eval="0"/>
+	        <field name="perm_unlink" eval="0"/>
+	    </record>
+	    	
+	   	
+	   	
 	    	
 	</data>
 </openerp>
