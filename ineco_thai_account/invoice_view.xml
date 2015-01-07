@@ -85,6 +85,20 @@
 	        	    		</tree>
 	        	    	</field>
 	        	    </page>
+	        	    <page string="Cheque" groups="ineco_thai_account.group_multiple_check">
+	        	    	<field name="cheque_ids" context="{'default_type':'in','default_partner_id': partner_id}" 
+	        	    		domain="[('type','=','in'),('state','=','draft'),('partner_id','=',partner_id)]" colspan="4" nolabel="1">
+			                <tree string="Banks">
+			                    <field name="name"/>
+			                    <field name="cheque_date"/>
+			                    <field name="cheque_date_reconcile" />
+			                    <field name="bank" />                    
+			                    <field name="partner_id" string="Customer" />
+			                    <field name="amount"/>     
+			                    <field name="state"/>           
+			                </tree>
+	        	    	</field>        	    
+	        	    </page>
 	        	    <page string="With Holding Tax">
 	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" 
 	        	    		   context="{'default_partner_id': partner_id or False, 'default_wht_type':'sale','default_date_doc': date }" >
@@ -102,7 +116,7 @@
 	        	    </page>
 	        	</page>
 				<field name="partner_id" position="after">
-			    	<field name="cheque_id" context="{'default_type':'in'}"  domain="[('type','=','in'),('state','=','draft')]"/>
+			    	<field name="cheque_id" context="{'default_type':'in', 'default_partner_id': partner_id }"  domain="[('type','=','in'),('state','=','draft')]"/>
 			   		<field name="move_id" />
 			   		<field name="period_tax_id" />
 			   	</field>	        	     
@@ -148,6 +162,20 @@
 	        	    			<field name="credit" />
 	        	    		</tree>
 	        	    	</field>
+	        	    </page>
+	        	    <page string="Cheque" groups="ineco_thai_account.group_multiple_check">
+	        	    	<field name="cheque_ids" context="{'default_type':'in','default_partner_id': partner_id}" 
+	        	    		domain="[('type','=','in'),('state','=','draft'),('partner_id','=',partner_id)]" colspan="4" nolabel="1">
+			                <tree string="Banks">
+			                    <field name="name"/>
+			                    <field name="cheque_date"/>
+			                    <field name="cheque_date_reconcile" />
+			                    <field name="bank" />                    
+			                    <field name="partner_id" string="Customer" />
+			                    <field name="amount"/>     
+			                    <field name="state"/>           
+			                </tree>
+	        	    	</field>        	    
 	        	    </page>
 	        	    <page string="With Holding Tax">
 	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" 
@@ -279,6 +307,20 @@
 	        	    		</tree>
 	        	    	</field>
 	        	    </page>
+	        	    <page string="Cheque" groups="ineco_thai_account.group_multiple_check">
+	        	    	<field name="cheque_ids" context="{'default_type':'out','default_partner_id': partner_id}" 
+	        	    		domain="[('type','=','out'),('state','=','draft'),('partner_id','=',partner_id)]" colspan="4" nolabel="1">
+			                <tree string="Banks">
+			                    <field name="name"/>
+			                    <field name="cheque_date"/>
+			                    <field name="cheque_date_reconcile" />
+			                    <field name="bank" />                    
+			                    <field name="partner_id" string="Customer" />
+			                    <field name="amount"/>     
+			                    <field name="state"/>           
+			                </tree>
+	        	    	</field>        	    
+	        	    </page>
 	        	    <page string="With Holding Tax">
 	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" 
 	        	    		   context="{'default_partner_id': partner_id or False, 'default_wht_type':'purchase', 'default_date_doc': date }" >
@@ -342,6 +384,20 @@
 	        	    			<field name="credit" />
 	        	    		</tree>
 	        	    	</field>
+	        	    </page>
+	        	    <page string="Cheque" groups="ineco_thai_account.group_multiple_check">
+	        	    	<field name="cheque_ids" context="{'default_type':'out','default_partner_id': partner_id}" 
+	        	    		domain="[('type','=','out'),('state','=','draft'),('partner_id','=',partner_id)]" colspan="4" nolabel="1">
+			                <tree string="Banks">
+			                    <field name="name"/>
+			                    <field name="cheque_date"/>
+			                    <field name="cheque_date_reconcile" />
+			                    <field name="bank" />                    
+			                    <field name="partner_id" string="Customer" />
+			                    <field name="amount"/>     
+			                    <field name="state"/>           
+			                </tree>
+	        	    	</field>        	    
 	        	    </page>
 	        	    <page string="With Holding Tax">
 	        	    	<field name="wht_ids" attrs="{'readonly':[('state','=','posted')]}" 

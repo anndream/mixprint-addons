@@ -9,11 +9,16 @@
 	      	<field name="arch" type="xml">
 	        	<page string="Additional Info" position="after" version="7.0">
 	        	    <page string="Accounting">
-	        	    	<label for="account_internal_no" string="Internal Ref" />
-	        	    	<field name="account_internal_no" />
-	        	    	<newline />
-	        	    	<label for="account_note" string="Internal Note" />
-	        	    	<field name="account_note" colspan="4" />
+						<group>
+							<div>	    	  
+								<label for="account_internal_no" string="Internal Ref" />  	
+								<field name="account_internal_no"/>
+							</div>
+							<div>
+								<label for="account_note" string="Internal Note" />
+								<field name="account_note" colspan="4"/>
+							</div>
+						</group>
 	        	    </page>
 	        	</page>	      		
 	        </field>
