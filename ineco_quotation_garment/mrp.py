@@ -146,22 +146,22 @@ class mrp_production(osv.osv):
                     self.pool.get('ineco.mrp.pattern.component').create(cr, uid, new_data)
                 full_ticket = 0
                 ticket_obj = self.pool.get('ineco.mrp.production.ticket')
-                while full_ticket <  production.product_qty // production.ticket_size:
+                #while full_ticket <  production.product_qty // production.ticket_size:
+                #    ticket_new = {
+                #        'name': production.name + (production.gender_id and production.gender_id.name)+'#'+ \
+                #            (production.color_id and production.color_id.name)+'#'+ \
+                #            (production.size_id and production.size_id.name)+ ('-T%s' % (full_ticket+1)),
+                #        'production_id': production.id,
+                #        'pattern_id': production.pattern_id.id,
+                #        'quantity': production.ticket_size,
+                #    }
+                #    ticket_obj.create(cr, uid, ticket_new)
+                #    full_ticket += 1
+                if production.product_qty > 0:
                     ticket_new = {
-                        'name': production.name + (production.gender_id and production.gender_id.name)+'#'+ \
+                        'name': production.name + '#'+(production.gender_id and production.gender_id.name)+'#'+ \
                             (production.color_id and production.color_id.name)+'#'+ \
-                            (production.size_id and production.size_id.name)+ ('-T%s' % (full_ticket+1)),
-                        'production_id': production.id,
-                        'pattern_id': production.pattern_id.id,
-                        'quantity': production.ticket_size,
-                    }
-                    ticket_obj.create(cr, uid, ticket_new)
-                    full_ticket += 1
-                if production.product_qty % production.ticket_size > 0:
-                    ticket_new = {
-                        'name': production.name + (production.gender_id and production.gender_id.name)+'#'+ \
-                            (production.color_id and production.color_id.name)+'#'+ \
-                            (production.size_id and production.size_id.name)+ ('-T%s' % (full_ticket+1)),
+                            (production.size_id and production.size_id.name) ,
                         'quantity': production.product_qty,
                         'pattern_id': production.pattern_id.id,
                         'production_id': production.id,
@@ -334,6 +334,9 @@ class ineco_mrp_production_ticket(osv.osv):
         'production_id': fields.many2one('mrp.production','Production'),
         'pattern_id': fields.many2one('ineco.pattern','Pattern'),
         'machine_id': fields.many2one('ineco.mrp.machine','Machine'),
+        'gender_id': fields.related('production_id', 'gender_id', type='many2one', relation="sale.gender", string='Gender', readonly=True),
+        'color_id': fields.related('production_id', 'color_id', type='many2one', relation="sale.color", string='Color', readonly=True),
+        'size_id': fields.related('production_id', 'size_id', type='many2one', relation="sale.size", string='Size', readonly=True),
     }
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -349,6 +352,9 @@ class ineco_mrp_production_ticket(osv.osv):
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
+
+    def button_split(self, cr, uid, ids, *args):
+        return True
     
 class ineco_mrp_machine(osv.osv):
     _name = 'ineco.mrp.machine'

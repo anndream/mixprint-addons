@@ -29,3 +29,4 @@ import wizard_update_routing
 import wizard_update_printmo
 import wizard_update_printplan
 import wizard_make_collar
+import wizard_ticket_split

@@ -363,8 +363,13 @@
                     					<button name="button_component" type="object" string="Calculate" />
                     					<field name="ticket_ids">
                     						<tree string="Tickets" editable="top">
-                    							<field name="name" />
+                    							<field name="name" invisible="1"/>
+                    							<field name="production_id" />
+                    							<field name="gender_id" />
+                    							<field name="color_id" />
+                    							<field name="size_id" />
                     							<field name="quantity" />
+                    							<button name="%(action_production_ticket_split)d" string="Split" icon="gtk-go-forward" type="action" />
                     							<field name="machine_id" />
                     						</tree>
                     					</field>
