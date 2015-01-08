@@ -1088,7 +1088,7 @@ class stock_picking(osv.osv):
             'account_id': account_id,
             'price_unit': self._get_price_unit_invoice(cr, uid, move_line, invoice_vals['type']),
             'discount': self._get_discount_invoice(cr, uid, move_line),
-            'quantity': move_line.product_uos_qty or move_line.product_qty,
+            'quantity': move_line.product_qty,
             'invoice_line_tax_id': [(6, 0, self._get_taxes_invoice(cr, uid, move_line, invoice_vals['type']))],
             'account_analytic_id': self._get_account_analytic_invoice(cr, uid, picking, move_line),
         }
