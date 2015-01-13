@@ -336,9 +336,9 @@ class ineco_mrp_production_ticket(osv.osv):
         'machine_id': fields.many2one('ineco.mrp.machine','Machine'),
         'gender_id': fields.related('production_id', 'gender_id', type='many2one', relation="sale.gender", string='Gender', readonly=True),
         'color_id': fields.related('production_id', 'color_id', type='many2one', relation="sale.color", string='Color', readonly=True),
-        'size_id': fields.related('production_id', 'size_id', type='many2one', relation="sale.size", string='Size', readonly=True),
+        'size_id': fields.related('production_id', 'size_id', type='many2one', relation="sale.size", string='Size', store=True, readonly=True),
     }
-    _order = 'machine_id, production_id'
+    _order = 'machine_id, size_id, production_id'
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
