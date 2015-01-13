@@ -204,7 +204,46 @@ class sale_order(osv.osv):
             if data and data[0]:
                 result[obj.id]['garment_order_no_org'] = data[0] or ''
         return result
-    
+
+    def _get_deposit(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'deposit': 0.00,
+                'residual': obj.amount_total,
+            }
+            sql = """
+                select coalesce( sum(amount_total), 0.00) from account_invoice
+                where journal_id in (2,10,37,39)
+                  and saleorder_id = %s
+                  and state not in ('draft','cancel')
+              """ % obj.id
+            cr.execute(sql)             
+            data = cr.fetchone()
+            if data and data[0]:
+                result[obj.id]['deposit'] = data[0] or ''
+                result[obj.id]['residual'] = obj.amount_total - (result[obj.id]['deposit'] or 0.00)
+        return result
+
+    def _get_residual(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'residual': 0.00
+            }
+            sql = """
+                select coalesce( sum(case when type = 'out_invoice' then amount_total else -amount_total end), 0.00) from account_invoice
+                where 
+                  type in ('out_invoice','out_refund')
+                  and state not in ('draft','cancel')
+                  and saleorder_id = %s    
+              """ % obj.id
+            cr.execute(sql)             
+            data = cr.fetchone()
+            if data and data[0]:
+                result[obj.id]['residual'] = data[0] or ''
+        return result
+
     def _get_pattern(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
@@ -283,6 +322,8 @@ class sale_order(osv.osv):
         'pattern_ids': fields.one2many('ineco.pattern','saleorder_id','Patterns'),
         'manager_user_id': fields.many2one('hr.employee','Approval',),
         'garment_order_no_org': fields.function(_get_original_mo, string="Master MO", type="char", multi="_mo"),
+        'deposit': fields.function(_get_deposit, string="Deposit", type="float", digits=(12,2), multi="_deposit"),
+        'residual': fields.function(_get_deposit, string="Residual", type="float", digits=(12,2), multi="_deposit"),
     }
     _defaults = {
         'cancel_sample_order': False,

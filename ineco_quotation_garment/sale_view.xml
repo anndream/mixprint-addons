@@ -303,7 +303,9 @@
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="manager_user_id" />
+                    <field name="deposit" invisible="context.get('invisible_deposit', True)" />
                     <field name="amount_total" sum="Total Tax Included"/>
+                    <field name="residual" invisible="context.get('invisible_residual', True)" />
                     <field name="sale_revision" />
                     <field name="state"/>
                     <field name="date_sale_close" invisible="0" />
@@ -602,6 +604,10 @@
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                         <filter string="Close Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_sale_close'}"/>                      
                     </group>
+					<group string="Display">
+                        <filter string="Show Deposit" context="{'invisible_deposit': False}" help="Show Deposit"/>
+                        <filter string="Show Residual" context="{'invisible_residual': False}" help="Show Residual"/>
+                    </group>                    
                </search>
             </field>
         </record>
@@ -701,6 +707,10 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
+            	<field name="amount_total" position="after">
+            		<field name="deposit" />
+            		<field name="residual" />
+            	</field>
               	<field name="date_order" position="after">
               		<field name="sample_order_no" />
               		<field name="garment_order_no" />
