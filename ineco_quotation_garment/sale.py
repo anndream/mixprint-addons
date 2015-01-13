@@ -396,7 +396,7 @@ class sale_order(osv.osv):
         for id in ids:
             sale_obj = self.browse(cr, uid, [id])[0]
             #Protect Cancel SO -> Duplicate
-            sale_ids = self.pool.get('sale.order').search(cr, uid ,[('garment_order_no','=', sale_obj.garment_order_no)])
+            sale_ids = self.pool.get('sale.order').search(cr, uid ,[('garment_order_no','=', sale_obj.garment_order_no),('garment_order_no','!=',False)])
             data_ids = pattern.search(cr, uid, [('saleorder_id','=',sale_ids)])
             #data_ids = pattern.search(cr, uid, [('saleorder_id','=',sale_obj.id)])
             other_ids = pattern.search(cr, uid, ['|',('name','=',sale_obj.sample_order_no),('name','=',sale_obj.garment_order_no)])
