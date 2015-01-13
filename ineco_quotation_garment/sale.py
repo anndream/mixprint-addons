@@ -354,8 +354,11 @@ class sale_order(osv.osv):
         pattern = self.pool.get('ineco.pattern')
         for id in ids:
             sale_obj = self.browse(cr, uid, [id])[0]
-            data_ids = pattern.search(cr, uid, [('saleorder_id','=',sale_obj.id)])
-            other_ids = pattern.search(cr, uid, [('name','=',sale_obj.sample_order_no or sale_obj.garment_order_no)])
+            #Protect Cancel SO -> Duplicate
+            sale_ids = self.pool.get('sale.order').search(cr, uid ,[('garment_order_no','=', sale_obj.garment_order_no)])
+            data_ids = pattern.search(cr, uid, [('saleorder_id','=',sale_ids)])
+            #data_ids = pattern.search(cr, uid, [('saleorder_id','=',sale_obj.id)])
+            other_ids = pattern.search(cr, uid, ['|',('name','=',sale_obj.sample_order_no),('name','=',sale_obj.garment_order_no)])
             if not data_ids:
                 if not other_ids:
                     new_pattern_data = {
