@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+ 
+        <record model="ir.ui.view" id="view_uniform_sale_order_form">
+	      	<field name="name">uniform.sale.form</field>
+	      	<field name="model">sale.order</field>
+	      	<field name="inherit_id" ref="sale.view_order_form"/>
+	      	<field name="arch" type="xml">
+	        	
+	        	<page string="Other Information" position="before" version="7.0">
+	        	    <page string="UNIFORM">
+	        	        <group>
+		        	        <group>
+			           			<field name="next_garment_order_no" />
+			           			<field name="next_garment_order_date" />
+			           			<field name="next_sample_order_no" />
+		        	        </group>	        
+	        	        </group>
+	        	    </page>
+	        	</page>
+				
+			</field>
+			
+		</record>
+		
+        <record id="view_uniform_order_tree" model="ir.ui.view">
+            <field name="name">uniform.sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+              	<field name="date_order" position="after">
+              		<field name="next_sample_order_no" />
+              		<field name="next_garment_order_no" />
+              		<field name="next_garment_order_date" />
+              	</field>
+            </field>
+        </record>
+
+		
+		
+	</data>
+</openerp>
