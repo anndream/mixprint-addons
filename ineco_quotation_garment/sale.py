@@ -418,6 +418,7 @@ class sale_order(osv.osv):
                                                       'date_finish_planned': False,
                                                       'is_cancel': False,
                                                       'state': 'draft',
+                                                      'saleorder_id': sale_obj.id,
                                                       'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
                                                       'date_expected': sale_obj.date_delivery}) #sale_obj.date_delivery})
                 else:
@@ -426,6 +427,7 @@ class sale_order(osv.osv):
                                                       'date_finish_planned': False,
                                                       'is_cancel': False,
                                                       'state': 'draft',
+                                                      'saleorder_id': sale_obj.id,
                                                       'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
                                                       'date_expected': sale_obj.date_delivery}) #sale_obj.date_delivery})
         return True
