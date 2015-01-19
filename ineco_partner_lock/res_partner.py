@@ -54,9 +54,15 @@ class res_partner(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, long) or isinstance(ids, int) :
             ids = [ids]
+        group_id = self.pool.get('res.groups').search(cr, uid, [('name','=','Full Change Partner')])
         for id in ids:
             data = self.browse(cr, uid, id, context=context)
-            if data.invoice_lock and uid != 1:
+            user = self.pool.get('res.users').browse(cr, uid, uid)
+            full_change = False
+            for group in user.groups_id:
+                if group.id == group_id[0] and full_change == False:
+                    full_change = True
+            if data.invoice_lock and not full_change:
                 if vals.get('stage_id',False) or vals.get('street',False) or vals.get('street2',False) or vals.get('zip',False) or vals.get('name',False):
                     raise osv.except_osv(_('Error!'), _("Please cancel all invoice when you edit this record.")) 
         return super(res_partner,self).write(cr, uid, ids, vals, context)    

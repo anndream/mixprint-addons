@@ -32,6 +32,7 @@
     'demo': [],
     'test':[],
     'update_xml': [
+        'security.xml',
         'res_partner_view.xml',
     ],
     'installable': True,
