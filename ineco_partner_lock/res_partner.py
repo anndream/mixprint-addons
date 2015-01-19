@@ -56,7 +56,7 @@ class res_partner(osv.osv):
             ids = [ids]
         for id in ids:
             data = self.browse(cr, uid, id, context=context)
-            if data.invoice_lock:
+            if data.invoice_lock and uid != 1:
                 if vals.get('stage_id',False) or vals.get('street',False) or vals.get('street2',False) or vals.get('zip',False) or vals.get('name',False):
                     raise osv.except_osv(_('Error!'), _("Please cancel all invoice when you edit this record.")) 
         return super(res_partner,self).write(cr, uid, ids, vals, context)    
