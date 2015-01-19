@@ -309,6 +309,10 @@ class ineco_pattern(osv.osv):
                 production.button_component()
         return True
 
+    def button_setdraft(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'draft', 'date_finish_planned': False})
+        return True
+
     def schedule_refresh(self, cr, uid, context={}):
         #print 'Refresh Partner Start'
         pattern_obj = self.pool.get('ineco.pattern')

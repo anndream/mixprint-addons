@@ -219,6 +219,7 @@
                 		<button name="button_ready" string="Ready" states="draft,used,damage" type="object" class="oe_highlight" />
                 		<button name="button_used" string="Used" states="ready" type="object" class="oe_highlight"/>
                 		<button name="button_damage" string="Damage" states="used,ready" type="object" class="oe_highlight"/>
+                		<button name="button_setdraft" string="Set Draft" states="userd,ready,damange" type="object" groups="base.group_erp_manager" />
 	                    <field name="state" widget="statusbar" statusbar_visible="ready,used,damage" />
                 	</header>
                 	<sheet>
