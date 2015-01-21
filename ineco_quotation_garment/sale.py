@@ -81,7 +81,7 @@ class sale_size(osv.osv):
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')
     ]     
-    _order = 'name desc'
+    _order = 'seq'
 
 class sale_style(osv.osv):
     _name = 'sale.style'
@@ -513,8 +513,9 @@ class sale_order(osv.osv):
             default['date_delivery'] = False
             default['date_order'] = time.strftime('%Y-%m-%d')
         new_id = super(sale_order, self).copy(cr, uid, ids, default, context=context)
-        #sql = "update ineco_pattern set saleorder_id = %s where saleorder_id = %s" % (new_id, ids)
-        #cr.execute(sql)
+        #print 'Duplicate ',ids
+        sql = "update ineco_pattern set saleorder_id = %s where saleorder_id = %s" % (new_id, ids)
+        cr.execute(sql)
         return new_id
     
     def action_gen_sampling_no(self, cr, uid, ids, context=None):

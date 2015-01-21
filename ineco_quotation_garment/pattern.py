@@ -283,10 +283,11 @@ class ineco_pattern(osv.osv):
         'attachment_count': fields.function(_get_attachment, fnct_search=_get_attachment_search, string="Attachment", type='integer', multi="_attachment"),
         'production_ids': fields.function(_get_production_lines, type='many2many', relation='mrp.production', string='Productions'),                
         'ticket_ids': fields.one2many('ineco.mrp.production.ticket','pattern_id','Tickets'),                
+        'pattern_group_id': fields.many2one('ineco.pattern.group', 'Pattern Group')
     }
     
     _sql_constraints = [
-        ('name_unique', 'unique(name)', 'Code must be unique!'),
+        ('name_unique', 'unique(name, pattern_group_id)', 'Code and Group must be unique!'),
     ]
     
     _defaults = {
@@ -406,6 +407,16 @@ class ineco_pattern_type(osv.osv):
         'name': fields.char('Description',size=64,required=True),
         'code': fields.char('Code', size=10, required=True),
         'name2': fields.char('Other Description',size=64,required=True),
+    }
+    _sql_constraints = [
+        ('name_unique', 'unique (name)', 'Description must be unique !')
+    ]   
+
+class ineco_pattern_group(osv.osv):
+    _name = 'ineco.pattern.group'
+    _description = 'Group of Pattern'
+    _columns = {
+        'name': fields.char('Description',size=64,required=True),
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')

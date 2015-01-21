@@ -69,6 +69,61 @@
             action="action_ineco_pattern_type"
             sequence="10"/>
 
+		<!-- Pattern Group -->
+        <record id="view_ineco_pattern_group_tree" model="ir.ui.view">
+            <field name="name">ineco.pattern.group.tree</field>
+            <field name="model">ineco.pattern.group</field>
+            <field name="arch" type="xml">
+                <tree string="Pattern Group">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>		
+
+        <record id="view_ineco_pattern_group_form" model="ir.ui.view">
+            <field name="name">ineco.pattern.group.form</field>
+            <field name="model">ineco.pattern.group</field>
+            <field name="arch" type="xml">
+                <form string="Pattern Group">
+                    <field name="name" />
+                </form>
+            </field>
+        </record>	
+        
+        <record id="view_ineco_pattern_group_filter" model="ir.ui.view">
+            <field name="name">ineco.pattern.group.select</field>
+            <field name="model">ineco.pattern.group</field>
+            <field name="arch" type="xml">
+                <search string="Search Group">
+                	<field name="name" />
+               	</search>
+            </field>
+        </record>
+        
+        <record id="action_ineco_pattern_group" model="ir.actions.act_window">
+            <field name="name">Pattern Group</field>
+            <field name="res_model">ineco.pattern.group</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_pattern_group_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a pattern group. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+        <menuitem name="Pattern Group"
+            id="menu_mrp_pattern_group"
+            parent="menu_mrp_pattern_menu"
+            action="action_ineco_pattern_group"
+            sequence="10"/>
+
 		<!-- Pattern Product Type -->
         <record id="view_ineco_pattern_producttype_tree" model="ir.ui.view">
             <field name="name">ineco.pattern.producttype.tree</field>
@@ -126,6 +181,7 @@
             parent="menu_mrp_pattern_menu"
             action="action_ineco_pattern_producttype"
             sequence="11"/>
+
 
 		<!-- Pattern Location -->
         <record id="view_ineco_pattern_location_tree" model="ir.ui.view">
@@ -202,6 +258,7 @@
                     <field name="date_expected" invisible="1" />
                     <field name="sampling_date_process1_finish" string="Cut Finish" />
                     <field name="date_finish_planned" />
+                    <field name="pattern_group_id" />
                     <field name="date_finish" invisible="1" />
                     <field name="late" invisible="1"/>
                     <field name="attachment_count" />
@@ -231,6 +288,9 @@
 							<h1>
 								<field name="name" />
 							</h1>
+							<h2>
+								<field name="pattern_group_id" required="1" />
+							</h2>
 						</div>
                 		<group>
                 			<group>
@@ -395,6 +455,7 @@
                     <field name="image" />
                     <field name="product_id" />
                     <field name="product_type_id" />
+                    <field name="pattern_group_id" />
                     <templates>
                         <t t-name="kanban-box">
                         	<div class="oe_module_vignette">
@@ -409,7 +470,9 @@
                                         <li>
                                             <t t-if="record.product_type_id.raw_value"><field name="product_type_id"/></t>
                                         </li>
-                                        
+                                        <li>
+                                            <t t-if="record.pattern_group_id.raw_value"><field name="pattern_group_id"/></t>
+                                        </li>
                                     </ul>
                                     
                                </div>
@@ -432,6 +495,7 @@
                     <field name="saleorder_id" />
                     <field name="partner_id" />
                     <field name="employee_id" />
+                    <field name="pattern_group_id" />
                     <field name="state" />
                     <field name="sampling_date_process1_finish" string="Cut Finish" />
                     <filter name="todo" icon="terp-dolar_ok!" string="To Do" domain="[('state','=','draft'),
