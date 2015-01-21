@@ -222,6 +222,9 @@
 				<tree string="Machine" editable="top">
 					<field name="name" />
 					<field name="code" />
+					<field name="brand" />
+					<field name="model" />
+					<field name="type" />
 					<field name="workcenter_id" />
 				</tree>
 			</field>
@@ -234,6 +237,9 @@
 				<search string="Machine">
 					<field name="name" />
 					<field name="code" />
+					<field name="model" />
+					<field name="brand" />
+					<field name="type" />
 					<field name="workcenter_id" />
 				</search>
 			</field>

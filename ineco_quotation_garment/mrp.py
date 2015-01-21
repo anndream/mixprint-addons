@@ -362,9 +362,13 @@ class ineco_mrp_machine(osv.osv):
     _name = 'ineco.mrp.machine'
     _description = 'Machine'
     _columns = {
-        'name': fields.char('Name', size=128, required=True),
-        'code': fields.char('Code', size=32),
-        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
+        'name': fields.char('Machine Code', size=128, required=True),
+        'code': fields.char('Machine Serial', size=32),
+        'seq': fields.integer('Sequence', ),
+        'brand': fields.char('Brand', size=128,),
+        'model': fields.char('Model', size=128,),
+        'type': fields.char('Type', size=128,),
+        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter',),
         'active': fields.boolean('Active'),
     }
     
