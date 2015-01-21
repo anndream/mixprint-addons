@@ -115,7 +115,7 @@ class account_invoice(osv.osv):
         if action_model:
             action_pool = self.pool.get(action_model)
             action = action_pool.read(cr, uid, action_id, context=context)
-            action['context'] = "{'default_partner_id':%s,'search_default_partner_id':%s}" % (invoice.partner_id.id,invoice.partner_id.id)
+            action['context'] = "{'default_partner_id':%s,'search_default_partner_id':%s,'default_journal_id':20}" % (invoice.partner_id.id,invoice.partner_id.id)
             action['domain'] = "[('partner_id','=',%s)]" % (invoice.partner_id.id)
         return action
 
