@@ -111,12 +111,21 @@ class account_invoice(osv.osv):
         invoice = self.browse(cr, uid, ids)[0]
         action_model = False
         action = {}
-        action_model,action_id = data_pool.get_object_reference(cr, uid, 'account_voucher', "action_vendor_receipt")
-        if action_model:
-            action_pool = self.pool.get(action_model)
-            action = action_pool.read(cr, uid, action_id, context=context)
-            action['context'] = "{'default_partner_id':%s,'search_default_partner_id':%s,'default_journal_id':20}" % (invoice.partner_id.id,invoice.partner_id.id)
-            action['domain'] = "[('partner_id','=',%s)]" % (invoice.partner_id.id)
+        if invoice.type == 'out_invoice':
+            action_model,action_id = data_pool.get_object_reference(cr, uid, 'account_voucher', "action_vendor_receipt")
+            if action_model:
+                action_pool = self.pool.get(action_model)
+                action = action_pool.read(cr, uid, action_id, context=context)
+                action['context'] = "{'default_partner_id':%s,'search_default_partner_id':%s,'default_journal_id':20}" % (invoice.partner_id.id,invoice.partner_id.id)
+                action['domain'] = "[('partner_id','=',%s)]" % (invoice.partner_id.id)
+        elif invoice.type == 'in_invoice':
+            action_model,action_id = data_pool.get_object_reference(cr, uid, 'account_voucher', "action_vendor_payment")
+            if action_model:
+                action_pool = self.pool.get(action_model)
+                action = action_pool.read(cr, uid, action_id, context=context)
+                action['context'] = "{'default_partner_id':%s,'search_default_partner_id':%s,'default_journal_id':35}" % (invoice.partner_id.id,invoice.partner_id.id)
+                action['domain'] = "[('partner_id','=',%s)]" % (invoice.partner_id.id)
+            
         return action
 
 class account_voucher(osv.osv):

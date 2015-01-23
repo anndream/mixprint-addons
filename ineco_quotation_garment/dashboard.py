@@ -276,7 +276,7 @@ class ineco_sale_summary4smart(osv.osv):
                         from (
                             select array (
                                 select ineco_sale_summary3 from ineco_sale_summary3
-                                where user_id in (7,115)
+                                where user_id in (7,115,122)
                             ) as a
                     ) b
                 ) c
@@ -433,7 +433,7 @@ class ineco_sale_summary5(osv.osv):
                         from (
                             select array (
                                 select ineco_sale_summary5_query from ineco_sale_summary5_query
-                                where user_id not in (7,115)
+                                where user_id not in (7,115,122)
                             ) as a
                     ) b
                 ) c
@@ -477,7 +477,7 @@ class ineco_sale_summary5smart(osv.osv):
                         from (
                             select array (
                                 select ineco_sale_summary5_query from ineco_sale_summary5_query
-                                where user_id in (7,115)
+                                where user_id in (7,115,122)
                             ) as a
                     ) b
                 ) c
