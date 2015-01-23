@@ -232,7 +232,7 @@ class ineco_sale_summary4(osv.osv):
                         from (
                             select array (
                                 select ineco_sale_summary3 from ineco_sale_summary3
-                                where user_id not in (7,115)
+                                where user_id not in (7,115,122)
                             ) as a
                     ) b
                 ) c
