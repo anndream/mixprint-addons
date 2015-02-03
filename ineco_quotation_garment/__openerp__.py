@@ -78,6 +78,7 @@ New Quotation Menu/View for Garment Business.
         'purchase_view.xml',
         'schedule_data.xml',
         'sequence.xml',
+        'dashboard_warehouse_view.xml',
     ],
     'installable': True,
     'auto_install': False,
