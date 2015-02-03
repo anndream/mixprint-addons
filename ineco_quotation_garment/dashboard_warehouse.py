@@ -83,8 +83,8 @@ class ineco_dashboard_order_late_summary(osv.osv):
     _description = 'Order Late Summary'
     _auto = False
     _columns = {
-        'year': fields.integer('Year'),
-        'month': fields.integer('Month'),
+        'year': fields.char('Year', size=4),
+        'month': fields.integer('Month',),
         'order_total': fields.integer('Order Total'),
         'order_count': fields.integer('Order Count'),
         'order_late_count': fields.integer('Late'),
@@ -104,7 +104,7 @@ class ineco_dashboard_order_late_summary(osv.osv):
             CREATE OR REPLACE VIEW ineco_dashboard_order_late_summary AS
 select
   replace(min(garment_order_date)::text,'-','')::integer as id,
-  extract(year from garment_order_date) as year,
+  extract(year from garment_order_date)::text as year,
   extract(month from garment_order_date) as month,
   sum(quantity_order)::integer as order_total,
   count(*) as order_count,

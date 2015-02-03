@@ -87,18 +87,9 @@
             <field name="name">ineco.dashboard.order.late.summary.filter</field>
             <field name="model">ineco.dashboard.order.late.summary</field>
             <field name="arch" type="xml">
-                <search string="Search All Order Late">
+                <search string="Search Order Late Summary">
                 	<field name="year" />
                 	<field name="month" />
-                	<field name="order_total" />
-                	<field name="order_count" />
-                	<field name="order_late_count" />
-                	<field name="order_done_count" />
-                	<field name="order_late_percent" />
-                	<field name="order_done_percent" />
-                	<field name="order_late_avg" />
-                	<field name="order_late_max" />
-                	<field name="order_late_min" />
                 	<group expand="0" string="Group By...">
                 		<filter name="date_group" string="Year" icon="terp-personal" domain="[]" context="{'group_by':'year'}"/>
                 	</group>                    
