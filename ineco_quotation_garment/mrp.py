@@ -135,7 +135,7 @@ class mrp_production(osv.osv):
             if production and production.pattern_id:
                 sql = "delete from ineco_mrp_pattern_component where production_id = %s" % production.id
                 cr.execute(sql)
-                sql = "delete from ineco_mrp_production_ticket where production_id = %s" % production.id
+                sql = "delete from ineco_mrp_production_ticket where production_id = %s and pattern_id = %s" % (production.id, production.pattern_id.id)
                 cr.execute(sql)
                 for component in production.pattern_id.component_ids:
                     new_data = {
