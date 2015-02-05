@@ -526,8 +526,99 @@
 		<menuitem name="Sub Workcenter Task" 
 			parent="menu_mrp_task_menu"
 			id="menu_ineco_mrp_subworkcenter_task" 
-			sequence="100" 
+			sequence="110" 
 			action="ineco_mrp_subworkcenter_task_action" />
+
+		<!-- INECO TASK LIST-->
+
+		<record model="ir.ui.view" id="ineco_mrp_task_list_tree">
+			<field name="name">ineco.mrp.task.list.tree</field>
+			<field name="model">ineco.mrp.task.list</field>
+			<field name="arch" type="xml">
+				<tree string="Task List" >
+					<field name="date" />
+					<field name="employee_id" />
+					<field name="machine_id" />
+					<field name="task_ids" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="ineco_mrp_task_list_form">
+			<field name="name">ineco.mrp.task.list.form</field>
+			<field name="model">ineco.mrp.task.list</field>
+			<field name="arch" type="xml">
+				<form string="Task List" version="7.0" >
+					<header>
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="employee_id" />
+								<field name="machine_id" />
+							</group>
+							<group>
+								<field name="date" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Task">
+								<field name="task_ids" context="{'default_employee_id':employee_id,'default_machine_id':machine_id,'default_date':date}">
+									<tree string="Task Period" editable="top">
+										<field name="employee_id" invisible="1"/>
+										<field name="machine_id" invisible="1" />
+										<field name="period_id" />
+										<field name="production_id" />
+										<field name="process_id" />
+										<field name="good" required="1"/>
+										<field name="no_good" />
+										<field name="ticket_id" invisible="1"  />
+										<field name="pattern_type_id" invisible="1" />
+										<field name="date" invisible="1"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>						
+					</sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="ineco_mrp_task_list_search">
+			<field name="name">ineco.mrp.task.list.search</field>
+			<field name="model">ineco.mrp.task.list</field>
+			<field name="arch" type="xml">
+				<search string="Task List">
+					<field name="employee_id" />
+					<field name="date" />
+					<field name="machine_id" />
+                  	<group expand="0" string="Group By...">
+                        <filter name="by_employee_id" string="Employee" icon="terp-partner" domain="[]" 
+                        	context="{'group_by':'employee_id'}"/>
+                        <filter name="by_date" string="Date" icon="terp-partner" domain="[]" 
+                        	context="{'group_by':'date'}"/>
+                        <filter name="by_machine_id" string="Machine" icon="terp-partner" domain="[]" 
+                        	context="{'group_by':'machine_id'}"/>
+                    </group>
+				</search>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="ineco_mrp_task_list_action">
+			<field name="name">Task List</field>
+			<field name="res_model">ineco.mrp.task.list</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem name="Task List" 
+			parent="menu_mrp_task_menu"
+			id="menu_ineco_mrp_task_list" 
+			sequence="120" 
+			action="ineco_mrp_task_list_action" />
 				    
     </data>
 </openerp>

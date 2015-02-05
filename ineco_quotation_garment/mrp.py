@@ -468,12 +468,29 @@ class ineco_mrp_period(osv.osv):
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
+
+class ineco_mrp_task_list(osv.osv):
+    _name = 'ineco.mrp.task.list'
+    _inherit = ['mail.thread']
+    _description = 'Task List'
+    _columns = {
+        'name': fields.char('Description',size=64,),
+        'employee_id': fields.many2one('hr.employee','Employee',required=True, track_visibility='onchange'),
+        'date': fields.date('Task Date', required=True, track_visibility='onchange'),
+        'machine_id': fields.many2one('ineco.mrp.machine','Machine', required=True, track_visibility='onchange'),
+        'task_ids': fields.one2many('ineco.mrp.task','list_id','Tasks'),
+    }
+    _defaults = {
+        'name': '...'
+    }
+    _order = 'date,employee_id'
     
 class ineco_mrp_task(osv.osv):
     _name = 'ineco.mrp.task'
     _description = "MRP Task"
     _columns = {
         'name': fields.char('Description',size=64,),
+        'list_id': fields.many2one('ineco.mrp.task.list','Task List',ondelete="cascade"),
         'employee_id': fields.many2one('hr.employee','Employee',required=True),
         'date': fields.date('Task Date', required=True),
         'period_id': fields.many2one('ineco.mrp.period','Period', required=True),
@@ -561,7 +578,8 @@ class ineco_mrp_subworkcenter_task(osv.osv):
     }
     
     def create(self, cr, uid, data, context=None):
-        data['date'] = time.strftime('%Y-%m-%d')
+        if not 'date' in data:
+            data['date'] = time.strftime('%Y-%m-%d')
         result = super(ineco_mrp_subworkcenter_task, self).create(cr, uid, data, context=context)
         return result
     
