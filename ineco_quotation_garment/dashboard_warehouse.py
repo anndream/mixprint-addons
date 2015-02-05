@@ -61,18 +61,24 @@ select
      join product_product pp on pp.id = sale_order_line.product_id
      join product_template pt on pt.id = pp.product_tmpl_id
          where order_id = sale_order.id and pt.type <> 'service')) - 
-  round((select sum(quantity) from stock_picking sp
+  round((select coalesce(sum(quantity),0) from stock_picking sp
          where sp.sale_id = sale_order.id and sp.state in  ('done','cancel') and sp.type = 'out')) as quantity_balance,
   date_delivery - garment_order_date as do_plan
 
 from sale_order
 where garment_order_date >= '2014-01-01'
     and state not in ('cancel')
-    and round((select sum(product_uom_qty) from sale_order_line
+    and extract( day from case when (select max(date_done) from stock_picking sp
+             where sp.sale_id = sale_order.id and sp.state in  ('done','cancel') and sp.type = 'out') is null then date_delivery - now()
+           else 
+            (select max(date_done) from stock_picking sp
+             where sp.sale_id = sale_order.id and sp.state in  ('done','cancel') and sp.type = 'out') - date_delivery
+    end) < 0
+    /*and round((select sum(product_uom_qty) from sale_order_line
                join product_product pp on pp.id = sale_order_line.product_id
            join product_template pt on pt.id = pp.product_tmpl_id
-               where order_id = sale_order.id and pt.type <> 'service')) > round((select sum(quantity) from stock_picking sp
-   where sp.sale_id = sale_order.id and sp.state in ('done','cancel') and sp.type = 'out'))
+               where order_id = sale_order.id and pt.type <> 'service')) > round((select coalesce(sum(quantity),0) from stock_picking sp
+   where sp.sale_id = sale_order.id and sp.state in ('done','cancel') and sp.type = 'out'))*/
 order by
    date_delivery            
 
@@ -109,9 +115,9 @@ select
   sum(quantity_order)::integer as order_total,
   count(*) as order_count,
   abs(count(case when delay < 0 then 1 else null end)) as order_late_count,
-  count(case when delay >= 0 then 1 else null end) as order_done_count,
+  count(case when delay >= 0 and quantity_balance = 0 then 1 else null end) as order_done_count,
   abs(count(case when delay < 0 then 1 else null end)) * 100 / count(*) as order_late_percent,
-  count(case when delay >= 0 then 1 else null end) * 100 / count(*) as order_done_percent,
+  count(case when delay >= 0 and quantity_balance = 0 then 1 else null end) * 100 / count(*) as order_done_percent,
   abs(coalesce(avg(case when delay < 0 then delay else null end), 0.0)::integer) as order_late_avg,
   abs(coalesce(min(case when delay < 0 then delay else null end), 0.0)::integer) as order_late_max,
   abs(coalesce(max(case when delay < 0 then delay else null end), 0.0)::integer) as order_late_min
@@ -122,7 +128,7 @@ from (
       date_delivery,
       extract(day from 
       case when (select max(date_done) from stock_picking sp
-             where sp.sale_id = sale_order.id and sp.state in  ('done','cancel') and sp.type = 'out') is null then now() - date_delivery 
+             where sp.sale_id = sale_order.id and sp.state in  ('done','cancel') and sp.type = 'out') is null then date_delivery - now()  
            else 
             (select max(date_done) from stock_picking sp
              where sp.sale_id = sale_order.id and sp.state in  ('done','cancel') and sp.type = 'out') - date_delivery 
@@ -131,7 +137,7 @@ from (
          join product_product pp on pp.id = sale_order_line.product_id
          join product_template pt on pt.id = pp.product_tmpl_id
          where order_id = sale_order.id and pt.type <> 'service')) as quantity_order,
-      round((select sum(product_uom_qty) from sale_order_line 
+      round((select coalesce(sum(product_uom_qty),0) from sale_order_line 
          join product_product pp on pp.id = sale_order_line.product_id
          join product_template pt on pt.id = pp.product_tmpl_id
          where order_id = sale_order.id and pt.type <> 'service')) - 

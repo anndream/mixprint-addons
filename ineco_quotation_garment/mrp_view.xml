@@ -429,7 +429,105 @@
 			id="menu_ineco_mrp_task" 
 			sequence="100" 
 			action="ineco_mrp_task_action" />
+
+		<!-- INECO SUB Workcenter -->
+
+		<record model="ir.ui.view" id="ineco_mrp_subworkcenter_tree">
+			<field name="name">ineco.mrp.subworkcenter.tree</field>
+			<field name="model">ineco.mrp.subworkcenter</field>
+			<field name="arch" type="xml">
+				<tree string="Sub Workcenter" editable="top">
+					<field name="name" />
+					<field name="workcenter_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="ineco_mrp_subworkcenter_search">
+			<field name="name">ineco.mrp.subworkcenter.search</field>
+			<field name="model">ineco.mrp.subworkcenter</field>
+			<field name="arch" type="xml">
+				<search string="Sub Workcenter">
+					<field name="name" />
+					<field name="workcenter_id" />
+                  	<group expand="0" string="Group By...">
+                        <filter name="by_workcenter_id" string="Workcenter" icon="terp-partner" domain="[]" context="{'group_by':'workcenter_id'}"/>
+                    </group>
+				</search>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="ineco_mrp_subworkcenter_action">
+			<field name="name">Sub Workenter</field>
+			<field name="res_model">ineco.mrp.subworkcenter</field>
+			<field name="view_mode">tree</field>
+		</record>
+
+		<menuitem name="Sub Workcenter" 
+			parent="menu_mrp_task_menu"
+			id="menu_ineco_mrp_subworkcenter" 
+			sequence="80" 
+			action="ineco_mrp_subworkcenter_action" />
 	
+		<!-- INECO SUB Workcenter Task -->
+
+		<record model="ir.ui.view" id="ineco_mrp_subworkcenter_task_tree">
+			<field name="name">ineco.mrp.subworkcenter.task.tree</field>
+			<field name="model">ineco.mrp.subworkcenter.task</field>
+			<field name="arch" type="xml">
+				<tree string="Sub Workcenter Task" editable="top">
+					<field name="subworkcenter_id" />
+					<field name="date" />
+					<field name="saleorder_id" />
+					<field name="garment_order_no" readonly="1" />
+					<field name="quantity" />
+					<field name="date_delivery" readonly="1" />
+					<field name="customer_id" readonly="1" />
+					<field name="product_id" readonly="1" />
+					<field name="user_id" readonly="1" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="ineco_mrp_subworkcenter_task_search">
+			<field name="name">ineco.mrp.subworkcenter.task.search</field>
+			<field name="model">ineco.mrp.subworkcenter.task</field>
+			<field name="arch" type="xml">
+				<search string="Sub Workcenter Task">
+					<field name="subworkcenter_id" />
+					<field name="date" />
+					<field name="saleorder_id" />
+					<field name="garment_order_no" />
+					<field name="quantity" />
+					<field name="date_delivery" />
+					<field name="customer_id" />
+					<field name="product_id" />
+					<field name="user_id" />
+                  	<group expand="0" string="Group By...">
+                        <filter name="by_subworkcenter_id" string="Sub Workcenter" icon="terp-partner" domain="[]" 
+                        	context="{'group_by':'subworkcenter_id'}"/>
+                        <filter name="by_saleorder_id" string="Sale Order" icon="terp-partner" domain="[]" 
+                        	context="{'group_by':'saleorder_id'}"/>
+                        <filter name="by_date" string="Date" icon="terp-partner" domain="[]" 
+                        	context="{'group_by':'date'}"/>
+                        <filter name="by_user_id" string="Sale" icon="terp-partner" domain="[]" 
+                        	context="{'group_by':'user_id'}"/>
+                    </group>
+				</search>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="ineco_mrp_subworkcenter_task_action">
+			<field name="name">Sub Workcenter Task</field>
+			<field name="res_model">ineco.mrp.subworkcenter.task</field>
+			<field name="view_mode">tree</field>
+		</record>
+
+		<menuitem name="Sub Workcenter Task" 
+			parent="menu_mrp_task_menu"
+			id="menu_ineco_mrp_subworkcenter_task" 
+			sequence="100" 
+			action="ineco_mrp_subworkcenter_task_action" />
 				    
     </data>
 </openerp>

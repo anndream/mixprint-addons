@@ -515,5 +515,39 @@ class ineco_mrp_task(osv.osv):
                 res['value'] = {'production_id': ticket.production_id.id,
                                 'ticket_id': ticket.id,
                                 'pattern_type_id': pattern_type.id}
-        return res
+        return res    
+    
+class ineco_mrp_subworkcenter(osv.osv):
+    _name = 'ineco.mrp.subworkcenter'
+    _description = "Sub Workcenter"
+    _columns = {
+        'name': fields.char('Sub Workcenter', size=128, required=True),
+        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True)
+    }
+    
+class ineco_mrp_subworkcenter_task(osv.osv):
+    _name = 'ineco.mrp.subworkcenter.task'
+    _description = 'Sub Workcenter Task'
+    _columns = {
+        'name': fields.char('Description', size=128),
+        'subworkcenter_id': fields.many2one('ineco.mrp.subworkcenter', 'Sub Workcenter', required=True),
+        'date': fields.date('Date Done', required=True),
+        'saleorder_id': fields.many2one('sale.order', 'Sale Order'),
+        'garment_order_no': fields.related('saleorder_id', string='Garment Order No', type='char'),
+        'garment_order_date': fields.related('saleorder_id', string='Garment Order Date', type='date'),
+        'date_delivery': fields.related('saleorder_id', string='Delivery Date',type='date'),
+        'customer_id': fields.related('saleorder_id',string='Customer',type='many2one', relation='res.partner'),
+        'product_id': fields.related('saleorder_id',string="Product",type='many2one',relation='product.product'),
+        'quantity_order': fields.related('saleorder_id',string="Order Qty",type='integer'),
+        'quantity': fields.integer('Quantity'),
+        'user_id': fields.related('saleorder_id',string="Sale",type='many2one',relation='res.users'),
+    }
+    _defaults = {
+        'date': time.strftime('%Y-%m-%d'),
+    }
+    
+    def create(self, cr, uid, data, context=None):
+        data['date'] = time.strftime('%Y-%m-%d')
+        result = super(ineco_mrp_subworkcenter_task, self).create(cr, uid, data, context=context)
+        return result
     
