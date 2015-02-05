@@ -526,6 +526,19 @@ class ineco_mrp_subworkcenter(osv.osv):
     }
     
 class ineco_mrp_subworkcenter_task(osv.osv):
+
+    def _get_product(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'product_id': False
+            }
+            if obj.saleorder_id :
+                for line in obj.saleorder_id.order_line:
+                    if result[obj.id]['product_id'] == False:
+                        result[obj.id]['product_id'] = line.product_id.id         
+        return result
+    
     _name = 'ineco.mrp.subworkcenter.task'
     _description = 'Sub Workcenter Task'
     _columns = {
@@ -533,14 +546,15 @@ class ineco_mrp_subworkcenter_task(osv.osv):
         'subworkcenter_id': fields.many2one('ineco.mrp.subworkcenter', 'Sub Workcenter', required=True),
         'date': fields.date('Date Done', required=True),
         'saleorder_id': fields.many2one('sale.order', 'Sale Order'),
-        'garment_order_no': fields.related('saleorder_id', string='Garment Order No', type='char'),
-        'garment_order_date': fields.related('saleorder_id', string='Garment Order Date', type='date'),
-        'date_delivery': fields.related('saleorder_id', string='Delivery Date',type='date'),
-        'customer_id': fields.related('saleorder_id',string='Customer',type='many2one', relation='res.partner'),
-        'product_id': fields.related('saleorder_id',string="Product",type='many2one',relation='product.product'),
-        'quantity_order': fields.related('saleorder_id',string="Order Qty",type='integer'),
+        'garment_order_no': fields.related('saleorder_id', 'garment_order_no', string='Garment Order No', type='char'),
+        'garment_order_date': fields.related('saleorder_id', 'garment_order_date', string='Garment Order Date', type='date'),
+        'date_delivery': fields.related('saleorder_id', 'date_delivery', string='Delivery Date',type='date'),
+        'customer_id': fields.related('saleorder_id', 'partner_id', string='Customer',type='many2one', relation='res.partner'),
+        'product_id': fields.function(_get_product, string="Product", type="many2one", multi="_product", relation="product.product"),
+        #'product_id': fields.related('saleorder_id', 'product_id', string="Product",type='many2one',relation='product.product'),
+        #'quantity_order': fields.related('saleorder_id', string="Order Qty",type='integer'),
         'quantity': fields.integer('Quantity'),
-        'user_id': fields.related('saleorder_id',string="Sale",type='many2one',relation='res.users'),
+        'user_id': fields.related('saleorder_id','user_id',string="Sale",type='many2one',relation='res.users'),
     }
     _defaults = {
         'date': time.strftime('%Y-%m-%d'),
