@@ -73,8 +73,10 @@
                 	<field name="order_total" sum="Order Total" />
                 	<field name="order_count" sum="Order Count" />
                 	<field name="order_late_count" sum="Late Count" />
+                	<field name="order_progress_count" sum="Progress Count" />
                 	<field name="order_done_count" sum="Done Count" />
                 	<field name="order_late_percent" avg="Late Percent" />
+                	<field name="order_progress_percent" avg="Progress Percent" />
                 	<field name="order_done_percent" avg="Done Percent" />
                 	<field name="order_late_avg" avg="Average Late" />
                 	<field name="order_late_max"  />

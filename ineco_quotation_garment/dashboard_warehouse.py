@@ -100,7 +100,8 @@ class ineco_dashboard_order_late_summary(osv.osv):
         'order_late_avg': fields.integer('Avg'),
         'order_late_max': fields.integer('Max'),
         'order_late_min': fields.integer('Min'),
-        
+        'order_progress_count': fields.integer('Progress'),
+        'order_progress_percent': fields.float('Progress (%)', digits=(12,2)),        
     }
     _order = 'year,month'
     
@@ -120,7 +121,13 @@ select
   count(case when delay >= 0 and quantity_balance = 0 then 1 else null end) * 100 / count(*) as order_done_percent,
   abs(coalesce(avg(case when delay < 0 then delay else null end), 0.0)::integer) as order_late_avg,
   abs(coalesce(min(case when delay < 0 then delay else null end), 0.0)::integer) as order_late_max,
-  abs(coalesce(max(case when delay < 0 then delay else null end), 0.0)::integer) as order_late_min
+  abs(coalesce(max(case when delay < 0 then delay else null end), 0.0)::integer) as order_late_min,
+  count(*) -
+    abs(count(case when delay < 0 then 1 else null end)) -
+    count(case when delay >= 0 and quantity_balance = 0 then 1 else null end) as order_progress_count,
+  (count(*) -
+    abs(count(case when delay < 0 then 1 else null end)) -
+    count(case when delay >= 0 and quantity_balance = 0 then 1 else null end)) * 100 / count(*) as order_progress_percent      
 from (
     select
       garment_order_no,
