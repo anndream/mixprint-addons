@@ -512,6 +512,10 @@
                         	context="{'group_by':'date'}"/>
                         <filter name="by_user_id" string="Sale" icon="terp-partner" domain="[]" 
                         	context="{'group_by':'user_id'}"/>
+                        <filter name="by_product_id" string="Product" icon="terp-partner" domain="[]" 
+                        	context="{'group_by':'product_id'}"/>
+                        <filter name="by_garment_order_no" string="Garment Order" icon="terp-partner" domain="[]" 
+                        	context="{'group_by':'garment_order_no'}"/>
                     </group>
 				</search>
 			</field>
