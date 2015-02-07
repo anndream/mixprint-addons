@@ -25,7 +25,7 @@
             <field name="arch" type="xml">
                 <form string="Problem Type">
                     <field name="user_id" />
-                    <field name="so" />
+                    <field name="so" invisible="1" />
                     <field name="mo" />
                     <field name="lose" />
                     <field name="percent10" />
@@ -70,8 +70,8 @@
             <field name="arch" type="xml">
                 <tree string="Problem Type">
                     <field name="nickname" />
-                    <field name="so1" sum="Total"/>
-                    <field name="so2" sum="Total" string=""/>
+                    <field name="so1" sum="Total" invisible="1"/>
+                    <field name="so2" sum="Total" string="" invisible="1"/>
                     <field name="mo1" sum="Total"/>
                     <field name="mo2" sum="Total" string=""/>
                     <field name="percent901" sum="Total"/>
@@ -138,8 +138,8 @@
             <field name="arch" type="xml">
                 <tree string="Problem Type">
                     <field name="nickname" />
-                    <field name="so1" sum="Total"/>
-                    <field name="so2" sum="Total" string=""/>
+                    <field name="so1" sum="Total" invisible="1"/>
+                    <field name="so2" sum="Total" string="" invisible="1"/>
                     <field name="mo1" sum="Total"/>
                     <field name="mo2" sum="Total" string=""/>
                     <field name="percent901" sum="Total"/>
@@ -194,7 +194,7 @@
             <field name="arch" type="xml">
                 <tree string="Problem Type">
                     <field name="nickname" />
-                    <field name="so2" sum="Total" string="SO"/>
+                    <field name="so2" sum="Total" string="SO" invisible="1"/>
                     <field name="mo2" sum="Total" string="MO"/>
                     <field name="total_customer" sum="Total"/>
                     <field name="total_customer_company" sum="Total" string="Comp"/>
@@ -250,7 +250,7 @@
             <field name="arch" type="xml">
                 <tree string="Problem Type">
                     <field name="nickname" />
-                    <field name="so2" sum="Total" string="SO"/>
+                    <field name="so2" sum="Total" string="SO" invisible="1"/>
                     <field name="mo2" sum="Total" string="MO"/>
                     <field name="total_customer" sum="Total"/>
                     <field name="total_customer_company" sum="Total" string="Comp"/>
@@ -305,7 +305,7 @@
             <field name="arch" type="xml">
                 <tree string="Problem Type">
                     <field name="nickname" />
-                    <field name="so2" sum="Total" string="SO"/>
+                    <field name="so2" sum="Total" string="SO" invisible="1"/>
                    	<field name="mo2" sum="Total" string="MO"/>
                 </tree>
             </field>

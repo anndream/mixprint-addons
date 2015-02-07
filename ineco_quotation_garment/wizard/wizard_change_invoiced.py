@@ -19,15 +19,22 @@
 #
 ##############################################################################
 
-import wizard_update_production_start
-import wizard_start_workorder
-import wizard_done_workorder
-import wizard_pattern_select
-import wizard_update_otherinfo
-import wizard_pattern_copy
-import wizard_update_routing
-import wizard_update_printmo
-import wizard_update_printplan
-import wizard_make_collar
-import wizard_ticket_split
-import wizard_change_invoiced
+from openerp.osv import fields, osv
+
+class ineco_invoiced_stock_picking(osv.osv_memory):
+    
+    _name = 'ineco.invoiced.stock.picking'
+    _description = 'Wizard change invoice state to invoiced'
+    _columns = {
+    }
+    
+    def update_data(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        active_ids = context.get('active_ids',[])
+        if active_ids:
+            self.pool.get('stock.picking').write(cr, uid, active_ids, {'invoice_state':'invoiced'})
+            
+        return {'type': 'ir.actions.act_window_close'}
+    
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
