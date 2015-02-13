@@ -999,6 +999,90 @@
             </field>
         </record>    
 
+
+		<!-- Color of Last Year -->
+        <record id="view_ineco_color_of_lastyear_tree" model="ir.ui.view">
+            <field name="name">ineco.color.of.lastyear.tree</field>
+            <field name="model">ineco.color.of.lastyear</field>
+            <field name="arch" type="xml">
+                <tree string="Color of Last Year">
+                    <field name="name" />
+                    <field name="total" sum="Total" />
+                    <field name="m01" sum="Total" />
+                    <field name="m02" sum="Total" />
+                    <field name="m03" sum="Total" />
+                    <field name="m04" sum="Total" />
+                    <field name="m05" sum="Total" />
+                    <field name="m06" sum="Total" />
+                    <field name="m07" sum="Total" />
+                    <field name="m08" sum="Total" />
+                    <field name="m09" sum="Total" />
+                    <field name="m10" sum="Total" />
+                    <field name="m11" sum="Total" />
+                    <field name="m12" sum="Total" />
+                </tree>
+            </field>
+        </record>		        
+        
+        <record id="action_ineco_color_of_lastyear" model="ir.actions.act_window">
+            <field name="name">Color of Lastyear</field>
+            <field name="res_model">ineco.color.of.lastyear</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_ineco_color_of_lastyear_tree" />
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale summary. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+		<!-- Color of Year -->
+        <record id="view_ineco_color_of_year_tree" model="ir.ui.view">
+            <field name="name">ineco.color.of.year.tree</field>
+            <field name="model">ineco.color.of.year</field>
+            <field name="arch" type="xml">
+                <tree string="Color of Year">
+                    <field name="name" />
+                    <field name="total" sum="Total" />
+                    <field name="m01" sum="Total" />
+                    <field name="m02" sum="Total" />
+                    <field name="m03" sum="Total" />
+                    <field name="m04" sum="Total" />
+                    <field name="m05" sum="Total" />
+                    <field name="m06" sum="Total" />
+                    <field name="m07" sum="Total" />
+                    <field name="m08" sum="Total" />
+                    <field name="m09" sum="Total" />
+                    <field name="m10" sum="Total" />
+                    <field name="m11" sum="Total" />
+                    <field name="m12" sum="Total" />
+                </tree>
+            </field>
+        </record>		        
+        
+        <record id="action_ineco_color_of_year" model="ir.actions.act_window">
+            <field name="name">Color of year</field>
+            <field name="res_model">ineco.color.of.year</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_ineco_color_of_lastyear_tree" />
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale summary. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
                     
       <!-- Dashboard Columns -->
       <record model="ir.ui.view" id="board_mixprint_dashboard_form">
@@ -1016,6 +1100,8 @@
                         	<action string="Smart Opportunity Stages" name="%(action_ineco_sale_summary4smart)d"/>
                         	<action string="Smart Sale Log" name="%(action_ineco_sale_summary5smart)d"/>
                         	<action string="Sale Quantity" name="%(action_ineco_sale_qty_dashboard)d"/>
+                        	<action string="Color of Last Year" name="%(action_ineco_color_of_lastyear)d" />
+                        	<action string="Color of year" name="%(action_ineco_color_of_year)d" />
                         	<action string="Stock" name="%(action_ineco_product_category_stock)d" />
                         	<action string="Stock Option" name="%(action_ineco_product_category_stock_option)d" />
                         </column>    

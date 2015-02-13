@@ -1343,3 +1343,115 @@ class ineco_sale_qty_dashboard(osv.osv):
                     ) b
                 ) c
         """)
+
+class ineco_color_of_lastyear(osv.osv):
+    _name = 'ineco.color.of.lastyear'
+    _auto = False
+    _columns = {
+        'name': fields.char('Color'),
+        'total': fields.integer('Total'),
+        'm01': fields.integer('January'),
+        'm02': fields.integer('February'),
+        'm03': fields.integer('March'),
+        'm04': fields.integer('April'),
+        'm05': fields.integer('May'),
+        'm06': fields.integer('June'),
+        'm07': fields.integer('July'),
+        'm08': fields.integer('August'),
+        'm09': fields.integer('September'),
+        'm10': fields.integer('Octorber'),
+        'm11': fields.integer('November'),
+        'm12': fields.integer('December'),        
+    }
+    _order = 'total desc'
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_color_of_lastyear')
+        cr.execute(""" CREATE VIEW ineco_color_of_lastyear AS 
+select 
+  sc.id,
+  sc.name,
+  round(sum(sol.product_uom_qty)) as total,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 1 then sol.product_uom_qty else null end),0)) as M01,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 2 then sol.product_uom_qty else null end),0)) as M02,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 3 then sol.product_uom_qty else null end),0)) as M03,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 4 then sol.product_uom_qty else null end),0)) as M04,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 5 then sol.product_uom_qty else null end),0)) as M05,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 6 then sol.product_uom_qty else null end),0)) as M06,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 7 then sol.product_uom_qty else null end),0)) as M07,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 8 then sol.product_uom_qty else null end),0)) as M08,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 9 then sol.product_uom_qty else null end),0)) as M09,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 10 then sol.product_uom_qty else null end),0)) as M10,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 11 then sol.product_uom_qty else null end),0)) as M11,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 12 then sol.product_uom_qty else null end),0)) as M12
+from 
+  sale_color sc
+   join sale_line_property_other slpo on slpo.color_id = sc.id
+   join sale_order_line sol on sol.id = slpo.sale_line_id
+   join sale_order so on so.id = sol.order_id
+where
+  extract(year from so.garment_order_date) = extract(year from current_date) - 1
+group by
+  sc.id,
+  sc.name
+order by
+  sum(sol.product_uom_qty) desc,
+  sc.name
+limit 10
+        """)
+
+class ineco_color_of_year(osv.osv):
+    _name = 'ineco.color.of.year'
+    _auto = False
+    _columns = {
+        'name': fields.char('Color'),
+        'total': fields.integer('Total'),
+        'm01': fields.integer('January'),
+        'm02': fields.integer('February'),
+        'm03': fields.integer('March'),
+        'm04': fields.integer('April'),
+        'm05': fields.integer('May'),
+        'm06': fields.integer('June'),
+        'm07': fields.integer('July'),
+        'm08': fields.integer('August'),
+        'm09': fields.integer('September'),
+        'm10': fields.integer('Octorber'),
+        'm11': fields.integer('November'),
+        'm12': fields.integer('December'),        
+    }
+    _order = 'total desc'
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_color_of_year')
+        cr.execute(""" CREATE VIEW ineco_color_of_year AS 
+select 
+  sc.id,
+  sc.name,
+  round(sum(sol.product_uom_qty)) as total,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 1 then sol.product_uom_qty else null end),0)) as M01,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 2 then sol.product_uom_qty else null end),0)) as M02,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 3 then sol.product_uom_qty else null end),0)) as M03,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 4 then sol.product_uom_qty else null end),0)) as M04,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 5 then sol.product_uom_qty else null end),0)) as M05,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 6 then sol.product_uom_qty else null end),0)) as M06,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 7 then sol.product_uom_qty else null end),0)) as M07,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 8 then sol.product_uom_qty else null end),0)) as M08,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 9 then sol.product_uom_qty else null end),0)) as M09,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 10 then sol.product_uom_qty else null end),0)) as M10,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 11 then sol.product_uom_qty else null end),0)) as M11,
+  coalesce(round(sum(case when extract(month from so.garment_order_date) = 12 then sol.product_uom_qty else null end),0)) as M12
+from 
+  sale_color sc
+   join sale_line_property_other slpo on slpo.color_id = sc.id
+   join sale_order_line sol on sol.id = slpo.sale_line_id
+   join sale_order so on so.id = sol.order_id
+where
+  extract(year from so.garment_order_date) = extract(year from current_date)
+group by
+  sc.id,
+  sc.name
+order by
+  sum(sol.product_uom_qty) desc,
+  sc.name
+limit 10
+        """)
