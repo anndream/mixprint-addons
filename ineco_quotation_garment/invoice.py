@@ -99,7 +99,12 @@ class account_invoice(osv.osv):
             },
         ),
         'partner_shipping_id': fields.related('saleorder_id','partner_shipping_id',string='Delivery Address', type="many2one", relation="res.partner",),
-        'other_invoice_no': fields.char('Other Invoice No', size=64)
+        'other_invoice_no': fields.char('Other Invoice No', size=64),
+        'corrected': fields.boolean('Corrected', track_visibility='onchange'),
+    }
+    
+    _defaults = {
+        'corrected': False,
     }
     
     def button_open_payment(self, cr, uid, ids, context=None):

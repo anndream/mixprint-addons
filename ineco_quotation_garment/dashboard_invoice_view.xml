@@ -49,6 +49,31 @@
             </field>
         </record>    
 
+		<!-- ALL Uncorrect -->
+        <record model="ir.ui.view" id="view_ineco_invoice_uncorrect_tree">
+            <field name="name">ineco.invoice.uncorrect.tree</field>
+            <field name="model">ineco.invoice.uncorrect</field>
+            <field name="arch" type="xml">
+                <tree string="All Invoice Uncorrect" >
+                	<field name="name" />
+                	<field name="sale_amount" />
+                	<field name="invoice_list" /> 
+                	<field name="invoice_amount" />
+                </tree>
+            </field>
+        </record>        
+
+        <record id="action_ineco_invoice_uncorrect" model="ir.actions.act_window">
+            <field name="name">All Invoice Uncorrect</field>
+            <field name="res_model">ineco.invoice.uncorrect</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ineco_invoice_uncorrect_tree"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+            </field>
+        </record>    
 
       <!-- Invoice Dashboard -->
       <record model="ir.ui.view" id="board_mixprint_invoice_dashboard">
@@ -58,7 +83,8 @@
                 <form string="Dashboard" version="7.0">
                     <board style="1">
                         <column>
-                       		<action string="All Invoice Balance" name="%(action_ineco_sale_invoice_balance)d"/>
+                        	<action string="Uncorrect" name="%(action_ineco_invoice_uncorrect)d" />
+                       		<!-- <action string="All Invoice Balance" name="%(action_ineco_sale_invoice_balance)d"/> -->
  						</column>
                     </board>
                 </form>

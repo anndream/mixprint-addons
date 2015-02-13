@@ -34,6 +34,43 @@ from openerp import tools
 #import pytz
 #from lxml import etree
 
+class ineco_invoice_uncorrect(osv.osv):
+    _name = 'ineco.invoice.uncorrect'
+    _auto = False
+    _columns = {
+        'name': fields.char('Garment Order No', size=64),
+        'sale_amount': fields.float('Sale Amount', digits=(12,2)),
+        'invoice_list': fields.char('Invocie Lists', size=254),
+        'record_count': fields.integer('Counts'),
+        'invoice_amount': fields.float('Invoice Amount', digits=(12,2)),
+    }
+    _order = 'name'
+    
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_invoice_uncorrect')
+        cr.execute("""
+        CREATE OR REPLACE VIEW ineco_invoice_uncorrect AS
+            select 
+              so.id, 
+              so.garment_order_no as name,
+              so.amount_untaxed as sale_amount,
+              (select array( select distinct number from account_invoice ai2 where ai2.garment_order_no = so.garment_order_no and ai2.state not in ('cancel') )) as invoice_list,
+              count(*) as record_count,
+              sum(ai.amount_untaxed) as invoice_amount
+            from 
+              sale_order so
+              join account_invoice ai on ai.garment_order_no = so.garment_order_no
+            where
+              ai.amount_untaxed > so.amount_untaxed
+              and so.state not in ('cancel')
+              and so.garment_order_no is not null
+              and extract(year from so.garment_order_date) >= 2015 and ai.corrected = False
+            group by
+              so.id,
+              so.garment_order_no,
+              so.amount_untaxed
+        """)
+
 class ineco_sale_invoice_balance(osv.osv):
     _name = "ineco.sale.invoice.balance"
     _auto = False

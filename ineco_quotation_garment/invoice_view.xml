@@ -14,6 +14,7 @@
                 
                 <field name="internal_number" position="after">
                 	<field name="other_invoice_no" />
+                	<field name="corrected" />
                 </field>          
                 
                 <xpath expr="//page[@string='Other Info']" position="after">
