@@ -429,6 +429,7 @@
                     							<field name="gender_id" />
                     							<field name="color_id" />
                     							<field name="size_id" />
+                    							<field name="note" />
                     							<field name="quantity" />
                     							<button name="%(action_production_ticket_split)d" string="Split" icon="gtk-go-forward" type="action" />
                     							<field name="machine_id" domain="[('workcenter_id.name','=','แผนกตัด')]" />

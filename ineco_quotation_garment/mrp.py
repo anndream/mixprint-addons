@@ -137,13 +137,17 @@ class mrp_production(osv.osv):
                 cr.execute(sql)
                 sql = "delete from ineco_mrp_production_ticket where production_id = %s and pattern_id = %s" % (production.id, production.pattern_id.id)
                 cr.execute(sql)
-                for component in production.pattern_id.component_ids:
-                    new_data = {
-                        'seq': component.seq,
-                        'type_id': component.type_id.id,
-                        'production_id': production.id,
-                    }
-                    self.pool.get('ineco.mrp.pattern.component').create(cr, uid, new_data)
+                pattern_obj = self.pool.get('ineco.pattern')
+                pattern_ids = pattern_obj.search(cr, uid, [('saleorder_id','=',production.sale_order_id.id),('saleorder_id','!=',False)])
+                for pattern in pattern_obj.browse(cr, uid, pattern_ids):                    
+                    #for component in production.pattern_id.component_ids:
+                    for component in pattern.component_ids:
+                        new_data = {
+                            'seq': component.seq,
+                            'type_id': component.type_id.id,
+                            'production_id': production.id,
+                        }
+                        self.pool.get('ineco.mrp.pattern.component').create(cr, uid, new_data)
                 full_ticket = 0
                 ticket_obj = self.pool.get('ineco.mrp.production.ticket')
                 #while full_ticket <  production.product_qty // production.ticket_size:
@@ -338,6 +342,7 @@ class ineco_mrp_production_ticket(osv.osv):
         'color_id': fields.related('production_id', 'color_id', type='many2one', relation="sale.color", string='Color', readonly=True),
         'size_id': fields.related('production_id', 'size_id', type='many2one', relation="sale.size", string='Size', store=True, readonly=True),
         'size_seq': fields.related('size_id', 'seq', type='integer', string='Size Seq', store=True, readonly=True),
+        'note': fields.related('production_id', 'note', type='char', size=64, string='Note', store=True, readonly=True),
     }
     _order = 'machine_id, size_seq, production_id'
 
