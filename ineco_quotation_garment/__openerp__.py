@@ -20,7 +20,7 @@
 ##############################################################################
 {
     'name' : 'Ineco Quotation for Garment',
-    'version' : '0.1',
+    'version' : '0.2',
     'author' : 'Mr.Tititab Srisookco',
     'category' : 'INECO',
     'description' : """
