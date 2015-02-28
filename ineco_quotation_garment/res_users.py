@@ -29,4 +29,6 @@ class res_users(osv.osv):
     _inherit = "res.users"
     _columns = {
         'nickname': fields.char('Nick Name', size=32),
+        'mixprint': fields.boolean('Mixprint'),
+        'smart': fields.boolean('Smart'),
     }

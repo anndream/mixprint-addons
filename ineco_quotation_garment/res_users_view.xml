@@ -9,6 +9,8 @@
             <field name="arch" type="xml">
                 <field name="email" position="after">
                 	<field name="nickname" placeholder="Nick name here..."/>
+                	<field name="mixprint" />
+                	<field name="smart" />
                 </field>
             </field>
         </record>
@@ -20,8 +22,11 @@
             <field name="arch" type="xml">
                 <field name="login" position="before">
                 	<field name="nickname" />
+                	<field name="mixprint" />
+                	<field name="smart" />
                 </field>
             </field>
         </record>    
+        
     </data>
 </openerp>

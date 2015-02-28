@@ -188,14 +188,17 @@ class ineco_sale_summary3(osv.osv):
                 from 
                   res_users ru
                 left join res_partner rp on ru.partner_id = rp.id
-                where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
-                   signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
+                where ru.active = true and
+                    ru.mixprint = True or ru.smart = True 
+                    --ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+                    --signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
                 order by rp.name                
             )    
         """)
         
 class ineco_sale_summary4(osv.osv):
     _name = 'ineco.sale.summary4'
+    _description = "Oppportunity Stages (Mixprint)"
     _auto = False
     _columns = {
         'user_id': fields.many2one('res.users', 'Sale'),
@@ -232,7 +235,7 @@ class ineco_sale_summary4(osv.osv):
                         from (
                             select array (
                                 select ineco_sale_summary3 from ineco_sale_summary3
-                                where user_id not in (7,115,122)
+                                where user_id in (select id from res_users where mixprint = True)
                             ) as a
                     ) b
                 ) c
@@ -240,6 +243,7 @@ class ineco_sale_summary4(osv.osv):
 
 class ineco_sale_summary4smart(osv.osv):
     _name = 'ineco.sale.summary4smart'
+    _description = "Oppportunity Stages (Smart)"
     _auto = False
     _columns = {
         'user_id': fields.many2one('res.users', 'Sale'),
@@ -276,7 +280,7 @@ class ineco_sale_summary4smart(osv.osv):
                         from (
                             select array (
                                 select ineco_sale_summary3 from ineco_sale_summary3
-                                where user_id in (7,115,122)
+                                where user_id in (select id from res_users where smart = True)
                             ) as a
                     ) b
                 ) c
@@ -389,14 +393,17 @@ class ineco_sale_summary5_query(osv.osv):
                 from 
                   res_users ru
                 left join res_partner rp on ru.partner_id = rp.id
-                where ru.active = true and ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
-                   signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
+                where ru.active = true and 
+                   ru.mixprint = True or ru.smart = True
+                   --ru.id not in (70,71,72,23,16,61,20,1,18,22,21,66,60) and
+                   --signature like '%เจ้าหน้าที่งานฝ่ายขาย%'
                 order by rp.name      
         )    
         """)
         
 class ineco_sale_summary5(osv.osv):
     _name = 'ineco.sale.summary5'
+    _description = "Sale Log (Mixprint)"
     _auto = False
     _columns = {
         'user_id': fields.many2one('res.users', 'Sale'),
@@ -433,7 +440,7 @@ class ineco_sale_summary5(osv.osv):
                         from (
                             select array (
                                 select ineco_sale_summary5_query from ineco_sale_summary5_query
-                                where user_id not in (7,115,122)
+                                where user_id in (select id from res_users where mixprint = True)
                             ) as a
                     ) b
                 ) c
@@ -441,6 +448,7 @@ class ineco_sale_summary5(osv.osv):
         
 class ineco_sale_summary5smart(osv.osv):
     _name = 'ineco.sale.summary5smart'
+    _description = "Sale Log (Smart)"
     _auto = False
     _columns = {
         'user_id': fields.many2one('res.users', 'Sale'),
@@ -477,7 +485,7 @@ class ineco_sale_summary5smart(osv.osv):
                         from (
                             select array (
                                 select ineco_sale_summary5_query from ineco_sale_summary5_query
-                                where user_id in (7,115,122)
+                                where user_id in (select id from res_users where smart = True)
                             ) as a
                     ) b
                 ) c
