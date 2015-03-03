@@ -65,6 +65,12 @@ class wizard_select_close_saleorder(osv.osv_memory):
                     sale_order_ids = self.pool.get('sale.order').search(cr, uid, [('name','in',sale_no_list),('sale_close_no','=',False)])
                     for id in sale_order_ids:
                         sale_ids.append(id)
+                    #Add Commission Line
+                    commission_rate = 0.5 / 100
+                    invoice_amount = invoice.amount_untaxed or 0.00
+                    commission = invoice_amount * commission_rate
+                    invoice.write({'commission_sale': commission,'commission_date': time.strftime('%Y-%m-%d') })
+
             if sale_ids:
                 #print sale_ids
                 next_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.sale.close') or False
