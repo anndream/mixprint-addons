@@ -118,7 +118,11 @@
                 	<field name="garment_order_other" />
                 </field>
                 <filter name="unpaid" position="after">
-                	<filter name="depnomo" icon="terp-go-today" string="Deposit no Garment Order" domain="[('garment_order_no','=',False),('journal_id','in',[10,2]),('state','=','open')]" />					
+                	<filter name="depnomo" icon="terp-go-today" string="Deposit no Garment Order" domain="[('garment_order_no','=',False),('journal_id','in',[10,2]),('state','=','open')]" />			
+                	<filter name="commission_prepare" icon="terp-go-today" string="To Commission" 
+                		domain="[('commission_ready','!=',False),('commission_date','=',False)]" />
+                	<filter name="commission_pay" icon="terp-go-today" string="Pay Commission" 
+                		domain="[('commission_pay','=',False),('commission_date','!=',False),('commission_sale','!=',False)]" />
                 </filter>
                 <filter string="Status" position="after">
                 	<filter name="search_garment_order_no" icon="terp-go-today" string="Garment Order" domain="[]" context="{'group_by':'garment_order_no'}" />					
@@ -140,6 +144,17 @@
 	      		</field>
 			</field>
 		</record>
-		              
+
+        <record model="ir.ui.view" id="view_mixprint_invoice_commission_form">
+	      	<field name="name">mixprint.invoice.commission.form</field>
+	      	<field name="model">account.invoice</field>
+	      	<field name="inherit_id" ref="ineco_thai_account.view_ineco_account_invoice_form"/>
+	      	<field name="arch" type="xml">
+	      		<field name="commission_sale" position="after">
+	      			<field name="commission_date" />
+	      		</field>
+			</field>
+		</record>
+				              
     </data>
 </openerp>

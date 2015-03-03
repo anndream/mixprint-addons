@@ -31,3 +31,5 @@ import wizard_update_printplan
 import wizard_make_collar
 import wizard_ticket_split
 import wizard_change_invoiced
+import wizard_prepare_commission
+import wizard_pay_commission

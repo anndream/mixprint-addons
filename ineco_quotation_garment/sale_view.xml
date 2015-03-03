@@ -762,6 +762,7 @@
             	<field name="amount_total" position="after">
             		<field name="deposit" />
             		<field name="residual" />
+            		<field name="commission_ready" />
             	</field>
               	<field name="date_order" position="after">
               		<field name="sample_order_no" />

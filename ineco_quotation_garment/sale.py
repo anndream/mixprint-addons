@@ -225,6 +225,51 @@ class sale_order(osv.osv):
                 result[obj.id]['residual'] = obj.amount_total - (result[obj.id]['deposit'] or 0.00)
         return result
 
+    def _get_commission(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'commission_ready': False
+            }
+            sql = """
+                select 
+                   so.id,
+                   garment_order_no,
+                   amount_untaxed,
+                   (select count(*) from account_invoice ai
+                    where type = 'out_invoice'
+                      and state = 'paid'
+                      and garment_order_no = so.garment_order_no) as invoice_count,
+                   (select count(*) from account_invoice ai
+                    where type = 'out_refund'
+                      and state = 'paid'
+                      and garment_order_no = so.garment_order_no) as refund_count,
+                   (select coalesce(sum(amount_untaxed),0.00) from account_invoice ai
+                    where type = 'out_invoice'
+                      and state = 'paid'
+                      and garment_order_no = so.garment_order_no) as invoice_amount,
+                   (select coalesce(sum(amount_untaxed),0.00) from account_invoice ai
+                    where type = 'out_refund'
+                      and state = 'paid'
+                      and garment_order_no = so.garment_order_no) as refund_amount   
+                from
+                   sale_order so
+                where
+                  so.state not in ('draft','cancel') and
+                  so.id = %s
+                  and so.garment_order_no is not null
+                  and amount_untaxed - (select coalesce(sum(amount_untaxed),0.00) from account_invoice ai
+                    where type = 'out_refund'
+                      and garment_order_no = so.garment_order_no) <= (select coalesce(sum(amount_untaxed),0.00) from account_invoice ai
+                    where type = 'out_invoice'
+                      and garment_order_no = so.garment_order_no)
+              """ % obj.id
+            cr.execute(sql)             
+            data = cr.fetchone()
+            if data and data[0]:
+                result[obj.id]['commission_ready'] = data[2] - data[6] <= data[5]
+        return result
+
     def _get_residual(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
@@ -279,6 +324,12 @@ class sale_order(osv.osv):
                 result[obj.id]['sampling_employee2_start'] = pattern.sampling_date_process2_start or False
                 result[obj.id]['sampling_employee2_finish'] = pattern.sampling_date_process2_finish or False
         return result
+
+    def _get_invoice_paid(self, cr, uid, ids, context=None):
+        result = {}
+        for data in self.pool.get('account.invoice').browse(cr, uid, ids, context=context):
+            result[data.saleorder_id.id] = True
+        return result.keys()
     
     _inherit = 'sale.order'
     _description = 'Add Delivery Date'
@@ -324,12 +375,19 @@ class sale_order(osv.osv):
         'garment_order_no_org': fields.function(_get_original_mo, string="Master MO", type="char", multi="_mo"),
         'deposit': fields.function(_get_deposit, string="Deposit", type="float", digits=(12,2), multi="_deposit"),
         'residual': fields.function(_get_deposit, string="Residual", type="float", digits=(12,2), multi="_deposit"),
+        'commission_ready': fields.function(_get_commission, string="Commission Ready", 
+                    store={
+                        'sale.order': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+                        'account.invoice': (_get_invoice_paid, ['state'], 10),
+                    },
+                    type="boolean", multi="_commission"),
     }
     _defaults = {
         'cancel_sample_order': False,
         'cancel_garment_order': False,
         'to_correct': False,
         'relate_garment_order_no': False,
+        'commission_ready': False,
     }
 
     def write(self, cr, uid, ids, vals, context=None):

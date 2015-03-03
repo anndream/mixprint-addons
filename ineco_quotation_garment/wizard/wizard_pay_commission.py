@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012 - INECO PARTNERSHIP LIMITE (<http://www.ineco.co.th>).
+#    Copyright (C) 2014-Today INECO., Part., Ltd. (<http://www.ineco.co.th>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,22 +19,28 @@
 #
 ##############################################################################
 
-import wizard
-import sale
-import res_users
-import stock
-import stock_partial_picking
-import partner
-import problem
-import invoice
-import product
-import dashboard_invoice
-import pattern
-import mrp
-import crm
-import dashboard
-import purchase
-import employee
-import dashboard_warehouse
+from openerp.osv import fields, osv
+import time
 
+class ineco_pay_commission(osv.osv_memory):
+    
+    _name = 'ineco.pay.commission'
+    _description = 'Wizard pay commission'
+    _columns = {
+    }
+    _defaults = {
+    }
+    
+    def update_data(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        active_ids = context.get('active_ids',[])
+        if active_ids:
+            data = self.read(cr, uid, ids, context=context)[0]
+            for invoice in self.pool.get('account.invoice').browse(cr, uid, active_ids):
+                if invoice.state == 'paid' and invoice.commission_ready :
+                    invoice.write({'commission_pay': True})
+            
+        return {'type': 'ir.actions.act_window_close'}
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
