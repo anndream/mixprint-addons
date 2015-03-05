@@ -130,6 +130,7 @@
             <field name="arch" type="xml">
             	<field name="list_price" position="after">
             		<field name="no_return_product" />
+            		<field name="pattern" />
             		<field name="product_name_eng" />
             	</field>
             </field>

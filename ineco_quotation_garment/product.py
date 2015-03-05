@@ -96,9 +96,11 @@ having (sum(qty) > 0.00)
         'lot_count': fields.function(_get_lot_count, string="Lots", type='integer',),
         'no_return_product': fields.boolean('No Return'),
         'product_name_eng': fields.char('English Name', size=128),
+        'pattern': fields.boolean('Pattern'),
     }
     _defaults = {
         'no_return_product': False,
+        'pattern': False,
     }
 
 class ineco_product_category_stock(osv.osv):
