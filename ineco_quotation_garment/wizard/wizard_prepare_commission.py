@@ -40,7 +40,7 @@ class ineco_prepare_commission(osv.osv_memory):
         if active_ids:
             data = self.read(cr, uid, ids, context=context)[0]
             for invoice in self.pool.get('account.invoice').browse(cr, uid, active_ids):
-                if invoice.state == 'paid' and invoice.commission_ready:
+                if invoice.state == 'paid' and (invoice.commission_ready or invoice.type == 'out_refund') :
                     commission_rate = 0.5 / 100
                     invoice_amount = invoice.amount_untaxed or 0.00
                     commission = invoice_amount * commission_rate

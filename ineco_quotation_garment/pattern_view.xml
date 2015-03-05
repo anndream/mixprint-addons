@@ -533,12 +533,134 @@
               </p>
             </field>
         </record>
+        
+        <record id="action_ineco_pattern_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ineco_pattern_tree" />
+            <field name="act_window_id" ref="action_ineco_pattern"/>
+        </record>
 
+        <record id="action_ineco_pattern_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ineco_pattern_form"/>
+            <field name="act_window_id" ref="action_ineco_pattern"/>
+        </record>
+        
+        <record id="action_ineco_pattern_form" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_ineco_pattern_kanban"/>
+            <field name="act_window_id" ref="action_ineco_pattern"/>
+        </record>     
+        
         <menuitem name="Pattern"
             id="menu_mrp_pattern"
             parent="menu_mrp_pattern_menu"
             action="action_ineco_pattern"
             sequence="0"/>
+
+        <record id="view_ineco_pattern_process_form" model="ir.ui.view">
+            <field name="name">ineco.pattern.process.form</field>
+            <field name="model">ineco.pattern</field>
+            <field name="arch" type="xml">
+                <form string="Pattern" version="7.0">
+                	<header>
+	                    <field name="state" widget="statusbar" statusbar_visible="ready,used,damage" />
+                	</header>
+                	<sheet>
+						<field name="image" widget="image" class="oe_avatar oe_left" />
+						<div class="oe_title">
+							<div class="oe_edit_only">
+								<label for="name" string="Product Name" />
+							</div>
+							<h1>
+								<field name="name" readonly="1" />
+							</h1>
+						</div>
+                		<group>
+                			<group>
+			                    <!-- <field name="name" /> -->
+			                    <field name="saleorder_id" readonly="1"/>
+			                    <field name="partner_id" readonly="1"/>
+			                    <field name="employee_id" readonly="1"/>
+			                    <field name="last_updated" readonly="1"/>
+			                    <field name="rev_no" readonly="1"/>
+			                    <field name="remark2" readonly="1"/>
+                			</group>
+                			<group>
+			                    <field name="product_id" readonly="1"/>
+			                    <field name="garment_order_no" readonly="1"/>
+			                    <field name="garment_order_no_org" readonly="1"/>
+			                    <field name="sampling_order_no" readonly="1"/>
+			                    <field name="product_type_id" readonly="1" />
+			                    <field name="location_id" readonly="1" />
+			                    <field name="user_id" readonly="1"/>
+			                    <field name="is_cancel" readonly="1"/>
+			                    <field name="active" groups="base.group_erp_manager" />
+                			</group>
+                			<notebook colspan="4">
+                				<page string="Process">
+                					<field name="process_ids">
+                						<tree string="Processes">
+                							<field name="sequence" />
+                							<field name="process_id" />
+                							<field name="name" />
+                							<field name="cycle_time" />
+                							<field name="cost" />
+                						</tree>
+                					</field>
+                    			</page>
+                			</notebook>              				
+                		</group>
+                	</sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>	
+
+        <record id="action_ineco_pattern_process" model="ir.actions.act_window">
+            <field name="name">Pattern Process</field>
+            <field name="res_model">ineco.pattern</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_pattern_filter"/>
+            <field name="context">{'search_default_todo':1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a problem type. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_ineco_pattern_process_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ineco_pattern_tree" />
+            <field name="act_window_id" ref="action_ineco_pattern_process"/>
+        </record>
+
+        <record id="action_ineco_pattern_process_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ineco_pattern_process_form"/>
+            <field name="act_window_id" ref="action_ineco_pattern_process"/>
+        </record>
+
+        <menuitem name="Pattern Process"
+            id="menu_mrp_pattern_process"
+            parent="menu_mrp_pattern_menu"
+            action="action_ineco_pattern_process"
+            sequence="1"/>
 
 		<!-- Pattern Out -->
         <record id="view_ineco_pattern_out_tree" model="ir.ui.view">
@@ -591,7 +713,7 @@
             id="menu_mrp_pattern_out"
             parent="menu_mrp_pattern_menu"
             action="action_ineco_pattern_out"
-            sequence="1"/>
+            sequence="3"/>
 
 		<!-- Pattern In -->
         <record id="view_ineco_pattern_in_tree" model="ir.ui.view">
@@ -632,7 +754,7 @@
             id="menu_mrp_pattern_in"
             parent="menu_mrp_pattern_menu"
             action="action_ineco_pattern_in"
-            sequence="2"/>
+            sequence="4"/>
       
      </data>
 </openerp>

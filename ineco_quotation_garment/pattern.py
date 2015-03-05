@@ -283,7 +283,8 @@ class ineco_pattern(osv.osv):
         'attachment_count': fields.function(_get_attachment, fnct_search=_get_attachment_search, string="Attachment", type='integer', multi="_attachment"),
         'production_ids': fields.function(_get_production_lines, type='many2many', relation='mrp.production', string='Productions'),                
         'ticket_ids': fields.one2many('ineco.mrp.production.ticket','pattern_id','Tickets'),                
-        'pattern_group_id': fields.many2one('ineco.pattern.group', 'Pattern Group')
+        'pattern_group_id': fields.many2one('ineco.pattern.group', 'Pattern Group'),
+        'process_ids': fields.one2many('ineco.pattern.process','pattern_id','Processes'),
     }
     
     _sql_constraints = [
@@ -519,3 +520,22 @@ class ineco_pattern_log(osv.osv):
         vals.update({'last_updated': time.strftime("%Y-%m-%d %H:%M:%S")})
         res = super(ineco_pattern_log, self).write(cr, uid, ids, vals, context=context)
         return res
+    
+class ineco_pattern_process(osv.osv):
+    _name = 'ineco.pattern.process'
+    _description = 'Process of Pattern'
+    _columns = {
+        'name': fields.char('Description',size=254,required=True),
+        'pattern_id': fields.many2one('ineco.pattern'),
+        'process_id': fields.many2one('ineco.mrp.process','Process',required=True),
+        'sequence': fields.integer('Seq',required=True),
+        'cycle_time': fields.integer('Cycle Time (Sec.)',required=True),
+        'cost': fields.integer('Cost',)
+    }
+    _defaults = {
+        'sequence': 1.0,
+    }
+    #_sql_constraints = [
+    #    ('name_unique', 'unique (name)', 'Description must be unique !')
+    #]   
+

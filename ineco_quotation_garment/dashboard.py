@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012 - INECO PARTNERSHIP LIMITE (<http://www.ineco.co.th>).
+#    Copyright (C) 2012 - INECO PARTNERSHIP LIMITED (<http://www.ineco.co.th>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -1259,11 +1259,12 @@ class ineco_sale_amount_dashboard(osv.osv):
 
 class ineco_sale_qty_dashboard_temp(osv.osv):
     _name = 'ineco.sale.qty.dashboard.temp'
+    _description = "Dashboard Sale Quantity by Polo (Smart user next_garment_order_date)"
     _auto = False
     
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'ineco_sale_qty_dashboard_temp')
-        cr.execute(""" CREATE VIEW ineco_sale_qty_dashboard_temp AS 
+        cr.execute(""" CREATE or replace VIEW ineco_sale_qty_dashboard_temp AS 
 select
   raw_data.user_id,
   ru.nickname,
