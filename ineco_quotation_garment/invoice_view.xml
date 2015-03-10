@@ -10,6 +10,7 @@
                 <field name="fiscal_position" position="after">
                 	<field name="garment_order_no" />
                 	<field name="garment_order_other" />
+                	<field name="commission_relate" />
                 </field>   
                 
                 <field name="internal_number" position="after">
