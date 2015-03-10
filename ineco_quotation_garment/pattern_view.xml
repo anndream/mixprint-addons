@@ -545,7 +545,7 @@
             <field name="act_window_id" ref="action_ineco_pattern"/>
         </record>
 
-        <record id="action_ineco_pattern_form" model="ir.actions.act_window.view">
+        <record id="action_ineco_pattern_form2" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_ineco_pattern_form"/>
