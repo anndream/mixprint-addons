@@ -23,7 +23,7 @@
 {
     'name' : 'INECO UNIFORM',
     'version' : '0.1',
-    'depends' : ["base","sale"],
+    'depends' : ["base","sale","ineco_quotation_garment"],
     'author' : 'INECO LTD.,PART.',
     'category': 'Accounting',
     'description': """
@@ -34,6 +34,7 @@ Feature:
     ],
     'update_xml': [
         'sale_view.xml',
+        'security.xml',
     ],
     'demo': [],
     'installable': True,

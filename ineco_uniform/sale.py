@@ -27,4 +27,17 @@ class sale_order(osv.osv):
         'next_garment_order_no': fields.char('Garment Order No', size=32),
         'next_garment_order_date': fields.date('Garment Order Date'),
         'next_sample_order_no': fields.char('Sampling Order No', size=32),
+        'candidate_ids': fields.one2many('sale.order.candidate','order_id','Candidates'),
+    }
+    
+class sale_order_candidate(osv.osv):
+    _name = 'sale.order.candidate'
+    _description = "Candidate Material"
+    _columns = {
+        'name': fields.char('Description',size=64,required=True),
+        'cost': fields.integer('Unit Price'),
+        'order_id': fields.many2one('sale.order','Sale Order'),
+    }
+    _defaults = {
+        'cost': 1.0,
     }
