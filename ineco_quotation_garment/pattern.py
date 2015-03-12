@@ -24,6 +24,9 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from openerp import tools
+from openerp.osv.orm import Model
+
+
 #import openerp.addons.decimal_precision as dp
 
 class ineco_pattern(osv.osv):
@@ -522,6 +525,7 @@ class ineco_pattern_log(osv.osv):
         return res
     
 class ineco_pattern_process(osv.osv):
+    
     _name = 'ineco.pattern.process'
     _description = 'Process of Pattern'
     _columns = {
@@ -530,12 +534,44 @@ class ineco_pattern_process(osv.osv):
         'process_id': fields.many2one('ineco.mrp.process','Process',required=True),
         'sequence': fields.integer('Seq',required=True),
         'cycle_time': fields.integer('Cycle Time (Sec.)',required=True),
-        'cost': fields.integer('Cost',)
+        'cost': fields.integer('Cost',),
+        'image_multi': fields.text('Image List'),
+        #'attachments': fields.one2many('ir.attachment', 'pattern_process_id', string="Attachments")
     }
+
+    def _get_sequence(self, cr, uid, context=None):
+        context = context or {}
+        next_id = False
+        if context.get('lines', False):
+            next_id = len(context.get('lines', False)) + 1
+        else:
+            next_id = 1
+        return next_id
+    
     _defaults = {
-        'sequence': 1.0,
+        'sequence': _get_sequence,
     }
+
     #_sql_constraints = [
     #    ('name_unique', 'unique (name)', 'Description must be unique !')
     #]   
 
+#class document_file(Model):
+#    
+#    _inherit = 'ir.attachment'
+#    
+#    _columns = {
+#        'pattern_process_id': fields.many2one('ineco.pattern.process','Pattern Process'),
+#    }
+
+#    def create(self, cr, uid, vals, context=None):
+#        if vals.get('pattern_process_id', 0) != 0 and not (vals.get('res_id', False) and vals.get('res_model', False)):
+#            vals['res_id'] = vals['pattern_process_id']
+#            vals['res_model'] = 'ineco.pattern.process'
+#        return super(document_file, self).create(cr, uid, vals, context)
+
+#    def write(self, cr, uid, ids, vals, context=None):
+#        if vals.get('pattern_process_id', 0) != 0 and not (vals.get('res_id', False) and vals.get('res_model', False)):
+#            vals['res_id'] = vals['pattern_process_id']
+#            vals['res_model'] = 'ineco.pattern.process'
+#        return super(document_file, self).write(cr, uid, ids, vals, context)

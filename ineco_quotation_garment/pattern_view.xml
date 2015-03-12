@@ -606,7 +606,7 @@
                 			</group>
                 			<notebook colspan="4">
                 				<page string="Process">
-                					<field name="process_ids">
+                					<field name="process_ids" context="{'lines': process_ids}">
                 						<tree string="Processes">
                 							<field name="sequence" />
                 							<field name="process_id" />
@@ -614,6 +614,28 @@
                 							<field name="cycle_time" />
                 							<field name="cost" />
                 						</tree>
+                						<form string="Process" version="7.0">
+                							<group>
+                								<group>
+		                							<field name="sequence" />
+		                							<field name="process_id" />
+		                							<field name="name" />
+                								</group>
+                								<group>
+		                							<field name="cycle_time" />
+		                							<field name="cost" />
+                								</group>
+	                							<notebook colspan="4">
+	                								<page string="Images">
+	                									<field name="image_multi" widget="image_multi" />
+	                								</page>
+	                								<!-- <page string="Attachment">
+	                									<field name="attachments" />
+	                								</page>
+	                								 -->
+	                							</notebook>
+                							</group>
+                						</form>
                 					</field>
                     			</page>
                 			</notebook>              				
