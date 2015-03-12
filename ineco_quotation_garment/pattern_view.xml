@@ -613,6 +613,7 @@
                 							<field name="name" />
                 							<field name="cycle_time" />
                 							<field name="cost" />
+                							<field name="attachments" />
                 						</tree>
                 						<form string="Process" version="7.0">
                 							<group>
@@ -629,10 +630,22 @@
 	                								<page string="Images">
 	                									<field name="image_multi" widget="image_multi" />
 	                								</page>
-	                								<!-- <page string="Attachment">
-	                									<field name="attachments" />
-	                								</page>
-	                								 -->
+	                								<page string="Attachment">
+	                									<field name="attachments" context="{'default_type':'binary'}">
+	                										<tree string="Attachment">
+	                											<field name="name" />
+	                										</tree>
+	                										<form string="Attachment" version="7.0">
+	                											<group>	
+	                												<group>
+			                											<field name="type" invisible="1" />
+			                											<field name="name" />
+			                											<field name="db_datas" />
+	                												</group>
+	                											</group>
+	                										</form>
+	                									</field>
+	                								</page>	                								
 	                							</notebook>
                 							</group>
                 						</form>

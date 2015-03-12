@@ -536,7 +536,7 @@ class ineco_pattern_process(osv.osv):
         'cycle_time': fields.integer('Cycle Time (Sec.)',required=True),
         'cost': fields.integer('Cost',),
         'image_multi': fields.text('Image List'),
-        #'attachments': fields.one2many('ir.attachment', 'pattern_process_id', string="Attachments")
+        'attachments': fields.one2many('ir.attachment', 'pattern_process_id', string="Attachments")
     }
 
     def _get_sequence(self, cr, uid, context=None):
@@ -556,22 +556,22 @@ class ineco_pattern_process(osv.osv):
     #    ('name_unique', 'unique (name)', 'Description must be unique !')
     #]   
 
-#class document_file(Model):
-#    
-#    _inherit = 'ir.attachment'
-#    
-#    _columns = {
-#        'pattern_process_id': fields.many2one('ineco.pattern.process','Pattern Process'),
-#    }
+class document_file(Model):
+    
+    _inherit = 'ir.attachment'
+    
+    _columns = {
+        'pattern_process_id': fields.many2one('ineco.pattern.process','Pattern Process'),
+    }
 
-#    def create(self, cr, uid, vals, context=None):
-#        if vals.get('pattern_process_id', 0) != 0 and not (vals.get('res_id', False) and vals.get('res_model', False)):
-#            vals['res_id'] = vals['pattern_process_id']
-#            vals['res_model'] = 'ineco.pattern.process'
-#        return super(document_file, self).create(cr, uid, vals, context)
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('pattern_process_id', 0) != 0 and not (vals.get('res_id', False) and vals.get('res_model', False)):
+            vals['res_id'] = vals['pattern_process_id']
+            vals['res_model'] = 'ineco.pattern.process'
+        return super(document_file, self).create(cr, uid, vals, context)
 
-#    def write(self, cr, uid, ids, vals, context=None):
-#        if vals.get('pattern_process_id', 0) != 0 and not (vals.get('res_id', False) and vals.get('res_model', False)):
-#            vals['res_id'] = vals['pattern_process_id']
-#            vals['res_model'] = 'ineco.pattern.process'
-#        return super(document_file, self).write(cr, uid, ids, vals, context)
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('pattern_process_id', 0) != 0 and not (vals.get('res_id', False) and vals.get('res_model', False)):
+            vals['res_id'] = vals['pattern_process_id']
+            vals['res_model'] = 'ineco.pattern.process'
+        return super(document_file, self).write(cr, uid, ids, vals, context)
