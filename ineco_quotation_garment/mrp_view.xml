@@ -478,6 +478,7 @@
 				<tree string="Sub Workcenter Task" editable="top">
 					<field name="subworkcenter_id" />
 					<field name="date" />
+					<field name="day_month" invisible="1" string="Day" />
 					<field name="saleorder_id" />
 					<field name="garment_order_no" readonly="1" />
 					<field name="quantity" />
@@ -508,8 +509,10 @@
                         	context="{'group_by':'subworkcenter_id'}"/>
                         <filter name="by_saleorder_id" string="Sale Order" icon="terp-partner" domain="[]" 
                         	context="{'group_by':'saleorder_id'}"/>
-                        <filter name="by_date" string="Date" icon="terp-partner" domain="[]" 
+                        <filter name="by_date" string="Month" icon="terp-partner" domain="[]" 
                         	context="{'group_by':'date'}"/>
+                        <filter name="by_day" string="Day" icon="terp-partner" domain="[]" 
+                        	context="{'group_by':'day_month'}"/>
                         <filter name="by_user_id" string="Sale" icon="terp-partner" domain="[]" 
                         	context="{'group_by':'user_id'}"/>
                         <filter name="by_product_id" string="Product" icon="terp-partner" domain="[]" 

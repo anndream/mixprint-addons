@@ -36,5 +36,6 @@ import dashboard
 import purchase
 import employee
 import dashboard_warehouse
+import cheque
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -33,3 +33,4 @@ import wizard_ticket_split
 import wizard_change_invoiced
 import wizard_prepare_commission
 import wizard_pay_commission
+import wizard_cheque_action

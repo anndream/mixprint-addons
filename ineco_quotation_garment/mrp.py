@@ -560,6 +560,16 @@ class ineco_mrp_subworkcenter_task(osv.osv):
                     if result[obj.id]['product_id'] == False:
                         result[obj.id]['product_id'] = line.product_id.id         
         return result
+
+    def _get_day(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'day_month': False
+            }
+            if obj.date:          
+                result[obj.id]['day_month'] = "%02d" % time.strptime(obj.date,'%Y-%m-%d').tm_mday         
+        return result
     
     _name = 'ineco.mrp.subworkcenter.task'
     _description = 'Sub Workcenter Task'
@@ -577,10 +587,15 @@ class ineco_mrp_subworkcenter_task(osv.osv):
         #'quantity_order': fields.related('saleorder_id', string="Order Qty",type='integer'),
         'quantity': fields.integer('Quantity'),
         'user_id': fields.related('saleorder_id','user_id',string="Sale",type='many2one',relation='res.users',store=True),
+        'day_month': fields.function(_get_day, string="Day", type="char", size=2, multi="_day", 
+                store={
+                    'ineco.mrp.subworkcenter.task': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+                }),
     }
     _defaults = {
         'date': time.strftime('%Y-%m-%d'),
     }
+    _order = 'date'
     
     def create(self, cr, uid, data, context=None):
         if not 'date' in data:
