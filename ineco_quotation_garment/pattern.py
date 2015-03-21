@@ -530,13 +530,20 @@ class ineco_pattern_process(osv.osv):
     _description = 'Process of Pattern'
     _columns = {
         'name': fields.char('Description',size=254,required=True),
-        'pattern_id': fields.many2one('ineco.pattern'),
+        'pattern_id': fields.many2one('ineco.pattern','Pattern'),
         'process_id': fields.many2one('ineco.mrp.process','Process',required=True),
         'sequence': fields.integer('Seq',required=True),
         'cycle_time': fields.integer('Cycle Time (Sec.)',required=True),
         'cost': fields.integer('Cost',),
+        'needle_length': fields.integer('Needle Length'),
+        'level': fields.selection([('begin','Beginner'),('medium','Medium'),('hard','Hard')],'Level'),
         'image_multi': fields.text('Image List'),
-        'attachments': fields.one2many('ir.attachment', 'pattern_process_id', string="Attachments")
+        'attachments': fields.one2many('ir.attachment', 'pattern_process_id', string="Attachments"),
+        'product_ids': fields.one2many('ineco.pattern.process.product','pattern_process_id','Accessories'),
+    }
+    _defaults = {
+        'level': 'begin',
+        'needle_length': 0.0,
     }
 
     def _get_sequence(self, cr, uid, context=None):
@@ -555,6 +562,20 @@ class ineco_pattern_process(osv.osv):
     #_sql_constraints = [
     #    ('name_unique', 'unique (name)', 'Description must be unique !')
     #]   
+    
+class ineco_pattern_process_product(osv.osv):
+    _name = 'ineco.pattern.process.product'
+    _description = "Pattern Process Product"
+    _columns = {
+        'name': fields.char('Description',size=64),
+        'pattern_process_id': fields.many2one('ineco.pattern.process','Pattern Process'),
+        'product_id': fields.many2one('product.product','Product',required=True),
+        'quantity': fields.float('Quantity'),
+    }
+    _defaults = {
+        'quantity': 1.0,
+        'name': '...',
+    }
 
 class document_file(Model):
     
@@ -562,16 +583,23 @@ class document_file(Model):
     
     _columns = {
         'pattern_process_id': fields.many2one('ineco.pattern.process','Pattern Process'),
+        'mrp_process_id': fields.many2one('ineco.mrp.process','MRP Process'),
     }
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('pattern_process_id', 0) != 0 and not (vals.get('res_id', False) and vals.get('res_model', False)):
             vals['res_id'] = vals['pattern_process_id']
             vals['res_model'] = 'ineco.pattern.process'
+        elif vals.get('mrp_process_id', 0) != 0 and not (vals.get('res_id', False) and vals.get('res_model', False)):
+            vals['res_id'] = vals['mrp_process_id']
+            vals['res_model'] = 'ineco.mrp.process'
         return super(document_file, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('pattern_process_id', 0) != 0 and not (vals.get('res_id', False) and vals.get('res_model', False)):
             vals['res_id'] = vals['pattern_process_id']
             vals['res_model'] = 'ineco.pattern.process'
+        elif vals.get('mrp_process_id', 0) != 0 and not (vals.get('res_id', False) and vals.get('res_model', False)):
+            vals['res_id'] = vals['mrp_process_id']
+            vals['res_model'] = 'ineco.mrp.process'
         return super(document_file, self).write(cr, uid, ids, vals, context)

@@ -419,7 +419,10 @@ class ineco_mrp_process(osv.osv):
         'code': fields.char('Barcode', size=32, required=True),
         'name': fields.char('Process Name', size=64, required=True),
         'process_group_id': fields.many2one('ineco.mrp.process.group','Group',),
-        'cost': fields.float('Costing', digits=(12,2),required=True)
+        'cost': fields.float('Costing', digits=(12,2),required=True),
+        'level': fields.selection([('begin','Beginner'),('medium','Medium'),('hard','Hard')],'Level'),
+        'image_multi': fields.text('Image List'),
+        'attachments': fields.one2many('ir.attachment', 'mrp_process_id', string="Attachments"),
     }
     _defaults = {
         'cost': 1.0,
