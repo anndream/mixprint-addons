@@ -1280,7 +1280,9 @@ select
   sum(september) as september,
   sum(octorber) as octorber,
   sum(november) as november,
-  sum(december) as december
+  sum(december) as december,
+  round(sum(amount) * 100 / 50000,2) as target50000,
+  round(sum(amount) * 100 / 10000,2) as target10000
 from
 (
 select
@@ -1296,7 +1298,8 @@ select
   case when extract(month from garment_order_date) = 9 then sum(product_uom_qty) else 0 end as september,
   case when extract(month from garment_order_date) = 10 then sum(product_uom_qty) else 0 end as octorber,
   case when extract(month from garment_order_date) = 11 then sum(product_uom_qty) else 0 end as november,
-  case when extract(month from garment_order_date) = 12 then sum(product_uom_qty) else 0 end as december
+  case when extract(month from garment_order_date) = 12 then sum(product_uom_qty) else 0 end as december,
+  sum(product_uom_qty) as amount
 from sale_order so
 join sale_order_line sol on sol.order_id = so.id
 join product_product pp on pp.id = sol.product_id
@@ -1337,6 +1340,8 @@ class ineco_sale_qty_dashboard(osv.osv):
         'octorber': fields.integer('Octorber',readonly=True),
         'november': fields.integer('November',readonly=True),
         'december': fields.integer('December',readonly=True),
+        'target50000': fields.float('% Target 50k', digits=(10,2), readonly=True),
+        'target10000': fields.integer('% Target 10k', digits=(10,2), readonly=True),
     }
     
     def init(self, cr):

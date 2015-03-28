@@ -968,6 +968,8 @@
                 <tree string="Sale Summary Qty" >
                 	<field name="user_id" invisible="1"/>
                 	<field name="nickname" />
+                	<field name="target50000" />
+                	<field name="target10000" invisible="1" />
                 	<field name="january" />
                 	<field name="febuary" />
                 	<field name="march" />
