@@ -288,6 +288,12 @@ class ineco_pattern(osv.osv):
         'ticket_ids': fields.one2many('ineco.mrp.production.ticket','pattern_id','Tickets'),                
         'pattern_group_id': fields.many2one('ineco.pattern.group', 'Pattern Group'),
         'process_ids': fields.one2many('ineco.pattern.process','pattern_id','Processes'),
+
+        #Collar
+        'machine_collar_id': fields.many2one('ineco.mrp.machine', 'Collar Machine'),
+        'employee_collar_id': fields.many2one('hr.employee', 'Collar Employee'),
+        'date_collar_start': fields.date('Date Collar Start'),
+        'date_collar_finish': fields.date('Date Collar Finish'),
     }
     
     _sql_constraints = [
@@ -302,6 +308,9 @@ class ineco_pattern(osv.osv):
         'is_cancel': False,  
         'remark2': False,
         'note': False,
+        'date_collar_finish': False,
+        'machine_collar_id': False,
+        'employee_collar_id': False,
     }
     
     _order = 'date_start'

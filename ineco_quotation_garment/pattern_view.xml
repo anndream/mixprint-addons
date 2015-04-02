@@ -436,6 +436,15 @@
                     						</tree>
                     					</field>
                     				</page>
+                    				<page string="Collar" groups="base.group_garment_collar">
+                    					<group>
+                    						<group>
+                    							<field name="machine_collar_id" />
+                    							<field name="employee_collar_id" />
+                    							<field name="date_collar_finish" />
+                    						</group>
+                    					</group>
+                    				</page>
                 				</notebook>              				
                 		</group>
                 	</sheet>
@@ -508,6 +517,7 @@
                     	('sale_product_id.pattern','!=',False)]" />
                     <filter name="cancel" icon="terp-dolar_ok!" string="Cancel" domain="[('is_cancel','=',True)]" />         
                     <filter icon="terp-check" name="attachment_count" string="No Attachment" domain="[('attachment_count', '=', False)]"/>
+                    <filter name="collar" icon="terp-dolar_ok!" string="Collar" domain="['|',('date_collar_start','=',False), ('date_collar_finish','=',False)]" />
                   	<group expand="0" string="Group By...">
                         <filter name="by_product_type" string="Product Type" icon="terp-partner" domain="[]" context="{'group_by':'product_type_id'}"/>
                         <filter name="by_date_expected" string="Date Expected" icon="terp-partner" domain="[]" context="{'group_by':'date_expected'}"/>
@@ -518,6 +528,39 @@
                 </search>
             </field>
         </record>
+
+		<!-- Collar -->
+        <record id="view_ineco_collar_tree" model="ir.ui.view">
+            <field name="name">ineco.collar.tree</field>
+            <field name="model">ineco.pattern</field>
+            <field name="arch" type="xml">
+                <tree string="Pattern" colors="black:late == False;red:late == True">
+                    <field name="name" invisible="1" />
+                    <field name="product_id" invisible="1" />
+                    <field name="product_type_id" invisible="1" />
+                    <field name="garment_order_no" />
+                    <field name="user_id" />
+                    <field name="product_name" />
+                    <field name="order_qty" />
+                    <field name="partner_id" />
+                    <field name="saleorder_id" invisible="1" />
+                    <field name="employee_id" invisible="1" />
+                    <field name="date_start" invisible="1" />
+                    <field name="date_expected" invisible="1" />
+                    <field name="machine_collar_id" />
+                    <field name="employee_collar_id" />
+                    <field name="date_collar_start" />
+                    <field name="date_collar_finish" />
+                    <field name="sampling_date_process1_finish" string="Cut Finish" invisible="1" />
+                    <field name="date_finish_planned" invisible="1"/>
+                    <field name="pattern_group_id" invisible="1"/>
+                    <field name="date_finish" invisible="1" />
+                    <field name="late" invisible="1"/>
+                    <field name="attachment_count" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>		
 
         <record id="action_ineco_pattern" model="ir.actions.act_window">
             <field name="name">Pattern</field>
@@ -564,6 +607,47 @@
             parent="menu_mrp_pattern_menu"
             action="action_ineco_pattern"
             sequence="0"/>
+
+        <record id="action_ineco_collar" model="ir.actions.act_window">
+            <field name="name">Collar</field>
+            <field name="res_model">ineco.pattern</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_ineco_pattern_filter"/>
+            <field name="context">{'search_default_collar':1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create. 
+              </p><p>
+                This is the list of all problem type that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_ineco_collar_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ineco_collar_tree" />
+            <field name="act_window_id" ref="action_ineco_collar"/>
+        </record>
+		<!-- 
+        <record id="action_ineco_collar_form2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ineco_pattern_form"/>
+            <field name="act_window_id" ref="action_ineco_collar"/>
+        </record>
+         -->
+
+        <menuitem name="Collar"
+            id="menu_mrp_collar"
+            parent="menu_mrp_pattern_menu"
+            action="action_ineco_collar"
+            groups="base.group_garment_collar"
+            sequence="20"/>
 
         <record id="view_ineco_pattern_process_form" model="ir.ui.view">
             <field name="name">ineco.pattern.process.form</field>
