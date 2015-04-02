@@ -68,6 +68,18 @@ class ineco_pattern(osv.osv):
             else:
                 result[obj.id]['late'] = False            
         return result
+
+    def _get_collar(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'collar_day': False
+            }
+            if obj.date_collar_finish:
+                result[obj.id] = {
+                    'collar_day': '%02d' % int(obj.date_collar_finish.split('-')[1])
+                }
+        return result
     
     def _get_attachment(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -294,6 +306,10 @@ class ineco_pattern(osv.osv):
         'employee_collar_id': fields.many2one('hr.employee', 'Collar Employee'),
         'date_collar_start': fields.date('Date Collar Start'),
         'date_collar_finish': fields.date('Date Collar Finish'),
+        'collar_day': fields.function(_get_collar, string="Collar Day", type="char", size=2, multi="_collar",
+            store = {
+                'ineco.pattern': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            },),
     }
     
     _sql_constraints = [

@@ -512,18 +512,27 @@
                     <field name="pattern_group_id" />
                     <field name="state" />
                     <field name="sampling_date_process1_finish" string="Cut Finish" />
+                    <field name="collar_day" string="Day of Collar" />
+                    <field name="employee_collar_id" string="Employee's Collar" />
+                    <field name="machine_collar_id" string="Machine's Collar" />
+                    <field name="date_collar_finish" string="Collar Finish" />
                     <filter name="todo" icon="terp-dolar_ok!" string="To Do" domain="[('state','=','draft'),
                     	('date_finish_planned','=',False),('is_cancel','=',False),
                     	('sale_product_id.pattern','!=',False)]" />
                     <filter name="cancel" icon="terp-dolar_ok!" string="Cancel" domain="[('is_cancel','=',True)]" />         
                     <filter icon="terp-check" name="attachment_count" string="No Attachment" domain="[('attachment_count', '=', False)]"/>
                     <filter name="collar" icon="terp-dolar_ok!" string="Collar" domain="['|',('date_collar_start','=',False), ('date_collar_finish','=',False)]" />
+                    <filter name="collar_done" icon="terp-dolar_ok!" string="Collar Done" domain="[('date_collar_start','!=',False), ('date_collar_finish','!=',False)]" />
                   	<group expand="0" string="Group By...">
                         <filter name="by_product_type" string="Product Type" icon="terp-partner" domain="[]" context="{'group_by':'product_type_id'}"/>
                         <filter name="by_date_expected" string="Date Expected" icon="terp-partner" domain="[]" context="{'group_by':'date_expected'}"/>
                         <filter name="by_employee" string="Employee" icon="terp-partner" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter name="by_employee_collar" string="Employee Collar" icon="terp-partner" domain="[]" context="{'group_by':'employee_collar_id'}"/>
+                        <filter name="by_machine_collar" string="Machine Collar" icon="terp-partner" domain="[]" context="{'group_by':'machine_collar_id'}"/>
                         <filter name="by_late" string="Late" icon="terp-partner" domain="[]" context="{'group_by':'late'}"/>
                         <filter name="by_cut_finish" string="Cut Finish" icon="terp-partner" domain="[]" context="{'group_by':'sampling_date_process1_finish'}"/>
+                        <filter name="by_collar_finish" string="Collar Finish" icon="terp-partner" domain="[]" context="{'group_by':'date_collar_finish'}"/>
+                        <filter name="by_collar_day" string="Collar Day" icon="terp-partner" domain="[]" context="{'group_by':'collar_day'}"/>
                     </group>
                 </search>
             </field>
@@ -541,7 +550,7 @@
                     <field name="garment_order_no" />
                     <field name="user_id" />
                     <field name="product_name" />
-                    <field name="order_qty" />
+                    <field name="order_qty" sum="total" />
                     <field name="partner_id" />
                     <field name="saleorder_id" invisible="1" />
                     <field name="employee_id" invisible="1" />
@@ -557,6 +566,7 @@
                     <field name="date_finish" invisible="1" />
                     <field name="late" invisible="1"/>
                     <field name="attachment_count" invisible="1"/>
+                    <field name="collar_day" invisible="1" />
                     <field name="state" invisible="1"/>
                 </tree>
             </field>
