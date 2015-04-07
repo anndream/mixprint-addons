@@ -441,7 +441,11 @@
                     						<group>
                     							<field name="machine_collar_id" />
                     							<field name="employee_collar_id" />
+                    							<field name="date_collar_start" />
                     							<field name="date_collar_finish" />
+                    						</group>
+                    						<group>
+                    							<field name="date_collar_planned" />
                     						</group>
                     					</group>
                     				</page>
@@ -521,7 +525,7 @@
                     	('sale_product_id.pattern','!=',False)]" />
                     <filter name="cancel" icon="terp-dolar_ok!" string="Cancel" domain="[('is_cancel','=',True)]" />         
                     <filter icon="terp-check" name="attachment_count" string="No Attachment" domain="[('attachment_count', '=', False)]"/>
-                    <filter name="collar" icon="terp-dolar_ok!" string="Collar" domain="['|',('date_collar_start','=',False), ('date_collar_finish','=',False)]" />
+                    <filter name="collar" icon="terp-dolar_ok!" string="Collar" domain="['|',('date_collar_start','=',False), ('date_collar_finish','=',False),('date_collar_planned','!=',False)]" />
                     <filter name="collar_done" icon="terp-dolar_ok!" string="Collar Done" domain="[('date_collar_start','!=',False), ('date_collar_finish','!=',False)]" />
                   	<group expand="0" string="Group By...">
                         <filter name="by_product_type" string="Product Type" icon="terp-partner" domain="[]" context="{'group_by':'product_type_id'}"/>

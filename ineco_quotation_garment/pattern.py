@@ -80,6 +80,22 @@ class ineco_pattern(osv.osv):
                     'collar_day': '%02d' % int(obj.date_collar_finish.split('-')[1])
                 }
         return result
+
+    def _get_date_collar_planned(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'date_collar_planned': False
+            }
+            production_ids = self.pool.get('mrp.production').search(cr, uid, [('sale_order_id','=',obj.saleorder_id.id)])
+            min_date = False
+            for production in self.pool.get('mrp.production').browse(cr, uid, production_ids):
+                min_date = max(min_date, production.date_process1_start or False)
+            if min_date:
+                result[obj.id] = {
+                    'date_collar_planned': min_date
+                }
+        return result
     
     def _get_attachment(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -213,6 +229,14 @@ class ineco_pattern(osv.osv):
                 if result_ids:
                     res[pattern.id] = sorted(result_ids)
         return res
+
+    def _get_production_pattern(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('mrp.production').browse(cr, uid, ids, context=context):
+            pattern_ids = self.pool.get('ineco.pattern').search(cr, uid, [('saleorder_id','=',line.sale_order_id.id)])
+            for pattern in pattern_ids:
+                result[pattern] = True
+        return result.keys()
         
     _name = 'ineco.pattern'
     _inherit = ['mail.thread']
@@ -309,6 +333,11 @@ class ineco_pattern(osv.osv):
         'collar_day': fields.function(_get_collar, string="Collar Day", type="char", size=2, multi="_collar",
             store = {
                 'ineco.pattern': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            },),
+        'date_collar_planned': fields.function(_get_date_collar_planned, string="Collar Planned", type="datetime", multi="_collar2",
+            store = {
+                'ineco.pattern': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+                'mrp.production': (_get_production_pattern, ['date_process1_start'], 10),
             },),
     }
     
