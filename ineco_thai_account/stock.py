@@ -160,7 +160,7 @@ class stock_picking(osv.osv):
                         if invoice_line_id.invoice_id.id not in from_line_invoice_ids:
                             from_line_invoice_ids.append(invoice_line_id.invoice_id.id)
                 for preinv in picking.sale_id.invoice_ids:
-                    if preinv.state not in ('cancel',) and preinv.id not in from_line_invoice_ids:
+                    if preinv.state not in ('cancel','draft') and preinv.id not in from_line_invoice_ids:
                         for preline in preinv.invoice_line:
                             inv_line_id = invoice_line_obj.copy(cr, uid, preline.id, {'invoice_id': invoice_id, 'price_unit': -preline.price_unit})
                             sale_order_obj.write(cr,uid,[picking.sale_id.id],{
