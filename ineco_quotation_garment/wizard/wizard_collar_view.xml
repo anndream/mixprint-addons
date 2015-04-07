@@ -10,8 +10,8 @@
                 <form string="Make Collar" version="7.0">
                 	<group>
                 		<group>
-                			<field name="machine_collar_id" />
-                			<field name="employee_collar_id" />
+                			<field name="machine_collar_id" domain="[('workcenter_id','=',13)]" />
+                			<field name="employee_collar_id" domain="[('department_id','=',13)]" />
                 		</group>
                 	</group>
                     <p class="oe_grey">
