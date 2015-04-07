@@ -623,7 +623,7 @@
             <field name="res_model">ineco.pattern</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_ineco_pattern_filter"/>
             <field name="context">{'search_default_collar':1}</field>
             <field name="help" type="html">
@@ -643,14 +643,13 @@
             <field name="view_id" ref="view_ineco_collar_tree" />
             <field name="act_window_id" ref="action_ineco_collar"/>
         </record>
-		<!-- 
+        
         <record id="action_ineco_collar_form2" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_ineco_pattern_form"/>
             <field name="act_window_id" ref="action_ineco_collar"/>
         </record>
-         -->
 
         <menuitem name="Collar"
             id="menu_mrp_collar"
