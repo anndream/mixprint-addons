@@ -554,6 +554,7 @@
                     <field name="garment_order_no" />
                     <field name="user_id" />
                     <field name="product_name" />
+                    <field name="date_collar_planned" />
                     <field name="order_qty" sum="total" />
                     <field name="partner_id" />
                     <field name="saleorder_id" invisible="1" />
