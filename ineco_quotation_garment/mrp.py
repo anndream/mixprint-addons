@@ -428,9 +428,9 @@ class ineco_mrp_process(osv.osv):
         'cost': 1.0,
     }
     _sql_constraints = [
-        ('name_unique',
-         'unique (name)',
-         'Process Name must be unique.')
+        ('name_group_unique',
+         'unique (name, process_group_id)',
+         'Process Name and Group must be unique.')
     ]
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):

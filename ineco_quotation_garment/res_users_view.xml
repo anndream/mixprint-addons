@@ -11,6 +11,7 @@
                 	<field name="nickname" placeholder="Nick name here..."/>
                 	<field name="mixprint" />
                 	<field name="smart" />
+                	<field name="commission_rate" groups="base.group_erp_manager" />
                 </field>
             </field>
         </record>

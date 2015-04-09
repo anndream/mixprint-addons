@@ -31,4 +31,8 @@ class res_users(osv.osv):
         'nickname': fields.char('Nick Name', size=32),
         'mixprint': fields.boolean('Mixprint'),
         'smart': fields.boolean('Smart'),
+        'commission_rate': fields.float('Commission Rate', digits=(12,2)),
+    }
+    _defaults = {
+        'commission_rate': 0.5,
     }
