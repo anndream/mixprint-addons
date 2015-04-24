@@ -151,7 +151,10 @@ class ineco_wht(osv.osv):
     
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'ineco.wht') or '/'
+            if vals.get('wht_type','purchase') == 'purchase':
+                vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'ineco.wht') or '/'
+            else:
+                vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'ineco.wht.sale') or '/'
         return super(ineco_wht, self).create(cr, uid, vals, context=context)
     
     def button_compute_tax(self, cr, uid, ids, context=None):
