@@ -139,5 +139,17 @@ class account_voucher(osv.osv):
                 res['value']['date_due'] = date_due[-1][0]
                           
         return res    
+
+    def onchange_journal_id(self, cr, uid, ids, journal_id, context=None):
+        res = {'value':{}}
+        journal_pool = self.pool.get('account.journal')
+        journal = journal_pool.browse(cr, uid, journal_id, context=context)
+        account_id = False
+        if journal.customer :
+            account_id = journal.default_debit_account_id.id
+        else:
+            account_id = journal.default_credit_account_id.id
+        res['value']['account_id'] = account_id
+        return res
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
