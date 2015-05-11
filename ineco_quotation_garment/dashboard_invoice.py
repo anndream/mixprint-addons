@@ -109,3 +109,56 @@ class ineco_sale_invoice_balance(osv.osv):
             order by so.garment_order_no        
         """)
         
+class ineco_sale_audit_delivery(osv.osv):
+    _name = 'ineco.sale.audit.delivery'
+    _auto = False
+    _columns = {
+        'garment_order_no': fields.char('Garment Order No', size=32),
+        'amount_untaxed': fields.float('Sale Amount'),
+        'invoice_amount_untaxed': fields.float('Invoice Amount'),
+        'name': fields.char('Picking No', size=32),
+        'batch_no': fields.integer('Batch No'),
+        'sale_quantity': fields.integer('Sale Qty'),
+        'delivery_quantity': fields.integer('Delivery Qty'),
+    }
+    _order = 'garment_order_no'
+
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'ineco_sale_audit_delivery')
+        cr.execute("""
+        CREATE OR REPLACE VIEW ineco_sale_audit_delivery AS
+            select 
+              sp.id,
+              garment_order_no,
+              amount_untaxed,
+              (select coalesce(sum(amount_untaxed),0.00) from account_invoice 
+               where account_invoice.garment_order_no = so.garment_order_no and
+                 type = 'out_invoice' and
+                 state not in ('cancel')) as invoice_amount_untaxed,
+              sp.name,
+              sp.batch_no,
+              (select sum(product_uom_qty) from sale_order_line
+               join product_product pp on pp.id = sale_order_line.product_id
+               join product_template pt on pt.id = pp.product_tmpl_id
+               where order_id = so.id and pt.type not in ('service')
+              ) as sale_quantity,
+              case 
+                when sp.type = 'in' then -sp.quantity
+                when sp.type = 'out' then sp.quantity
+                else 
+                  sp.quantity
+              end as delivery_quantity
+            from 
+              sale_order so
+              left join stock_picking sp on sp.sale_id = so.id
+            where 
+              extract(year from garment_order_date) >= 2015
+              and so.state not in ('cancel')
+              and sp.type not in ('internal')
+              and sp.invoice_state = '2binvoiced'
+              and so.amount_untaxed > 0
+            order by
+               so.garment_order_no,
+               sp.batch_no
+        """)
+        

@@ -58,6 +58,7 @@
                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" groups="base.group_erp_manager,ineco_thai_account.group_account_cancel"/>
                 </xpath>
                 <xpath expr="//button[@name='action_cancel_draft']" position="replace">
+					<button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object" groups="base.group_erp_manager,ineco_thai_account.group_account_cancel"/>
                 	<button name="button_open_payment" string="Open Supplier Payment" type="object" />
                 </xpath>
             </field>

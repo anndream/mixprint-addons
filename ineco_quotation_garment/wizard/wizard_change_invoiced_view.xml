@@ -32,7 +32,7 @@
         
         <record model="ir.values" id="ineco_invoiced_stock_picking_value">
             <field name="name">Set To Invoiced</field>
-            <field name="key2">client_action_multi</field>
+            <!-- <field name="key2">client_action_multi</field> -->
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_ineco_invoiced_stock_picking'))" />
             <field name="key">action</field>
             <field name="model">stock.picking.out</field>

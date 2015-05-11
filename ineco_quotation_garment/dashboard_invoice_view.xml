@@ -75,6 +75,35 @@
             </field>
         </record>    
 
+		<!-- Delivery Uncorrect -->
+        <record model="ir.ui.view" id="view_ineco_sale_audit_delivery">
+            <field name="name">ineco.sale.audit.delivery.tree</field>
+            <field name="model">ineco.sale.audit.delivery</field>
+            <field name="arch" type="xml">
+                <tree string="All Delivery Uncorrect" >
+                	<field name="garment_order_no" />
+                	<field name="amount_untaxed" />
+                	<field name="invoice_amount_untaxed" />
+                	<field name="name" />
+                	<field name="batch_no" />
+                	<field name="sale_quantity" />
+                	<field name="delivery_quantity" />
+                </tree>
+            </field>
+        </record>        
+
+        <record id="action_ineco_sale_audit_delivery" model="ir.actions.act_window">
+            <field name="name">All Delivery Uncorrect</field>
+            <field name="res_model">ineco.sale.audit.delivery</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ineco_sale_audit_delivery"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+            </field>
+        </record>    
+
       <!-- Invoice Dashboard -->
       <record model="ir.ui.view" id="board_mixprint_invoice_dashboard">
             <field name="name">Invoice Dashboard</field>
@@ -84,6 +113,7 @@
                     <board style="1">
                         <column>
                         	<action string="Uncorrect" name="%(action_ineco_invoice_uncorrect)d" />
+                        	<action string="Delivery to Correct" name="%(action_ineco_sale_audit_delivery)d" />
                        		<!-- <action string="All Invoice Balance" name="%(action_ineco_sale_invoice_balance)d"/> -->
  						</column>
                     </board>
