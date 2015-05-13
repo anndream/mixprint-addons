@@ -154,8 +154,7 @@ class ineco_sale_audit_delivery(osv.osv):
               sale_order so
               left join stock_picking sp on sp.sale_id = so.id
             where 
-              extract(year from garment_order_date) >= 2014
-              and extract(month from garment_order_date) >= 8
+              garment_order_date >= '2014-08-01'
               and so.state not in ('cancel')
               and sp.type not in ('internal')
               and sp.invoice_state = '2binvoiced'

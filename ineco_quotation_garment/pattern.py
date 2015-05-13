@@ -339,6 +339,11 @@ class ineco_pattern(osv.osv):
                 'ineco.pattern': (lambda self, cr, uid, ids, c={}: ids, [], 10),
                 'mrp.production': (_get_production_pattern, ['date_process1_start'], 10),
             },),
+        'machine_collar_ids': fields.many2many('ineco.mrp.machine', 'ineco_collar_machine_rel', 'child_id', 'parent_id', 'Collars'),
+        'machine_sleeve_ids': fields.many2many('ineco.mrp.machine', 'ineco_sleeve_machine_rel', 'child_id', 'parent_id', 'Sleeves'),
+        'employee_sleeve_id': fields.many2one('hr.employee', 'Collar Employee'),
+        'date_sleeve_start': fields.date('Date Collar Start'),
+        'date_sleeve_finish': fields.date('Date Collar Finish'),
     }
     
     _sql_constraints = [

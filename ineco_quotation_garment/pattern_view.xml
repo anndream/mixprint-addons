@@ -436,16 +436,21 @@
                     						</tree>
                     					</field>
                     				</page>
-                    				<page string="Collar" groups="base.group_garment_collar">
+                    				<page string="Collar / Sleeve" groups="base.group_garment_collar">
                     					<group>
                     						<group>
                     							<field name="machine_collar_id" />
+                    							<field name="machine_collar_ids" widget="many2many_tags" />
+                    							<field name="date_collar_planned" />
                     							<field name="employee_collar_id" />
                     							<field name="date_collar_start" />
                     							<field name="date_collar_finish" />
                     						</group>
                     						<group>
-                    							<field name="date_collar_planned" />
+                    							<field name="machine_sleeve_ids" widget="many2many_tags"  />
+                    							<field name="employee_sleeve_id" />
+                    							<field name="date_sleeve_start" />
+                    							<field name="date_sleeve_finish" />
                     						</group>
                     					</group>
                     				</page>
@@ -656,7 +661,7 @@
             <field name="act_window_id" ref="action_ineco_collar"/>
         </record>
 
-        <menuitem name="Collar"
+        <menuitem name="Collar / Sleeve"
             id="menu_mrp_collar"
             parent="menu_mrp_pattern_menu"
             action="action_ineco_collar"

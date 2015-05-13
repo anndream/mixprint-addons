@@ -352,7 +352,8 @@ class stock_picking(osv.osv):
                                     digits_compute=dp.get_precision('Product Unit of Measure'), 
                                     string='#',
                                     type="integer",),
-        'is_overlimit': fields.function(_get_overlimit, string='Over Limit', type="boolean",)
+        'is_overlimit': fields.function(_get_overlimit, string='Over Limit', type="boolean",),
+        'supplier_job_no': fields.char('Supplier Job No', size=64),
     }
 
     def onchange_note_id(self, cr, uid, ids, note_id=False, context=None):
