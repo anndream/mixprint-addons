@@ -120,6 +120,7 @@ class ineco_sale_audit_delivery(osv.osv):
         'batch_no': fields.integer('Batch No'),
         'sale_quantity': fields.integer('Sale Qty'),
         'delivery_quantity': fields.integer('Delivery Qty'),
+        'account_internal_no': fields.char('Account No', size=32),
     }
     _order = 'garment_order_no'
 
@@ -147,12 +148,14 @@ class ineco_sale_audit_delivery(osv.osv):
                 when sp.type = 'out' then sp.quantity
                 else 
                   sp.quantity
-              end as delivery_quantity
+              end as delivery_quantity,
+              sp.account_internal_no
             from 
               sale_order so
               left join stock_picking sp on sp.sale_id = so.id
             where 
-              extract(year from garment_order_date) >= 2015
+              extract(year from garment_order_date) >= 2014
+              and extract(month from garment_order_date) >= 8
               and so.state not in ('cancel')
               and sp.type not in ('internal')
               and sp.invoice_state = '2binvoiced'

@@ -85,6 +85,7 @@
                 	<field name="amount_untaxed" />
                 	<field name="invoice_amount_untaxed" />
                 	<field name="name" />
+                	<field name="account_internal_no" />
                 	<field name="batch_no" />
                 	<field name="sale_quantity" />
                 	<field name="delivery_quantity" />
