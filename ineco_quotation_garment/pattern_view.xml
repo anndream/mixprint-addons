@@ -436,7 +436,17 @@
                     						</tree>
                     					</field>
                     				</page>
-                    				<page string="Collar / Sleeve" groups="base.group_garment_collar">
+                    				<page string="Collar" groups="base.group_garment_collar">
+                                        <field name="collar_ids" nolabel="1">
+                                            <tree string="Collars" editable="top">
+                                                <field name="machine_collar_id"/>
+                                                <field name="employee_collar_id"/>
+                                                <field name="date_collar_start"/>
+                                                <field name="date_collar_finish"/>
+                                                <field name="quantity" />
+                                            </tree>
+                                        </field>
+                                        <!--
                     					<group>
                     						<group>
                     							<field name="machine_collar_id" />
@@ -453,7 +463,19 @@
                     							<field name="date_sleeve_finish" />
                     						</group>
                     					</group>
+                    					-->
                     				</page>
+                                    <page string="Sleeve" groups="base.group_garment_collar">
+                                        <field name="sleeve_ids" nolabel="1">
+                                            <tree string="Sleeve" editable="top">
+                                                <field name="machine_sleeve_id"/>
+                                                <field name="employee_sleeve_id"/>
+                                                <field name="date_sleeve_start"/>
+                                                <field name="date_sleeve_finish"/>
+                                                <field name="quantity" />
+                                            </tree>
+                                        </field>
+                                    </page>
                 				</notebook>              				
                 		</group>
                 	</sheet>
