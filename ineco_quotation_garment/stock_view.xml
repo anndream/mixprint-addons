@@ -134,9 +134,25 @@
                     <field name="order_color" />
                     <field name="order_type" />
                     <field name="order_weight" />
-                    <field name="supplier_job_no" />
                     <field name="picking_note_id" on_change="onchange_note_id(picking_note_id)"/>
                 </field>
+                <xpath expr="/form/sheet/notebook/page[@string='Additional Info']" position="after" >
+                    <page string="Account Information">
+                        <group>
+                            <group>
+                                <field name="supplier_job_no" />
+                            </group>
+                            <group>
+                                <field name="supplier_job_ref1" />
+                                <field name="supplier_job_ref2" />
+                                <field name="supplier_job_ref3" />
+                                <field name="supplier_job_ref4" />
+                            </group>
+                        </group>
+
+                    </page>
+                </xpath>
+
             </field>
         </record>        
 

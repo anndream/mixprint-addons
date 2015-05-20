@@ -121,6 +121,7 @@ class ineco_sale_audit_delivery(osv.osv):
         'sale_quantity': fields.integer('Sale Qty'),
         'delivery_quantity': fields.integer('Delivery Qty'),
         'account_internal_no': fields.char('Account No', size=32),
+        'other_mo': fields.char('Other Mo', size=254),
     }
     _order = 'garment_order_no'
 
@@ -149,7 +150,15 @@ class ineco_sale_audit_delivery(osv.osv):
                 else 
                   sp.quantity
               end as delivery_quantity,
-              sp.account_internal_no
+              sp.account_internal_no,
+              replace(
+                replace(
+		            replace(array(select garment_order_other from account_invoice
+		                where account_invoice.garment_order_no = so.garment_order_no and
+			                type = 'out_invoice' and
+			                state not in ('cancel')
+			                and garment_order_other is not null)::varchar,'}',''),
+                 '{',''),'"','') as other_mo
             from 
               sale_order so
               left join stock_picking sp on sp.sale_id = so.id

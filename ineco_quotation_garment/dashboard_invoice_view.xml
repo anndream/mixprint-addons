@@ -82,6 +82,7 @@
             <field name="arch" type="xml">
                 <tree string="All Delivery Uncorrect" >
                 	<field name="garment_order_no" />
+                    <field name="other_mo" />
                 	<field name="amount_untaxed" />
                 	<field name="invoice_amount_untaxed" />
                 	<field name="name" />

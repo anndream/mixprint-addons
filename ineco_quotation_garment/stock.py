@@ -353,7 +353,11 @@ class stock_picking(osv.osv):
                                     string='#',
                                     type="integer",),
         'is_overlimit': fields.function(_get_overlimit, string='Over Limit', type="boolean",),
-        'supplier_job_no': fields.char('Supplier Job No', size=64),
+        'supplier_job_no': fields.char('Supplier Job No', size=64, track_visibility='onchange'),
+        'supplier_job_ref1': fields.char('Supplier Ref#1', size=64, track_visibility='onchange'),
+        'supplier_job_ref2': fields.char('Supplier Ref#2', size=64, track_visibility='onchange'),
+        'supplier_job_ref3': fields.char('Supplier Ref#3', size=64, track_visibility='onchange'),
+        'supplier_job_ref4': fields.char('Supplier Ref#4', size=64, track_visibility='onchange'),
     }
 
     def onchange_note_id(self, cr, uid, ids, note_id=False, context=None):

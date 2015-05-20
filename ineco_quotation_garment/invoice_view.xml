@@ -96,6 +96,11 @@
                 	<field name="garment_order_other" />
                 	<field name="supplier_invoice_number" invisible="not context.get('set_visible',False)" />
                 </field>
+
+                <field name="state" position="after">
+                    <field name="name" string="Reference"/>
+                </field>
+
             </field>
         </record>        
         
