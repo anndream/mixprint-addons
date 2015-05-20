@@ -35,7 +35,7 @@ class ineco_sale_smart_delivery(osv.osv):
         CREATE OR REPLACE VIEW ineco_sale_audit_delivery AS
             select 
               sp.id,
-              so.name as garment_order_no,
+              concat(so.name,' (', next_garment_order_no,')') as garment_order_no,
               amount_untaxed,
               (select coalesce(sum(amount_untaxed),0.00) from account_invoice 
                where account_invoice.origin = so.name and
@@ -54,13 +54,20 @@ class ineco_sale_smart_delivery(osv.osv):
                 else 
                   sp.quantity
               end as delivery_quantity,
-              sp.account_internal_no
+              sp.account_internal_no,
+              replace(
+                replace(
+		            replace(array(select garment_order_other from account_invoice
+		                where account_invoice.garment_order_no = so.garment_order_no and
+			                type = 'out_invoice' and
+			                state not in ('cancel')
+			                and garment_order_other is not null)::varchar,'}',''),
+                 '{',''),'"','') as other_mo
             from 
               sale_order so
               left join stock_picking sp on sp.sale_id = so.id
             where 
-              extract(year from garment_order_date) >= 2014
-              and extract(month from garment_order_date) >= 8
+              garment_order_date >= '2014-08-01'
               and so.state not in ('cancel')
               and sp.type not in ('internal')
               and sp.invoice_state = '2binvoiced'
