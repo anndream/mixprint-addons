@@ -196,8 +196,8 @@ class ineco_product_category_stock_option(osv.osv):
         orderpoint = self.pool.get('stock.warehouse.orderpoint')
         for data in self.browse(cr, uid, ids):
             res[data.id] = {
-                'product_rule_count': 0,
-                'product_rule_min': 0,
+                'product_rule_count': 0.0,
+                'product_rule_min': 0.0,
             }
             count_ids = orderpoint.search(cr, uid, [('product_id','=',data.product_id.id)])
             min_stock = 0
