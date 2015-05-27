@@ -58,5 +58,19 @@
             <field name="company_id" eval="False"/>
         </record>
 
+        <!-- MRP Tag -->
+        <record id="seq_ineco_mrp_tag_type" model="ir.sequence.type">
+            <field name="name">MRP Tag</field>
+            <field name="code">ineco.mrp.tag</field>
+        </record>
+
+        <record id="seq_ineco_mrp_tag" model="ir.sequence">
+            <field name="name">MRP Tag</field>
+            <field name="code">ineco.mrp.tag</field>
+            <field name="prefix">%(y)s-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
    </data>
 </openerp>

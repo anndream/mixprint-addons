@@ -605,4 +605,127 @@ class ineco_mrp_subworkcenter_task(osv.osv):
             data['date'] = time.strftime('%Y-%m-%d')
         result = super(ineco_mrp_subworkcenter_task, self).create(cr, uid, data, context=context)
         return result
-    
+
+class ineco_mrp_tag(osv.osv):
+
+    def _get_quantity(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            total = 0
+            amount = 0
+            for line in obj.line_ids:
+                total += line.quantity
+            for process in obj.tag_process_ids:
+                amount += process.cost * (total / 12)
+            result[obj.id] = {
+                'totals': total,
+                'amount': amount,
+            }
+        return result
+
+    _name = 'ineco.mrp.tag'
+    _inherit = ['mail.thread']
+    _description = "MRP Tag"
+    _columns = {
+        'name': fields.char('Tag No', size=32, required=True),
+        'sale_order_id': fields.many2one('sale.order','Sale Order', track_visibility='onchange'),
+        'garment_order_no': fields.related('sale_order_id','garment_order_no', type="char", string="Garment No",
+            readonly=True),
+        'customer_id': fields.related('sale_order_id','partner_id',type="many2one", relation="res.partner",
+            string="Customer", readonly=True),
+        'user_id': fields.related('sale_order_id','user_id',type="many2one", relation="res.users", string="Sale Person",
+            readonly=True),
+        'sequence': fields.integer('Sequence'),
+        'totals': fields.function(_get_quantity, string="Activity Total", type="integer", multi="_quantity", track_visibility='onchange',
+            store = {
+                'ineco.mrp.tag': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            },),
+        'amount': fields.function(_get_quantity, string="Amount", type="float", digits=(12,2), multi="_quantity", track_visibility='onchange',
+            store = {
+                'ineco.mrp.tag': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            },),
+        'date': fields.date('Date', track_visibility='onchange'),
+        'start_datetime': fields.datetime('Start Date', track_visibility='onchange'),
+        'finish_datetime': fields.datetime('Finish Date', track_visibility='onchange'),
+        'employee_id': fields.many2one('hr.employee','Employee', track_visibility='onchange'),
+        'line_ids': fields.one2many('ineco.mrp.tag.line','mrp_tag_id','Tag Items'),
+        'tag_process_ids': fields.many2many('ineco.mrp.process', 'ineco_tag_process_rel', 'child_id', 'parent_id', 'Process'),
+        'state': fields.selection([('draft','Draft'),('done','Done'),('cancel','Cancel')],'State',readonly=True, track_visibility='onchange')
+    }
+
+    _defaults = {
+        'name': '/',
+        'sequence': 1.0,
+        'date': lambda self, cr, uid, ctx: fields.date.context_today(self, cr, uid, ctx),
+        'state': 'draft',
+    }
+
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('name','/')=='/':
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'ineco.mrp.tag') or '/'
+        return super(ineco_mrp_tag, self).create(cr, uid, vals, context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        default = default.copy()
+        default['line_ids'] = []
+        default['employee_id'] = False
+        default['start_datetime'] = False
+        default['finish_datetime'] = False
+        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'ineco.mrp.tag')
+        return super(ineco_mrp_tag, self).copy(cr, uid, id, default, context=context)
+
+    def button_load(self, cr, uid, ids, context=None):
+        obj_packing_line = self.pool.get('ineco.mrp.tag.line')
+        for data in self.browse(cr, uid, ids):
+            for line in data.sale_order_id.order_line:
+                for property in line.order_line_property_other_ids:
+                    new_data = {
+                        'sale_line_property_other_id': property.id,
+                        'mrp_tag_id': data.id,
+                        'product_id': line.product_id.id,
+                    }
+                    find_ids = obj_packing_line.search(cr, uid, [('mrp_tag_id','=', data.id),('sale_line_property_other_id','=',property.id)])
+                    if not find_ids:
+                        obj_packing_line.create(cr, uid, new_data)
+        return True
+
+    def button_reset(self, cr, uid, ids, context=None):
+        obj_packing_line = self.pool.get('ineco.mrp.tag.line')
+        for data in self.browse(cr, uid, ids):
+            line_ids = obj_packing_line.search(cr, uid, [('mrp_tag_id','=',data.id),('quantity','=',False)])
+            if line_ids:
+                obj_packing_line.unlink(cr, uid, line_ids)
+        return True
+
+
+class ineco_mrp_tag_line(osv.osv):
+    _name = 'ineco.mrp.tag.line'
+    _description = "MRP Tag Line"
+    _columns = {
+        'name': fields.char('Description', size=32),
+        'mrp_tag_id': fields.many2one('ineco.mrp.tag','Tag'),
+        'sale_line_property_other_id': fields.many2one('sale.line.property.other','Property Other'),
+        'product_id': fields.many2one('product.product','Product', readonly=True),
+        'color_id': fields.related('sale_line_property_other_id', 'color_id', type="many2one", relation='sale.color', string='Color',readonly=True),
+        'gender_id': fields.related('sale_line_property_other_id', 'gender_id', type="many2one", relation='sale.gender', string='Gender',readonly=True),
+        'size_id': fields.related('sale_line_property_other_id', 'size_id', type="many2one", relation='sale.size', string='Size',readonly=True),
+        'note': fields.related('sale_line_property_other_id','note', type="char", string="Note", readonly=True),
+        'product_qty': fields.related('sale_line_property_other_id', 'quantity', type="float",  string='Origin Qty',readonly=True),
+        'quantity': fields.integer('Quantity'),
+    }
+    _defaults = {
+        'quantity': 0.0,
+    }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        default = default.copy()
+        default['quantity'] = 0.0
+        return super(ineco_mrp_tag_line, self).copy(cr, uid, id, default, context=context)

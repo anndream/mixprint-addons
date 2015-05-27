@@ -670,6 +670,152 @@
 			id="menu_ineco_mrp_task_list" 
 			sequence="120" 
 			action="ineco_mrp_task_list_action" />
-				    
+
+		<!--   Tag    -->
+        <record id="view_ineco_mrp_tag_tree" model="ir.ui.view">
+            <field name="name">ineco.mrp.tag.tree</field>
+            <field name="model">ineco.mrp.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tag">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="customer_id" />
+                    <field name="sale_order_id" />
+                    <field name="garment_order_no" />
+					<field name="start_datetime" />
+					<field name="finish_datetime" />
+                    <field name="totals" />
+                    <field name="amount" />
+					<field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_ineco_mrp_tag_form" model="ir.ui.view">
+            <field name="name">ineco.mrp.tag.form</field>
+            <field name="model">ineco.mrp.tag</field>
+            <field name="arch" type="xml">
+                <form string="Tag" version="7.0">
+                	<header>
+						<!--
+                        <button name="button_done" type="object" states="draft" string="Done" />
+                        <button name="button_cancel" type="object" states="draft" string="Cancel" />
+                        -->
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done,cancel" />
+                	</header>
+                	<sheet>
+                		<group>
+                			<group>
+			                    <field name="name" readonly="1"/>
+			                    <field name="sale_order_id" attrs="{'readonly':[('state', 'in', ['done','cancel'])]}"/>
+			                    <field name="customer_id" />
+
+                			</group>
+                			<group>
+			                    <field name="date" />
+			                    <field name="garment_order_no" />
+								<!--
+			                    	<field name="sequence" attrs="{'readonly':[('state', 'in', ['done','cancel'])]}"/>/>
+			                    -->
+			                    <field name="totals" />
+                                <field name="amount" />
+                			</group>
+							<notebook colspan="4">
+								<page string="Activity">
+									<group>
+										<group>
+											<field name="employee_id" />
+											<field name="start_datetime" />
+											<field name="finish_datetime" />
+										</group>
+										<group>
+											<div>
+												<button name="button_load" type="object" string="Load"  attrs="{'invisible':[('state', 'in', ['done','cancel'])]}"/>
+												<button name="button_reset" type="object" string="Reset 0"  attrs="{'invisible':[('state', 'in', ['done','cancel'])]}"/>
+											</div>
+
+										</group>
+									</group>
+									<field name="line_ids" colspan="4" nolabel="1"  attrs="{'readonly':[('state', 'in', ['done','cancel'])]}">
+										<tree string="Item" editable="top">
+											<field name="mrp_tag_id" invisible="1" />
+											<field name="product_id" readonly="1" />
+											<field name="color_id" readonly="1" />
+											<field name="gender_id" readonly="1" />
+											<field name="size_id" readonly="1" />
+											<field name="note" readonly="1" />
+											<field name="product_qty" readonly="1" />
+											<field name="quantity" />
+										</tree>
+									</field>
+								</page>
+								<page string="Process">
+								<field name="tag_process_ids" colspan="4" nolabel="1" />
+								</page>
+							</notebook>
+							<!--
+                			<field name="line_ids" colspan="4" nolabel="1"  attrs="{'readonly':[('state', 'in', ['done','cancel'])]}">
+                				<tree string="Item" editable="top">
+                					<field name="packing_id" invisible="1" />
+                					<field name="stock_move_id" invisible="1" />
+                					<field name="product_id" readonly="1" />
+                					<field name="color_id" readonly="1" />
+                					<field name="gender_id" readonly="1" />
+                					<field name="size_id" readonly="1" />
+                					<field name="note" readonly="1" />
+                					<field name="product_qty" readonly="1" />
+                					<field name="quantity" />
+                				</tree>
+                			</field>
+                			-->
+                		</group>
+                	</sheet>
+                    <div class="oe_chatter">
+                        <!--<field name="message_follower_ids" widget="mail_followers"/>-->
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_ineco_mrp_tag_search" model="ir.ui.view">
+            <field name="name">ineco.mrp.tag.search</field>
+            <field name="model">ineco.mrp.tag</field>
+            <field name="arch" type="xml">
+                <search string="Tag">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="customer_id" />
+                    <field name="sale_order_id" />
+                    <field name="garment_order_no" />
+                </search>
+            </field>
+        </record>
+
+        <record id="action_ineco_mrp_tag" model="ir.actions.act_window">
+            <field name="name">MRP Tag</field>
+            <field name="res_model">ineco.mrp.tag</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_mrp_tag_search"/>
+            <field name="context">{'default_date':time.strftime('%Y-%m-%d')}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a Packing.
+              </p><p>
+                This is the list of all cost group that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+       <menuitem
+            id="menu_ineco_mrp_tag"
+        	action="action_ineco_mrp_tag"
+        	parent="stock.menu_traceability"
+        	sequence="40"/>
+
     </data>
 </openerp>
