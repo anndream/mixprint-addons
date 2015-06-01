@@ -104,6 +104,7 @@ class account_invoice(osv.osv):
         'commission_ready': fields.related('saleorder_id','commission_ready',string='Commission', type="boolean",readonly=True),
         'commission_date': fields.date('Date Commission'),
         'commission_relate': fields.char('Relate Close Sale',size=16),
+        'internal_number': fields.char('Invoice Number', size=32, track_visibility='onchange'),
     }
     
     _defaults = {

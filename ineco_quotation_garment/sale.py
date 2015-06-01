@@ -22,6 +22,7 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import time
+import re
 #import pooler
 from openerp.osv import fields, osv
 #from tools.translate import _
@@ -389,6 +390,44 @@ class sale_order(osv.osv):
         'relate_garment_order_no': False,
         'commission_ready': False,
     }
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not isinstance(ids, list) :
+            ids = [ids]
+        res = []
+        if not ids:
+            return res
+        reads = self.read(cr, uid, ids, ['name', 'garment_order_no'], context)
+
+        for record in reads:
+            name = record['name']
+            if record['garment_order_no']:
+                name = name + '/' + record['garment_order_no']
+            res.append((record['id'], name))
+        return res
+
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if name:
+            ids = self.search(cr, user, [('name','=',name)]+ args, limit=limit, context=context)
+            if not ids:
+                ids = self.search(cr, user, [('garment_order_no','=',name)]+ args, limit=limit, context=context)
+            if not ids:
+                ids = set()
+                ids.update(self.search(cr, user, args + [('name',operator,name)], limit=limit, context=context))
+                if not limit or len(ids) < limit:
+                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit and (limit-len(ids)) or False) , context=context))
+                ids = list(ids)
+            if not ids:
+                ptrn = re.compile('(\[(.*?)\])')
+                res = ptrn.search(name)
+                if res:
+                    ids = self.search(cr, user, [('name','=', res.group(2))] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, user, args, limit=limit, context=context)
+        result = self.name_get(cr, user, ids, context=context)
+        return result
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
