@@ -38,8 +38,22 @@ class hr_employee(osv.osv):
             if name.find(':') > 0 and name.split(':')[1] == '409':
                 ids = [int(name.split(':')[0])]
             else:
-                ids = self.search(cr, user, [('otherid','=',name)] + args, limit=limit, context=context)
+                ids = self.search(cr, user, [('otherid',operator,name)] + args, limit=limit, context=context)
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
-    
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not isinstance(ids, list) :
+            ids = [ids]
+        res = []
+        if not ids:
+            return res
+        reads = self.read(cr, uid, ids, ['name', 'otherid'], context)
+
+        for record in reads:
+            name = record['name']
+            if record['otherid']:
+                name = name + '/' + record['otherid']
+            res.append((record['id'], name))
+        return res

@@ -412,7 +412,7 @@ class sale_order(osv.osv):
         if name:
             ids = self.search(cr, user, [('name','=',name)]+ args, limit=limit, context=context)
             if not ids:
-                ids = self.search(cr, user, [('garment_order_no','=',name)]+ args, limit=limit, context=context)
+                ids = self.search(cr, user, [('garment_order_no',operator,name)]+ args, limit=limit, context=context)
             if not ids:
                 ids = set()
                 ids.update(self.search(cr, user, args + [('name',operator,name)], limit=limit, context=context))
