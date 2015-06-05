@@ -530,6 +530,7 @@
 					<field name="customer_id" readonly="1" />
 					<field name="product_id" readonly="1" />
 					<field name="user_id" readonly="1" />
+                    <field name="type" invisible="1" />
 				</tree>
 			</field>
 		</record>
@@ -569,16 +570,32 @@
 		</record>
 		
 		<record model="ir.actions.act_window" id="ineco_mrp_subworkcenter_task_action">
-			<field name="name">Sub Workcenter Task</field>
+			<field name="name">Sub Workcenter Task (Out)</field>
 			<field name="res_model">ineco.mrp.subworkcenter.task</field>
 			<field name="view_mode">tree</field>
+            <field name="context">{'default_type':'out'}</field>
+            <field name="domain">[('type','=','out')]</field>
 		</record>
 
-		<menuitem name="Sub Workcenter Task" 
+		<menuitem name="Sub Workcenter Task (Out)"
 			parent="menu_mrp_task_menu"
 			id="menu_ineco_mrp_subworkcenter_task" 
-			sequence="110" 
+			sequence="110"
 			action="ineco_mrp_subworkcenter_task_action" />
+
+        <record model="ir.actions.act_window" id="ineco_mrp_subworkcenter_task_action_in">
+			<field name="name">Sub Workcenter Task (In)</field>
+			<field name="res_model">ineco.mrp.subworkcenter.task</field>
+			<field name="view_mode">tree</field>
+            <field name="context">{'default_type':'in'}</field>
+            <field name="domain">[('type','=','in')]</field>
+		</record>
+
+		<menuitem name="Sub Workcenter Task (In)"
+			parent="menu_mrp_task_menu"
+			id="menu_ineco_mrp_subworkcenter_task_in"
+			sequence="120"
+			action="ineco_mrp_subworkcenter_task_action_in" />
 
 		<!-- INECO TASK LIST-->
 
@@ -668,7 +685,7 @@
 		<menuitem name="Task List" 
 			parent="menu_mrp_task_menu"
 			id="menu_ineco_mrp_task_list" 
-			sequence="120" 
+			sequence="130"
 			action="ineco_mrp_task_list_action" />
 
 		<!--   Tag    -->
@@ -709,7 +726,8 @@
 			                    <field name="name" readonly="1"/>
 			                    <field name="sale_order_id" attrs="{'readonly':[('state', 'in', ['done','cancel'])]}"/>
 			                    <field name="customer_id" />
-
+								<field name="employee_id" />
+								<field name="tag_process_ids" string="Process" widget="many2many_tags"/>
                 			</group>
                 			<group>
 			                    <field name="date" />
@@ -724,7 +742,6 @@
 								<page string="Activity">
 									<group>
 										<group>
-											<field name="employee_id" />
 											<field name="start_datetime" />
 											<field name="finish_datetime" />
 										</group>
@@ -749,25 +766,7 @@
 										</tree>
 									</field>
 								</page>
-								<page string="Process">
-								<field name="tag_process_ids" colspan="4" nolabel="1" />
-								</page>
 							</notebook>
-							<!--
-                			<field name="line_ids" colspan="4" nolabel="1"  attrs="{'readonly':[('state', 'in', ['done','cancel'])]}">
-                				<tree string="Item" editable="top">
-                					<field name="packing_id" invisible="1" />
-                					<field name="stock_move_id" invisible="1" />
-                					<field name="product_id" readonly="1" />
-                					<field name="color_id" readonly="1" />
-                					<field name="gender_id" readonly="1" />
-                					<field name="size_id" readonly="1" />
-                					<field name="note" readonly="1" />
-                					<field name="product_qty" readonly="1" />
-                					<field name="quantity" />
-                				</tree>
-                			</field>
-                			-->
                 		</group>
                 	</sheet>
                     <div class="oe_chatter">

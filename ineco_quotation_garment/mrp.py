@@ -433,6 +433,21 @@ class ineco_mrp_process(osv.osv):
          'Process Name and Group must be unique.')
     ]
 
+    def name_get(self, cr, uid, ids, context=None):
+        if not isinstance(ids, list) :
+            ids = [ids]
+        res = []
+        if not ids:
+            return res
+        reads = self.read(cr, uid, ids, ['name', 'cost'], context)
+
+        for record in reads:
+            name = record['name']
+            if record['cost']:
+                name = name + ' (' + ('%0.2f' % record['cost'] or 0.0)+')'
+            res.append((record['id'], name))
+        return res
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
@@ -594,9 +609,11 @@ class ineco_mrp_subworkcenter_task(osv.osv):
                 store={
                     'ineco.mrp.subworkcenter.task': (lambda self, cr, uid, ids, c={}: ids, [], 10),
                 }),
+        'type': fields.selection([('out','Out'),('in','In')],'Type')
     }
     _defaults = {
         'date': time.strftime('%Y-%m-%d'),
+        'type': 'out',
     }
     _order = 'date'
     
@@ -611,12 +628,12 @@ class ineco_mrp_tag(osv.osv):
     def _get_quantity(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            total = 0
-            amount = 0
+            total = 0.0
+            amount = 0.0
             for line in obj.line_ids:
                 total += line.quantity
             for process in obj.tag_process_ids:
-                amount += process.cost * (total / 12)
+                amount += process.cost * (total / 12.0)
             result[obj.id] = {
                 'totals': total,
                 'amount': amount,
