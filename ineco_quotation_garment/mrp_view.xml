@@ -696,11 +696,13 @@
                 <tree string="Tag">
                     <field name="name" />
                     <field name="date" />
+                    <field name="day_month" invisible="1" />
                     <field name="customer_id" />
+                    <field name="employee_id" />
                     <field name="sale_order_id" />
                     <field name="garment_order_no" />
 					<field name="start_datetime" />
-					<field name="finish_datetime" />
+					<field name="finish_datetime"  invisible="1"/>
                     <field name="totals" />
                     <field name="amount" />
 					<field name="state" />
@@ -785,8 +787,17 @@
                     <field name="name" />
                     <field name="date" />
                     <field name="customer_id" />
+                    <field name="employee_id" />
                     <field name="sale_order_id" />
                     <field name="garment_order_no" />
+                  	<group expand="0" string="Group By...">
+                        <filter name="by_employee" string="Employee" icon="terp-partner" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter name="by_customer" string="Customer" icon="terp-partner" domain="[]" context="{'group_by':'customer_id'}"/>
+                        <filter name="by_mo" string="Garment Order" icon="terp-partner" domain="[]" context="{'group_by':'garment_order_no'}"/>
+                        <filter name="by_date" string="Month" icon="terp-partner" domain="[]" context="{'group_by':'start_datetime'}"/>
+                        <filter name="by_day" string="Day" icon="terp-partner" domain="[]" context="{'group_by':'day_month'}"/>
+
+                    </group>
                 </search>
             </field>
         </record>

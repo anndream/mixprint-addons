@@ -640,6 +640,16 @@ class ineco_mrp_tag(osv.osv):
             }
         return result
 
+    def _get_day(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'day_month': False
+            }
+            if obj.start_datetime:
+                result[obj.id]['day_month'] = "%02d" % time.strptime(obj.start_datetime,'%Y-%m-%d %H:%M:%S').tm_mday
+        return result
+
     _name = 'ineco.mrp.tag'
     _inherit = ['mail.thread']
     _description = "MRP Tag"
@@ -647,8 +657,13 @@ class ineco_mrp_tag(osv.osv):
         'name': fields.char('Tag No', size=32, required=True),
         'sale_order_id': fields.many2one('sale.order','Sale Order', track_visibility='onchange'),
         'garment_order_no': fields.related('sale_order_id','garment_order_no', type="char", string="Garment No",
-            readonly=True),
+                store={
+                    'ineco.mrp.tag': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+                }, readonly=True),
         'customer_id': fields.related('sale_order_id','partner_id',type="many2one", relation="res.partner",
+                store={
+                    'ineco.mrp.tag': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+                },
             string="Customer", readonly=True),
         'user_id': fields.related('sale_order_id','user_id',type="many2one", relation="res.users", string="Sale Person",
             readonly=True),
@@ -667,7 +682,11 @@ class ineco_mrp_tag(osv.osv):
         'employee_id': fields.many2one('hr.employee','Employee', track_visibility='onchange'),
         'line_ids': fields.one2many('ineco.mrp.tag.line','mrp_tag_id','Tag Items'),
         'tag_process_ids': fields.many2many('ineco.mrp.process', 'ineco_tag_process_rel', 'child_id', 'parent_id', 'Process'),
-        'state': fields.selection([('draft','Draft'),('done','Done'),('cancel','Cancel')],'State',readonly=True, track_visibility='onchange')
+        'state': fields.selection([('draft','Draft'),('done','Done'),('cancel','Cancel')],'State',readonly=True, track_visibility='onchange'),
+        'day_month': fields.function(_get_day, string="Day", type="char", size=2, multi="_day",
+                store={
+                    'ineco.mrp.tag': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+                }),
     }
 
     _defaults = {
