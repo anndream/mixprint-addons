@@ -687,6 +687,10 @@ class ineco_mrp_tag(osv.osv):
                 store={
                     'ineco.mrp.tag': (lambda self, cr, uid, ids, c={}: ids, [], 10),
                 }),
+        'coach_id': fields.related('employee_id','coach_id',type="many2one", relation="hr.employee", string="Coach",
+                store={
+                    'ineco.mrp.tag': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+                }, readonly=True),
     }
 
     _defaults = {
