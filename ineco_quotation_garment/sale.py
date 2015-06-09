@@ -419,6 +419,7 @@ class sale_order(osv.osv):
         'order_unit_cost': fields.function(_get_order_total, string="Dozen Cost", type="float", digits=(12,2), multi="_ordertotal"),
         'date_pin_start': fields.date('Date Pin Start'),
         'date_pin_finish': fields.date('Date Pin Finish'),
+        'pin_note': fields.text('Pin Note'),
     }
     _defaults = {
         'cancel_sample_order': False,

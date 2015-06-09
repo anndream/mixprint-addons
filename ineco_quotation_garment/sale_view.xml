@@ -1317,6 +1317,7 @@
                                     <field name="unit_cost" invisible="1" />
                                 </tree>
                             </field>
+                            <field name="pin_note" colspan="4" />
                         </group>
                     </sheet>
                     <!--
