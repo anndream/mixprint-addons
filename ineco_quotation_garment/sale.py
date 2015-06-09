@@ -877,7 +877,7 @@ class ineco_sale_order_process(osv.osv):
             }
             result[obj.id]['order_total'] = order_total
             result[obj.id]['order_total_dozen'] = (order_total / 12) or 0.0
-            result[obj.id]['order_cost'] = ((order_total / 12) or 0.0) * obj.process_id.cost
+            result[obj.id]['order_cost'] = ((order_total / 12) or 0.0) * obj.unit_cost
         return result
 
     _name = 'ineco.sale.order.process'
@@ -896,6 +896,7 @@ class ineco_sale_order_process(osv.osv):
     _defaults = {
         'sequence': 10,
     }
+    _order = 'sale_order_id, sequence'
 
     def onchange_process_id(self, cr, uid, ids, process_id, context=None):
         if context==None:

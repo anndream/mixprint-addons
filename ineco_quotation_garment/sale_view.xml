@@ -1257,6 +1257,7 @@
         <record id="view_ineco_process_cost_tree" model="ir.ui.view">
             <field name="name">ineco.process.cost.order.tree</field>
             <field name="model">sale.order</field>
+            <field name="priority" eval="50"/>
             <field name="arch" type="xml">
                 <tree string="Process and Cost" fonts="bold:message_unread==True">
                     <field name="message_unread" invisible="1"/>
@@ -1278,6 +1279,7 @@
         <record id="view_ineco_process_cost_form" model="ir.ui.view">
             <field name="name">ineco.process.cost.order.form</field>
             <field name="model">sale.order</field>
+            <field name="priority" eval="50"/>
             <field name="arch" type="xml">
                 <form string="Process and Cost" version="7.0">
                     <header></header>
@@ -1331,6 +1333,7 @@
 
         <record id="view_ineco_process_cost_search" model="ir.ui.view">
             <field name="name">ineco.process.cost.order.search</field>
+            <field name="priority" eval="50"/>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <search string="Process and Cost">
@@ -1387,9 +1390,9 @@
         <menuitem
             id="menu_ineco_process_cost"
         	action="action_ineco_process_cost"
-        	parent="base.menu_sales"
+        	parent="menu_mrp_task_menu"
             groups="base.group_garment_sale_cost"
-        	sequence="5"/>
+        	sequence="150"/>
 
     </data>
 </openerp>
