@@ -13,7 +13,9 @@
                 	<field name="commission_relate" />
                 </field>   
                 
-                <field name="internal_number" position="after">
+                <field name="internal_number" position="replace">
+                    <field name="internal_number" attrs="{'readonly': [('allow_change_number','=', False)]}"/>
+                    <field name="allow_change_number" groups="base.group_erp_manager,ineco_thai_account.group_account_cancel"/>
                 	<field name="other_invoice_no" />
                 	<field name="corrected" />
                 </field>          
@@ -49,21 +51,26 @@
             </field>
         </record>
 
+        <!--
+
         <record id="view_ineco_supplierinvoice_cancel_form" model="ir.ui.view">
             <field name="name">cancel.supplier.invoice.form.inherit</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account_cancel.invoice_supplier_cancel_form_inherit"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='invoice_cancel']" position="replace">
-                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" groups="base.group_erp_manager,ineco_thai_account.group_account_cancel"/>
+                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel"
+                            groups="base.group_erp_manager,ineco_thai_account.group_account_cancel"/>
                 </xpath>
                 <xpath expr="//button[@name='action_cancel_draft']" position="replace">
-					<button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object" groups="base.group_erp_manager,ineco_thai_account.group_account_cancel"/>
+					<button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object"
+                            groups="base.group_erp_manager,ineco_thai_account.group_account_cancel"/>
                 	<button name="button_open_payment" string="Open Supplier Payment" type="object" />
                 </xpath>
             </field>
         </record>
-        
+        -->
+
         <record id="view_ineco_receipt_voucher_cancel_form" model="ir.ui.view">
             <field name="name">cancel.receipt.voucher.form</field>
             <field name="model">account.voucher</field>
@@ -123,6 +130,7 @@
                 <field name="period_id" position="after">
                 	<field name="garment_order_no" />
                 	<field name="garment_order_other" />
+                    <field name="supplier_billing" />
                 </field>
                 <filter name="unpaid" position="after">
                 	<filter name="depnomo" icon="terp-go-today" string="Deposit no Garment Order" domain="[('garment_order_no','=',False),('journal_id','in',[10,2]),('state','=','open')]" />			
@@ -162,6 +170,17 @@
 	      		</field>
 			</field>
 		</record>
-				              
+
+        <record id="mixprint_invoice_supplier_form" model="ir.ui.view">
+            <field name="name">mixprint.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="supplier_invoice_number" position="after">
+                    <field name="supplier_billing" />
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>

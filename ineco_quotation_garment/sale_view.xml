@@ -1253,6 +1253,143 @@
         	groups="base.group_sale_manager"
         	sequence="7"/>
         	
-        
+        <!-- Process and Cost on Sale Order -->
+        <record id="view_ineco_process_cost_tree" model="ir.ui.view">
+            <field name="name">ineco.process.cost.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <tree string="Process and Cost" fonts="bold:message_unread==True">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="name" string="Quotation No" invisible="1"/>
+                    <field name="garment_order_no" />
+                    <field name="garment_order_date" />
+                    <field name="partner_id" />
+                    <field name="user_id" />
+                    <field name="date_pin_start" />
+                    <field name="date_pin_finish" />
+                    <field name="order_total" />
+                    <field name="order_unit_cost" />
+                    <field name="order_total_cost" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_ineco_process_cost_form" model="ir.ui.view">
+            <field name="name">ineco.process.cost.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <form string="Process and Cost" version="7.0">
+                    <header></header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="garment_order_no" readonly="1"/>
+                                <field name="garment_order_date" readonly="1"/>
+                                <field name="order_total" />
+                                <field name="order_unit_cost" />
+                                <field name="state" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="date_pin_start" />
+                                <field name="date_pin_finish" />
+                                <field name="order_total_cost" />
+                            </group>
+                            <field name="order_line" nolabel="1" colspan="4" reononly="1">
+                                <tree string="Order Line">
+                                    <field name="product_id" />
+                                    <field name="product_uom" />
+                                    <field name="product_uom_qty" />
+                                    <field name="state" invisible="1" />
+                                </tree>
+                            </field>
+                            <field name="process_ids" colspan="4" string="Process">
+                                <tree string="Process" editable="top">
+                                    <field name="sequence" />
+                                    <field name="process_id" on_change="onchange_process_id(process_id)" />
+                                    <field name="process_cost" />
+                                    <field name="order_total_dozen" />
+                                    <field name="order_cost" />
+                                    <field name="name" />
+                                    <field name="unit_cost" invisible="1" />
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                    <!--
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    -->
+                </form>
+
+
+            </field>
+        </record>
+
+        <record id="view_ineco_process_cost_search" model="ir.ui.view">
+            <field name="name">ineco.process.cost.order.search</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <search string="Process and Cost">
+                    <field name="name" string="Quotation No"/>
+                    <field name="garment_order_no" />
+                    <field name="garment_order_date" />
+                    <field name="partner_id" />
+                    <field name="user_id" />
+                    <field name="date_pin_start" />
+                    <field name="date_pin_finish" />
+                </search>
+            </field>
+        </record>
+
+        <record id="action_ineco_process_cost" model="ir.actions.act_window">
+            <field name="name">Costing</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_ineco_process_cost_tree"/>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[('garment_order_no','!=',False),('state','not in',['cancel'])]</field>
+            <field name="search_view_id" ref="view_ineco_process_cost_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation, the first step of a new sale.
+              </p><p>
+                OpenERP will help you handle efficiently the complete sale flow:
+                from the quotation to the sale order, the
+                delivery, the invoicing and the payment collection.
+              </p><p>
+                The social feature helps you organize discussions on each sale
+                order, and allow your customers to keep track of the evolution
+                of the sale order.
+              </p>
+            </field>
+        </record>
+
+	    <record model="ir.actions.act_window.view" id="action_ineco_process_cost_tree">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_ineco_process_cost_tree"/>
+	        <field name="act_window_id" ref="action_ineco_process_cost"/>
+	    </record>
+
+	    <record model="ir.actions.act_window.view" id="action_ineco_process_cost_form">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="view_ineco_process_cost_form"/>
+	        <field name="act_window_id" ref="action_ineco_process_cost"/>
+	    </record>
+
+        <menuitem
+            id="menu_ineco_process_cost"
+        	action="action_ineco_process_cost"
+        	parent="base.menu_sales"
+            groups="base.group_garment_sale_cost"
+        	sequence="5"/>
+
     </data>
 </openerp>

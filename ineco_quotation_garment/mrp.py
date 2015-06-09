@@ -414,12 +414,13 @@ class ineco_mrp_process_group(osv.osv):
     
 class ineco_mrp_process(osv.osv):
     _name = 'ineco.mrp.process'
+    _inherit = ['mail.thread']
     _description = "MRP Process"
     _columns = {
-        'code': fields.char('Barcode', size=32, required=True),
-        'name': fields.char('Process Name', size=64, required=True),
+        'code': fields.char('Barcode', size=32, required=True, track_visibility='onchange'),
+        'name': fields.char('Process Name', size=64, required=True, track_visibility='onchange'),
         'process_group_id': fields.many2one('ineco.mrp.process.group','Group',),
-        'cost': fields.float('Costing', digits=(12,2),required=True),
+        'cost': fields.float('Costing', digits=(12,2),required=True, track_visibility='onchange'),
         'level': fields.selection([('begin','Beginner'),('medium','Medium'),('hard','Hard')],'Level'),
         'image_multi': fields.text('Image List'),
         'attachments': fields.one2many('ir.attachment', 'mrp_process_id', string="Attachments"),

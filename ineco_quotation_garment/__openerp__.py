@@ -51,6 +51,7 @@ New Quotation Menu/View for Garment Business.
     'update_xml':[
         'wizard/wizard_pattern_copy_view.xml',
         'wizard/wizard_ticket_split_view.xml',
+        'security.xml',
         'sale_view.xml',
         'stock_view.xml',
         'account_view.xml',
@@ -61,7 +62,6 @@ New Quotation Menu/View for Garment Business.
         'problem_data.xml',
         'res_users_view.xml',
         'invoice_view.xml',
-        'security.xml',
         'product_view.xml',
         'dashboard_view.xml',
         'dashboard_invoice_view.xml',

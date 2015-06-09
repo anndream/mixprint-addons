@@ -105,11 +105,14 @@ class account_invoice(osv.osv):
         'commission_date': fields.date('Date Commission'),
         'commission_relate': fields.char('Relate Close Sale',size=16),
         'internal_number': fields.char('Invoice Number', size=32, track_visibility='onchange'),
+        'supplier_billing': fields.char('Supplier DO Billing',size=254, track_visibility='onchange'),
+        'allow_change_number': fields.boolean('Change Number'),
     }
     
     _defaults = {
         'corrected': False,
         'commission_date': False,
+        'allow_change_number': False,
     }
     
     def button_open_payment(self, cr, uid, ids, context=None):

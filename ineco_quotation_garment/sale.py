@@ -226,6 +226,36 @@ class sale_order(osv.osv):
                 result[obj.id]['residual'] = obj.amount_total - (result[obj.id]['deposit'] or 0.00)
         return result
 
+    def _get_order_total(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'order_total': 0.00,
+                'order_total_cost': 0.00,
+                'order_unit_cost': 0.00,
+            }
+            sql = """
+                select coalesce(round(sum(sol.product_uom_qty)),0)
+                from sale_order_line sol
+                join product_product pp on pp.id = sol.product_id
+                join product_template pt on pt.id = pp.product_tmpl_id
+                where order_id = %s
+                  and pt.type <> 'service'
+                """ % obj.id
+            cr.execute(sql)
+            data = cr.fetchone()
+            if data and data[0]:
+                result[obj.id]['order_total'] = data[0] or ''
+            unit_cost = 0.0
+            order_cost = 0.0
+            for cost_line in obj.process_ids:
+                unit_cost += cost_line.unit_cost
+                order_cost += cost_line.order_cost
+            result[obj.id]['order_total_cost'] = order_cost
+            result[obj.id]['order_unit_cost'] = unit_cost
+
+        return result
+
     def _get_commission(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
@@ -382,6 +412,13 @@ class sale_order(osv.osv):
                         'account.invoice': (_get_invoice_paid, ['state'], 10),
                     },
                     type="boolean", multi="_commission"),
+        #In-line
+        'process_ids': fields.one2many('ineco.sale.order.process','sale_order_id','Processes'),
+        'order_total': fields.function(_get_order_total, string="Order Total", type="integer", multi="_ordertotal"),
+        'order_total_cost': fields.function(_get_order_total, string="Order Total Cost", type="float", digits=(12,2), multi="_ordertotal"),
+        'order_unit_cost': fields.function(_get_order_total, string="Dozen Cost", type="float", digits=(12,2), multi="_ordertotal"),
+        'date_pin_start': fields.date('Date Pin Start'),
+        'date_pin_finish': fields.date('Date Pin Finish'),
     }
     _defaults = {
         'cancel_sample_order': False,
@@ -814,5 +851,62 @@ class ineco_crm_cost(osv.osv):
         'quantity': 1,
         'cost': 0.0,
     }
-    
+
+class ineco_sale_order_process(osv.osv):
+
+    def _get_cost(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            order_total = 0.0
+            sql = """
+                select coalesce(round(sum(sol.product_uom_qty)),0)
+                from sale_order_line sol
+                join product_product pp on pp.id = sol.product_id
+                join product_template pt on pt.id = pp.product_tmpl_id
+                where order_id = %s
+                  and pt.type <> 'service'
+                """ % obj.sale_order_id.id
+            cr.execute(sql)
+            data = cr.fetchone()
+            if data and data[0]:
+                order_total = data[0] or 0.0
+            result[obj.id] = {
+                'order_total': 0.0,
+                'order_total_dozen': 0,
+                'order_cost': 0.0,
+            }
+            result[obj.id]['order_total'] = order_total
+            result[obj.id]['order_total_dozen'] = (order_total / 12) or 0.0
+            result[obj.id]['order_cost'] = ((order_total / 12) or 0.0) * obj.process_id.cost
+        return result
+
+    _name = 'ineco.sale.order.process'
+    _description = "Sale Process"
+    _columns = {
+        'name': fields.char('Description', size=128),
+        'sale_order_id': fields.many2one('sale.order','Sale Order'),
+        'sequence': fields.integer('Sequence'),
+        'process_id': fields.many2one('ineco.mrp.process','Process'),
+        'unit_cost': fields.float('Unit Cost'),
+        'order_total': fields.function(_get_cost, string="Order Total", type="integer", multi="_cost"),
+        'process_cost':fields.related('process_id', 'cost', string="Dozen Cost", type='float', readonly=True),
+        'order_total_dozen': fields.function(_get_cost, string="Order Dozen", type="float", digits=(12,2), multi="_cost"),
+        'order_cost': fields.function(_get_cost, string="Total", type="float", digits=(12,2), multi="_cost"),
+    }
+    _defaults = {
+        'sequence': 10,
+    }
+
+    def onchange_process_id(self, cr, uid, ids, process_id, context=None):
+        if context==None:
+            context={}
+        result = 0.0
+        cost_type_obj = self.pool.get('ineco.mrp.process').browse(cr, uid, process_id)
+        if cost_type_obj:
+            result = cost_type_obj.cost
+        return {'value': {
+            'unit_cost': result,
+            }
+        }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

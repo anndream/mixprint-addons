@@ -16,7 +16,12 @@
 	        <field name="name">Garment Collar</field>
 	        <field name="category_id" ref="base.module_category_hidden"/>
 	    </record>
-	
+
+        <record id="base.group_garment_sale_cost" model="res.groups">
+	        <field name="name">Garment Sale Costing</field>
+	        <field name="category_id" ref="base.module_category_hidden"/>
+	    </record>
+
 	    <record id="secure_ineco_sale_qty_amount" model="ir.model.access">
 	        <field name="name">Employees</field>
 	        <field name="group_id" ref="base.group_user" />
@@ -236,6 +241,27 @@
 	        <field name="perm_create" eval="1"/>
 	        <field name="perm_unlink" eval="1"/>
 	    </record>
+
+		<record id="secure_ineco_sale_order_process" model="ir.model.access">
+	        <field name="name">Employees</field>
+	        <field name="group_id" ref="base.group_user" />
+	        <field name="model_id" ref="model_ineco_sale_order_process" />
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_write" eval="1"/>
+	        <field name="perm_create" eval="1"/>
+	        <field name="perm_unlink" eval="1"/>
+	    </record>
+
+		<record id="secure_ineco_sale_order_costing" model="ir.model.access">
+	        <field name="name">Sale Costing</field>
+	        <field name="group_id" ref="base.group_garment_sale_cost" />
+	        <field name="model_id" ref="model_sale_order" />
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_write" eval="1"/>
+	        <field name="perm_create" eval="0"/>
+	        <field name="perm_unlink" eval="0"/>
+	    </record>
+
 
 	</data>
 </openerp>
