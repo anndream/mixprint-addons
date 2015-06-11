@@ -262,6 +262,35 @@
 	        <field name="perm_unlink" eval="0"/>
 	    </record>
 
+		<record id="secure_ineco_mrp_process_bom" model="ir.model.access">
+	        <field name="name">BOM Process</field>
+	        <field name="group_id" ref="base.group_user" />
+	        <field name="model_id" ref="model_ineco_mrp_process_bom" />
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_write" eval="1"/>
+	        <field name="perm_create" eval="1"/>
+	        <field name="perm_unlink" eval="0"/>
+	    </record>
+
+		<record id="secure_ineco_mrp_process_bom_line" model="ir.model.access">
+	        <field name="name">BOM Process Line</field>
+	        <field name="group_id" ref="base.group_user" />
+	        <field name="model_id" ref="model_ineco_mrp_process_bom_line" />
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_write" eval="1"/>
+	        <field name="perm_create" eval="1"/>
+	        <field name="perm_unlink" eval="1"/>
+	    </record>
+
+		<record id="secure_ineco_sale_order_bom" model="ir.model.access">
+	        <field name="name">Sale BOM Process</field>
+	        <field name="group_id" ref="base.group_user" />
+	        <field name="model_id" ref="model_ineco_sale_order_bom" />
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_write" eval="1"/>
+	        <field name="perm_create" eval="1"/>
+	        <field name="perm_unlink" eval="1"/>
+	    </record>
 
 	</data>
 </openerp>
