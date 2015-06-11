@@ -440,7 +440,7 @@ class ineco_mrp_process(osv.osv):
         res = []
         if not ids:
             return res
-        reads = self.read(cr, uid, ids, ['name', 'cost'], context)
+        reads = self.read(cr, uid, ids, ['id', 'name', 'cost'], context)
 
         for record in reads:
             name = record['name']
@@ -770,3 +770,32 @@ class ineco_mrp_tag_line(osv.osv):
         default = default.copy()
         default['quantity'] = 0.0
         return super(ineco_mrp_tag_line, self).copy(cr, uid, id, default, context=context)
+
+class ineco_mrp_process_bom(osv.osv):
+    _name = 'ineco.mrp.process.bom'
+    _description = 'MRP Process Bom'
+    _inherit = ['mail.thread']
+    _columns = {
+        'name': fields.char('BOM Process Name', size=254, required=True, track_visibility='onchange'),
+        'note': fields.text('Note'),
+        'line_ids': fields.one2many('ineco.mrp.process.bom.line','process_bom_id','Lines'),
+    }
+    _sql_constraints = [
+        ('name_unique',
+         'unique (name)',
+         'BOM Process name must be unique.')
+    ]
+
+class ineco_mrp_process_bom_line(osv.osv):
+    _name = 'ineco.mrp.process.bom.line'
+    _description = "Process Bom Detail"
+    _columns = {
+        'process_bom_id': fields.many2one('ineco.mrp.process.bom','BOM Process'),
+        'sequence': fields.integer('Sequence'),
+        'process_id': fields.many2one('ineco.mrp.process','Process'),
+        'name': fields.char('Description',size=254),
+    }
+    _order = 'process_bom_id, sequence'
+    _defaults = {
+        'sequence': 100,
+    }

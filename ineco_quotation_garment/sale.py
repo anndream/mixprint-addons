@@ -414,6 +414,7 @@ class sale_order(osv.osv):
                     type="boolean", multi="_commission"),
         #In-line
         'process_ids': fields.one2many('ineco.sale.order.process','sale_order_id','Processes'),
+        'bom_ids': fields.one2many('ineco.sale.order.bom','sale_order_id','Boms'),
         'order_total': fields.function(_get_order_total, string="Order Total", type="integer", multi="_ordertotal"),
         'order_total_cost': fields.function(_get_order_total, string="Order Total Cost", type="float", digits=(12,2), multi="_ordertotal"),
         'order_unit_cost': fields.function(_get_order_total, string="Dozen Cost", type="float", digits=(12,2), multi="_ordertotal"),
@@ -853,6 +854,46 @@ class ineco_crm_cost(osv.osv):
         'cost': 0.0,
     }
 
+class ineco_sale_order_bom(osv.osv):
+    _name = 'ineco.sale.order.bom'
+    _description = "Sale Order Bom"
+    _columns = {
+        'name': fields.char('Description', size=254),
+        'sale_order_id': fields.many2one('sale.order','Sale Order'),
+        'process_bom_id': fields.many2one('ineco.mrp.process.bom','BOM Process'),
+        'process_ids': fields.one2many('ineco.sale.order.process','sale_bom_id','Process'),
+    }
+
+    def onchange_bom_id(self, cr, uid, ids, bom_id, context=None):
+        if context==None:
+            context={}
+        result = '...'
+        bom_obj = self.pool.get('ineco.mrp.process.bom').browse(cr, uid, bom_id)
+        if bom_obj:
+            result = bom_obj.name
+        return {'value': {
+            'name': result,
+            }
+        }
+
+    def button_load_process(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        line_obj = self.pool.get('ineco.sale.order.process')
+        for data in self.browse(cr, uid, ids):
+            if data.process_bom_id:
+                for process in data.process_bom_id.line_ids:
+                    new_data = {
+                        'sale_bom_id': data.id,
+                        'process_id': process.process_id.id,
+                        'name': process.name,
+                        'sequence': process.sequence,
+                    }
+
+                    line_obj.create(cr, uid, new_data)
+        return True
+
+
 class ineco_sale_order_process(osv.osv):
 
     def _get_cost(self, cr, uid, ids, name, args, context=None):
@@ -873,7 +914,7 @@ class ineco_sale_order_process(osv.osv):
                 order_total = data[0] or 0.0
             result[obj.id] = {
                 'order_total': 0.0,
-                'order_total_dozen': 0,
+                'order_total_dozen': 0.0,
                 'order_cost': 0.0,
             }
             result[obj.id]['order_total'] = order_total
@@ -885,7 +926,12 @@ class ineco_sale_order_process(osv.osv):
     _description = "Sale Process"
     _columns = {
         'name': fields.char('Description', size=128),
-        'sale_order_id': fields.many2one('sale.order','Sale Order'),
+        #'sale_order_id': fields.many2one('sale.order','Sale Order'),
+        'sale_bom_id': fields.many2one('ineco.sale.order.bom','BOM'),
+        'sale_order_id':fields.related('sale_bom_id', 'sale_order_id', string="Sale Order", type='many2one', relation="sale.order",
+            store={
+                'ineco.sale.order.process': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            }, readonly=True),
         'sequence': fields.integer('Sequence'),
         'process_id': fields.many2one('ineco.mrp.process','Process'),
         'unit_cost': fields.float('Unit Cost'),
@@ -897,7 +943,7 @@ class ineco_sale_order_process(osv.osv):
     _defaults = {
         'sequence': 10,
     }
-    _order = 'sale_order_id, sequence'
+    _order = 'sale_order_id, sale_bom_id, sequence'
 
     def onchange_process_id(self, cr, uid, ids, process_id, context=None):
         if context==None:
@@ -905,7 +951,7 @@ class ineco_sale_order_process(osv.osv):
         result = 0.0
         cost_type_obj = self.pool.get('ineco.mrp.process').browse(cr, uid, process_id)
         if cost_type_obj:
-            result = cost_type_obj.cost
+            result = cost_type_obj.cost or 0.0
         return {'value': {
             'unit_cost': result,
             }

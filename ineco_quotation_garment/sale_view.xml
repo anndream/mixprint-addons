@@ -1301,21 +1301,39 @@
                             <field name="order_line" nolabel="1" colspan="4" reononly="1">
                                 <tree string="Order Line">
                                     <field name="product_id" />
-                                    <field name="product_uom" />
                                     <field name="product_uom_qty" />
+                                    <field name="product_uom" />
                                     <field name="state" invisible="1" />
                                 </tree>
                             </field>
-                            <field name="process_ids" colspan="4" string="Process">
-                                <tree string="Process" editable="top">
-                                    <field name="sequence" />
-                                    <field name="process_id" on_change="onchange_process_id(process_id)" />
-                                    <field name="process_cost" />
-                                    <field name="order_total_dozen" />
-                                    <field name="order_cost" />
+                            <field name="bom_ids" colspan="4" string="BOM Process">
+                                <tree string="BOM Process">
                                     <field name="name" />
-                                    <field name="unit_cost" invisible="1" />
+                                    <field name="process_bom_id" />
                                 </tree>
+                                <form string="BOM Process">
+                                    <group>
+                                        <group>
+                                            <field name="process_bom_id" on_change="onchange_bom_id(process_bom_id)" />
+                                            <field name="name" />
+                                            <field name="sale_order_id" invisible="1"/>
+                                            <button name="button_load_process" string="Load Process" type="object"  />
+                                        </group>
+                                        <group>
+                                        </group>
+                                        <field name="process_ids" colspan="4">
+                                            <tree string="BOM Process" editable="bottom">
+                                                <field name="sequence" />
+                                                <field name="process_id" on_change="onchange_process_id(process_id)" />
+                                                <field name="process_cost" />
+                                                <field name="order_total_dozen" />
+                                                <field name="order_cost" />
+                                                <field name="name" />
+                                                <field name="unit_cost" invisible="1" />
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </form>
                             </field>
                             <field name="pin_note" colspan="4" />
                         </group>
