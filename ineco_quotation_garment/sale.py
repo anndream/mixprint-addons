@@ -888,6 +888,7 @@ class ineco_sale_order_bom(osv.osv):
                         'process_id': process.process_id.id,
                         'name': process.name,
                         'sequence': process.sequence,
+                        'unit_cost': process.process_id.cost,
                     }
 
                     line_obj.create(cr, uid, new_data)
