@@ -39,7 +39,7 @@ from itertools import groupby
 from jasperclient import * 
 
 import os
-import M2Crypto
+#import M2Crypto
 
 def _links_get(self, cr, uid, context=None):
     obj = self.pool.get('res.request.link')
@@ -61,22 +61,22 @@ npxHqLH2SWP9D8t1jwIDAQAB
 
     def _get_code1(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        for id in ids:
-            bio = M2Crypto.BIO.MemoryBuffer(self._public_key)
-            WriteRSA = M2Crypto.RSA.load_pub_key_bio(bio)
-            uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-            encrypt_text = WriteRSA.public_encrypt(uuid.encode('ascii'), M2Crypto.RSA.pkcs1_oaep_padding)
-            res[id] = encrypt_text.encode('base64')
+        #for id in ids:
+        #    bio = M2Crypto.BIO.MemoryBuffer(self._public_key)
+        #    WriteRSA = M2Crypto.RSA.load_pub_key_bio(bio)
+        #    uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
+        #    encrypt_text = WriteRSA.public_encrypt(uuid.encode('ascii'), M2Crypto.RSA.pkcs1_oaep_padding)
+        #    res[id] = encrypt_text.encode('base64')
         
         return res
 
     def _get_code2(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        for data in self.browse(cr, uid, ids):            
-            bio = M2Crypto.BIO.MemoryBuffer(data.key1.encode('ascii'))
-            ReadRSA = M2Crypto.RSA.load_key_bio(bio)
-            PlainText = ReadRSA.private_decrypt (data.passportkey.decode('base64'), M2Crypto.RSA.pkcs1_oaep_padding)
-            res[data.id] = PlainText
+        #for data in self.browse(cr, uid, ids):
+        #    bio = M2Crypto.BIO.MemoryBuffer(data.key1.encode('ascii'))
+        #    ReadRSA = M2Crypto.RSA.load_key_bio(bio)
+        #    PlainText = ReadRSA.private_decrypt (data.passportkey.decode('base64'), M2Crypto.RSA.pkcs1_oaep_padding)
+        #    res[data.id] = PlainText
         return res
 
     def _get_uuid(self, cr, uid, ids, field_name, arg, context=None):
@@ -116,12 +116,12 @@ npxHqLH2SWP9D8t1jwIDAQAB
     _order = 'name'
     
     def create(self, cr, uid, vals, context=None):
-        Bob = M2Crypto.RSA.gen_key (1024, 65537)
-        Bob.save_key ('private.pem', None)
-        Bob.save_pub_key ('public.pem')
-        key1 = open('private.pem').read()
-        key2 = open('public.pem').read()
-        vals.update({'key1':key1,'key2':key2})
+        #Bob = M2Crypto.RSA.gen_key (1024, 65537)
+        #Bob.save_key ('private.pem', None)
+        #Bob.save_pub_key ('public.pem')
+        #key1 = open('private.pem').read()
+        #key2 = open('public.pem').read()
+        #vals.update({'key1':key1,'key2':key2})
         return super(ineco_jasper_server, self).create(cr, uid, vals, context=context)
 
     def button_get_report(self, cr, uid, ids, *args):
