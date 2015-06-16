@@ -82,6 +82,9 @@ class ineco_problem(osv.osv):
             ('approve','Approved'),
             ('cancel','Cancelled')
             ],'Status', select=True, readonly=True),
+        'user_id': fields.related('sale_order_id', 'user_id', type='many2one', relation="res.users", string='Sale', readonly=True),
+        'mixprint': fields.related('user_id', 'mixprint', type='boolean', string='Mixprint', readonly=True),
+        'smart': fields.related('user_id', 'smart', type='boolean', string='Smart', readonly=True),
     }
     _defaults = {
         'name': '/',

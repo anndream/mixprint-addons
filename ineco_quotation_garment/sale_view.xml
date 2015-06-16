@@ -239,6 +239,7 @@
                 <tree string="Property">
                 	<field name="seq" />
                     <field name="name" />
+                    <field name="type" />
                     <field name="active" />
                 </tree>
             </field>
@@ -251,6 +252,7 @@
                 <form string="Property">
                 	<field name="seq" />
                     <field name="name" />
+                    <field name="type" />
                     <field name="active" />
                 </form>
             </field>
@@ -262,6 +264,7 @@
             <field name="arch" type="xml">
                 <search string="Search Property">
                 	<field name="name" />
+                    <field name="type" />
                	</search>
             </field>
         </record>
@@ -408,8 +411,10 @@
 		                                        <page string="Sale Property">
 		                                            <field name="order_line_property_ids">
 		                                                <tree string="Property" editable="bottom">
-		                                                    <field name="property_id" />
+                                                            <field name="sequence" widget="handle" nolabel="1"/>
+		                                                    <field name="property_id" on_change="onchange_property_id(property_id)" />
 		                                                    <field name="name" />
+                                                            <field name="note" />
 		                                                </tree>
 		                                            </field>
 		                                        </page>
@@ -1197,6 +1202,8 @@
                 <tree string="Line Property">
                     <field name="name" />
                     <field name="property_id" />
+                    <field name="sequence" />
+                    <field name="note" />
                     <field name="order_id" />
                 </tree>
             </field>
@@ -1209,6 +1216,8 @@
                 <form string="Line Property">
                     <field name="name" />
                     <field name="property_id" />
+                    <field name="note" />
+                    <field name="sequence"/>
                     <field name="order_id" readonly="1" />
                 </form>
             </field>
@@ -1221,6 +1230,7 @@
                 <search string="Line Property">
                     <field name="name" />
                     <field name="property_id" />
+                    <field name="note" />
                     <field name="order_id" />
                 </search>
             </field>

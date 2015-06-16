@@ -37,15 +37,18 @@ class sale_property(osv.osv):
     _columns = {
         'name': fields.char('Description',size=64,required=True),
         'active': fields.boolean('Active'),
-        'seq': fields.integer('Sequence',required=True),
+        'seq': fields.integer('Sequence', required=True),
+        'type': fields.selection([('default','Default'),('cross','Cross Tab'),('form1','Form1')],'Type')
     }
     _defaults = {
         'active': True,
         'seq': 0,
+        'type': 'default',
     }
     _sql_constraints = [
         ('name_unique', 'unique (name)', 'Description must be unique !')
     ]
+    _order = 'seq'
     
 class sale_gender(osv.osv):
     _name = 'sale.gender'
@@ -101,19 +104,32 @@ class sale_line_property(osv.osv):
     _description = 'Property of Sale Line'
     _columns = {
         'name': fields.text('Description', required=True),
-        'seq': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence'),
         'property_id': fields.many2one('sale.property', 'Property',  required=True, ondelete='cascade'),
         'sale_line_id': fields.many2one('sale.order.line', 'Order Line', ondelete='cascade'),
         'order_id':fields.related('sale_line_id', 'order_id', 
             string="Order", type='many2one', relation="sale.order", 
             store={
                 'sale.line.property': (lambda self, cr, uid, ids, c={}: ids, [], 10),
-            }, readonly=True), 
+            }, readonly=True),
+        'note': fields.text('Note'),
     }
     #_sql_constraints = [
     #    ('name_property_unique', 'unique (name, property_id, sale_line_id)', 'Description and property must be unique !')
     #]
-    _order = 'name, seq'
+    _order = 'sale_line_id, sequence'
+
+    def onchange_property_id(self, cr, uid, ids, property_id, context=None):
+        if context==None:
+            context={}
+        result = 100
+        bom_obj = self.pool.get('sale.property').browse(cr, uid, property_id)
+        if bom_obj:
+            result = bom_obj.seq
+        return {'value': {
+            'sequence': result,
+            }
+        }
     
 class sale_line_property_other(osv.osv):
     _name = 'sale.line.property.other'

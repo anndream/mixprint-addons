@@ -73,6 +73,8 @@
                     <field name="manager_user_id" invisible="1" />
                     <field name="note" />
                     <field name="cost" />
+                    <field name="mixprint" />
+                    <field name="smart" />
                     <field name="state" invisible="1"/>
                 </tree>
             </field>
@@ -103,6 +105,7 @@
 			                    <field name="partner_id" readonly="1"/>
 			                    <field name="cost" />
 			                    <field name="level" invisible="1" />
+                                <field name="user_id" />
 	                        </group>
 	                        <group>
 			                    <field name="type_id" />
@@ -110,6 +113,8 @@
 			                    <field name="target_user_id" on_change="on_change_user_id(target_user_id)" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
 			                    <field name="supervisor_user_id" on_change="on_change_supervisor_id(supervisor_user_id)"  required="1" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
 			                    <field name="manager_user_id" required="1" attrs="{'readonly': [('state', 'in', ['approve','cancel'])]}"/>
+                                <field name="mixprint" />
+                                <field name="smart" />
 	                        </group>
 	                    </group>
 	                    <notebook>
