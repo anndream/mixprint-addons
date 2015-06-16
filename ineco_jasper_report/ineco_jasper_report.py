@@ -173,11 +173,21 @@ class ineco_jasper_report(osv.osv):
                                    ('warehouse', 'Warehouse')], 'Module' ),
         'group_ids': fields.many2many('res.groups', 'jasperreport_group_rel', 'jasperreport_id', 'group_id', 'Groups'),                
     }
+
     _sql_constraints = [
         ('name_uniq', 'unique(name, server_id, uristring)', 'Server and Report must be unique!'),
     ]
+
     _order = 'server_id, name'
-    
+
+    def copy(self, cr, uid, ids, default=None, context=None):
+        if default is None:
+            default = {}
+        report = self.read(cr, uid, id, ['name'], context=context)
+        default = default.copy()
+        default.update(name=_("%s (copy)") % (report['name']))
+        return super(ineco_jasper_report, self).copy(cr, uid, ids, default, context=context)
+
     def browse_report(self, cr, uid, ids, *args):
         if not ids:
             return False
