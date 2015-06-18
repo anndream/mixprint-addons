@@ -377,7 +377,35 @@ class sale_order(osv.osv):
         for data in self.pool.get('account.invoice').browse(cr, uid, ids, context=context):
             result[data.saleorder_id.id] = True
         return result.keys()
-    
+
+    def _get_start_production(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'start_production': False
+            }
+            #   select count(*) from mrp_production_workcenter_line mpwl
+            #    join mrp_production mp on mp.id = mpwl.production_id
+            #    where
+            #      workcenter_id = 3
+            #      and mpwl.state = 'done'
+            #      and mp.sale_order_id = %s
+            sql = """
+                select count(*) from mrp_production
+                where sale_order_id = %s and is_print = True
+                """ % obj.id
+            cr.execute(sql)
+            data = cr.fetchone()
+            if data and data[0] > 0:
+                result[obj.id]['start_production'] = True
+        return result
+
+    def _get_production(self, cr, uid, ids, context=None):
+        result = {}
+        for data in self.pool.get('mrp.production').browse(cr, uid, ids, context=context):
+            result[data.sale_order_id.id] = True
+        return result.keys()
+
     _inherit = 'sale.order'
     _description = 'Add Delivery Date'
     _columns = {
@@ -437,6 +465,12 @@ class sale_order(osv.osv):
         'date_pin_start': fields.date('Date Pin Start'),
         'date_pin_finish': fields.date('Date Pin Finish'),
         'pin_note': fields.text('Pin Note'),
+        'start_production': fields.function(_get_start_production, string="Production Ready",
+                    store={
+                        'sale.order': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+                        'mrp.production': (_get_production, ['workder','is_print'], 10),
+                    },
+                    type="boolean", multi="_production"),
     }
     _defaults = {
         'cancel_sample_order': False,

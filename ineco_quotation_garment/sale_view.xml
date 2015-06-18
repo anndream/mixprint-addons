@@ -312,6 +312,7 @@
                     <field name="sale_revision" />
                     <field name="state"/>
                     <field name="date_sale_close" invisible="0" />
+                    <field name="start_production" invisible="1" />
                 </tree>
             </field>
         </record>
@@ -597,6 +598,7 @@
                     <separator/>
                     <filter string="My Sale Orders" domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal" name="my_sale_orders_filter"/>
                     <filter string="No MO" domain="[('date_sale_close','!=',False),('garment_order_date','=',False)]" name="date_error" />
+                    <filter string="Production Not Available" domain="[('start_production','=',False),('state','not in',('draft','cancel')]" name="production_not_available" />
                     <field name="partner_id" />
                     <field name="user_id" />
                     <field name="project_id"/>
@@ -775,6 +777,7 @@
               		<field name="garment_order_no" />
               		<field name="garment_order_date" />
               		<field name="date_sale_close" invisible="1"/>
+                    <field name="start_production" invisible="1" />
               	</field>
             </field>
         </record>
@@ -1036,6 +1039,9 @@
               	<field name="name" position="after">
               		<field name="garment_order_no" />
 					<field name="date_sale_close" />
+                    <filter string="Production Not Available"
+                            domain="[('start_production','=',False),('state','not in',('draft','cancel'))]"
+                            name="production_not_available" />
 					<filter string="Close Date" icon="terp-personal" domain="[]" context="{'group_by':'date_sale_close'}"/>
               	</field>
             </field>
