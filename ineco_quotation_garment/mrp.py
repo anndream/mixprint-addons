@@ -786,6 +786,23 @@ class ineco_mrp_process_bom(osv.osv):
          'BOM Process name must be unique.')
     ]
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context={}
+
+        if not default:
+            default = {}
+
+        # Craft our own `<name> (copy)` in en_US (self.copy_translation()
+        # will do the other languages).
+        context_wo_lang = context.copy()
+        context_wo_lang.pop('lang', None)
+        bom = self.read(cr, uid, id, ['name'], context=context_wo_lang)
+        default = default.copy()
+        default.update(name="%s (copy)" % (bom['name']))
+        return super(ineco_mrp_process_bom, self).copy(cr, uid, id, default=default, context=context)
+
+
 class ineco_mrp_process_bom_line(osv.osv):
     _name = 'ineco.mrp.process.bom.line'
     _description = "Process Bom Detail"

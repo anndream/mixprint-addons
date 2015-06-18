@@ -437,6 +437,14 @@
                     					</field>
                     				</page>
                     				<page string="Collar" groups="base.group_garment_collar">
+                                        <group>
+                                            <group>
+                                                <field name="date_collar_start"/>
+                                            </group>
+                                            <group>
+                                                <field name="date_collar_finish"/>
+                                            </group>
+                                        </group>
                                         <field name="collar_ids" nolabel="1">
                                             <tree string="Collars" editable="top">
                                                 <field name="machine_collar_id"/>
