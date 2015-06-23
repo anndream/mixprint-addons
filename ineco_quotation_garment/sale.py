@@ -912,6 +912,11 @@ class ineco_sale_order_bom(osv.osv):
         'sale_order_id': fields.many2one('sale.order','Sale Order'),
         'process_bom_id': fields.many2one('ineco.mrp.process.bom','BOM Process'),
         'process_ids': fields.one2many('ineco.sale.order.process','sale_bom_id','Process'),
+        #2015-06-23
+        'date_pin_start': fields.datetime('Pin Start'),
+        'date_pin_finish': fields.datetime('Pin Finish'),
+        'process_total': fields.integer('Process Total'),
+        'pin_count': fields.integer('Pin Count'),
     }
 
     def onchange_bom_id(self, cr, uid, ids, bom_id, context=None):
