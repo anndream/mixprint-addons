@@ -392,7 +392,7 @@ class sale_order(osv.osv):
             #      and mp.sale_order_id = %s
             sql = """
                 select count(*) from mrp_production
-                where sale_order_id = %s and is_print = True
+                where sale_order_id = %s and (is_print = True or state not in ('draft','cancel'))
                 """ % obj.id
             cr.execute(sql)
             data = cr.fetchone()
@@ -465,10 +465,11 @@ class sale_order(osv.osv):
         'date_pin_start': fields.date('Date Pin Start'),
         'date_pin_finish': fields.date('Date Pin Finish'),
         'pin_note': fields.text('Pin Note'),
+        #2015-06-18
         'start_production': fields.function(_get_start_production, string="Production Ready",
                     store={
                         'sale.order': (lambda self, cr, uid, ids, c={}: ids, [], 10),
-                        'mrp.production': (_get_production, ['workder','is_print'], 10),
+                        'mrp.production': (_get_production, ['worker','is_print'], 10),
                     },
                     type="boolean", multi="_production"),
     }
@@ -917,6 +918,8 @@ class ineco_sale_order_bom(osv.osv):
         'date_pin_finish': fields.datetime('Pin Finish'),
         'process_total': fields.integer('Process Total'),
         'pin_count': fields.integer('Pin Count'),
+        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter',),
+        'machine_id': fields.many2one('ineco.mrp.machine', 'Machine',),
     }
 
     def onchange_bom_id(self, cr, uid, ids, bom_id, context=None):

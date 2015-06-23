@@ -1330,6 +1330,7 @@
                                     <field name="date_pin_start" />
                                     <field name="date_pin_finish" />
                                     <field name="pin_count" />
+                                    <field name="machine_id" />
                                 </tree>
                                 <form string="BOM Process">
                                     <group>
@@ -1337,12 +1338,14 @@
                                             <field name="process_bom_id" on_change="onchange_bom_id(process_bom_id)" />
                                             <field name="name" />
                                             <field name="sale_order_id" invisible="1"/>
+                                            <field name="date_pin_start" />
+                                            <field name="date_pin_finish" />
                                             <button name="button_load_process" string="Load Process" type="object"  />
                                         </group>
                                         <group>
+                                            <field name="workcenter_id" />
+                                            <field name="machine_id" domain="[('workcenter_id','=',workcenter_id)]" />
                                             <field name="process_total" />
-                                            <field name="date_pin_start" />
-                                            <field name="date_pin_finish" />
                                             <field name="pin_count" />
                                         </group>
                                         <field name="process_ids" colspan="4">
