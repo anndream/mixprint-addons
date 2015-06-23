@@ -3,6 +3,7 @@ from report_tools import pdf_fill,pdf_merge
 import pooler
 from report import render
 import time
+from openerp import tools
 
 def fmt_thaidate(date):
     dt=datetime.datetime.strptime(date,"%Y-%m-%d")
@@ -103,7 +104,7 @@ class report_custom(report_int):
             "tax12":str(vals["tax12"])+" "+"%.2d"%(vals["st12"]),
             "pay_more": vals["tax12"] and "Yes" or "No",
         })
-
+        
         pdf=pdf_fill("addons/ac_account_thai/report/pdf/vat_pp30.pdf",vals)
 
         # attachments for output vat

@@ -6,6 +6,7 @@ from openerp.osv import fields, osv
 import pooler
 from num2word import num2word_th
 import datetime
+import os
 
 def fmt_tin(tin):
     return "%s %s%s%s%s %s%s%s%s%s %s%s %s"%(tin[0],tin[1],tin[2],tin[3],tin[4],tin[5],tin[6],tin[7],tin[8],tin[9],tin[10],tin[11],tin[12])
@@ -115,7 +116,9 @@ class report_custom(report_int):
             }
             #may = 0, #june = 4
     
-            pdf2=pdf_fill("openerp/addons/ineco_thai_account/report/pdf/wht_pnd3.pdf",vals)
+            report_file = os.path.dirname(os.path.abspath(__file__))+"/pdf/wht_pnd3.pdf"
+            pdf2=pdf_fill(report_file,vals)
+            #pdf2=pdf_fill("openerp/addons/ineco_thai_account/report/pdf/wht_pnd3.pdf",vals)
             if pdf:
                 pdf = pdf_merge(pdf, pdf2)
             else:
