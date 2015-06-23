@@ -170,7 +170,8 @@ class ineco_jasper_report(osv.osv):
                                    ('purchase', 'Purchase'),
                                    ('mrp', 'Manufacturing'),
                                    ('account', 'Account'),
-                                   ('warehouse', 'Warehouse')], 'Module' ),
+                                   ('warehouse', 'Warehouse'),
+                                   ('hr','HR')], 'Module' ),
         'group_ids': fields.many2many('res.groups', 'jasperreport_group_rel', 'jasperreport_id', 'group_id', 'Groups'),                
     }
 
