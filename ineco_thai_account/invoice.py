@@ -627,7 +627,45 @@ class account_voucher(osv.osv):
                 'date_maturity': voucher_brw.date_due
             }
         return move_line
-    
+
+    def account_move_get(self, cr, uid, voucher_id, context=None):
+        '''
+        This method prepare the creation of the account move related to the given voucher.
+
+        :param voucher_id: Id of voucher for which we are creating account_move.
+        :return: mapping between fieldname and value of account move to create
+        :rtype: dict
+        '''
+        seq_obj = self.pool.get('ir.sequence')
+        voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        if voucher_brw.number:
+            name = voucher_brw.number
+        elif voucher_brw.journal_id.sequence_id:
+            if not voucher_brw.journal_id.sequence_id.active:
+                raise osv.except_osv(_('Configuration Error !'),
+                    _('Please activate the sequence of selected journal !'))
+            c = dict(context)
+            c.update({'fiscalyear_id': voucher_brw.period_id.fiscalyear_id.id})
+            #name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id, context=c)
+            name = 'TMP-%s' % (voucher_brw.id)
+        else:
+            raise osv.except_osv(_('Error!'),
+                        _('Please define a sequence on the journal.'))
+        if not voucher_brw.reference:
+            ref = name.replace('/','')
+        else:
+            ref = voucher_brw.reference
+
+        move = {
+            'name': name,
+            'journal_id': voucher_brw.journal_id.id,
+            'narration': voucher_brw.narration,
+            'date': voucher_brw.date,
+            'ref': ref,
+            'period_id': voucher_brw.period_id.id,
+        }
+        return move
+
     def action_move_line_create(self, cr, uid, ids, context=None):
         '''
         Confirm the vouchers given in ids and create the journal entries for each of them
@@ -699,11 +737,15 @@ class account_voucher(osv.osv):
                 if ml_writeoff:
                     move_line_pool.create(cr, uid, ml_writeoff, context)
                 # We post the voucher.
+                if name[0:3] == 'TMP':
+                    seq_obj = self.pool.get('ir.sequence')
+                    name = seq_obj.next_by_id(cr, uid, voucher.journal_id.sequence_id.id, context=context)
                 self.write(cr, uid, [voucher.id], {
                     'move_id': move_id,
                     'state': 'posted',
                     'number': name,
                 })
+                self.pool.get('account.move').write(cr, uid, [move_id], {'name': name})
                 if voucher.journal_id.entry_posted:
                     move_pool.post(cr, uid, [move_id], context={})
                 # We automatically reconcile the account move lines.
