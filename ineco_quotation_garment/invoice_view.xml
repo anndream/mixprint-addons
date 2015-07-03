@@ -13,7 +13,7 @@
                 	<field name="commission_relate" />
                 </field>   
                 
-                <field name="internal_number" position="replace">
+                <field name="account_id" position="after">
                     <field name="internal_number" attrs="{'readonly': [('allow_change_number','=', False)]}"/>
                     <field name="allow_change_number" groups="base.group_erp_manager,ineco_thai_account.group_account_cancel"/>
                 	<field name="other_invoice_no" />

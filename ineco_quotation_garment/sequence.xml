@@ -72,5 +72,19 @@
             <field name="company_id" eval="False"/>
         </record>
 
+        <!-- Cutting Tag -->
+        <record id="seq_ineco_cuttingtag_type" model="ir.sequence.type">
+            <field name="name">Cutting Tag</field>
+            <field name="code">ineco.cutting.tag</field>
+        </record>
+
+        <record id="seq_ineco_cuttingtag" model="ir.sequence">
+            <field name="name">Cutting Tag</field>
+            <field name="code">ineco.cutting.tag</field>
+            <field name="prefix">%(y)s-</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
    </data>
 </openerp>

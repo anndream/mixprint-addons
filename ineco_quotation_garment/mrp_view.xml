@@ -925,5 +925,143 @@
                   sequence="150"
                   action="action_ineco_mrp_process_bom"/>
 
+		<!--   Cutting Tag    -->
+        <record id="view_ineco_cutting_tag_tree" model="ir.ui.view">
+            <field name="name">ineco.cutting_tag_tree</field>
+            <field name="model">ineco.cutting.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Cutting Tag">
+                    <field name="name" />
+                    <field name="garment_order_no" />
+                    <field name="customer_id" />
+                    <field name="date_start" />
+                    <field name="date_finish" />
+                    <field name="sale_order_id" invisible="1"/>
+                    <field name="sale_product_id" />
+                    <field name="order_qty" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_ineco_cutting_tag_form" model="ir.ui.view">
+            <field name="name">ineco.cutting.tag.form</field>
+            <field name="model">ineco.cutting.tag</field>
+            <field name="arch" type="xml">
+                <form string="Cutting Tag" version="7.0">
+                	<header>
+                        <button name="button_done" type="object" states="draft" string="Done" />
+                        <button name="button_cancel" type="object" states="draft" string="Cancel" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done,cancel" />
+                	</header>
+                	<sheet>
+                		<group>
+                			<group>
+			                    <field name="name" readonly="1"/>
+			                    <field name="sale_order_id" attrs="{'readonly':[('state', 'in', ['done','cancel'])]}"/>
+			                    <field name="customer_id" readonly="1" />
+                                <field name="sale_product_id" readonly="1" />
+                                <field name="order_qty" readonly="1" />
+			                    <div>
+				                    <button name="button_load" type="object" string="Load"  attrs="{'invisible':[('state', 'in', ['done','cancel'])]}"/>
+				                    <button name="button_reset" type="object" string="Reset 0"  attrs="{'invisible':[('state', 'in', ['done','cancel'])]}"/>
+			                    </div>
+                			</group>
+                			<group>
+			                    <field name="date_start" required="1" />
+                                <field name="date_finish" required="1" />
+                                <field name="worker" />
+                                <field name="machine_id" domain="[('workcenter_id','=',3)]" required="1" />
+			                    <field name="garment_order_no" readonly="1"/>
+			                    <field name="sequence" attrs="{'readonly':[('state', 'in', ['done','cancel'])]}"/>/>
+			                    <field name="tag_quantity" />
+                			</group>
+                		</group>
+                            <notebook>
+                                <page string="Material">
+                                    <group>
+                                        <group string="Material">
+                                            <field name="color_code" />
+                                            <field name="jfm" />
+                                            <field name="kpm" />
+                                            <field name="jiam" />
+                                            <field name="cr" />
+                                            <field name="st" />
+                                            <field name="other" />
+                                        </group>
+                                        <group string="Sheet">
+                                            <field name="sheet_length" />
+                                            <field name="sheet_quantity" />
+                                            <field name="sheet_total" />
+                                        </group>
+                                        <group string="Roll">
+                                            <field name="rolling" />
+                                            <field name="size_per_pattern"/>
+                                            <field name="size_total" />
+                                            <field name="size_width" />
+                                        </group>
+                                    </group>
+                                </page>
+                                <page string="Cutting Item">
+                                    <field name="line_ids" colspan="4" nolabel="1"  attrs="{'readonly':[('state', 'in', ['done','cancel'])]}">
+                                        <tree string="Item" editable="top">
+                                            <field name="cutting_id" invisible="1" />
+                                            <field name="product_id" readonly="1" />
+                                            <field name="color_id" readonly="1" />
+                                            <field name="gender_id" readonly="1" />
+                                            <field name="size_id" readonly="1" />
+                                            <field name="note" readonly="1" />
+                                            <field name="product_qty" readonly="1" />
+                                            <field name="quantity" />
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                	</sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_ineco_cutting_tag_search" model="ir.ui.view">
+            <field name="name">ineco.cutting.tag.search</field>
+            <field name="model">ineco.cutting.tag</field>
+            <field name="arch" type="xml">
+                <search string="Packing">
+                    <field name="name" />
+                    <field name="date_start" />
+                    <field name="date_finish" />
+                    <field name="sequence" />
+                    <field name="total" />
+                    <field name="customer_id" />
+                    <field name="sale_order_id" />
+                    <field name="garment_order_no" />
+                </search>
+            </field>
+        </record>
+
+        <record id="action_ineco_cutting_tag" model="ir.actions.act_window">
+            <field name="name">Cutting Tag</field>
+            <field name="res_model">ineco.cutting.tag</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ineco_cutting_tag_search"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a Packing.
+              </p><p>
+                This is the list of all cost group that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
+        </record>
+
+       <menuitem
+            id="menu_ineco_cutting_tag"
+        	action="action_ineco_cutting_tag"
+        	parent="menu_mrp_task_menu"
+        	sequence="160"/>
+
     </data>
 </openerp>

@@ -816,3 +816,179 @@ class ineco_mrp_process_bom_line(osv.osv):
     _defaults = {
         'sequence': 100,
     }
+
+class ineco_cutting_tag(osv.osv):
+
+    def _get_product(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                #'product_name': False,
+                'sale_product_id': False,
+            }
+            if obj.sale_order_id:
+                sql = """
+                    select
+                      pt.name,
+                      pp.id
+                    from sale_order so
+                    join sale_order_line sol on so.id = sol.order_id
+                    join product_product pp on sol.product_id = pp.id
+                    join product_template pt on pp.product_tmpl_id = pt.id
+                    where so.id = %s and pt.type not in ('service')
+                    limit 1
+                """ % obj.sale_order_id.id
+                cr.execute(sql)
+                data = cr.fetchone()
+                if data and data[0]:
+                    #result[obj.id]['product_name'] = data[0] or ''
+                    result[obj.id]['sale_product_id'] = data[1] or False
+        return result
+
+    def _get_quantity(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'order_qty': False
+            }
+            if obj.sale_order_id:
+                sql = """
+                    select
+                      coalesce(sum(sol.product_uom_qty), 0) as quantity
+                    from
+                      sale_order_line sol
+                      join product_product pp on sol.product_id = pp.id
+                      join product_template pt on pt.id = pp.product_tmpl_id
+                    where order_id = %s
+                      and pt.type <> 'service'
+                  """ % obj.sale_order_id.id
+                cr.execute(sql)
+                data = cr.fetchone()
+                if data and data[0]:
+                    result[obj.id]['order_qty'] = data[0] or 0.0
+        return result
+
+    def _get_tag_quantity(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {
+                'tag_quantity': False
+            }
+            total = 0.0
+            for line in obj.line_ids:
+                total += line.quantity
+            result[obj.id]['tag_quantity'] = total
+        return result
+
+    _name = 'ineco.cutting.tag'
+    _description = "Cutting Tag"
+    _columns = {
+        'name': fields.char('Cutting No', size=32, required=True),
+        'sale_order_id': fields.many2one('sale.order','Sale Order'),
+        'garment_order_no': fields.related('sale_order_id','garment_order_no', type="char", string="Garment No", readonly=True),
+        'customer_id': fields.related('sale_order_id','partner_id',type="many2one", relation="res.partner", string="Customer", readonly=True),
+        'sequence': fields.integer('Sequence'),
+        'total': fields.integer('Total'),
+        'date_start': fields.datetime('Date Start'),
+        'date_finish': fields.datetime('Date Finish'),
+        'machine_id': fields.many2one('ineco.mrp.machine','Cutting Table'),
+        'sheet_length': fields.float('Sheet Length',digits=(12,2)),
+        'sheet_quantity': fields.integer('Sheet Quantity'),
+        'sheet_total': fields.float('Sheet Total', digits=(12,2)),
+        'worker': fields.char('Worker', size=64),
+        'color_code': fields.char('Color Code', size=64),
+        'rolling': fields.boolean('Rolling'),
+        'size_per_pattern': fields.integer('Size per Pattern'),
+        'size_total': fields.float('Total'),
+        'size_width': fields.float('Width'),
+        'note': fields.text('Note'),
+        'jfm': fields.char('JFM', size=64),
+        'kpm': fields.char('KPM', size=64),
+        'jiam': fields.char('Jiam', size=64),
+        'cr': fields.char('CR', size=64),
+        'st': fields.char('ST', size=64),
+        'other': fields.char('Other', size=64),
+        'order_qty': fields.function(_get_quantity, string="Quantity", type="integer", multi="_quantity"),
+        'line_ids': fields.one2many('ineco.cutting.tag.line','cutting_id','Cutting Items'),
+        'state': fields.selection([('draft','Draft'),('done','Done'),('cancel','Cancel')],'State',readonly=True),
+        'sale_product_id': fields.function(_get_product, string="Product", type="many2one", relation="product.product", multi="_product",
+            store = {
+                'ineco.cutting.tag': (lambda self, cr, uid, ids, c={}: ids, [], 10),
+            }),
+        'tag_quantity': fields.function(_get_tag_quantity, string="Total", multi="_tag_quantity"),
+    }
+    _defaults = {
+        'name': '/',
+        'sequence': 1.0,
+        #'date': time.strftime('%Y-%m-%d'),
+        'total': 1.0,
+        'state': 'draft',
+    }
+
+    def button_cancel(self, cr, uid, ids, context=None):
+        for data in self.browse(cr, uid, ids):
+            data.write({'state':'cancel'})
+        return True
+
+    def button_done(self, cr, uid, ids, context=None):
+        for data in self.browse(cr, uid, ids):
+            data.write({'state':'done'})
+        return True
+
+    def button_load(self, cr, uid, ids, context=None):
+        sale_line_obj = self.pool.get('sale.order.line')
+        cutting_tag_line_obj = self.pool.get('ineco.cutting.tag.line')
+        for data in self.browse(cr, uid, ids):
+            sale_line_ids = sale_line_obj.search(cr, uid, [('order_id','=',data.sale_order_id.id)])
+            for sale_line in sale_line_obj.browse(cr, uid, sale_line_ids):
+                if sale_line.order_line_property_other_ids:
+                    for property in sale_line.order_line_property_other_ids:
+                        found_ids = cutting_tag_line_obj.search(cr, uid, [('cutting_id','=',data.id),('property_id','=',property.id)])
+                        if not found_ids:
+                            new_data = {
+                                'name': False,
+                                'product_id': sale_line.product_id.id,
+                                'property_id': property.id,
+                                'cutting_id': data.id,
+                            }
+                            cutting_tag_line_obj.create(cr, uid, new_data)
+        return True
+
+    def button_reset(self, cr, uid, ids, context=None):
+        obj_packing_line = self.pool.get('ineco.cutting.tag.line')
+        for data in self.browse(cr, uid, ids):
+            line_ids = obj_packing_line.search(cr, uid, [('cutting_id','=',data.id),('quantity','=',False)])
+            if line_ids:
+                obj_packing_line.unlink(cr, uid, line_ids)
+        return True
+
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('name','/')=='/':
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'ineco.cutting.tag') or '/'
+        return super(ineco_cutting_tag, self).create(cr, uid, vals, context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        default = default.copy()
+        default['line_ids'] = []
+        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'ineco.cutting.tag')
+        return super(ineco_cutting_tag, self).copy(cr, uid, id, default, context=context)
+
+class ineco_cutting_tag_line(osv.osv):
+    _name = 'ineco.cutting.tag.line'
+    _description = "Cutting Tag Line"
+    _columns = {
+        'name': fields.char('Description', size=32),
+        'cutting_id': fields.many2one('ineco.cutting.tag','Cutting Tag'),
+        'property_id': fields.many2one('sale.line.property.other','Property'),
+        'product_id': fields.many2one('product.product','Product'),
+        'color_id': fields.related('property_id', 'color_id', type="many2one", relation='sale.color', string='Color',readonly=True),
+        'gender_id': fields.related('property_id', 'gender_id', type="many2one", relation='sale.gender', string='Gender',readonly=True),
+        'size_id': fields.related('property_id', 'size_id', type="many2one", relation='sale.size', string='Size',readonly=True),
+        'note': fields.related('property_id','note', type="char", string="Note", readonly=True),
+        'product_qty': fields.related('property_id', 'quantity', type="float",  string='Origin Qty',readonly=True),
+        'quantity': fields.integer('Quantity'),
+    }
