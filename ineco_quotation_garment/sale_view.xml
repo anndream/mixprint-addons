@@ -547,7 +547,13 @@
 		                            	type="object" 
 		                            	icon="gtk-justify-fill"
 		                            	attrs="{'invisible': ['|',('garment_order_no','!=',False),('state','=','draft')]}" />
-		                            <field name="relate_garment_order_no" />   		                            
+                                    <button name="action_regen_mo"
+                                            string="Re Garment"
+                                            type="object"
+                                            icon="gtk-justify-fill"
+                                            groups="base.group_erp_manager"
+                                            attrs="{'invisible': [('garment_order_no','=',False)]}" />
+		                            <field name="relate_garment_order_no" />
                         		</group>
                         		<group string="Pattern">
                         			<field name="employee_id" />
