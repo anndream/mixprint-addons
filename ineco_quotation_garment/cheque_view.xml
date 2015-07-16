@@ -8,6 +8,7 @@
             <field name="inherit_id" ref="ineco_thai_account.view_ineco_cheque_tree"/>
             <field name="arch" type="xml">
             	<field name="cheque_date" position="after">
+                    <field name="date_due" readonly="1" />
             		<field name="day_month" invisible="1" />
             	</field>
             </field>

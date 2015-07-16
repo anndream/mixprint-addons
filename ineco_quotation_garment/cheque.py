@@ -44,4 +44,5 @@ class ineco_cheque(osv.osv):
                 store={
                     'ineco.cheque': (lambda self, cr, uid, ids, c={}: ids, [], 10),
                 }),
+        'date_due': fields.related('voucher_id','date_due',type='date', string="Date Due")
     }
