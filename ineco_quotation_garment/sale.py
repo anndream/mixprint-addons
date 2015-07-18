@@ -415,6 +415,7 @@ class sale_order(osv.osv):
         'garment_order_no': fields.char('Garment Order No', size=32, readonly=True, track_visibility='onchange'),
         'sample_order_date': fields.date('Sampling Order Date', track_visibility='onchange'),
         'garment_order_date': fields.date('Garment Order Date', track_visibility='onchange'),
+        'last_garment_order_update': fields.datetime('Last Garment Order Update'),
         'sample_deliver_date': fields.date('Sampling Deliver Date', track_visibility='onchange'),
         'cancel_sample_order': fields.boolean('Cancel Sampling Order', track_visibility='onchange'),
         'cancel_garment_order': fields.boolean('Cancel Garment Order', track_visibility='onchange'),
@@ -722,14 +723,16 @@ class sale_order(osv.osv):
         if production_ids:
             garment_order = production_obj.browse(cr, uid, production_ids)[0]
             garment_order_no = garment_order.name.split('#')[0]
-            self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
+            self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d'),
+                                      'last_garment_order_update': time.strftime('%Y-%m-%d %H:%M:%S')})
         else:
             try:
                 if sale_obj.shop_id and sale_obj.shop_id.production_sequence_id:
                     garment_order_no = self.pool.get('ir.sequence').get_id(cr, uid, sequence_code_or_id=sale_obj.shop_id.production_sequence_id.id )
                 else:
                     garment_order_no = self.pool.get('ir.sequence').get(cr, uid, 'ineco.garment.order')
-                self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d')})
+                self.write(cr, uid, ids, {'garment_order_no': garment_order_no, 'garment_order_date': time.strftime('%Y-%m-%d'),
+                                          'last_garment_order_update': time.strftime('%Y-%m-%d %H:%M:%S')})
                 self.create_mo(cr, uid, ids, context)
             except:
                 cr.rollback()
