@@ -178,7 +178,7 @@ class sale_order_line(osv.osv):
             store={
                 'sale.order.line': (lambda self, cr, uid, ids, c={}: ids, [], 10),
                 'sale.order': (_get_order_line, ['garment_order_date'], 10),
-            }, string='Date Order'),      
+            }, string='Date Order'),
     }    
     _defaults = {
         'sampling_qty': 0,
@@ -409,19 +409,19 @@ class sale_order(osv.osv):
     _inherit = 'sale.order'
     _description = 'Add Delivery Date'
     _columns = {
-        'date_delivery': fields.date('Delivery Date'),
-        'sale_revision': fields.char('Revision', size=32),   
-        'sample_order_no': fields.char('Sampling Order No', size=32, readonly=True),
-        'garment_order_no': fields.char('Garment Order No', size=32, readonly=True),    
-        'sample_order_date': fields.date('Sampling Order Date',),
-        'garment_order_date': fields.date('Garment Order Date',),
-        'sample_deliver_date': fields.date('Sampling Deliver Date'),
-        'cancel_sample_order': fields.boolean('Cancel Sampling Order'),
-        'cancel_garment_order': fields.boolean('Cancel Garment Order'),
-        'date_sale_close': fields.date('Closed Date'),
-        'sample_revision_no': fields.char('Sampling Revision No', size=32,),
-        'sample_revision_date': fields.date('Sampling Revision Date',),
-        'to_correct': fields.boolean('To Corrected'),
+        'date_delivery': fields.date('Delivery Date', track_visibility='onchange'),
+        'sale_revision': fields.char('Revision', size=32, track_visibility='onchange'),
+        'sample_order_no': fields.char('Sampling Order No', size=32, readonly=True, track_visibility='onchange'),
+        'garment_order_no': fields.char('Garment Order No', size=32, readonly=True, track_visibility='onchange'),
+        'sample_order_date': fields.date('Sampling Order Date', track_visibility='onchange'),
+        'garment_order_date': fields.date('Garment Order Date', track_visibility='onchange'),
+        'sample_deliver_date': fields.date('Sampling Deliver Date', track_visibility='onchange'),
+        'cancel_sample_order': fields.boolean('Cancel Sampling Order', track_visibility='onchange'),
+        'cancel_garment_order': fields.boolean('Cancel Garment Order', track_visibility='onchange'),
+        'date_sale_close': fields.date('Closed Date', track_visibility='onchange'),
+        'sample_revision_no': fields.char('Sampling Revision No', size=32, track_visibility='onchange'),
+        'sample_revision_date': fields.date('Sampling Revision Date',track_visibility='onchange'),
+        'to_correct': fields.boolean('To Corrected', track_visibility='onchange'),
         'relate_garment_order_no': fields.char('Relate MO', size=32),
         'date_pattern_finish': fields.function(_get_pattern,  string="Pattern Finish", 
                                                type="datetime", multi="_get_pattern"),
