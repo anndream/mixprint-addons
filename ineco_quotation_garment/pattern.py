@@ -478,6 +478,27 @@ class ineco_pattern_collar(osv.osv):
         'date_collar_finish': fields.date('Date Collar Finish'),
         'pattern_id': fields.many2one('ineco.pattern','Pattern'),
         'quantity': fields.integer('Quantity'),
+        'employee_ids': fields.one2many('ineco.pattern.collar.employee','pattern_collar_id','Employees'),
+    }
+
+class ineco_pattern_collar_employee(osv.osv):
+    _name = 'ineco.pattern.collar.employee'
+    _description = "Pattern Collar Activity by Employee"
+    _columns = {
+        'name': fields.char('Description', size=64),
+        'pattern_collar_id': fields.many2one('ineco.pattern.collar','Collar'),
+        'employee_collar_id': fields.many2one('hr.employee', 'Collar Employee'),
+        'p1': fields.boolean('P1'),
+        'p2': fields.boolean('P2'),
+        'p3': fields.boolean('P3'),
+        'date_collar_start': fields.date('Date Start'),
+        'date_collar_finish': fields.date('Date Finish'),
+        'quantity': fields.integer('Quantity'),
+    }
+    _defaults = {
+        'p1': False,
+        'p2': False,
+        'p3': False,
     }
 
 class ineco_pattern_sleeve(osv.osv):
@@ -491,6 +512,27 @@ class ineco_pattern_sleeve(osv.osv):
         'date_sleeve_finish': fields.date('Date Sleeve Finish'),
         'pattern_id': fields.many2one('ineco.pattern','Pattern'),
         'quantity': fields.integer('Quantity'),
+        'employee_ids': fields.one2many('ineco.pattern.sleeve.employee','pattern_sleeve_id','Employees'),
+    }
+
+class ineco_pattern_sleeve_employee(osv.osv):
+    _name = 'ineco.pattern.sleeve.employee'
+    _description = "Pattern Sleeve Activity by Employee"
+    _columns = {
+        'name': fields.char('Description', size=64),
+        'pattern_sleeve_id': fields.many2one('ineco.pattern.sleeve','Sleeve'),
+        'employee_sleeve_id': fields.many2one('hr.employee', 'Sleeve Employee'),
+        'p1': fields.boolean('P1'),
+        'p2': fields.boolean('P2'),
+        'p3': fields.boolean('P3'),
+        'date_sleeve_start': fields.date('Date Start'),
+        'date_sleeve_finish': fields.date('Date Finish'),
+        'quantity': fields.integer('Quantity'),
+    }
+    _defaults = {
+        'p1': False,
+        'p2': False,
+        'p3': False,
     }
 
 class ineco_pattern_type(osv.osv):
