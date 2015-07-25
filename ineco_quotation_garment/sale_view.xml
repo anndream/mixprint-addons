@@ -423,10 +423,10 @@
 		                                        <page string="Color / Gender / Sizing">
 		                                            <field name="order_line_property_other_ids">
 		                                                <tree string="Other Information" editable="bottom">
-		                                                    <field name="color_id" />
-		                                                    <field name="note" />
+		                                                    <field name="color_id" required="1" />
+		                                                    <field name="note" required="1" />
 		                                                    <field name="gender_id" required="1" />
-		                                                    <field name="size_id" />
+		                                                    <field name="size_id" required="1" />
 		                                                    <field name="quantity" sum="Total"/>
 		                                                </tree>
 		                                            </field>
