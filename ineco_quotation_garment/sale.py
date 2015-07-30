@@ -29,7 +29,14 @@ from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
 import openerp.addons.decimal_precision as dp
 from openerp import netsvc
-
+from openerp.addons.ineco_report import jasperclient
+import os
+import unicodedata
+import string
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 class sale_property(osv.osv):
     _name = 'sale.property'
@@ -473,6 +480,7 @@ class sale_order(osv.osv):
                         'mrp.production': (_get_production, ['worker','is_print'], 10),
                     },
                     type="boolean", multi="_production"),
+        'nas_ok': fields.boolean('Nas Ready'),
     }
     _defaults = {
         'cancel_sample_order': False,
@@ -480,6 +488,7 @@ class sale_order(osv.osv):
         'to_correct': False,
         'relate_garment_order_no': False,
         'commission_ready': False,
+        'nas_ok': False,
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -530,6 +539,75 @@ class sale_order(osv.osv):
                 sale_obj.lead_id.write({'date_closed': sale_obj.date_sale_close,
                                         'date_deadline': sale_obj.date_sale_close })
         return res
+
+    def schedule_generate_pdf(self, cr, uid, ids, context=None):
+
+        validFilenameChars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+        def removeDisallowedFilenameChars(filename):
+            cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
+            return ''.join(c for c in cleanedFilename if c in validFilenameChars)
+
+        user_obj = self.pool.get('res.users').browse(cr, uid, uid)
+        user_print_name = user_obj.name
+        report_xml = self.pool.get('ir.actions.report.xml').browse(cr, uid, 533) #Sale Order (Mixprint)
+        field_in = report_xml.criteria_field
+        url = report_xml.jasper_url
+        user = report_xml.jasper_username
+        password = report_xml.jasper_password
+        report_path = report_xml.jasper_report_path
+        parameter = report_xml.parameter_name
+        format = 'pdf'
+        export_ids = self.search(cr, uid, [('nas_ok','=',False),('garment_order_no','!=',False),('garment_order_date','!=',False)])
+
+        for data in self.browse(cr, uid, export_ids):
+            if os.path.exists('/Users/Tititab/pdf'):
+                default_path = '/Users/Tititab/pdf'
+            else:
+                default_path = '/media/mixprint/openerp'
+            report_param = {}
+            default_path = default_path + '/%s' % (cr.dbname)
+            if not os.path.exists(default_path):
+                os.makedirs(default_path)
+            if data.garment_order_date:
+                garment_date = datetime.strptime(data.garment_order_date,'%Y-%m-%d')
+                default_path = default_path + '/%s' % (garment_date.year)
+                if not os.path.exists(default_path):
+                    os.makedirs(default_path)
+                default_path = default_path + '/%s' % (garment_date.month)
+                if not os.path.exists(default_path):
+                    os.makedirs(default_path)
+                default_path = default_path + '/%s' % (data.garment_order_no[:2])
+                if not os.path.exists(default_path):
+                    os.makedirs(default_path)
+                if field_in and url and user and password and report_path:
+                    criteries = field_in + ' in '+ str(tuple( sorted( [data.id] )))
+                    criteries = criteries.replace(',)',')')
+                    if parameter:
+                        report_param[parameter] = criteries
+                        report_param['user_print_name'] = user_print_name
+                    j = jasperclient.JasperClient(url,user,password)
+                    a = j.runReport(report_path,format, report_param) # {'pick_ids': criteries})
+                    if data.partner_id.parent_id:
+                        filename = default_path+'/%s-%s.pdf' % (data.garment_order_no,data.partner_id.parent_id.name)
+                        #filename = filename
+                        try:
+                            file = open(filename,'w')
+                        except:
+                            filename = default_path+'/%s.pdf' % (data.garment_order_no)
+                            file = open(filename,'w')
+                            pass
+                    else:
+                        filename = default_path+'/%s-%s.pdf' % (data.garment_order_no,data.partner_id.name)
+                        try:
+                            file = open(filename,'w')
+                        except:
+                            filename = default_path+'/%s.pdf' % (data.garment_order_no)
+                            file = open(filename,'w')
+                            pass
+                    file.write(a['data'])
+                    data.write({'nas_ok':True})
+
+        return True
 
     def action_regen_mo(self, cr, uid, ids, context=None):
         self.cancel_mo(cr, uid, ids, context=context)
