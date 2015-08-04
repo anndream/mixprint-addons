@@ -613,7 +613,7 @@ class ineco_mrp_subworkcenter_task(osv.osv):
         'type': fields.selection([('out','Out'),('in','In')],'Type')
     }
     _defaults = {
-        'date': time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today ,
         'type': 'out',
     }
     _order = 'date'
